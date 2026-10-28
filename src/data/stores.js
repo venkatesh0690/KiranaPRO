@@ -18,7 +18,7 @@ export const stores = [
     offer: "20% off on first order",
     tags: ["Daily Groceries", "Dairy & Eggs", "Snacks"],
     image: "🏪",
-    posterImage: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1200&q=80",
+    posterImage: "https://cdn.cosmos.so/c1a7a937-772c-43e2-9de6-ecb2eb68065a?format=webp",
     posterBadge: "⚡ 20-30 mins delivery",
     posterTagline: "Your Trusted Neighborhood Kirana • Daily Dairy & Breakfast",
     coverFrom: "#FF6E40",
@@ -41,7 +41,7 @@ export const stores = [
     offer: "Free delivery on all orders",
     tags: ["Authentic Spices", "Pulses & Grains", "Ghee & Oils"],
     image: "🛒",
-    posterImage: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=80",
+    posterImage: "https://cdn.cosmos.so/722d7f22-3e24-4309-80e8-2ac8fda5d20b?format=webp",
     posterBadge: "⚡ 20-30 mins delivery",
     posterTagline: "Handpicked South Indian Spices, Cold-Pressed Oils & Heritage Grains",
     coverFrom: "#00A86B",
@@ -64,7 +64,7 @@ export const stores = [
     offer: "Flat ₹40 off on ₹299+",
     tags: ["All-in-One", "Beverages", "Instant Food"],
     image: "🏬",
-    posterImage: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1200&q=80",
+    posterImage: "https://cdn.cosmos.so/a3f2f1f6-b1b0-4c27-85b9-930f00e7a7b3?format=webp",
     posterBadge: "⚡ 20-30 mins delivery",
     posterTagline: "Instant Munchies, Chilled Drinks & Everyday Household Needs",
     coverFrom: "#0284C7",
@@ -87,7 +87,7 @@ export const stores = [
     offer: "Free delivery above ₹199",
     tags: ["Supermart", "Organic Produce", "Packaged Snacks"],
     image: "🛍️",
-    posterImage: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?auto=format&fit=crop&w=1200&q=80",
+    posterImage: "https://cdn.cosmos.so/9e09b5ea-b722-40fb-a2cb-1bfba8d3a9b1?format=webp&w=2048",
     posterBadge: "⚡ 20-30 mins delivery",
     posterTagline: "Modern Supermart Selection • Organic Produce & Packaged Delights",
     coverFrom: "#7C3AED",
@@ -110,7 +110,7 @@ export const stores = [
     offer: null,
     tags: ["Departmental", "Stationery", "Cleaning"],
     image: "🏪",
-    posterImage: "https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?auto=format&fit=crop&w=1200&q=80",
+    posterImage: "https://cdn.cosmos.so/f8230a0f-7d21-402a-b256-7dbfcd728455?format=webp",
     posterBadge: "⚡ 20-30 mins delivery",
     posterTagline: "Complete Home Cleaning, Pooja Essentials & Kitchen Staples",
     coverFrom: "#64748B",
@@ -243,7 +243,87 @@ export const productsByCategory = {
       description: "Wholesome brown bread baked with 100% whole wheat flour, rich in dietary fiber and essential micronutrients.",
       specs: { Weight: "400 g", Slices: "14 slices", Fiber: "3.2g / 100g" }
     }
-  ],
+  ,
+    {
+        "id": 106,
+        "name": "Amul Fresh Malai Paneer",
+        "price": 85,
+        "mrp": 95,
+        "unit": "200 g pack",
+        "image": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83e\uddc0",
+        "inStock": true,
+        "rating": 4.9,
+        "reviewsCount": 210,
+        "brand": "Amul",
+        "badge": "Rich Protein",
+        "description": "Soft and succulent cubes of fresh cottage cheese, ideal for paneer tikka, butter masala and curries.",
+        "specs": {
+            "Weight": "200 g",
+            "Protein": "18g / 100g",
+            "Type": "Pasteurised"
+        }
+    },
+    {
+        "id": 107,
+        "name": "Epigamia Greek Yogurt Natural (No Added Sugar)",
+        "price": 60,
+        "mrp": 65,
+        "unit": "100 g cup",
+        "image": "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83e\udd63",
+        "inStock": true,
+        "rating": 4.8,
+        "reviewsCount": 115,
+        "brand": "Epigamia",
+        "badge": "2x Protein",
+        "description": "Strained Greek yogurt offering double the protein of regular dahi, ultra thick and creamy.",
+        "specs": {
+            "Weight": "100 g",
+            "Protein": "7.5g",
+            "LiveCultures": "Yes"
+        }
+    },
+    {
+        "id": 108,
+        "name": "Amul Processed Cheese Slices",
+        "price": 140,
+        "mrp": 150,
+        "unit": "10 slices pack",
+        "image": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83e\uddc0",
+        "inStock": true,
+        "rating": 4.9,
+        "reviewsCount": 380,
+        "brand": "Amul",
+        "badge": "Melt in Mouth",
+        "description": "Individually wrapped creamy cheese slices for sandwiches, burgers, and morning toast.",
+        "specs": {
+            "Count": "10 Slices",
+            "Weight": "200 g",
+            "Calcium": "Rich"
+        }
+    },
+    {
+        "id": 109,
+        "name": "Heritage Gold High Fat Cow Milk",
+        "price": 38,
+        "mrp": 40,
+        "unit": "500 ml pouch",
+        "image": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83e\udd5b",
+        "inStock": true,
+        "rating": 4.9,
+        "reviewsCount": 420,
+        "brand": "Heritage",
+        "badge": "Full Cream",
+        "description": "Rich 4.5% fat pasteurised fresh milk, ideal for thick morning coffee, tea and boiling khoya.",
+        "specs": {
+            "Volume": "500 ml",
+            "Fat": "4.5% Min",
+            "SNF": "8.5% Min"
+        }
+    }],
   "Fresh Produce": [
     {
       id: 201,
@@ -325,7 +405,86 @@ export const productsByCategory = {
       description: "Naturally ripened, sweet robusta bananas rich in potassium and instant energy. Delivered at ideal ripeness.",
       specs: { Count: "6 Bananas", Ripeness: "Ready to Eat", Preservatives: "None" }
     }
-  ],
+  ,
+    {
+        "id": 206,
+        "name": "Crunchy Orange Ooty Carrots",
+        "price": 42,
+        "mrp": 50,
+        "unit": "500 g",
+        "image": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83e\udd55",
+        "inStock": true,
+        "rating": 4.8,
+        "reviewsCount": 165,
+        "brand": "Mandi Fresh",
+        "badge": "Sweet Crunch",
+        "description": "Cleaned, sweet tender hill carrots rich in beta carotene, great for salads, juicing and halwa.",
+        "specs": {
+            "Weight": "500 g",
+            "Origin": "Ooty Hills",
+            "Grade": "Grade A"
+        }
+    },
+    {
+        "id": 207,
+        "name": "Vibrant Green Capsicum (Shimla Mirch)",
+        "price": 35,
+        "mrp": 42,
+        "unit": "500 g",
+        "image": "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83e\uded1",
+        "inStock": true,
+        "rating": 4.7,
+        "reviewsCount": 130,
+        "brand": "Mandi Fresh",
+        "badge": "Crisp",
+        "description": "Glossy, thick-walled bell peppers ideal for Indo-Chinese noodles, fried rice and paneer curries.",
+        "specs": {
+            "Weight": "500 g",
+            "Taste": "Mildly Sweet & Crisp"
+        }
+    },
+    {
+        "id": 208,
+        "name": "Fresh Earthy Ginger (Allam)",
+        "price": 32,
+        "mrp": 38,
+        "unit": "250 g",
+        "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83e\udeda",
+        "inStock": true,
+        "rating": 4.8,
+        "reviewsCount": 210,
+        "brand": "Mandi Fresh",
+        "badge": "Spicy Zest",
+        "description": "Fiber-rich, pungent organic ginger roots cleaned and packed for chai, tadka and ginger pachadi.",
+        "specs": {
+            "Weight": "250 g",
+            "Pungency": "High",
+            "Type": "Old Ginger (High Juice)"
+        }
+    },
+    {
+        "id": 209,
+        "name": "Desi Small Garlic Bulbs (Vellulli)",
+        "price": 45,
+        "mrp": 55,
+        "unit": "250 g",
+        "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83e\uddc4",
+        "inStock": true,
+        "rating": 4.9,
+        "reviewsCount": 190,
+        "brand": "Mandi Fresh",
+        "badge": "Aromatic",
+        "description": "Small pungent country garlic cloves packed with allicin and rich medical benefits.",
+        "specs": {
+            "Weight": "250 g",
+            "Type": "Naatu Desi Garlic",
+            "Cloves": "Tight Packed"
+        }
+    }],
   "Cold Drinks & Juices": [
     {
       id: 301,
@@ -407,7 +566,64 @@ export const productsByCategory = {
       description: "The world's favorite sparkling beverage. Enjoy the crisp, uplifting taste chilled to perfection.",
       specs: { Volume: "250 ml", Temperature: "Chilled (4°C)", Packaging: "Aluminum Can" }
     }
-  ],
+  ,
+    {
+        "id": 306,
+        "name": "Thums Up Charged Carbonated Drink Can",
+        "price": 40,
+        "mrp": 40,
+        "unit": "250 ml can",
+        "image": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\u26a1",
+        "inStock": true,
+        "rating": 4.9,
+        "reviewsCount": 480,
+        "brand": "Thums Up",
+        "badge": "Strong Fizz",
+        "description": "Toofani strong taste cola packed with intense fizz and bold Indian flavor.",
+        "specs": {
+            "Volume": "250 ml",
+            "Serve": "Chilled 4\u00b0C"
+        }
+    },
+    {
+        "id": 307,
+        "name": "Sprite Crisp Lemon-Lime Drink Can",
+        "price": 40,
+        "mrp": 40,
+        "unit": "250 ml can",
+        "image": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83c\udf4b",
+        "inStock": true,
+        "rating": 4.8,
+        "reviewsCount": 350,
+        "brand": "Sprite",
+        "badge": "Clear Refreshment",
+        "description": "Sparkling clear lemon and lime flavored beverage delivering total refreshment.",
+        "specs": {
+            "Volume": "250 ml",
+            "Taste": "Crisp Citrus"
+        }
+    },
+    {
+        "id": 308,
+        "name": "Paper Boat Aamras Mango Drink",
+        "price": 35,
+        "mrp": 40,
+        "unit": "200 ml pouch",
+        "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83e\udd6d",
+        "inStock": true,
+        "rating": 4.9,
+        "reviewsCount": 290,
+        "brand": "Paper Boat",
+        "badge": "45% Real Pulp",
+        "description": "Authentic Indian mango juice made from 45% ripe mango pulp, nostalgic homestyle taste.",
+        "specs": {
+            "Volume": "200 ml",
+            "Preservatives": "Zero Artificial"
+        }
+    }],
   "Snacks & Munchies": [
     {
       id: 401,
@@ -473,7 +689,64 @@ export const productsByCategory = {
       description: "India's beloved comfort food. Classic roasted spice blend tastemaker with quick-cooking noodles.",
       specs: { Weight: "70 g", PrepTime: "2 Minutes", Includes: "Tastemaker Sachet" }
     }
-  ],
+  ,
+    {
+        "id": 405,
+        "name": "Kurkure Masala Munch Crunchy Snack",
+        "price": 20,
+        "mrp": 20,
+        "unit": "75 g pack",
+        "image": "https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83c\udf7f",
+        "inStock": true,
+        "rating": 4.8,
+        "reviewsCount": 520,
+        "brand": "Kurkure",
+        "badge": "Tedha Par Mera",
+        "description": "Spicy, crunchy corn and rice puffs cooked in authentic Indian spices.",
+        "specs": {
+            "Weight": "75 g",
+            "Taste": "Chatpata Masala"
+        }
+    },
+    {
+        "id": 406,
+        "name": "Parle-G Gold Glucose Biscuits",
+        "price": 30,
+        "mrp": 30,
+        "unit": "250 g pack",
+        "image": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83c\udf6a",
+        "inStock": true,
+        "rating": 4.9,
+        "reviewsCount": 890,
+        "brand": "Parle",
+        "badge": "The Original",
+        "description": "India's beloved tea companion biscuit baked with milk and wheat glucose goodness.",
+        "specs": {
+            "Weight": "250 g",
+            "Energy": "460 kcal / 100g"
+        }
+    },
+    {
+        "id": 407,
+        "name": "Cadbury Oreo Original Vanilla Sandwich Biscuits",
+        "price": 35,
+        "mrp": 40,
+        "unit": "120 g pack",
+        "image": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=400&q=80",
+        "fallbackEmoji": "\ud83c\udf6b",
+        "inStock": true,
+        "rating": 4.8,
+        "reviewsCount": 420,
+        "brand": "Cadbury",
+        "badge": "Twist Lick Dunk",
+        "description": "Rich dark chocolate cookie sandwich filled with smooth sweet vanilla cream.",
+        "specs": {
+            "Weight": "120 g",
+            "Flavor": "Rich Chocolate & Vanilla"
+        }
+    }],
   "Household Staples": [
     {
       id: 501,

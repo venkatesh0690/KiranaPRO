@@ -132,9 +132,12 @@ export default function StorePage() {
     const container = productsScrollRef.current;
 
     if (target && container) {
-      const targetTop = target.offsetTop - container.offsetTop;
+      const containerRect = container.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const targetTop = targetRect.top - containerRect.top + container.scrollTop;
+
       container.scrollTo({
-        top: Math.max(0, targetTop - 4),
+        top: Math.max(0, targetTop - 8),
         behavior: 'smooth'
       });
     }
@@ -143,6 +146,12 @@ export default function StorePage() {
     setTimeout(() => {
       isUserScrollingRef.current = false;
     }, 600);
+  };
+
+  const handleSplitBodyWheel = (e) => {
+    if (productsScrollRef.current && !productsScrollRef.current.contains(e.target)) {
+      productsScrollRef.current.scrollTop += e.deltaY;
+    }
   };
 
   const visibleCategories = store.categories.filter((cat) => {
@@ -300,7 +309,7 @@ export default function StorePage() {
       </header>
 
       {/* ─── Instamart Fixed 2-Column Body ─── */}
-      <div className="sp-split-body">
+      <div className="sp-split-body" onWheel={handleSplitBodyWheel}>
         {/* Left Column: Fixed Category Sidebar */}
         <aside className="sp-fixed-sidebar" aria-label="Grocery Categories">
           <div className="sp-sidebar-header-hint">Categories</div>
@@ -335,6 +344,22 @@ export default function StorePage() {
 
         {/* Right Column: Independently Scrollable Products List */}
         <main className="sp-scrollable-products" ref={productsScrollRef}>
+          {/* Store AI Hero Banner (e.g. Vegetable Farm for LocalFresh) */}
+          {store.posterImage && !search && (
+            <div className="sp-catalog-hero-poster">
+              <img src={store.posterImage} alt={store.name} className="sp-catalog-hero-img" />
+              <div className="sp-catalog-hero-overlay" />
+              <div className="sp-catalog-hero-content">
+                <span className="sp-catalog-hero-pill">
+                  {store.isAdminManaged ? '🌾 Direct Mandi Farm Harvest' : '⚡ 20–30 Mins Local Delivery'}
+                </span>
+                <h2 className="sp-catalog-hero-title">{store.name}</h2>
+                <p className="sp-catalog-hero-desc">
+                  {store.posterTagline || 'Farm-Fresh Wholesale Harvest Direct to Your Kitchen'}
+                </p>
+              </div>
+            </div>
+          )}
           {visibleCategories.length === 0 ? (
             <div className="sp-no-results">
               <span style={{ fontSize: '2.5rem' }}>🔍</span>

@@ -8697,3 +8697,318 @@ input { font-family: inherit; }
     display: none;
   }
 }
+
+
+/* ══════════════════════════════════════════════════════════════════
+   MINIMALIST CLEAN DESIGN & TOP-RIGHT CORNER ACTION CLUSTER
+   ══════════════════════════════════════════════════════════════════ */
+
+.minimal-header {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 14px 18px 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.minimal-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.minimal-left-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.minimal-brand {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.mb-bolt {
+  font-size: 1.15rem;
+  filter: drop-shadow(0 0 4px #FBBF24);
+}
+
+.mb-text {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.02em;
+}
+
+.mb-text strong {
+  color: #16A34A;
+}
+
+.minimal-loc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--r-full);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.minimal-loc-pill:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+}
+
+.minimal-loc-txt {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.minimal-user-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  background: #DCFCE7;
+  border: 1px solid #86EFAC;
+  border-radius: var(--r-full);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #15803D;
+}
+
+/* ── Top Right Corner Icons: Logout, Cart, Notification ── */
+.minimal-top-right-corner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.minimal-circle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.18s ease;
+}
+
+.minimal-circle-btn:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+  transform: translateY(-1px);
+}
+
+.minimal-circle-btn.logout:hover {
+  background: #FEF2F2;
+  border-color: #FCA5A5;
+}
+
+.minimal-notif-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #F59E0B;
+  border: 1.5px solid #FFFFFF;
+}
+
+.minimal-cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #16A34A;
+  color: #FFFFFF;
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 1px 5px;
+  border-radius: var(--r-full);
+  border: 1.5px solid #FFFFFF;
+}
+
+.minimal-auth-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.minimal-auth-btn {
+  padding: 6px 12px;
+  border-radius: var(--r-full);
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.minimal-auth-btn.signup {
+  background: #16A34A;
+  color: #FFFFFF;
+  border: 1px solid #16A34A;
+}
+
+.minimal-auth-btn.signup:hover {
+  background: #15803D;
+}
+
+.minimal-auth-btn.login {
+  background: #F8FAFC;
+  color: #1E293B;
+  border: 1px solid #E2E8F0;
+}
+
+.minimal-auth-btn.login:hover {
+  background: #F1F5F9;
+}
+
+/* Minimalist Search Bar */
+.minimal-search-bar {
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: var(--r-full);
+  padding: 8px 14px 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.minimal-search-bar:hover {
+  background: #FFFFFF;
+  border-color: #CBD5E1;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.minimal-search-ph {
+  flex: 1;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #64748B;
+}
+
+.minimal-search-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+}
+
+/* ── Store Catalog Hero Poster (AI Vegetable Farm on LocalFresh) ── */
+.sp-catalog-hero-poster {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E2E8F0;
+}
+
+@media (min-width: 768px) {
+  .sp-catalog-hero-poster {
+    height: 220px;
+  }
+}
+
+.sp-catalog-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.sp-catalog-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(15, 23, 42, 0.75) 100%);
+}
+
+.sp-catalog-hero-content {
+  position: absolute;
+  bottom: 14px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #FFFFFF;
+  z-index: 2;
+}
+
+.sp-catalog-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 3px 9px;
+  border-radius: var(--r-full);
+  background: rgba(22, 163, 74, 0.9);
+  backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.sp-catalog-hero-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.sp-catalog-hero-desc {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #E2E8F0;
+  line-height: 1.3;
+}
+
+/* ── Absolute Catalog Scrolling Guarantee ── */
+.sp-scrollable-products {
+  flex: 1 !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch !important;
+  scroll-behavior: smooth !important;
+  padding: 14px 16px 360px 16px !important;
+  position: relative !important;
+  touch-action: pan-y !important;
+}
+
+@media (min-width: 768px) {
+  .sp-scrollable-products {
+    padding: 20px 32px 360px 24px !important;
+  }
+}

@@ -60,29 +60,73 @@ export default function HomePage() {
   return (
     <div className="home-container">
       {/* ── Deep Forest Green Brand Header (Matching Groceasy Design in Image 1 & 2) ── */}
-      <header className="groceasy-header">
-        <div className="groceasy-top-row">
-          {/* Location Chip */}
-          <div className="groceasy-loc-chip" onClick={() => navigate('/')}>
-            <div className="groceasy-loc-icon-wrap">
-              <MapPin size={13} color="#FFFFFF" />
+      <header className="minimal-header">
+        <div className="minimal-top-row">
+          {/* Left: Brand & Delivery Location */}
+          <div className="minimal-left-group">
+            <div className="minimal-brand" onClick={() => navigate('/home')}>
+              <span className="mb-bolt">⚡</span>
+              <span className="mb-text">Kirana<strong>PRO</strong></span>
             </div>
-            <div className="groceasy-loc-text">
-              <span className="groceasy-loc-label">Deliver to</span>
-              <div className="groceasy-loc-val">
-                <strong>Maddilapalem, Vizag • 2 km</strong>
-                <ChevronRight size={11} color="#A7F3D0" />
-              </div>
+
+            <div className="minimal-loc-pill" onClick={() => navigate('/')}>
+              <MapPin size={12} color="#16A34A" />
+              <span className="minimal-loc-txt">Maddilapalem, Vizag • 2 km</span>
+              <ChevronRight size={11} color="#94A3B8" />
             </div>
+
+            {authSession.isAuthenticated && (
+              <span className="minimal-user-badge">
+                <User size={11} color="#16A34A" />
+                <span>Hi, {authSession.userName.split(' ')[0]}</span>
+              </span>
+            )}
           </div>
 
-          {/* Clean Sign Up & Log In Buttons */}
-          <div className="groceasy-top-actions">
-            {!authSession.isAuthenticated ? (
-              <div className="groceasy-auth-strip">
+          {/* Top Right Corner: Logout, Cart and Notification Icons */}
+          <div className="minimal-top-right-corner">
+            {/* Notification Bell */}
+            <button
+              type="button"
+              className="minimal-circle-btn notif"
+              onClick={() => alert('Nearby stores deliver within 20–30 mins! Mandi orders delivered in 2 hours.')}
+              aria-label="Notifications"
+              title="Notifications"
+            >
+              <Bell size={16} color="#334155" />
+              <span className="minimal-notif-dot" />
+            </button>
+
+            {/* Shopping Cart */}
+            <button
+              type="button"
+              className="minimal-circle-btn cart"
+              onClick={() => navigate('/cart')}
+              aria-label={`Cart with ${totalItems} items`}
+              title="Cart"
+            >
+              <ShoppingBag size={16} color="#334155" />
+              {totalItems > 0 && (
+                <span className="minimal-cart-badge">{totalItems}</span>
+              )}
+            </button>
+
+            {/* Logout / Login in Top Right Corner */}
+            {authSession.isAuthenticated ? (
+              <button
+                type="button"
+                className="minimal-circle-btn logout"
+                onClick={logout}
+                title="Log Out"
+                aria-label="Log Out"
+              >
+                <LogOut size={16} color="#EF4444" />
+              </button>
+            ) : (
+              <div className="minimal-auth-btns">
                 <button
                   type="button"
-                  className="groceasy-auth-btn signup"
+                  className="minimal-auth-btn signup"
                   onClick={() => setAuthModalMode('signup')}
                 >
                   <UserPlus size={12} />
@@ -90,69 +134,31 @@ export default function HomePage() {
                 </button>
                 <button
                   type="button"
-                  className="groceasy-auth-btn login"
+                  className="minimal-auth-btn login"
                   onClick={() => setAuthModalMode('login')}
                 >
                   <LogIn size={12} />
                   <span>Log In</span>
                 </button>
               </div>
-            ) : (
-              <div className="groceasy-auth-strip logged-in">
-                <span className="groceasy-user-chip">
-                  <User size={11} />
-                  <span>{authSession.userName}</span>
-                </span>
-                <button
-                  type="button"
-                  className="groceasy-auth-btn logout"
-                  onClick={logout}
-                  title="Sign Out"
-                >
-                  <LogOut size={12} />
-                </button>
-              </div>
             )}
-
-            {/* Notification Bell in Circle */}
-            <button
-              type="button"
-              className="groceasy-circle-btn notif"
-              onClick={() => alert('Nearby stores deliver within 20–30 mins! Mandi orders delivered in 2 hours.')}
-              aria-label="Notifications"
-            >
-              <Bell size={15} color="#FFFFFF" />
-              <span className="groceasy-notif-dot" />
-            </button>
-
-            {/* Shopping Cart in Circle */}
-            <button
-              type="button"
-              className="groceasy-circle-btn cart"
-              onClick={() => navigate('/cart')}
-              aria-label={`Cart with ${totalItems} items`}
-            >
-              <ShoppingBag size={15} color="#FFFFFF" />
-              {totalItems > 0 && (
-                <span className="groceasy-cart-badge">{totalItems}</span>
-              )}
-            </button>
           </div>
         </div>
 
-        {/* Compact White Rounded Pill Search Bar */}
-        <div className="groceasy-search-bar" onClick={() => navigate('/search')}>
-          <Search size={15} color="#64748B" />
-          <span className="groceasy-search-placeholder">Search groceries, vegetables, milk, spices...</span>
+        {/* Minimalist Search Bar */}
+        <div className="minimal-search-bar" onClick={() => navigate('/search')}>
+          <Search size={16} color="#94A3B8" />
+          <span className="minimal-search-ph">Search farm vegetables, fresh fruits, groceries, dairy...</span>
           <button
             type="button"
-            className="groceasy-search-filter-btn"
+            className="minimal-search-btn"
             onClick={(e) => {
               e.stopPropagation();
               navigate('/search');
             }}
+            aria-label="Filter"
           >
-            <SlidersHorizontal size={13} />
+            <SlidersHorizontal size={14} />
           </button>
         </div>
       </header>
