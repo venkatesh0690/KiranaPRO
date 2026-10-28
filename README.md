@@ -5,10 +5,12 @@
 [![Neon](https://img.shields.io/badge/Neon-PostgreSQL-00E599?logo=postgresql&logoColor=white)](https://neon.tech/)
 [![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?logo=vercel&logoColor=white)](https://kiranapro.vercel.app)
 [![Live Demo](https://img.shields.io/badge/Live_URL-kiranapro.vercel.app-00C781?style=flat&logo=vercel&logoColor=white)](https://kiranapro.vercel.app)
+[![Download Android APK](https://img.shields.io/badge/Download_APK-v1.0.0_Android-3DDC84?style=flat&logo=android&logoColor=white)](https://github.com/venkatesh0690/KiranaPRO/releases/download/v1.0.0-mobile/KiranaPRO-v1.0.0.apk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 > **KiranaPRO** connects local consumers with neighborhood kirana stores and direct-from-mandi farmers.
 > 🌐 **Live Website**: [https://kiranapro.vercel.app](https://kiranapro.vercel.app)
+> 📱 **Android APK**: [Download KiranaPRO-v1.0.0.apk (Official Release)](https://github.com/venkatesh0690/KiranaPRO/releases/download/v1.0.0-mobile/KiranaPRO-v1.0.0.apk)
 
 ---
 
