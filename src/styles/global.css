@@ -8183,3 +8183,424 @@ input { font-family: inherit; }
     font-size: 1.45rem;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   LOCATION ACCESS & ONBOARDING ANIMATIONS (Cosmos MP4 & Design Elements)
+   ══════════════════════════════════════════════════════════════════ */
+
+.loc-onboarding-screen.groceasy-loc-theme {
+  background: radial-gradient(circle at 50% 15%, #F0FDF4 0%, #FFFFFF 65%, #F8FAFC 100%);
+  min-height: 100vh;
+}
+
+.startup-brand-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.startup-tagline {
+  font-size: 0.7rem;
+  color: #64748B;
+  font-weight: 600;
+}
+
+.role-pill-btn.signup-clean {
+  background: var(--brand);
+  color: white;
+  border-color: var(--brand);
+  font-weight: 800;
+}
+
+.role-pill-btn.signup-clean:hover {
+  background: #008f5a;
+}
+
+.role-pill-btn.login-clean {
+  background: white;
+  color: #334155;
+  border-color: #CBD5E1;
+  font-weight: 700;
+}
+
+.role-pill-btn.login-clean:hover {
+  background: #F1F5F9;
+}
+
+/* ── Hero Visual Stage with Cosmos Video ── */
+.loc-hero-visual-stage {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  margin: 6px 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loc-ambient-glow {
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(16, 185, 129, 0) 70%);
+  filter: blur(24px);
+  pointer-events: none;
+  animation: glowPulse 5s ease-in-out infinite alternate;
+}
+
+@keyframes glowPulse {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
+.loc-video-card-frame {
+  width: 100%;
+  height: 290px;
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 45px rgba(16, 185, 129, 0.18), 0 0 0 2.5px rgba(255, 255, 255, 0.95);
+  background: #0B2F21;
+}
+
+@media (max-width: 640px) {
+  .loc-video-card-frame {
+    height: 230px;
+    border-radius: 22px;
+  }
+}
+
+.loc-hero-cosmos-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+}
+
+.loc-video-overlay-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(11, 47, 33, 0.25) 50%, rgba(11, 47, 33, 0.8) 100%);
+  pointer-events: none;
+}
+
+.loc-video-floating-tag {
+  position: absolute;
+  bottom: 14px;
+  left: 16px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--r-full);
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  z-index: 5;
+}
+
+.loc-vft-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22C55E;
+  box-shadow: 0 0 8px #22C55E;
+}
+
+/* ── Floating 3D Levitation Badges (Keyframe Animations) ── */
+.loc-floating-badge {
+  position: absolute;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+  border-radius: 16px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: default;
+}
+
+.badge-top-left {
+  top: -10px;
+  left: -12px;
+}
+
+.badge-top-right {
+  top: 14px;
+  right: -14px;
+}
+
+.badge-bottom-left {
+  bottom: -12px;
+  left: 16px;
+}
+
+@media (max-width: 580px) {
+  .badge-top-left {
+    top: -8px;
+    left: 4px;
+    padding: 6px 10px;
+  }
+  .badge-top-right {
+    top: 6px;
+    right: 4px;
+    padding: 6px 10px;
+  }
+  .badge-bottom-left {
+    bottom: -8px;
+    left: 10px;
+    padding: 6px 10px;
+  }
+}
+
+.lfb-icon {
+  font-size: 1.35rem;
+}
+
+.lfb-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.lfb-text strong {
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: #0F172A;
+  line-height: 1.1;
+}
+
+.lfb-text span {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #64748B;
+}
+
+/* Keyframe Float Animations */
+.anim-float-slow {
+  animation: floatSlow 4s ease-in-out infinite;
+}
+
+.anim-float-medium {
+  animation: floatMedium 3.5s ease-in-out infinite 0.5s;
+}
+
+.anim-float-fast {
+  animation: floatFast 3s ease-in-out infinite 1s;
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(-1.5deg); }
+}
+
+@keyframes floatMedium {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1.8deg); }
+}
+
+@keyframes floatFast {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-7px) rotate(-1deg); }
+}
+
+/* ── Text Block & 3-Step Trust Track (Image 2) ── */
+.loc-fresh-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #DCFCE7;
+  color: #15803D;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 5px 14px;
+  border-radius: var(--r-full);
+  border: 1px solid #86EFAC;
+  margin-bottom: 8px;
+}
+
+.loc-trust-steps-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 16px 0 6px;
+  width: 100%;
+  max-width: 480px;
+}
+
+.lts-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #334155;
+  white-space: nowrap;
+}
+
+.lts-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lts-circle.check {
+  background: #16A34A;
+  color: white;
+}
+
+.lts-circle.handshake {
+  background: #0284C7;
+  color: white;
+}
+
+.lts-line {
+  flex: 1;
+  height: 2px;
+  background: #CBD5E1;
+  min-width: 16px;
+}
+
+/* ── Interactive Area Picker Card ── */
+.ph-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ph-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand);
+}
+
+.psv-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.psv-pin-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 168, 107, 0.3);
+}
+
+.psv-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.psv-text strong {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #0F172A;
+}
+
+.psv-text span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748B;
+}
+
+.q-spot-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1.5px solid #E2E8F0;
+  background: white;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.q-spot-btn:hover {
+  border-color: var(--brand);
+  background: #F0FDF4;
+}
+
+.q-spot-btn.selected {
+  border-color: var(--brand);
+  background: #F0FDF4;
+  box-shadow: 0 2px 8px rgba(0, 168, 107, 0.15);
+}
+
+.q-spot-emoji {
+  font-size: 1.25rem;
+}
+
+.q-spot-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.q-spot-name {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.q-spot-dist {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #64748B;
+}
+
+.anim-pulse-subtle {
+  animation: pulseButton 3s ease-in-out infinite alternate;
+}
+
+@keyframes pulseButton {
+  0% { box-shadow: 0 8px 24px rgba(0, 168, 107, 0.28); }
+  100% { box-shadow: 0 12px 32px rgba(0, 168, 107, 0.42); }
+}
+
+.gps-radar-pin {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #DCFCE7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.gps-radar-pin.detecting::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid #16A34A;
+  animation: radarPing 1.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes radarPing {
+  0% { transform: scale(0.9); opacity: 1; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+.anim-fade-in {
+  animation: fadeIn 0.2s ease;
+}

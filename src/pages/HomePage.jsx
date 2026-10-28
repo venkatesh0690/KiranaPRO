@@ -19,10 +19,7 @@ import {
   LogIn,
   LogOut,
   User,
-  ShieldCheck,
-  Heart,
-  Plus,
-  Minus
+  ShieldCheck
 } from 'lucide-react';
 import { allCategories } from '../data/stores';
 import { useStore } from '../context/StoreContext';
@@ -33,104 +30,10 @@ import ProductDetailModal from '../components/ProductDetailModal';
 import CategoriesModal from '../components/CategoriesModal';
 import AuthModal from '../components/AuthModal';
 
-// Popular Now products curated directly from uploaded design images (Image 1 & 2)
-const POPULAR_PRODUCTS = [
-  {
-    id: 'pop-1',
-    name: 'Brussels Sprouts & Greens',
-    price: 48,
-    mrp: 60,
-    unit: '500 g',
-    discount: '-20%',
-    rating: 4.9,
-    reviewsCount: 142,
-    brand: 'LocalFresh Mandi',
-    image: 'https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=500&q=80',
-    fallbackEmoji: '🥬',
-    storeId: 'localfresh',
-    storeName: 'LocalFresh Mandi'
-  },
-  {
-    id: 'pop-2',
-    name: 'Rainbow Organic Carrots',
-    price: 44,
-    mrp: 56,
-    unit: '500 g',
-    discount: '-21%',
-    rating: 4.8,
-    reviewsCount: 98,
-    brand: 'Farm Harvest',
-    image: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=500&q=80',
-    fallbackEmoji: '🥕',
-    storeId: 'localfresh',
-    storeName: 'LocalFresh Mandi'
-  },
-  {
-    id: 'pop-3',
-    name: 'Farm Fresh Red Tomatoes',
-    price: 32,
-    mrp: 42,
-    unit: '1 kg',
-    discount: '-24%',
-    rating: 4.9,
-    reviewsCount: 320,
-    brand: 'LocalFresh Mandi',
-    image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=500&q=80',
-    fallbackEmoji: '🍅',
-    storeId: 'localfresh',
-    storeName: 'LocalFresh Mandi'
-  },
-  {
-    id: 'pop-4',
-    name: 'Amul Taaza Toned Milk',
-    price: 54,
-    mrp: 58,
-    unit: '1 Litre',
-    discount: 'Fresh Daily',
-    rating: 4.9,
-    reviewsCount: 412,
-    brand: 'Amul',
-    image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=500&q=80',
-    fallbackEmoji: '🥛',
-    storeId: 1,
-    storeName: 'Sharma General Store'
-  },
-  {
-    id: 'pop-5',
-    name: 'Crisp Washington Red Apples',
-    price: 145,
-    mrp: 180,
-    unit: '1 kg',
-    discount: '-19%',
-    rating: 4.8,
-    reviewsCount: 165,
-    brand: 'Fresh Orchard',
-    image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=500&q=80',
-    fallbackEmoji: '🍎',
-    storeId: 'localfresh',
-    storeName: 'LocalFresh Mandi'
-  },
-  {
-    id: 'pop-6',
-    name: 'Fresh Nagpur Sweet Oranges',
-    price: 75,
-    mrp: 95,
-    unit: '1 kg',
-    discount: '-21%',
-    rating: 4.7,
-    reviewsCount: 88,
-    brand: 'Nagpur Fresh',
-    image: 'https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=500&q=80',
-    fallbackEmoji: '🍊',
-    storeId: 'localfresh',
-    storeName: 'LocalFresh Mandi'
-  }
-];
-
 export default function HomePage() {
   const navigate = useNavigate();
   const { stores } = useStore();
-  const { cart, addItem, removeItem, totalItems } = useCart();
+  const { totalItems } = useCart();
   const { authSession, logout } = useSecurity();
 
   const [authModalMode, setAuthModalMode] = useState(null);
@@ -139,12 +42,6 @@ export default function HomePage() {
   const [storeViewMode, setStoreViewMode] = useState('grid'); // 'grid' | 'compact'
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isCatModalOpen, setIsCatModalOpen] = useState(false);
-  const [likedMap, setLikedMap] = useState({});
-
-  const toggleLike = (prodId, e) => {
-    e.stopPropagation();
-    setLikedMap((prev) => ({ ...prev, [prodId]: !prev[prodId] }));
-  };
 
   const storeFilters = [
     { id: 'all', label: 'All Stores' },
@@ -298,116 +195,6 @@ export default function HomePage() {
                 </div>
                 <span className="groceasy-cat-title">{cat.name.split(' ')[0]}</span>
               </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ── "Popular Now" Products (Matching Image 1 & 2 Screens) ── */}
-      <section className="home-section groceasy-popular-section">
-        <div className="section-header-row">
-          <div>
-            <h3 className="groceasy-sec-title">Popular Now</h3>
-            <p className="groceasy-sec-sub">Fastest selling fresh items in your neighborhood</p>
-          </div>
-          <button
-            type="button"
-            className="groceasy-see-all-link"
-            onClick={() => navigate('/store/localfresh')}
-          >
-            See all
-          </button>
-        </div>
-
-        <div className="groceasy-products-grid">
-          {POPULAR_PRODUCTS.map((prod) => {
-            const cartItem = cart.items.find((i) => i.id === prod.id);
-            const qty = cartItem ? cartItem.quantity : 0;
-            const isLiked = likedMap[prod.id] || false;
-
-            return (
-              <div
-                key={prod.id}
-                className="groceasy-product-card"
-                onClick={() => setSelectedProduct(prod)}
-              >
-                {/* Top Row: Discount Badge & Heart Wishlist */}
-                <div className="gpc-top-row">
-                  {prod.discount ? (
-                    <span className="gpc-discount-badge">{prod.discount}</span>
-                  ) : <span />}
-                  <button
-                    type="button"
-                    className="gpc-heart-btn"
-                    onClick={(e) => toggleLike(prod.id, e)}
-                    aria-label="Wishlist"
-                  >
-                    <Heart
-                      size={15}
-                      fill={isLiked ? '#FF4D4D' : 'none'}
-                      color={isLiked ? '#FF4D4D' : '#94A3B8'}
-                    />
-                  </button>
-                </div>
-
-                {/* Clean Product Image on Pure White Background */}
-                <div className="gpc-img-wrap">
-                  <img
-                    src={prod.image}
-                    alt={prod.name}
-                    className="gpc-real-img"
-                    loading="lazy"
-                  />
-                </div>
-
-                {/* Details */}
-                <div className="gpc-details">
-                  <h4 className="gpc-name">{prod.name}</h4>
-                  <span className="gpc-unit">{prod.unit} • {prod.storeName}</span>
-
-                  <div className="gpc-price-action-row">
-                    <div className="gpc-price-box">
-                      <span className="gpc-price">₹{prod.price}</span>
-                      {prod.mrp > prod.price && (
-                        <span className="gpc-mrp">₹{prod.mrp}</span>
-                      )}
-                    </div>
-
-                    {/* Circular Add Button or Counter (matching Image 1 & 2) */}
-                    {qty === 0 ? (
-                      <button
-                        type="button"
-                        className="gpc-add-circle-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          addItem(prod.storeId, prod);
-                        }}
-                        title="Add to basket"
-                      >
-                        <Plus size={16} strokeWidth={2.8} />
-                      </button>
-                    ) : (
-                      <div className="gpc-qty-pill" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          type="button"
-                          className="gpc-qp-btn"
-                          onClick={() => removeItem(prod.id)}
-                        >
-                          <Minus size={12} />
-                        </button>
-                        <span className="gpc-qp-count">{qty}</span>
-                        <button
-                          type="button"
-                          className="gpc-qp-btn"
-                          onClick={() => addItem(prod.storeId, prod)}
-                        >
-                          <Plus size={12} />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
             );
           })}
         </div>

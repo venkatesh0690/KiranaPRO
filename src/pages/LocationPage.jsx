@@ -1,17 +1,34 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Navigation, Store, Shield, ArrowRight, Check, UserPlus, LogIn, User } from 'lucide-react';
+import {
+  MapPin,
+  Navigation,
+  Store,
+  Shield,
+  ArrowRight,
+  Check,
+  UserPlus,
+  LogIn,
+  User,
+  Sparkles,
+  Clock,
+  CheckCircle2,
+  Bike,
+  Heart,
+  ChevronRight,
+  ShieldCheck
+} from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { useSecurity } from '../context/SecurityContext';
 import AuthModal from '../components/AuthModal';
 
 const quickSpots = [
-  { label: 'Maddilapalem', distance: '0.4 km', icon: '🏪' },
-  { label: 'MVP Colony', distance: '0.3 km', icon: '🏬' },
-  { label: 'Seethammadhara', distance: '0.7 km', icon: '🌳' },
-  { label: 'Dwaraka Nagar', distance: '0.9 km', icon: '🏢' },
-  { label: 'Siripuram', distance: '1.2 km', icon: '🛍️' },
-  { label: 'Gopalapatnam', distance: '1.8 km', icon: '⛽' },
+  { label: 'Maddilapalem', distance: '0.4 km', icon: '🏪', eta: '20 mins' },
+  { label: 'MVP Colony', distance: '0.3 km', icon: '🏬', eta: '20 mins' },
+  { label: 'Seethammadhara', distance: '0.7 km', icon: '🌳', eta: '25 mins' },
+  { label: 'Dwaraka Nagar', distance: '0.9 km', icon: '🏢', eta: '30 mins' },
+  { label: 'Siripuram', distance: '1.2 km', icon: '🛍️', eta: '30 mins' },
+  { label: 'Gopalapatnam', distance: '1.8 km', icon: '⛽', eta: '30 mins' },
 ];
 
 export default function LocationPage({ onLocationSet }) {
@@ -19,11 +36,21 @@ export default function LocationPage({ onLocationSet }) {
   const [selectedSpot, setSelectedSpot] = useState('Maddilapalem, Vizag');
   const [customInput, setCustomInput] = useState('');
   const [showManualModal, setShowManualModal] = useState(false);
-  const [authModalMode, setAuthModalMode] = useState(null); // 'user-signup' | 'seller-signup' | 'user-login'
+  const [authModalMode, setAuthModalMode] = useState(null); // 'signup' | 'login'
+  const videoRef = useRef(null);
 
   const { setActiveRole } = useStore();
   const { authSession } = useSecurity();
   const navigate = useNavigate();
+
+  // Ensure video autoplay plays seamlessly
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Autoplay policy fallback
+      });
+    }
+  }, []);
 
   const handleGpsDetect = () => {
     setDetecting(true);
@@ -43,31 +70,33 @@ export default function LocationPage({ onLocationSet }) {
   };
 
   return (
-    <div className="loc-onboarding-screen">
-      {/* ── Top Role Switcher & Sign Up Links ── */}
-      <div className="startup-role-nav">
-        <span className="startup-brand">⚡ Kirana<strong>PRO</strong></span>
+    <div className="loc-onboarding-screen groceasy-loc-theme">
+      {/* ── Top Role Switcher & Auth Links ── */}
+      <header className="startup-role-nav">
+        <div className="startup-brand-wrap">
+          <span className="startup-brand">⚡ Kirana<strong>PRO</strong></span>
+          <span className="startup-tagline">Neighborhood Groceries in 20-30 Mins</span>
+        </div>
+
         <div className="startup-role-pills">
-          {/* User Sign Up Button */}
+          {/* Sign Up & Log In Buttons */}
           <button
             type="button"
-            className="role-pill-btn signup-user"
-            onClick={() => setAuthModalMode('user-signup')}
-            title="Create Customer Account"
+            className="role-pill-btn signup-clean"
+            onClick={() => setAuthModalMode('signup')}
+            title="Create Customer or Seller Account"
           >
             <UserPlus size={13} />
-            <span>User Sign Up</span>
+            <span>Sign Up</span>
           </button>
-
-          {/* Seller Sign Up Button */}
           <button
             type="button"
-            className="role-pill-btn signup-seller"
-            onClick={() => setAuthModalMode('seller-signup')}
-            title="Register your Kirana Store"
+            className="role-pill-btn login-clean"
+            onClick={() => setAuthModalMode('login')}
+            title="Sign in to your account"
           >
-            <Store size={13} />
-            <span>Seller Sign Up</span>
+            <LogIn size={13} />
+            <span>Log In</span>
           </button>
 
           <button
@@ -79,7 +108,7 @@ export default function LocationPage({ onLocationSet }) {
             }}
             title="Sellers: Add and update stock"
           >
-            🏪 Seller Login
+            🏪 Seller Hub
           </button>
           <button
             type="button"
@@ -90,68 +119,135 @@ export default function LocationPage({ onLocationSet }) {
             }}
             title="Platform Admin Access"
           >
-            🛡️ Admin Login
+            🛡️ Admin
           </button>
         </div>
-      </div>
+      </header>
 
-      {/* ── Main Location Graphic Card ── */}
+      {/* ── Main Interactive Showcase & Location Container ── */}
       <div className="loc-card-container">
-        {/* Radar Graphic with Concentric Circles */}
-        <div className="loc-radar-wrapper">
-          <div className="radar-circle radar-c3" />
-          <div className="radar-circle radar-c2" />
-          <div className="radar-circle radar-c1" />
-          
-          {/* Subtle Map Grid Lines */}
-          <div className="radar-grid-lines">
-            <div className="r-line r-line-h" />
-            <div className="r-line r-line-v" />
-            <div className="r-line r-line-d1" />
-            <div className="r-line r-line-d2" />
+        {/* Animated Visual Hero with Cosmos MP4 Video & Floating 3D Badges */}
+        <div className="loc-hero-visual-stage">
+          {/* Glowing Animated Ambient Backlight */}
+          <div className="loc-ambient-glow" />
+
+          {/* Animated Cosmos MP4 Video Card */}
+          <div className="loc-video-card-frame">
+            <video
+              ref={videoRef}
+              src="https://cdn.cosmos.so/e4f0e678-7134-4458-bf51-272c3b1be635.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="loc-hero-cosmos-video"
+            />
+            <div className="loc-video-overlay-gradient" />
+
+            {/* In-Video Live Delivery Tag */}
+            <div className="loc-video-floating-tag">
+              <span className="loc-vft-dot" />
+              <span>Live Delivery Active in Vizag</span>
+            </div>
           </div>
 
-          {/* Central Blue Beacon with Location Icon */}
-          <div className={`radar-beacon ${detecting ? 'detecting' : ''}`}>
-            <MapPin size={34} color="white" fill="white" />
+          {/* Floating Levitation Badges (Inspired by Uploaded Image 1, 2 & 3) */}
+          <div className="loc-floating-badge badge-top-left anim-float-slow">
+            <div className="lfb-icon">⚡</div>
+            <div className="lfb-text">
+              <strong>20–30 Mins</strong>
+              <span>Fastest Local Dispatch</span>
+            </div>
+          </div>
+
+          <div className="loc-floating-badge badge-top-right anim-float-medium">
+            <div className="lfb-icon">🥦</div>
+            <div className="lfb-text">
+              <strong>Direct Mandi</strong>
+              <span>Fresh Farm Harvest</span>
+            </div>
+          </div>
+
+          <div className="loc-floating-badge badge-bottom-left anim-float-fast">
+            <div className="lfb-icon">📍</div>
+            <div className="lfb-text">
+              <strong>Within 2 km</strong>
+              <span>Trusted Local Stores</span>
+            </div>
           </div>
         </div>
 
-        {/* Text Block */}
+        {/* ── Headline & Promise Section (Inspired by Image 2: "We deliver freshness to your hand") ── */}
         <div className="loc-text-block">
-          <h1 className="loc-main-title">Location</h1>
+          <div className="loc-fresh-pill-badge">
+            <Sparkles size={13} color="#15803D" />
+            <span>Pure Freshness Direct from Kirana Partners</span>
+          </div>
+
+          <h1 className="loc-main-title">
+            We deliver freshness to your hand.
+          </h1>
           <p className="loc-main-subtitle">
-            We will help you find local kirana stores around you within <strong>2 km</strong> ready to deliver in <strong>20–30 minutes</strong> (LocalFresh Mandi in 2 hrs).
+            From local soil and trusted neighborhood kirana stores to your doorstep in <strong>20–30 minutes</strong> (LocalFresh Mandi in 2 hrs).
           </p>
 
-          <div className="loc-carousel-dots">
-            <span className="c-dot active" />
-            <span className="c-dot" />
+          {/* 3-Step Animated Trust Pillars (Directly matching Image 2 mockup) */}
+          <div className="loc-trust-steps-row">
+            <div className="lts-step">
+              <div className="lts-circle check">
+                <Check size={13} strokeWidth={3} />
+              </div>
+              <span>Fast 20-30m Delivery</span>
+            </div>
+            <div className="lts-line" />
+            <div className="lts-step">
+              <div className="lts-circle check">
+                <Check size={13} strokeWidth={3} />
+              </div>
+              <span>Trusted Service</span>
+            </div>
+            <div className="lts-line" />
+            <div className="lts-step">
+              <div className="lts-circle handshake">
+                <ShieldCheck size={13} strokeWidth={2.5} />
+              </div>
+              <span>Fresh Promise</span>
+            </div>
           </div>
         </div>
 
-        {/* Selected Area / Quick Selection */}
+        {/* ── Selected Area / Interactive Picker Card ── */}
         <div className="loc-area-picker-card">
           <div className="picker-header">
-            <span>Delivering To:</span>
+            <div className="ph-left">
+              <span className="ph-dot" />
+              <span>Delivering To Your Address:</span>
+            </div>
             <button
               type="button"
               className="picker-change-link"
               onClick={() => setShowManualModal(!showManualModal)}
             >
-              {showManualModal ? 'Done' : 'Change Area'}
+              {showManualModal ? 'Done' : 'Change Colony'}
             </button>
           </div>
           
           <div className="picker-selected-value">
-            <MapPin size={18} color="var(--brand)" />
-            <strong>{customInput || selectedSpot}</strong>
-            <span className="picker-radius-badge">⚡ 2km Active</span>
+            <div className="psv-left">
+              <div className="psv-pin-wrap">
+                <MapPin size={18} color="#FFFFFF" />
+              </div>
+              <div className="psv-text">
+                <strong>{customInput || selectedSpot}</strong>
+                <span>Active 2km Hyperlocal Radius</span>
+              </div>
+            </div>
+            <span className="picker-radius-badge">⚡ 20–30 Mins ETA</span>
           </div>
 
           {/* Collapsible Area Chips */}
           {showManualModal && (
-            <div className="quick-spots-grid">
+            <div className="quick-spots-grid anim-fade-in">
               {quickSpots.map((spot) => {
                 const fullLoc = `${spot.label}, Vizag`;
                 const isSelected = selectedSpot === fullLoc && !customInput;
@@ -165,18 +261,21 @@ export default function LocationPage({ onLocationSet }) {
                       setCustomInput('');
                     }}
                   >
-                    <span>{spot.icon}</span>
-                    <span className="q-spot-name">{spot.label}</span>
-                    <span className="q-spot-dist">{spot.distance}</span>
-                    {isSelected && <Check size={14} color="var(--brand)" />}
+                    <span className="q-spot-emoji">{spot.icon}</span>
+                    <div className="q-spot-info">
+                      <span className="q-spot-name">{spot.label}</span>
+                      <span className="q-spot-dist">{spot.distance} • {spot.eta}</span>
+                    </div>
+                    {isSelected && <Check size={15} color="#16A34A" strokeWidth={3} />}
                   </button>
                 );
               })}
 
               <div className="manual-input-box">
+                <MapPin size={16} color="#64748B" />
                 <input
                   type="text"
-                  placeholder="Or enter your street / colony name..."
+                  placeholder="Or enter your street, apartment or colony name..."
                   value={customInput}
                   onChange={(e) => setCustomInput(e.target.value)}
                   onKeyDown={(e) => {
@@ -188,14 +287,14 @@ export default function LocationPage({ onLocationSet }) {
           )}
         </div>
 
-        {/* Primary Bottom Button */}
+        {/* ── Primary Action Controls ── */}
         <div className="loc-bottom-cta-box">
           <button
             type="button"
-            className="loc-start-btn"
+            className="loc-start-btn anim-pulse-subtle"
             onClick={detecting ? undefined : handleConfirm}
           >
-            {detecting ? 'Detecting your coordinates...' : `Deliver to ${customInput || selectedSpot.split(',')[0]}`}
+            <span>{detecting ? 'Detecting your coordinates...' : `Deliver to ${customInput || selectedSpot.split(',')[0]}`}</span>
             <ArrowRight size={18} />
           </button>
 
@@ -204,30 +303,32 @@ export default function LocationPage({ onLocationSet }) {
             className="loc-gps-link-btn"
             onClick={handleGpsDetect}
           >
-            <Navigation size={14} />
-            <span>{detecting ? 'Accessing GPS...' : 'Use Precise GPS Location'}</span>
+            <div className={`gps-radar-pin ${detecting ? 'detecting' : ''}`}>
+              <Navigation size={15} color="#15803D" />
+            </div>
+            <span>{detecting ? 'Accessing satellite GPS coordinates...' : 'Use Precise GPS Auto-Detect'}</span>
           </button>
         </div>
 
-        {/* Dedicated Sign Up Action Strip for Both User and Seller */}
+        {/* Sign Up & Seller Partner strip */}
         <div className="loc-signup-actions-strip">
           <div className="loc-sas-title">New to KiranaPRO?</div>
           <div className="loc-sas-buttons">
             <button
               type="button"
               className="loc-sas-btn user"
-              onClick={() => setAuthModalMode('user-signup')}
+              onClick={() => setAuthModalMode('signup')}
             >
               <UserPlus size={15} />
-              <span>User Sign Up</span>
+              <span>Customer Sign Up</span>
             </button>
             <button
               type="button"
               className="loc-sas-btn seller"
-              onClick={() => setAuthModalMode('seller-signup')}
+              onClick={() => setAuthModalMode('signup')}
             >
               <Store size={15} />
-              <span>Seller Sign Up</span>
+              <span>Register Kirana Store</span>
             </button>
           </div>
         </div>
@@ -235,21 +336,26 @@ export default function LocationPage({ onLocationSet }) {
         {/* Footer Trust Indicators */}
         <div className="loc-footer-trust">
           <div className="lft-item">
-            <Shield size={13} color="var(--accent-green)" />
+            <Shield size={13} color="#16A34A" />
             <span>Fast 20–30 Mins Delivery</span>
           </div>
           <span className="lft-dot">•</span>
           <div className="lft-item">
-            <Store size={13} color="var(--brand)" />
-            <span>6 Real Kiranas in Vizag</span>
+            <Store size={13} color="#16A34A" />
+            <span>6 Real Kirana Partners in Vizag</span>
+          </div>
+          <span className="lft-dot">•</span>
+          <div className="lft-item">
+            <Sparkles size={13} color="#F59E0B" />
+            <span>Free Delivery on ₹301+</span>
           </div>
         </div>
       </div>
 
-      {/* Reusable Auth Modal for User & Seller Registration */}
+      {/* Clean Auth Modal */}
       <AuthModal
         isOpen={Boolean(authModalMode)}
-        initialMode={authModalMode || 'user-signup'}
+        initialMode={authModalMode || 'signup'}
         onClose={() => setAuthModalMode(null)}
         onSuccess={(type) => {
           setAuthModalMode(null);
