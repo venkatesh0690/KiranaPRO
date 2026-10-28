@@ -20,6 +20,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import './styles/tokens.css';
 import './styles/global.css';
 import './styles/minimal.css';
+import './styles/gallery.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();
