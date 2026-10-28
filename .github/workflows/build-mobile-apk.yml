@@ -25,10 +25,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: 🟢 Setup Node.js
+      - name: 🟢 Setup Node.js (Node 22 LTS required by Capacitor CLI)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: 📦 Install Node Dependencies
