@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { Smartphone, Monitor } from 'lucide-react';
 import { CartProvider } from './context/CartContext';
 import { StoreProvider } from './context/StoreContext';
 import { SecurityProvider } from './context/SecurityContext';
 import { SellerProtectedRoute, AdminProtectedRoute } from './components/ProtectedRoutes';
-import Navbar from './components/Navbar';
 import BottomNav from './components/BottomNav';
 import LocationPage from './pages/LocationPage';
 import HomePage from './pages/HomePage';
@@ -23,47 +21,18 @@ import './styles/global.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();
-  const [deviceMode, setDeviceMode] = useState('mobile'); // 'mobile' | 'desktop'
 
-  // Portal routes that should display in wide console mode
+  // Portal routes use their own navigation within the mobile layout
   const isPortalRoute =
     location.pathname.startsWith('/seller') || location.pathname.startsWith('/admin');
   const isStoreRoute = location.pathname.startsWith('/store');
 
   return (
-    <div
-      className={`app-root-wrapper ${
-        deviceMode === 'mobile' && !isPortalRoute ? 'mobile-frame-mode' : 'desktop-mode'
-      }`}
-    >
-      {/* Device View Mode Switcher for Desktop Testing (Hidden in portal views) */}
-      {!isPortalRoute && (
-        <div className="device-switcher-pill">
-          <button
-            type="button"
-            className={`dswitch-btn ${deviceMode === 'mobile' ? 'active' : ''}`}
-            onClick={() => setDeviceMode('mobile')}
-            title="Preview in Mobile Phone Frame"
-          >
-            <Smartphone size={14} />
-            <span>Mobile App</span>
-          </button>
-          <button
-            type="button"
-            className={`dswitch-btn ${deviceMode === 'desktop' ? 'active' : ''}`}
-            onClick={() => setDeviceMode('desktop')}
-            title="Switch to Wide Desktop View"
-          >
-            <Monitor size={14} />
-            <span>Full Web</span>
-          </button>
-        </div>
-      )}
-
+    <div className="app-root-wrapper mobile-frame-mode">
       {/* Main Device / App Container */}
-      <div className={`phone-chassis ${isPortalRoute ? 'portal-wide-container' : ''}`}>
+      <div className="phone-chassis">
         {/* Top Status Bar (Only in phone frame customer view) */}
-        {deviceMode === 'mobile' && !isPortalRoute && (
+        {!isPortalRoute && (
           <div className="phone-status-bar">
             <span className="status-time">9:41</span>
             <div className="status-notch" />
