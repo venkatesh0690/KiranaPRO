@@ -131,23 +131,33 @@ export default function LocationPage({ onLocationSet }) {
           {/* Glowing Animated Ambient Backlight */}
           <div className="loc-ambient-glow" />
 
-          {/* Animated Cosmos MP4 Video Card */}
-          <div className="loc-video-card-frame">
-            <video
-              ref={videoRef}
-              src="https://cdn.cosmos.so/e4f0e678-7134-4458-bf51-272c3b1be635.mp4"
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="loc-hero-cosmos-video"
+          {/* Animated Home Delivery Visual & KiranaPRO Graphic Showcase */}
+          <div className="loc-video-card-frame loc-hero-gif-card">
+            {/* KiranaPRO Top Graphic Branding */}
+            <div className="loc-kiranapro-graphic-banner">
+              <div className="loc-kp-badge">
+                <span className="loc-kp-bolt">⚡</span>
+                <span className="loc-kp-brand">Kirana<strong>PRO</strong></span>
+                <span className="loc-kp-tag">EXPRESS</span>
+              </div>
+              <span className="loc-kp-desc">Neighborhood 20–30 Mins Delivery</span>
+            </div>
+
+            {/* Animated Home Delivery GIF */}
+            <img
+              src="/home-delivery.gif"
+              alt="KiranaPRO Express Home Delivery"
+              className="loc-hero-delivery-gif"
+              onError={(e) => {
+                e.currentTarget.src = 'https://media.giphy.com/media/ICnE90q1JUH0poH7aB/giphy.gif';
+              }}
             />
             <div className="loc-video-overlay-gradient" />
 
-            {/* In-Video Live Delivery Tag */}
+            {/* In-Visual Live Delivery Status Tag */}
             <div className="loc-video-floating-tag">
               <span className="loc-vft-dot" />
-              <span>Live Delivery Active in Vizag</span>
+              <span>⚡ Express Home Delivery Active in Vizag</span>
             </div>
           </div>
 

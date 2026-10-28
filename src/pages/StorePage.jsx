@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
   ArrowLeft,
   Star,
@@ -28,6 +28,7 @@ import ProductDetailModal from '../components/ProductDetailModal';
 export default function StorePage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { stores, products: productsByCategory } = useStore();
   const { totalItems } = useCart();
   const store = stores.find((s) => String(s.id).toLowerCase() === String(id).toLowerCase());
@@ -45,10 +46,17 @@ export default function StorePage() {
   const isUserScrollingRef = useRef(false);
 
   useEffect(() => {
-    if (store && store.categories && store.categories.length > 0) {
+    if (!store || !store.categories || store.categories.length === 0) return;
+    const targetCat = location.state?.category;
+    if (targetCat && store.categories.includes(targetCat)) {
+      setActiveCategory(targetCat);
+      setTimeout(() => {
+        scrollToCategory(targetCat);
+      }, 150);
+    } else {
       setActiveCategory(store.categories[0]);
     }
-  }, [store]);
+  }, [store, location.state]);
 
   // Total products in this store
   const totalProductsCount = useMemo(() => {

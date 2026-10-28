@@ -65,13 +65,13 @@ export default function HomePage() {
           {/* Location Chip */}
           <div className="groceasy-loc-chip" onClick={() => navigate('/')}>
             <div className="groceasy-loc-icon-wrap">
-              <MapPin size={15} color="#FFFFFF" />
+              <MapPin size={13} color="#FFFFFF" />
             </div>
             <div className="groceasy-loc-text">
               <span className="groceasy-loc-label">Deliver to</span>
               <div className="groceasy-loc-val">
                 <strong>Maddilapalem, Vizag • 2 km</strong>
-                <ChevronRight size={13} color="#A7F3D0" />
+                <ChevronRight size={11} color="#A7F3D0" />
               </div>
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function HomePage() {
                   className="groceasy-auth-btn signup"
                   onClick={() => setAuthModalMode('signup')}
                 >
-                  <UserPlus size={13} />
+                  <UserPlus size={12} />
                   <span>Sign Up</span>
                 </button>
                 <button
@@ -93,14 +93,14 @@ export default function HomePage() {
                   className="groceasy-auth-btn login"
                   onClick={() => setAuthModalMode('login')}
                 >
-                  <LogIn size={13} />
+                  <LogIn size={12} />
                   <span>Log In</span>
                 </button>
               </div>
             ) : (
               <div className="groceasy-auth-strip logged-in">
                 <span className="groceasy-user-chip">
-                  <User size={13} />
+                  <User size={11} />
                   <span>{authSession.userName}</span>
                 </span>
                 <button
@@ -109,7 +109,7 @@ export default function HomePage() {
                   onClick={logout}
                   title="Sign Out"
                 >
-                  <LogOut size={13} />
+                  <LogOut size={12} />
                 </button>
               </div>
             )}
@@ -121,7 +121,7 @@ export default function HomePage() {
               onClick={() => alert('Nearby stores deliver within 20–30 mins! Mandi orders delivered in 2 hours.')}
               aria-label="Notifications"
             >
-              <Bell size={18} color="#FFFFFF" />
+              <Bell size={15} color="#FFFFFF" />
               <span className="groceasy-notif-dot" />
             </button>
 
@@ -132,7 +132,7 @@ export default function HomePage() {
               onClick={() => navigate('/cart')}
               aria-label={`Cart with ${totalItems} items`}
             >
-              <ShoppingBag size={18} color="#FFFFFF" />
+              <ShoppingBag size={15} color="#FFFFFF" />
               {totalItems > 0 && (
                 <span className="groceasy-cart-badge">{totalItems}</span>
               )}
@@ -140,9 +140,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* White Rounded Pill Search Bar (Matching Image 1) */}
+        {/* Compact White Rounded Pill Search Bar */}
         <div className="groceasy-search-bar" onClick={() => navigate('/search')}>
-          <Search size={18} color="#64748B" />
+          <Search size={15} color="#64748B" />
           <span className="groceasy-search-placeholder">Search groceries, vegetables, milk, spices...</span>
           <button
             type="button"
@@ -152,7 +152,7 @@ export default function HomePage() {
               navigate('/search');
             }}
           >
-            <SlidersHorizontal size={16} />
+            <SlidersHorizontal size={13} />
           </button>
         </div>
       </header>
@@ -183,10 +183,12 @@ export default function HomePage() {
                 className={`groceasy-cat-btn ${isActive ? 'is-active' : ''}`}
                 onClick={() => {
                   setActiveCategory(cat.id);
-                  if (['vegetables', 'fruits', 'leafy', 'flowers', 'pickles', 'groceries'].includes(cat.id)) {
-                    navigate('/store/localfresh');
+                  const catName = cat.name;
+                  const mandiCats = ['Vegetables', 'Fruits', 'Leafy Green', 'Groceries', 'Flowers', 'Pickles'];
+                  if (mandiCats.includes(catName)) {
+                    navigate('/store/localfresh', { state: { category: catName } });
                   } else {
-                    navigate('/store/1');
+                    navigate('/store/1', { state: { category: catName } });
                   }
                 }}
               >
@@ -200,39 +202,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── AI Hero Promo Poster (Matching Image 1 & 2: 20-30 mins delivery) ── */}
-      <section className="home-section">
-        <div className="groceasy-promo-poster-card">
-          <div className="gpp-content">
-            <div className="gpp-pill-badge">
-              <Clock size={13} strokeWidth={2.5} />
-              <span>20-30 mins delivery</span>
-            </div>
-
-            <h2 className="gpp-title">Shop Smarter, Eat Better</h2>
-            <p className="gpp-desc">
-              Fresh farm vegetables & neighborhood kirana staples delivered right to your doorstep. Use coupon <strong>TASTY12</strong> for flat ₹30 off!
-            </p>
-
-            <button
-              type="button"
-              className="gpp-cta-btn"
-              onClick={() => navigate('/store/localfresh')}
-            >
-              <span>See Detail & Shop</span>
-              <ArrowRight size={15} />
-            </button>
-          </div>
-
-          <div className="gpp-visual-wrap">
-            <img
-              src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80"
-              alt="Fresh Groceries"
-              className="gpp-visual-img"
-            />
-          </div>
-        </div>
-      </section>
+      
 
       {/* ── Featured Stores Catalog with AI Seller Posters ── */}
       <section className="home-section">
@@ -305,6 +275,15 @@ export default function HomePage() {
       <CategoriesModal
         isOpen={isCatModalOpen}
         onClose={() => setIsCatModalOpen(false)}
+        onSelectCategory={(catName) => {
+          setIsCatModalOpen(false);
+          const mandiCats = ['Vegetables', 'Fruits', 'Leafy Green', 'Groceries', 'Flowers', 'Pickles'];
+          if (mandiCats.includes(catName)) {
+            navigate('/store/localfresh', { state: { category: catName } });
+          } else {
+            navigate('/store/1', { state: { category: catName } });
+          }
+        }}
       />
 
       {/* Auth Modal with Clean Sign Up / Log In */}
