@@ -37,8 +37,23 @@ export default function Navbar({ location }) {
         </div>
 
         {/* Actions */}
-        <button className="nav-icon-btn"><Bell size={19} /></button>
-        <button className="nav-icon-btn"><User size={19} /></button>
+        <button
+          type="button"
+          className="nav-icon-btn"
+          onClick={() => alert('Nearby stores deliver within 20 mins, other stores within 30 mins, and LocalFresh Mandi within 2 hours!')}
+          aria-label="Notifications"
+        >
+          <Bell size={19} />
+        </button>
+        <button
+          type="button"
+          className="nav-icon-btn"
+          onClick={() => navigate('/profile')}
+          aria-label="Profile and Account"
+          title="Profile and Account"
+        >
+          <User size={19} />
+        </button>
 
         {totalItems > 0 && (
           <Link to="/cart" className="nav-cart-btn">

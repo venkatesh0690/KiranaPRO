@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Navigation, Store, Shield, ArrowRight, Check } from 'lucide-react';
+import { MapPin, Navigation, Store, Shield, ArrowRight, Check, UserPlus, LogIn, User } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
+import { useSecurity } from '../context/SecurityContext';
+import AuthModal from '../components/AuthModal';
 
 const quickSpots = [
   { label: 'Maddilapalem', distance: '0.4 km', icon: '🏪' },
@@ -17,7 +19,10 @@ export default function LocationPage({ onLocationSet }) {
   const [selectedSpot, setSelectedSpot] = useState('Maddilapalem, Vizag');
   const [customInput, setCustomInput] = useState('');
   const [showManualModal, setShowManualModal] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState(null); // 'user-signup' | 'seller-signup' | 'user-login'
+
   const { setActiveRole } = useStore();
+  const { authSession } = useSecurity();
   const navigate = useNavigate();
 
   const handleGpsDetect = () => {
@@ -39,17 +44,32 @@ export default function LocationPage({ onLocationSet }) {
 
   return (
     <div className="loc-onboarding-screen">
-      {/* ── Top Role Switcher Links (User, Seller, Admin) ── */}
+      {/* ── Top Role Switcher & Sign Up Links ── */}
       <div className="startup-role-nav">
         <span className="startup-brand">⚡ Kirana<strong>PRO</strong></span>
         <div className="startup-role-pills">
+          {/* User Sign Up Button */}
           <button
             type="button"
-            className="role-pill-btn active"
-            title="Customer View"
+            className="role-pill-btn signup-user"
+            onClick={() => setAuthModalMode('user-signup')}
+            title="Create Customer Account"
           >
-            🛒 Customer
+            <UserPlus size={13} />
+            <span>User Sign Up</span>
           </button>
+
+          {/* Seller Sign Up Button */}
+          <button
+            type="button"
+            className="role-pill-btn signup-seller"
+            onClick={() => setAuthModalMode('seller-signup')}
+            title="Register your Kirana Store"
+          >
+            <Store size={13} />
+            <span>Seller Sign Up</span>
+          </button>
+
           <button
             type="button"
             className="role-pill-btn seller"
@@ -75,7 +95,7 @@ export default function LocationPage({ onLocationSet }) {
         </div>
       </div>
 
-      {/* ── Main Location Graphic Card (Directly from Uploaded Screenshot) ── */}
+      {/* ── Main Location Graphic Card ── */}
       <div className="loc-card-container">
         {/* Radar Graphic with Concentric Circles */}
         <div className="loc-radar-wrapper">
@@ -97,14 +117,13 @@ export default function LocationPage({ onLocationSet }) {
           </div>
         </div>
 
-        {/* Text Block matching Screenshot */}
+        {/* Text Block */}
         <div className="loc-text-block">
           <h1 className="loc-main-title">Location</h1>
           <p className="loc-main-subtitle">
             We will help you find local kirana stores around you within <strong>2 km</strong> ready to deliver in <strong>20–30 minutes</strong> (LocalFresh Mandi in 2 hrs).
           </p>
 
-          {/* Carousel indicator dots (from screenshot) */}
           <div className="loc-carousel-dots">
             <span className="c-dot active" />
             <span className="c-dot" />
@@ -169,7 +188,7 @@ export default function LocationPage({ onLocationSet }) {
           )}
         </div>
 
-        {/* Primary Bottom Button (Matching Screenshot Blue CTA) */}
+        {/* Primary Bottom Button */}
         <div className="loc-bottom-cta-box">
           <button
             type="button"
@@ -190,6 +209,29 @@ export default function LocationPage({ onLocationSet }) {
           </button>
         </div>
 
+        {/* Dedicated Sign Up Action Strip for Both User and Seller */}
+        <div className="loc-signup-actions-strip">
+          <div className="loc-sas-title">New to KiranaPRO?</div>
+          <div className="loc-sas-buttons">
+            <button
+              type="button"
+              className="loc-sas-btn user"
+              onClick={() => setAuthModalMode('user-signup')}
+            >
+              <UserPlus size={15} />
+              <span>User Sign Up</span>
+            </button>
+            <button
+              type="button"
+              className="loc-sas-btn seller"
+              onClick={() => setAuthModalMode('seller-signup')}
+            >
+              <Store size={15} />
+              <span>Seller Sign Up</span>
+            </button>
+          </div>
+        </div>
+
         {/* Footer Trust Indicators */}
         <div className="loc-footer-trust">
           <div className="lft-item">
@@ -203,6 +245,21 @@ export default function LocationPage({ onLocationSet }) {
           </div>
         </div>
       </div>
+
+      {/* Reusable Auth Modal for User & Seller Registration */}
+      <AuthModal
+        isOpen={Boolean(authModalMode)}
+        initialMode={authModalMode || 'user-signup'}
+        onClose={() => setAuthModalMode(null)}
+        onSuccess={(type) => {
+          setAuthModalMode(null);
+          if (type === 'seller') {
+            navigate('/seller/dashboard');
+          } else {
+            handleConfirm();
+          }
+        }}
+      />
     </div>
   );
 }

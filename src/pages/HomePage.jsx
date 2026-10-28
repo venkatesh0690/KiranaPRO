@@ -14,19 +14,28 @@ import {
   ShoppingBag,
   ArrowRight,
   LayoutGrid,
-  Rows3
+  Rows3,
+  UserPlus,
+  Store,
+  LogIn,
+  LogOut,
+  User
 } from 'lucide-react';
 import { allCategories } from '../data/stores';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
+import { useSecurity } from '../context/SecurityContext';
 import StoreCard from '../components/StoreCard';
 import ProductDetailModal from '../components/ProductDetailModal';
 import CategoriesModal from '../components/CategoriesModal';
+import AuthModal from '../components/AuthModal';
 
 export default function HomePage() {
   const navigate = useNavigate();
   const { stores } = useStore();
   const { totalItems, totalPrice } = useCart();
+  const { authSession, logout } = useSecurity();
+  const [authModalMode, setAuthModalMode] = useState(null);
 
   const [activeStoreFilter, setActiveStoreFilter] = useState('all');
   const [storeViewMode, setStoreViewMode] = useState('grid'); // 'grid' | 'compact'
@@ -59,7 +68,60 @@ export default function HomePage() {
               <span className="loc-text">Maddilapalem, Vizag • <strong>Within 2 km</strong></span>
               <ChevronRight size={13} color="var(--n400)" />
             </div>
-            <h1 className="greeting-name">Good Day, Venkatesh 👋</h1>
+            <h1 className="greeting-name">
+              {authSession.isAuthenticated && authSession.userName
+                ? `Good Day, ${authSession.userName} 👋`
+                : 'Welcome to KiranaPRO 👋'}
+            </h1>
+
+            {/* User & Seller Sign Up Actions */}
+            {!authSession.isAuthenticated ? (
+              <div className="home-auth-strip">
+                <button
+                  type="button"
+                  className="home-auth-pill user"
+                  onClick={() => setAuthModalMode('user-signup')}
+                  title="Create Customer Account"
+                >
+                  <UserPlus size={12} />
+                  <span>User Sign Up</span>
+                </button>
+                <button
+                  type="button"
+                  className="home-auth-pill seller"
+                  onClick={() => setAuthModalMode('seller-signup')}
+                  title="Register your store as a partner"
+                >
+                  <Store size={12} />
+                  <span>Seller Sign Up</span>
+                </button>
+                <button
+                  type="button"
+                  className="home-auth-pill login"
+                  onClick={() => setAuthModalMode('user-login')}
+                  title="Log in to your account"
+                >
+                  <LogIn size={12} />
+                  <span>Login</span>
+                </button>
+              </div>
+            ) : (
+              <div className="home-auth-strip logged-in">
+                <span className="home-logged-tag">
+                  <User size={12} />
+                  <span>{authSession.userName}</span>
+                </span>
+                <button
+                  type="button"
+                  className="home-auth-pill logout"
+                  onClick={logout}
+                  title="Sign Out"
+                >
+                  <LogOut size={12} />
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="top-actions">
@@ -245,6 +307,17 @@ export default function HomePage() {
           onClose={() => setSelectedProduct(null)}
         />
       )}
+
+      {/* Auth Modal for User & Seller Sign Up */}
+      <AuthModal
+        isOpen={Boolean(authModalMode)}
+        initialMode={authModalMode || 'user-signup'}
+        onClose={() => setAuthModalMode(null)}
+        onSuccess={(type) => {
+          setAuthModalMode(null);
+          if (type === 'seller') navigate('/seller/dashboard');
+        }}
+      />
     </div>
   );
 }

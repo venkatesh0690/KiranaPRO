@@ -5799,3 +5799,613 @@ input { font-family: inherit; }
   font-size: 11px;
   color: #475569;
 }
+
+
+/* ==========================================================================
+   KiranaPRO User & Seller Sign Up, Free Delivery & Auth Modal Styles
+   ========================================================================== */
+
+/* 1. Free Delivery Threshold Banner in CartPage */
+.cart-delivery-status-card {
+  margin: 12px 0 16px;
+  border-radius: 14px;
+  padding: 12px 14px;
+  transition: all 0.25s ease;
+}
+
+.cart-delivery-status-card.unlocked {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+.cart-delivery-status-card.locked {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
+.cdsc-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cdsc-emoji {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.cdsc-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cdsc-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.cdsc-title {
+  font-size: 0.85rem;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.cdsc-needed {
+  font-size: 0.72rem;
+  color: #d97706;
+  font-weight: 700;
+  background: #fef3c7;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.cdsc-subtitle {
+  font-size: 0.75rem;
+  color: #059669;
+  display: block;
+}
+
+.cdsc-tag {
+  background: #10b981;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+
+.cdsc-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cdsc-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #10b981);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+/* 2. Top Location Page Sign Up Buttons & Action Strip */
+.role-pill-btn.signup-user {
+  background: #ecfdf5 !important;
+  color: #047857 !important;
+  border: 1px solid #a7f3d0 !important;
+  font-weight: 700;
+  gap: 4px;
+}
+
+.role-pill-btn.signup-user:hover {
+  background: #d1fae5 !important;
+}
+
+.role-pill-btn.signup-seller {
+  background: #f0f9ff !important;
+  color: #0369a1 !important;
+  border: 1px solid #bae6fd !important;
+  font-weight: 700;
+  gap: 4px;
+}
+
+.role-pill-btn.signup-seller:hover {
+  background: #e0f2fe !important;
+}
+
+.loc-signup-actions-strip {
+  margin: 16px 0;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  text-align: center;
+}
+
+.loc-sas-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.loc-sas-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.loc-sas-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.loc-sas-btn.user {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.loc-sas-btn.user:hover {
+  background: #059669;
+}
+
+.loc-sas-btn.seller {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.loc-sas-btn.seller:hover {
+  background: #0369a1;
+}
+
+/* 3. Homepage Auth Strip (User Sign Up, Seller Sign Up, Login) */
+.home-auth-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.home-auth-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.home-auth-pill.user {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.home-auth-pill.user:hover {
+  background: #059669;
+}
+
+.home-auth-pill.seller {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.home-auth-pill.seller:hover {
+  background: #0369a1;
+}
+
+.home-auth-pill.login {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.home-auth-pill.login:hover {
+  background: #e2e8f0;
+}
+
+.home-auth-strip.logged-in {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.home-logged-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.home-auth-pill.logout {
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+  padding: 3px 8px;
+}
+
+.home-auth-pill.logout:hover {
+  background: #fef2f2;
+}
+
+/* 4. Profile Page Guest Actions & Seller Box */
+.profile-guest-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.profile-auth-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+.profile-auth-btn.user-signup {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.profile-auth-btn.user-login {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.profile-seller-cta-box {
+  margin: 14px 0;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.profile-seller-cta-box:hover {
+  background: #e0f2fe;
+}
+
+.pscb-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pscb-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0369a1;
+}
+
+.pscb-desc {
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+/* 5. Auth Modal Styling */
+.auth-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+.auth-modal-card {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 20px 22px;
+  animation: popUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popUp {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.auth-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.auth-brand-badge {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.auth-close-btn {
+  background: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.auth-close-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.auth-tabs-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.auth-tab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 6px;
+  border-radius: 8px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.auth-tab-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+}
+
+.auth-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.auth-alert.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.auth-alert.success {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
+}
+
+.auth-body-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-form-title-wrap h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.auth-form-title-wrap p {
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.auth-field label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.auth-input-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-icon {
+  position: absolute;
+  left: 12px;
+  color: #94a3b8;
+}
+
+.auth-input-icon-wrap input {
+  width: 100%;
+  padding: 10px 12px 10px 38px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.auth-input-icon-wrap input:focus {
+  border-color: #10b981;
+}
+
+.auth-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: opacity 0.2s;
+}
+
+.auth-submit-btn.user {
+  background: #10b981;
+}
+
+.auth-submit-btn.seller {
+  background: #0284c7;
+}
+
+.auth-submit-btn:hover {
+  opacity: 0.92;
+}
+
+.auth-switch-prompt {
+  text-align: center;
+  font-size: 0.76rem;
+  color: #64748b;
+  margin-top: 6px;
+}
+
+.auth-switch-prompt button {
+  background: none;
+  border: none;
+  color: #10b981;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.sample-cred-chip-box {
+  background: #eff6ff;
+  border: 1px dashed #93c5fd;
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sample-cred-chip-box:hover {
+  background: #dbeafe;
+}
+
+.sc-chip-icon {
+  font-size: 1.2rem;
+}
+
+.sc-chip-text {
+  font-size: 0.72rem;
+  color: #1e40af;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-sample-drawer {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.asd-title {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.asd-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.asd-col {
+  background: #f8fafc;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.asd-role {
+  font-weight: 700;
+  color: #334155;
+}
+
+.asd-col code {
+  background: #e2e8f0;
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: #0f172a;
+}

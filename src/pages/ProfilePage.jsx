@@ -1,8 +1,13 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Package, MapPin, Shield, RotateCcw, ChevronRight, LogOut, Bell, Heart, CreditCard } from 'lucide-react';
+import { ArrowLeft, User, Package, MapPin, Shield, RotateCcw, ChevronRight, LogOut, Bell, Heart, CreditCard, UserPlus, LogIn, Store } from 'lucide-react';
+import { useSecurity } from '../context/SecurityContext';
+import AuthModal from '../components/AuthModal';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
+  const { authSession, logout } = useSecurity();
+  const [authModalMode, setAuthModalMode] = useState(null);
 
   const menuSections = [
     {
@@ -34,19 +39,46 @@ export default function ProfilePage() {
         <h1 className="profile-top-title">My Profile</h1>
       </div>
 
-      {/* User Card (Screenshot 3 Profile Header) */}
+      {/* User Card: Only show user name when authenticated, otherwise Guest User */}
       <div className="profile-user-card">
         <div className="profile-avatar-wrap">
-          <div className="profile-avatar">👨‍💼</div>
+          <div className="profile-avatar">{authSession.isAuthenticated ? '👨‍💼' : '👤'}</div>
         </div>
         <div className="profile-user-info">
-          <h2 className="profile-user-name">Venkatesh Rao</h2>
-          <span className="profile-user-phone">+91 98480 22334</span>
-          <span className="profile-user-location">📍 Maddilapalem, Vizag • Active 2km Radius</span>
+          {authSession.isAuthenticated && authSession.userName ? (
+            <>
+              <h2 className="profile-user-name">{authSession.userName}</h2>
+              <span className="profile-user-phone">{authSession.userPhone || '+91 98480 22334'}</span>
+              <span className="profile-user-location">📍 Maddilapalem, Vizag • Active 2km Radius</span>
+            </>
+          ) : (
+            <>
+              <h2 className="profile-user-name">Guest Customer</h2>
+              <span className="profile-user-phone">Sign in to track orders & save delivery address</span>
+              <div className="profile-guest-actions">
+                <button
+                  type="button"
+                  className="profile-auth-btn user-signup"
+                  onClick={() => setAuthModalMode('user-signup')}
+                >
+                  <UserPlus size={14} />
+                  <span>User Sign Up</span>
+                </button>
+                <button
+                  type="button"
+                  className="profile-auth-btn user-login"
+                  onClick={() => setAuthModalMode('user-login')}
+                >
+                  <LogIn size={14} />
+                  <span>Log In</span>
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Menu Options (Screenshot 3 Profile List) */}
+      {/* Menu Options */}
       <div className="profile-menu-container">
         {menuSections.map((sec) => (
           <div key={sec.title} className="profile-menu-group">
@@ -76,20 +108,42 @@ export default function ProfilePage() {
           </div>
         ))}
 
-        {/* Logout button */}
+        {/* Partner Store Sign Up Banner */}
+        <div className="profile-seller-cta-box" onClick={() => setAuthModalMode('seller-signup')}>
+          <div className="pscb-left">
+            <Store size={20} className="text-sky-600" />
+            <div>
+              <div className="pscb-title">Own a Kirana Store?</div>
+              <div className="pscb-desc">Register as a seller & start getting online orders</div>
+            </div>
+          </div>
+          <ChevronRight size={18} color="#0284c7" />
+        </div>
+
+        {/* Logout / Switch Location button */}
         <button
           type="button"
           className="profile-logout-btn"
           onClick={() => {
-            if (confirm('Are you sure you want to log out or switch location?')) {
+            if (authSession.isAuthenticated) {
+              logout();
+            } else {
               navigate('/');
             }
           }}
         >
           <LogOut size={16} />
-          <span>Switch Location / Change Profile</span>
+          <span>{authSession.isAuthenticated ? 'Sign Out / Log Out' : 'Switch Location'}</span>
         </button>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={Boolean(authModalMode)}
+        initialMode={authModalMode || 'user-signup'}
+        onClose={() => setAuthModalMode(null)}
+        onSuccess={() => setAuthModalMode(null)}
+      />
     </div>
   );
 }

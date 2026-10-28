@@ -1,39 +1,42 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import {
   generateSecureToken,
   validatePIN,
   validateEmail,
-  recordFailedAttempt,
   isRateLimited,
+  recordFailedAttempt,
+  resetFailedAttempts,
   getRemainingLockoutTime,
-  resetFailedAttempts
+  sanitizeInput,
+  SAMPLE_CREDENTIALS
 } from '../utils/security';
 
 const SecurityContext = createContext(null);
 
 const SESSION_STORAGE_KEY = 'kp_sec_auth_session';
-const AUDIT_STORAGE_KEY = 'kp_sec_audit_logs';
-const SESSION_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes
+const AUDIT_STORAGE_KEY = 'kp_sec_audit_trail';
+const SESSION_EXPIRY_MS = 2 * 60 * 60 * 1000; // 2 hours
 
-export function SecurityProvider({ children }) {
-  // Restore session from sessionStorage if valid
+export const SecurityProvider = ({ children }) => {
+  // Session State
   const [authSession, setAuthSession] = useState(() => {
     try {
       const saved = sessionStorage.getItem(SESSION_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.expiresAt && parsed.expiresAt > Date.now()) {
+        if (parsed.expiresAt && Date.now() < parsed.expiresAt) {
           return parsed;
         }
       }
     } catch {
       // Fallback
     }
+    // Default logged out state: Do NOT show any user name when not logged in!
     return {
       isAuthenticated: false,
-      role: 'customer', // 'customer' | 'seller' | 'admin'
+      role: 'guest', // 'guest' | 'customer' | 'seller' | 'admin'
       storeId: null,
-      userName: 'Local Customer',
+      userName: null,
       userPhone: null,
       token: null,
       loginTime: null,
@@ -54,7 +57,7 @@ export function SecurityProvider({ children }) {
         id: 'SEC-INIT-1',
         timestamp: new Date().toLocaleTimeString(),
         event: 'SECURITY_SHIELD_INITIALIZED',
-        details: 'KiranaPRO Anti-Tamper & XSS Sanitizer defense layers active.',
+        details: 'KiranaPRO Anti-Tamper, XSS Sanitizer & Free Delivery Rules active.',
         severity: 'info',
         ip: '127.0.0.1 (Local Verified)'
       }
@@ -70,20 +73,7 @@ export function SecurityProvider({ children }) {
     }
   }, [securityAuditLogs]);
 
-  // Log a security event to audit trail
-  const logSecurityEvent = useCallback((event, details, severity = 'info') => {
-    const newLog = {
-      id: 'SEC-' + Date.now().toString(36).toUpperCase(),
-      timestamp: new Date().toLocaleTimeString(),
-      event,
-      details,
-      severity,
-      ip: '127.0.0.1 (Hyperlocal Safe)'
-    };
-    setSecurityAuditLogs((prev) => [newLog, ...prev.slice(0, 49)]);
-  }, []);
-
-  // Save authSession to sessionStorage
+  // Save session state to sessionStorage
   useEffect(() => {
     try {
       if (authSession.isAuthenticated) {
@@ -96,6 +86,19 @@ export function SecurityProvider({ children }) {
     }
   }, [authSession]);
 
+  // Log a security event into audit trail
+  const logSecurityEvent = useCallback((event, details, severity = 'info') => {
+    const newLog = {
+      id: `SEC-${Date.now().toString().slice(-6)}`,
+      timestamp: new Date().toLocaleTimeString(),
+      event,
+      details,
+      severity,
+      ip: '127.0.0.1 (Local Verified)'
+    };
+    setSecurityAuditLogs(prev => [newLog, ...prev.slice(0, 49)]);
+  }, []);
+
   // Auto-expire session check every 30 seconds
   useEffect(() => {
     const interval = setInterval(() => {
@@ -106,6 +109,118 @@ export function SecurityProvider({ children }) {
     }, 30000);
     return () => clearInterval(interval);
   }, [authSession, logSecurityEvent]);
+
+  // Customer Login with Rate Limiting & 4-Digit PIN
+  const loginCustomer = useCallback((phone, pin) => {
+    const cleanPhone = String(phone || '').replace(/\D/g, '');
+    const rateLimitKey = `customer_${cleanPhone || 'unknown'}`;
+
+    if (isRateLimited(rateLimitKey)) {
+      const remSeconds = getRemainingLockoutTime(rateLimitKey);
+      logSecurityEvent('CUSTOMER_BRUTE_FORCE_BLOCKED', `Blocked login attempt for phone ${phone}. Rate limited for ${remSeconds}s`, 'critical');
+      return {
+        success: false,
+        error: `Account temporarily locked due to multiple failed attempts. Try again in ${remSeconds} seconds.`
+      };
+    }
+
+    if (cleanPhone.length < 10) {
+      recordFailedAttempt(rateLimitKey);
+      logSecurityEvent('CUSTOMER_LOGIN_FAILED', `Invalid mobile number: ${phone}`, 'warning');
+      return { success: false, error: 'Please enter a valid 10-digit mobile number.' };
+    }
+
+    if (!validatePIN(pin)) {
+      const rec = recordFailedAttempt(rateLimitKey);
+      const remainingAttempts = Math.max(0, 4 - rec.count);
+      logSecurityEvent('CUSTOMER_LOGIN_FAILED', `Invalid PIN for customer ${cleanPhone}. ${remainingAttempts} attempts remaining`, 'warning');
+      return {
+        success: false,
+        error: `Invalid 4-digit PIN. ${remainingAttempts > 0 ? `${remainingAttempts} attempt(s) remaining.` : 'Account locked for 60 seconds.'}`
+      };
+    }
+
+    // Check pre-seeded sample customer or registered customers
+    let customerName = 'Customer';
+    if (cleanPhone === SAMPLE_CREDENTIALS.user.phone) {
+      customerName = SAMPLE_CREDENTIALS.user.name;
+    } else {
+      try {
+        const savedUsers = JSON.parse(localStorage.getItem('kp_registered_users') || '[]');
+        const found = savedUsers.find(u => u.phone === cleanPhone);
+        if (found) customerName = found.name;
+        else customerName = `Customer (${cleanPhone.slice(-4)})`;
+      } catch {
+        customerName = `Customer (${cleanPhone.slice(-4)})`;
+      }
+    }
+
+    resetFailedAttempts(rateLimitKey);
+    const token = generateSecureToken();
+    const session = {
+      isAuthenticated: true,
+      role: 'customer',
+      storeId: null,
+      userName: customerName,
+      userPhone: `+91 ${cleanPhone.slice(-10)}`,
+      token,
+      loginTime: new Date().toLocaleTimeString(),
+      expiresAt: Date.now() + SESSION_EXPIRY_MS
+    };
+
+    setAuthSession(session);
+    logSecurityEvent('CUSTOMER_LOGIN_SUCCESS', `Customer authenticated: ${customerName} (+91 ${cleanPhone.slice(-10)})`, 'info');
+    return { success: true, user: session };
+  }, [logSecurityEvent]);
+
+  // Customer Sign Up
+  const signupCustomer = useCallback((name, phone, pin, address) => {
+    const cleanPhone = String(phone || '').replace(/\D/g, '');
+    const sanitizedName = sanitizeInput(name);
+    const sanitizedAddress = sanitizeInput(address || 'Maddilapalem, Vizag');
+
+    if (!sanitizedName || sanitizedName.length < 2) {
+      return { success: false, error: 'Please enter your full name.' };
+    }
+    if (cleanPhone.length < 10) {
+      return { success: false, error: 'Please enter a valid 10-digit mobile number.' };
+    }
+    if (!validatePIN(pin)) {
+      return { success: false, error: 'Please set a secure 4-digit PIN.' };
+    }
+
+    // Save to registered users list
+    try {
+      const savedUsers = JSON.parse(localStorage.getItem('kp_registered_users') || '[]');
+      const filtered = savedUsers.filter(u => u.phone !== cleanPhone);
+      filtered.push({
+        name: sanitizedName,
+        phone: cleanPhone,
+        address: sanitizedAddress,
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem('kp_registered_users', JSON.stringify(filtered));
+    } catch {
+      // Ignore
+    }
+
+    const token = generateSecureToken();
+    const session = {
+      isAuthenticated: true,
+      role: 'customer',
+      storeId: null,
+      userName: sanitizedName,
+      userPhone: `+91 ${cleanPhone.slice(-10)}`,
+      userAddress: sanitizedAddress,
+      token,
+      loginTime: new Date().toLocaleTimeString(),
+      expiresAt: Date.now() + SESSION_EXPIRY_MS
+    };
+
+    setAuthSession(session);
+    logSecurityEvent('CUSTOMER_SIGNUP_SUCCESS', `New Customer Account created: ${sanitizedName} (+91 ${cleanPhone.slice(-10)})`, 'info');
+    return { success: true, user: session };
+  }, [logSecurityEvent]);
 
   // Authenticate Seller with Rate Limiting & 4-Digit PIN check
   const loginSeller = useCallback((storeId, phone, pin, storeName) => {
@@ -142,7 +257,7 @@ export function SecurityProvider({ children }) {
     const session = {
       isAuthenticated: true,
       role: 'seller',
-      storeId: Number(storeId),
+      storeId: Number(storeId) || storeId,
       userName: `${storeName || 'Shopkeeper'} (Store #${storeId})`,
       userPhone: phone,
       token,
@@ -153,6 +268,61 @@ export function SecurityProvider({ children }) {
     setAuthSession(session);
     logSecurityEvent('SELLER_LOGIN_SUCCESS', `Seller authenticated for Store #${storeId} (${storeName})`, 'info');
     return { success: true };
+  }, [logSecurityEvent]);
+
+  // Seller Sign Up (Store Partner Registration)
+  const signupSeller = useCallback((storeName, ownerName, phone, pin, address, category) => {
+    const cleanPhone = String(phone || '').replace(/\D/g, '');
+    const safeStoreName = sanitizeInput(storeName);
+    const safeOwnerName = sanitizeInput(ownerName);
+    const safeAddress = sanitizeInput(address || 'Vizag Local Area');
+
+    if (!safeStoreName || safeStoreName.length < 3) {
+      return { success: false, error: 'Please enter a valid Kirana Store Name.' };
+    }
+    if (!safeOwnerName || safeOwnerName.length < 2) {
+      return { success: false, error: 'Please enter the Store Owner Name.' };
+    }
+    if (cleanPhone.length < 10) {
+      return { success: false, error: 'Please enter a valid 10-digit mobile number.' };
+    }
+    if (!validatePIN(pin)) {
+      return { success: false, error: 'Please set a 4-digit security PIN for stock management.' };
+    }
+
+    const newStoreId = `partner-${Date.now().toString().slice(-4)}`;
+
+    try {
+      const savedSellers = JSON.parse(localStorage.getItem('kp_registered_sellers') || '[]');
+      savedSellers.push({
+        storeId: newStoreId,
+        storeName: safeStoreName,
+        ownerName: safeOwnerName,
+        phone: cleanPhone,
+        address: safeAddress,
+        category: category || 'Kirana & Provisions',
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem('kp_registered_sellers', JSON.stringify(savedSellers));
+    } catch {
+      // Ignore
+    }
+
+    const token = generateSecureToken();
+    const session = {
+      isAuthenticated: true,
+      role: 'seller',
+      storeId: newStoreId,
+      userName: `${safeOwnerName} (${safeStoreName})`,
+      userPhone: `+91 ${cleanPhone.slice(-10)}`,
+      token,
+      loginTime: new Date().toLocaleTimeString(),
+      expiresAt: Date.now() + SESSION_EXPIRY_MS
+    };
+
+    setAuthSession(session);
+    logSecurityEvent('SELLER_SIGNUP_SUCCESS', `New Seller Registered: ${safeStoreName} by ${safeOwnerName} (+91 ${cleanPhone.slice(-10)})`, 'info');
+    return { success: true, storeId: newStoreId };
   }, [logSecurityEvent]);
 
   // Authenticate Admin with Rate Limiting & Master Key Verification
@@ -208,14 +378,14 @@ export function SecurityProvider({ children }) {
     return { success: true };
   }, [logSecurityEvent]);
 
-  // Secure Logout
+  // Secure Logout: Completely resets to logged out state (no user name shown)
   const logout = useCallback(() => {
     const previousRole = authSession.role;
     setAuthSession({
       isAuthenticated: false,
-      role: 'customer',
+      role: 'guest',
       storeId: null,
-      userName: 'Local Customer',
+      userName: null,
       userPhone: null,
       token: null,
       loginTime: null,
@@ -228,23 +398,27 @@ export function SecurityProvider({ children }) {
     <SecurityContext.Provider
       value={{
         authSession,
+        loginCustomer,
+        signupCustomer,
         loginSeller,
+        signupSeller,
         loginAdmin,
         logout,
         securityAuditLogs,
         logSecurityEvent,
+        sampleCredentials: SAMPLE_CREDENTIALS,
         isSessionValid: () => authSession.isAuthenticated && authSession.expiresAt > Date.now()
       }}
     >
       {children}
     </SecurityContext.Provider>
   );
-}
+};
 
-export function useSecurity() {
+export const useSecurity = () => {
   const context = useContext(SecurityContext);
   if (!context) {
     throw new Error('useSecurity must be used within a SecurityProvider');
   }
   return context;
-}
+};
