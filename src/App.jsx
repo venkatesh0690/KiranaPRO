@@ -5,6 +5,7 @@ import { StoreProvider } from './context/StoreContext';
 import { SecurityProvider } from './context/SecurityContext';
 import { SellerProtectedRoute, AdminProtectedRoute } from './components/ProtectedRoutes';
 import BottomNav from './components/BottomNav';
+import InstallAppBanner from './components/InstallAppBanner';
 import LocationPage from './pages/LocationPage';
 import HomePage from './pages/HomePage';
 import StorePage from './pages/StorePage';
@@ -111,6 +112,9 @@ function MainAppShell({ userLocation, setUserLocation }) {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
+
+        {/* Mobile PWA Install App Prompt */}
+        {!isPortalRoute && <InstallAppBanner />}
 
         {/* Bottom Navigation Bar (Customer mode only) */}
         {userLocation && !isPortalRoute && <BottomNav />}

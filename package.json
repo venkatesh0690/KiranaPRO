@@ -6,11 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "mobile:build": "vite build && npx cap sync android",
+    "mobile:sync": "npx cap sync android",
+    "mobile:open": "npx cap open android",
     "db:migrate": "node scripts/neon_migrate_and_seed.js",
     "lint": "oxlint",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/cli": "^8.6.0",
+    "@capacitor/core": "^8.6.0",
     "@neondatabase/serverless": "^1.2.0",
     "lucide-react": "^1.63.0",
     "react": "^19.3.1",

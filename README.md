@@ -44,6 +44,11 @@
   - `kiranapro.orders` — JSONB order payloads with tamper-evident cryptographic integrity hashes.
   - `kiranapro.security_audit_logs` — High-fidelity logging of security events, failed logins, and PII reveals.
 
+### 6. 📱 Native Mobile App & PWA (Android APK & iOS)
+- **Automated GitHub Actions CI/CD APK Build**: Generates a downloadable `KiranaPRO-v1.0.0.apk` directly from GitHub repository pushes.
+- **Capacitor Mobile Shell**: Native Android container (`com.kiranapro.app`) with live cloud sync to `https://kiranapro.vercel.app` for continuous zero-recompile updates.
+- **Progressive Web App (PWA)**: Standalone 1-tap mobile installation prompt on Android and iOS browsers.
+
 ---
 
 ## 🚀 Getting Started
@@ -143,6 +148,30 @@ KiranaPRO is pre-configured with `vercel.json` for zero-configuration deployment
    npx vercel --prod
    ```
 3. Set the `DATABASE_URL` environment variable in your Vercel Project Settings for full Neon PostgreSQL integration.
+
+---
+
+## 📱 Mobile App Deployment (Android & PWA)
+
+KiranaPRO is fully mobile-enabled through both automated GitHub APK builds and Progressive Web App installation:
+
+### Method 1: Instant PWA Install on Mobile (Recommended)
+1. Open **[https://kiranapro.vercel.app](https://kiranapro.vercel.app)** on your Android phone (Chrome / Samsung Internet) or iPhone (Safari).
+2. Tap the **"Get KiranaPRO Mobile App"** banner at the bottom or browser menu -> **"Install App"** / **"Add to Home Screen"**.
+3. KiranaPRO installs directly to your home screen with full-screen standalone mobile UX, native icons, and push-like speed.
+
+### Method 2: Download Android APK from GitHub
+- Whenever code is pushed to `main`, GitHub Actions automatically builds `KiranaPRO-v1.0.0.apk`.
+- Go to the **[Releases](https://github.com/venkatesh0690/KiranaPRO/releases)** or **[Actions](https://github.com/venkatesh0690/KiranaPRO/actions)** tab in the GitHub repo to download and install the APK on any Android phone.
+
+### Method 3: Local Android Studio Build
+```bash
+# Build web assets and sync native Android project
+npm run mobile:build
+
+# Open Android Studio project directly
+npm run mobile:open
+```
 
 ---
 

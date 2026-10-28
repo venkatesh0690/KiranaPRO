@@ -1,0 +1,14 @@
+{
+  "appId": "com.kiranapro.app",
+  "appName": "KiranaPRO",
+  "webDir": "dist",
+  "server": {
+    "url": "https://kiranapro.vercel.app",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "KiranaPRO — Hyperlocal Quick Commerce",
+  "short_name": "KiranaPRO",
+  "description": "KiranaPRO delivers fresh vegetables, fruits, groceries, and daily essentials within 20-30 mins and 2 hours for LocalFresh mandi direct from farmers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#16a34a",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["shopping", "food", "lifestyle"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "LocalFresh Mandi",
+      "url": "/store/localfresh",
+      "description": "Order 108+ farm fresh fruits & veggies"
+    },
+    {
+      "name": "Orders",
+      "url": "/orders",
+      "description": "Track active deliveries"
+    }
+  ]
+}
