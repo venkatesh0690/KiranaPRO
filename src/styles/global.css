@@ -17,10 +17,21 @@ html {
 }
 
 body {
-  background: #F0F2F5;
+  background: #FFFFFF;
   color: var(--n900);
   line-height: 1.5;
   margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 a { text-decoration: none; color: inherit; }
@@ -37,12 +48,15 @@ input { font-family: inherit; }
    ══════════════════════════════════════════════════════════════════ */
 .app-root-wrapper {
   min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
-  padding: 16px 0;
+  padding: 0;
+  margin: 0;
   position: relative;
+  background: #FFFFFF;
 }
 
 .device-switcher-pill {
@@ -75,73 +89,44 @@ input { font-family: inherit; }
   color: white;
 }
 
-/* Phone Chassis (iPhone 16 styling) */
-.mobile-frame-mode .phone-chassis {
-  width: 100%;
-  max-width: 440px;
-  min-height: 890px;
-  height: 890px;
-  background: white;
-  border-radius: 44px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15), 0 0 0 10px #1E2024;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
+/* Full Screen Chassis Overrides */
+.phone-chassis,
+.mobile-frame-mode .phone-chassis,
 .desktop-mode .phone-chassis {
-  width: 100%;
-  max-width: 1080px;
-  min-height: 700px;
-  height: 92vh;
-  background: white;
-  border-radius: 16px;
-  box-shadow: var(--sh-lg);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100vh !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  overflow: visible !important;
+  background: transparent !important;
 }
 
-.phone-status-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 24px 6px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--n900);
-  background: white;
-  position: sticky;
-  top: 0;
-  z-index: 120;
-}
-
-.status-notch {
-  width: 90px;
-  height: 24px;
-  background: #121417;
-  border-radius: var(--r-full);
-}
-
+.phone-status-bar,
+.status-notch,
 .status-icons {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.7rem;
+  display: none !important;
 }
 
 .app-content-area {
   flex: 1;
+  width: 100%;
+  min-height: 0;
   overflow-y: auto;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .app-content-area.with-bottom-nav {
-  padding-bottom: 84px;
+  padding-bottom: 76px;
 }
 
 .app-content-area.store-view-mode {
+  height: 100vh;
+  max-height: 100vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -215,10 +200,20 @@ input { font-family: inherit; }
    HOME PAGE (Inspired by Image 1 & Image 3)
    ══════════════════════════════════════════════════════════════════ */
 .home-container {
-  padding: 14px 18px 24px;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px 24px 90px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+}
+
+@media (max-width: 640px) {
+  .home-container {
+    padding: 14px 16px 84px;
+    gap: 16px;
+  }
 }
 
 /* Top Bar: Greeting & Bell */
@@ -763,14 +758,35 @@ input { font-family: inherit; }
 /* Stores List Containers */
 .stores-list-container.view-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .stores-list-container.view-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .stores-list-container.view-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .stores-list-container.view-compact {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 720px) {
+  .stores-list-container.view-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 }
 
 /* Base Card */
@@ -6408,4 +6424,126 @@ input { font-family: inherit; }
   padding: 1px 5px;
   border-radius: 4px;
   color: #0f172a;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FULL SCREEN RESPONSIVE ENHANCEMENTS — KiranaPRO Web
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Responsive Containers for Standalone Pages */
+.cart-page,
+.orders-page,
+.profile-page,
+.search-page {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 20px 90px;
+}
+
+.seller-dashboard-page,
+.admin-dashboard-page {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* Location Onboarding Full Screen Header & Card */
+.startup-role-nav {
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.loc-card-container {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+
+/* Responsive Dual-Pane Store View */
+@media (min-width: 768px) {
+  .sp-split-body {
+    max-width: 1600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .sp-fixed-sidebar {
+    width: 220px;
+    padding: 14px 10px 100px;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .sp-sidebar-cat-btn {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 12px;
+    border-left: none;
+    border: 1.5px solid transparent;
+    width: 100%;
+  }
+
+  .sp-sidebar-cat-btn.is-active {
+    background: #F0FDF4;
+    border-color: #86EFAC;
+  }
+
+  .sp-sidebar-cat-thumb {
+    width: 38px;
+    height: 38px;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .sp-sidebar-cat-name {
+    font-size: 0.85rem;
+    text-align: left;
+    max-width: none;
+    flex: 1;
+  }
+
+  .sp-products-grid.layout-big {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 16px;
+  }
+
+  .sp-products-scroll-pane {
+    padding: 16px 28px 100px;
+  }
+
+  .sp-header-top-row,
+  .sp-header-controls-row {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .sp-fixed-sidebar {
+    width: 250px;
+  }
+
+  .sp-products-grid.layout-big {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 20px;
+  }
+}
+
+/* Dock-Style Bottom Nav on Full Screen */
+@media (min-width: 768px) {
+  .bottom-nav-inner {
+    max-width: 560px;
+    padding: 8px 24px;
+  }
+
+  .bnav-label {
+    font-size: 0.75rem;
+  }
 }
