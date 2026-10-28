@@ -19,6 +19,15 @@ jobs:
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
 
+      - name: ☕ Setup Java 17 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: 🤖 Setup Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -31,20 +40,11 @@ jobs:
       - name: 🏗️ Build Web Application Bundle
         run: npm run build
 
-      - name: 📱 Sync Capacitor Android Project
-        run: npx cap sync android
-
-      - name: ☕ Setup Java 17 (Temurin)
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: 🤖 Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: 🔧 Grant Execute Permission for Gradlew
         run: chmod +x android/gradlew
+
+      - name: 📱 Sync Capacitor Android Project
+        run: npx cap sync android
 
       - name: 🔨 Build Android Debug APK
         run: |
