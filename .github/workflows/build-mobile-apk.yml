@@ -19,11 +19,11 @@ jobs:
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
 
-      - name: ☕ Setup Java 17 (Temurin)
+      - name: ☕ Setup Java 21 (Temurin)
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: 🟢 Setup Node.js (Node 22 LTS required by Capacitor CLI)
         uses: actions/setup-node@v4
