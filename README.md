@@ -3,10 +3,12 @@
 [![Vite](https://img.shields.io/badge/Vite-8.3.5-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-19.3.1-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![Neon](https://img.shields.io/badge/Neon-PostgreSQL-00E599?logo=postgresql&logoColor=white)](https://neon.tech/)
-[![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?logo=vercel&logoColor=white)](https://vercel.com/)
+[![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?logo=vercel&logoColor=white)](https://kiranapro.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live_URL-kiranapro.vercel.app-00C781?style=flat&logo=vercel&logoColor=white)](https://kiranapro.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-> **KiranaPRO** connects local consumers with neighborhood kirana stores and direct-from-mandi farmers. Engineered with enterprise security, dynamic delivery SLAs, dual store views, and serverless PostgreSQL database persistence.
+> **KiranaPRO** connects local consumers with neighborhood kirana stores and direct-from-mandi farmers.
+> 🌐 **Live Website**: [https://kiranapro.vercel.app](https://kiranapro.vercel.app)
 
 ---
 
