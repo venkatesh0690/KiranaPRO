@@ -19,7 +19,10 @@ import {
   LogIn,
   LogOut,
   User,
-  ShieldCheck
+  ShieldCheck,
+  Heart,
+  Plus,
+  Minus
 } from 'lucide-react';
 import { allCategories } from '../data/stores';
 import { useStore } from '../context/StoreContext';
@@ -30,21 +33,122 @@ import ProductDetailModal from '../components/ProductDetailModal';
 import CategoriesModal from '../components/CategoriesModal';
 import AuthModal from '../components/AuthModal';
 
+// Popular Now products curated directly from uploaded design images (Image 1 & 2)
+const POPULAR_PRODUCTS = [
+  {
+    id: 'pop-1',
+    name: 'Brussels Sprouts & Greens',
+    price: 48,
+    mrp: 60,
+    unit: '500 g',
+    discount: '-20%',
+    rating: 4.9,
+    reviewsCount: 142,
+    brand: 'LocalFresh Mandi',
+    image: 'https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=500&q=80',
+    fallbackEmoji: '🥬',
+    storeId: 'localfresh',
+    storeName: 'LocalFresh Mandi'
+  },
+  {
+    id: 'pop-2',
+    name: 'Rainbow Organic Carrots',
+    price: 44,
+    mrp: 56,
+    unit: '500 g',
+    discount: '-21%',
+    rating: 4.8,
+    reviewsCount: 98,
+    brand: 'Farm Harvest',
+    image: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=500&q=80',
+    fallbackEmoji: '🥕',
+    storeId: 'localfresh',
+    storeName: 'LocalFresh Mandi'
+  },
+  {
+    id: 'pop-3',
+    name: 'Farm Fresh Red Tomatoes',
+    price: 32,
+    mrp: 42,
+    unit: '1 kg',
+    discount: '-24%',
+    rating: 4.9,
+    reviewsCount: 320,
+    brand: 'LocalFresh Mandi',
+    image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=500&q=80',
+    fallbackEmoji: '🍅',
+    storeId: 'localfresh',
+    storeName: 'LocalFresh Mandi'
+  },
+  {
+    id: 'pop-4',
+    name: 'Amul Taaza Toned Milk',
+    price: 54,
+    mrp: 58,
+    unit: '1 Litre',
+    discount: 'Fresh Daily',
+    rating: 4.9,
+    reviewsCount: 412,
+    brand: 'Amul',
+    image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=500&q=80',
+    fallbackEmoji: '🥛',
+    storeId: 1,
+    storeName: 'Sharma General Store'
+  },
+  {
+    id: 'pop-5',
+    name: 'Crisp Washington Red Apples',
+    price: 145,
+    mrp: 180,
+    unit: '1 kg',
+    discount: '-19%',
+    rating: 4.8,
+    reviewsCount: 165,
+    brand: 'Fresh Orchard',
+    image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=500&q=80',
+    fallbackEmoji: '🍎',
+    storeId: 'localfresh',
+    storeName: 'LocalFresh Mandi'
+  },
+  {
+    id: 'pop-6',
+    name: 'Fresh Nagpur Sweet Oranges',
+    price: 75,
+    mrp: 95,
+    unit: '1 kg',
+    discount: '-21%',
+    rating: 4.7,
+    reviewsCount: 88,
+    brand: 'Nagpur Fresh',
+    image: 'https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=500&q=80',
+    fallbackEmoji: '🍊',
+    storeId: 'localfresh',
+    storeName: 'LocalFresh Mandi'
+  }
+];
+
 export default function HomePage() {
   const navigate = useNavigate();
   const { stores } = useStore();
-  const { totalItems } = useCart();
+  const { cart, addItem, removeItem, totalItems } = useCart();
   const { authSession, logout } = useSecurity();
-  const [authModalMode, setAuthModalMode] = useState(null);
 
+  const [authModalMode, setAuthModalMode] = useState(null);
+  const [activeCategory, setActiveCategory] = useState('vegetables');
   const [activeStoreFilter, setActiveStoreFilter] = useState('all');
   const [storeViewMode, setStoreViewMode] = useState('grid'); // 'grid' | 'compact'
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isCatModalOpen, setIsCatModalOpen] = useState(false);
+  const [likedMap, setLikedMap] = useState({});
+
+  const toggleLike = (prodId, e) => {
+    e.stopPropagation();
+    setLikedMap((prev) => ({ ...prev, [prodId]: !prev[prodId] }));
+  };
 
   const storeFilters = [
     { id: 'all', label: 'All Stores' },
-    { id: 'fast', label: '⚡ Fastest (20–30m)' },
+    { id: 'fast', label: '⚡ 20–30 Mins' },
     { id: 'rated', label: '⭐ Top Rated (4.7+)' },
     { id: 'free', label: '🚚 Free Delivery' }
   ];
@@ -58,100 +162,94 @@ export default function HomePage() {
 
   return (
     <div className="home-container">
-      {/* ── Top App Bar (Curated from Uploaded Design Images 1, 2, 3) ── */}
-      <header className="home-top-bar">
-        <div className="top-user-greeting">
-          <div className="greeting-text">
-            {/* Clickable Location Chip */}
-            <div className="home-loc-chip" onClick={() => navigate('/')}>
-              <MapPin size={13} color="var(--brand)" />
-              <span className="loc-text">Maddilapalem, Vizag • <strong>Within 2 km</strong></span>
-              <ChevronRight size={13} color="var(--n400)" />
+      {/* ── Deep Forest Green Brand Header (Matching Groceasy Design in Image 1 & 2) ── */}
+      <header className="groceasy-header">
+        <div className="groceasy-top-row">
+          {/* Location Chip */}
+          <div className="groceasy-loc-chip" onClick={() => navigate('/')}>
+            <div className="groceasy-loc-icon-wrap">
+              <MapPin size={15} color="#FFFFFF" />
             </div>
-            <h1 className="greeting-name">
-              {authSession.isAuthenticated && authSession.userName
-                ? `Good Day, ${authSession.userName} 👋`
-                : 'Welcome to KiranaPRO 👋'}
-            </h1>
+            <div className="groceasy-loc-text">
+              <span className="groceasy-loc-label">Deliver to</span>
+              <div className="groceasy-loc-val">
+                <strong>Maddilapalem, Vizag • 2 km</strong>
+                <ChevronRight size={13} color="#A7F3D0" />
+              </div>
+            </div>
+          </div>
 
-            {/* Requirement: Just Show Sign up and log in button (No clutter) */}
+          {/* Clean Sign Up & Log In Buttons */}
+          <div className="groceasy-top-actions">
             {!authSession.isAuthenticated ? (
-              <div className="home-auth-clean-strip">
+              <div className="groceasy-auth-strip">
                 <button
                   type="button"
-                  className="home-clean-btn signup"
+                  className="groceasy-auth-btn signup"
                   onClick={() => setAuthModalMode('signup')}
-                  title="Create an account"
                 >
                   <UserPlus size={13} />
                   <span>Sign Up</span>
                 </button>
                 <button
                   type="button"
-                  className="home-clean-btn login"
+                  className="groceasy-auth-btn login"
                   onClick={() => setAuthModalMode('login')}
-                  title="Sign in to your account"
                 >
                   <LogIn size={13} />
                   <span>Log In</span>
                 </button>
               </div>
             ) : (
-              <div className="home-auth-clean-strip logged-in">
-                <span className="home-logged-tag">
-                  <User size={12} />
+              <div className="groceasy-auth-strip logged-in">
+                <span className="groceasy-user-chip">
+                  <User size={13} />
                   <span>{authSession.userName}</span>
                 </span>
                 <button
                   type="button"
-                  className="home-clean-btn logout"
+                  className="groceasy-auth-btn logout"
                   onClick={logout}
                   title="Sign Out"
                 >
-                  <LogOut size={12} />
-                  <span>Sign Out</span>
+                  <LogOut size={13} />
                 </button>
               </div>
             )}
-          </div>
 
-          <div className="top-actions">
-            {/* Notification Bell */}
+            {/* Notification Bell in Circle */}
             <button
               type="button"
-              className="notif-bell-btn"
-              onClick={() => alert('Nearby stores deliver in 20–30 mins! Mandi orders delivered in 2 hours.')}
+              className="groceasy-circle-btn notif"
+              onClick={() => alert('Nearby stores deliver within 20–30 mins! Mandi orders delivered in 2 hours.')}
               aria-label="Notifications"
             >
-              <Bell size={20} />
-              <span className="notif-dot" />
+              <Bell size={18} color="#FFFFFF" />
+              <span className="groceasy-notif-dot" />
             </button>
 
-            {/* Shopping Cart Button with Real-time Count Badge */}
+            {/* Shopping Cart in Circle */}
             <button
               type="button"
-              className="top-cart-btn"
+              className="groceasy-circle-btn cart"
               onClick={() => navigate('/cart')}
               aria-label={`Cart with ${totalItems} items`}
-              title="Open Shopping Cart"
             >
-              <div className="top-cart-icon-wrap">
-                <ShoppingBag size={20} />
-                {totalItems > 0 && (
-                  <span className="top-cart-badge">{totalItems}</span>
-                )}
-              </div>
+              <ShoppingBag size={18} color="#FFFFFF" />
+              {totalItems > 0 && (
+                <span className="groceasy-cart-badge">{totalItems}</span>
+              )}
             </button>
           </div>
         </div>
 
-        {/* Search bar with filter icon */}
-        <div className="home-search-bar" onClick={() => navigate('/search')}>
-          <Search size={18} color="var(--n400)" />
-          <span className="search-placeholder">Search "onion, milk, bread, spices, ghee, dal..."</span>
+        {/* White Rounded Pill Search Bar (Matching Image 1) */}
+        <div className="groceasy-search-bar" onClick={() => navigate('/search')}>
+          <Search size={18} color="#64748B" />
+          <span className="groceasy-search-placeholder">Search groceries, vegetables, milk, spices...</span>
           <button
             type="button"
-            className="search-filter-icon"
+            className="groceasy-search-filter-btn"
             onClick={(e) => {
               e.stopPropagation();
               navigate('/search');
@@ -162,88 +260,199 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* ── AI Hero Poster (Requirement: Just mention, 20-30 mins delivery in the poster) ── */}
-      <section className="home-ai-hero-poster">
-        <div className="hero-poster-card">
-          <div className="hero-poster-bg-img" />
-          <div className="hero-poster-overlay" />
-
-          <div className="hero-poster-content">
-            {/* Explicit 20-30 mins delivery pill badge right on the poster */}
-            <div className="hero-poster-pill">
-              <Clock size={13} strokeWidth={2.5} />
-              <span>20-30 mins delivery</span>
-            </div>
-
-            <h2 className="hero-poster-headline">
-              Shop Smarter, Eat Better
-            </h2>
-            <p className="hero-poster-subtext">
-              Fresh farm harvest & neighborhood kirana staples delivered right to your doorstep.
-            </p>
-
-            <div className="hero-poster-cta-row">
-              <button
-                type="button"
-                className="hero-poster-cta"
-                onClick={() => navigate('/store/localfresh')}
-              >
-                <span>Shop Now</span>
-                <ArrowRight size={15} />
-              </button>
-              <span className="hero-poster-guarantee">
-                <ShieldCheck size={14} color="#86EFAC" /> Sourced from Local Mandis
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Circular Categories Section (matching Image 1, 3, 4) ── */}
-      <section className="home-section">
+      {/* ── Selected by Category Section (Matching Image 1 Middle Screen) ── */}
+      <section className="home-section groceasy-cat-section">
         <div className="section-header-row">
           <div>
-            <h3 className="section-heading">Selected by Category</h3>
-            <p className="section-subtext-light">Curated essentials from local stores</p>
+            <h3 className="groceasy-sec-title">Selected by Category</h3>
           </div>
           <button
             type="button"
-            className="see-all-btn"
+            className="groceasy-see-all-link"
             onClick={() => setIsCatModalOpen(true)}
           >
             See All
           </button>
         </div>
 
-        {/* Circular Avatar List */}
-        <div className="circle-cats-scroll">
-          {allCategories.map((cat) => (
-            <div
-              key={cat.id}
-              className="circle-cat-item"
-              onClick={() => {
-                if (['vegetables', 'fruits', 'leafy', 'flowers', 'pickles', 'groceries'].includes(cat.id)) {
-                  navigate('/store/localfresh');
-                } else {
-                  navigate('/store/1');
-                }
-              }}
-            >
-              <div className="circle-cat-avatar" style={{ background: cat.bg }}>
-                <span>{cat.icon}</span>
-              </div>
-              <span className="circle-cat-label">{cat.name.split(' ')[0]}</span>
-            </div>
-          ))}
+        {/* Circular Avatar List: 1st is dark green filled circle with white icon */}
+        <div className="groceasy-cats-row">
+          {allCategories.slice(0, 8).map((cat) => {
+            const isActive = activeCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                className={`groceasy-cat-btn ${isActive ? 'is-active' : ''}`}
+                onClick={() => {
+                  setActiveCategory(cat.id);
+                  if (['vegetables', 'fruits', 'leafy', 'flowers', 'pickles', 'groceries'].includes(cat.id)) {
+                    navigate('/store/localfresh');
+                  } else {
+                    navigate('/store/1');
+                  }
+                }}
+              >
+                <div className={`groceasy-cat-circle ${isActive ? 'filled-green' : 'soft-tint'}`}>
+                  <span className="groceasy-cat-emoji">{cat.icon}</span>
+                </div>
+                <span className="groceasy-cat-title">{cat.name.split(' ')[0]}</span>
+              </button>
+            );
+          })}
         </div>
       </section>
 
-      {/* ── AI Seller Posters & Stores Catalog ── */}
+      {/* ── "Popular Now" Products (Matching Image 1 & 2 Screens) ── */}
+      <section className="home-section groceasy-popular-section">
+        <div className="section-header-row">
+          <div>
+            <h3 className="groceasy-sec-title">Popular Now</h3>
+            <p className="groceasy-sec-sub">Fastest selling fresh items in your neighborhood</p>
+          </div>
+          <button
+            type="button"
+            className="groceasy-see-all-link"
+            onClick={() => navigate('/store/localfresh')}
+          >
+            See all
+          </button>
+        </div>
+
+        <div className="groceasy-products-grid">
+          {POPULAR_PRODUCTS.map((prod) => {
+            const cartItem = cart.items.find((i) => i.id === prod.id);
+            const qty = cartItem ? cartItem.quantity : 0;
+            const isLiked = likedMap[prod.id] || false;
+
+            return (
+              <div
+                key={prod.id}
+                className="groceasy-product-card"
+                onClick={() => setSelectedProduct(prod)}
+              >
+                {/* Top Row: Discount Badge & Heart Wishlist */}
+                <div className="gpc-top-row">
+                  {prod.discount ? (
+                    <span className="gpc-discount-badge">{prod.discount}</span>
+                  ) : <span />}
+                  <button
+                    type="button"
+                    className="gpc-heart-btn"
+                    onClick={(e) => toggleLike(prod.id, e)}
+                    aria-label="Wishlist"
+                  >
+                    <Heart
+                      size={15}
+                      fill={isLiked ? '#FF4D4D' : 'none'}
+                      color={isLiked ? '#FF4D4D' : '#94A3B8'}
+                    />
+                  </button>
+                </div>
+
+                {/* Clean Product Image on Pure White Background */}
+                <div className="gpc-img-wrap">
+                  <img
+                    src={prod.image}
+                    alt={prod.name}
+                    className="gpc-real-img"
+                    loading="lazy"
+                  />
+                </div>
+
+                {/* Details */}
+                <div className="gpc-details">
+                  <h4 className="gpc-name">{prod.name}</h4>
+                  <span className="gpc-unit">{prod.unit} • {prod.storeName}</span>
+
+                  <div className="gpc-price-action-row">
+                    <div className="gpc-price-box">
+                      <span className="gpc-price">₹{prod.price}</span>
+                      {prod.mrp > prod.price && (
+                        <span className="gpc-mrp">₹{prod.mrp}</span>
+                      )}
+                    </div>
+
+                    {/* Circular Add Button or Counter (matching Image 1 & 2) */}
+                    {qty === 0 ? (
+                      <button
+                        type="button"
+                        className="gpc-add-circle-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          addItem(prod.storeId, prod);
+                        }}
+                        title="Add to basket"
+                      >
+                        <Plus size={16} strokeWidth={2.8} />
+                      </button>
+                    ) : (
+                      <div className="gpc-qty-pill" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          className="gpc-qp-btn"
+                          onClick={() => removeItem(prod.id)}
+                        >
+                          <Minus size={12} />
+                        </button>
+                        <span className="gpc-qp-count">{qty}</span>
+                        <button
+                          type="button"
+                          className="gpc-qp-btn"
+                          onClick={() => addItem(prod.storeId, prod)}
+                        >
+                          <Plus size={12} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── AI Hero Promo Poster (Matching Image 1 & 2: 20-30 mins delivery) ── */}
+      <section className="home-section">
+        <div className="groceasy-promo-poster-card">
+          <div className="gpp-content">
+            <div className="gpp-pill-badge">
+              <Clock size={13} strokeWidth={2.5} />
+              <span>20-30 mins delivery</span>
+            </div>
+
+            <h2 className="gpp-title">Shop Smarter, Eat Better</h2>
+            <p className="gpp-desc">
+              Fresh farm vegetables & neighborhood kirana staples delivered right to your doorstep. Use coupon <strong>TASTY12</strong> for flat ₹30 off!
+            </p>
+
+            <button
+              type="button"
+              className="gpp-cta-btn"
+              onClick={() => navigate('/store/localfresh')}
+            >
+              <span>See Detail & Shop</span>
+              <ArrowRight size={15} />
+            </button>
+          </div>
+
+          <div className="gpp-visual-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80"
+              alt="Fresh Groceries"
+              className="gpp-visual-img"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Featured Stores Catalog with AI Seller Posters ── */}
       <section className="home-section">
         <div className="section-header-row store-header-with-toggle">
           <div>
-            <h3 className="section-heading">Featured Sellers & Kirana Stores</h3>
-            <p className="section-subheading">Verified neighborhood partners with live mandi stock</p>
+            <h3 className="groceasy-sec-title">Stores in Your Locality</h3>
+            <p className="groceasy-sec-sub">Nearby stores deliver in 20–30 mins • Direct Mandi in 2 hrs</p>
           </div>
 
           {/* 2-Kind View Switcher: Grid View vs Compact View */}
@@ -253,7 +462,6 @@ export default function HomePage() {
               className={`store-vt-btn ${storeViewMode === 'grid' ? 'active' : ''}`}
               onClick={() => setStoreViewMode('grid')}
               title="Grid View (Poster Cards)"
-              aria-label="Switch to Grid View"
             >
               <LayoutGrid size={15} />
               <span>Grid</span>
@@ -263,7 +471,6 @@ export default function HomePage() {
               className={`store-vt-btn ${storeViewMode === 'compact' ? 'active' : ''}`}
               onClick={() => setStoreViewMode('compact')}
               title="Compact View (Dense List)"
-              aria-label="Switch to Compact View"
             >
               <Rows3 size={15} />
               <span>Compact</span>
@@ -301,6 +508,8 @@ export default function HomePage() {
       {selectedProduct && (
         <ProductDetailModal
           product={selectedProduct}
+          storeId={selectedProduct.storeId}
+          storeName={selectedProduct.storeName}
           onClose={() => setSelectedProduct(null)}
         />
       )}

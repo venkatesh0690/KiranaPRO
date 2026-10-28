@@ -7597,3 +7597,589 @@ input { font-family: inherit; }
 .pmc-save-btn:hover {
   background: #008f5a;
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   GROCEASY HOMEPAGE AESTHETIC (Uploaded Design Images 1 & 2)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Top Forest Green Header */
+.groceasy-header {
+  background: linear-gradient(135deg, #133928 0%, #0F2E20 100%);
+  border-radius: 24px;
+  padding: 22px 28px 24px;
+  color: white;
+  margin-bottom: 8px;
+  box-shadow: 0 12px 30px rgba(19, 57, 40, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.groceasy-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.groceasy-loc-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.groceasy-loc-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+
+.groceasy-loc-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.groceasy-loc-label {
+  font-size: 0.72rem;
+  color: #A7F3D0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.groceasy-loc-val {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.98rem;
+  color: #FFFFFF;
+  font-weight: 800;
+}
+
+.groceasy-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.groceasy-auth-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.groceasy-auth-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--r-full);
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  border: none;
+}
+
+.groceasy-auth-btn.signup {
+  background: #FFFFFF;
+  color: #133928;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.groceasy-auth-btn.signup:hover {
+  background: #F0FDF4;
+  transform: translateY(-1px);
+}
+
+.groceasy-auth-btn.login {
+  background: rgba(255, 255, 255, 0.16);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.groceasy-auth-btn.login:hover {
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.groceasy-user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--r-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.groceasy-circle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  backdrop-filter: blur(8px);
+  transition: all 0.18s ease;
+}
+
+.groceasy-circle-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.groceasy-notif-dot {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #F59E0B;
+  border: 1.5px solid #133928;
+}
+
+.groceasy-cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #F59E0B;
+  color: #0F172A;
+  font-size: 0.68rem;
+  font-weight: 900;
+  padding: 1px 6px;
+  border-radius: var(--r-full);
+  border: 1.5px solid #133928;
+}
+
+/* White Pill Search Bar (Matching Image 1) */
+.groceasy-search-bar {
+  background: #FFFFFF;
+  border-radius: var(--r-full);
+  padding: 10px 14px 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.groceasy-search-bar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.groceasy-search-placeholder {
+  flex: 1;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #64748B;
+}
+
+.groceasy-search-filter-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+  cursor: pointer;
+}
+
+/* ── Selected by Category Section (Image 1) ── */
+.groceasy-sec-title {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #0F172A;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.groceasy-sec-sub {
+  font-size: 0.8rem;
+  color: #64748B;
+  font-weight: 500;
+  margin: 2px 0 0;
+}
+
+.groceasy-see-all-link {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #133928;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.groceasy-see-all-link:hover {
+  text-decoration: underline;
+}
+
+.groceasy-cats-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 4px 2px 10px;
+  scrollbar-width: none;
+}
+
+.groceasy-cats-row::-webkit-scrollbar {
+  display: none;
+}
+
+.groceasy-cat-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.groceasy-cat-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.65rem;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.groceasy-cat-circle.filled-green {
+  background: #133928;
+  color: white;
+  box-shadow: 0 6px 16px rgba(19, 57, 40, 0.28);
+  transform: scale(1.05);
+}
+
+.groceasy-cat-circle.soft-tint {
+  background: #F1F5F9;
+  border: 1.5px solid #E2E8F0;
+}
+
+.groceasy-cat-circle.soft-tint:hover {
+  background: #DCFCE7;
+  border-color: #86EFAC;
+  transform: scale(1.06);
+}
+
+.groceasy-cat-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.groceasy-cat-btn.is-active .groceasy-cat-title {
+  color: #133928;
+  font-weight: 900;
+}
+
+/* ── "Popular Now" Products Grid (Image 1 & 2) ── */
+.groceasy-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .groceasy-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+.groceasy-product-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.groceasy-product-card:hover {
+  transform: translateY(-3px);
+  border-color: #CBD5E1;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.gpc-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.gpc-discount-badge {
+  background: #FFF1EE;
+  color: #FF5A36;
+  font-size: 0.68rem;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: var(--r-full);
+}
+
+.gpc-heart-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gpc-img-wrap {
+  width: 100%;
+  height: 125px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: 6px 0 10px;
+}
+
+.gpc-real-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+}
+
+.groceasy-product-card:hover .gpc-real-img {
+  transform: scale(1.08);
+}
+
+.gpc-details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: auto;
+}
+
+.gpc-name {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gpc-unit {
+  font-size: 0.72rem;
+  color: #64748B;
+  font-weight: 600;
+}
+
+.gpc-price-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.gpc-price-box {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.gpc-price {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #0F172A;
+}
+
+.gpc-mrp {
+  font-size: 0.74rem;
+  color: #94A3B8;
+  text-decoration: line-through;
+  font-weight: 600;
+}
+
+.gpc-add-circle-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #133928;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 3px 8px rgba(19, 57, 40, 0.25);
+}
+
+.gpc-add-circle-btn:hover {
+  background: #008f5a;
+  transform: scale(1.08);
+}
+
+.gpc-qty-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #F0FDF4;
+  border: 1.5px solid #86EFAC;
+  border-radius: var(--r-full);
+  padding: 3px 6px;
+}
+
+.gpc-qp-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid #86EFAC;
+  color: #133928;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.gpc-qp-count {
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: #133928;
+  min-width: 14px;
+  text-align: center;
+}
+
+/* ── Promotional Card (Image 1 Middle Screen) ── */
+.groceasy-promo-poster-card {
+  background: linear-gradient(105deg, #133928 0%, #1A4D37 100%);
+  border-radius: 22px;
+  padding: 26px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(19, 57, 40, 0.18);
+  gap: 20px;
+}
+
+.gpp-content {
+  flex: 1;
+  max-width: 550px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 2;
+}
+
+.gpp-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  background: #DCFCE7;
+  color: #15803D;
+  font-size: 0.78rem;
+  font-weight: 900;
+  padding: 4px 12px;
+  border-radius: var(--r-full);
+  border: 1px solid #86EFAC;
+}
+
+.gpp-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.gpp-desc {
+  font-size: 0.88rem;
+  color: #D1FAE5;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.gpp-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  background: #FFFFFF;
+  color: #133928;
+  font-size: 0.85rem;
+  font-weight: 900;
+  padding: 9px 20px;
+  border-radius: var(--r-full);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  margin-top: 4px;
+}
+
+.gpp-cta-btn:hover {
+  background: #F0FDF4;
+  transform: translateY(-2px);
+}
+
+.gpp-visual-wrap {
+  width: 220px;
+  height: 160px;
+  border-radius: 16px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.gpp-visual-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .groceasy-promo-poster-card {
+    flex-direction: column;
+    padding: 20px 22px;
+  }
+  .gpp-visual-wrap {
+    width: 100%;
+    height: 120px;
+  }
+  .gpp-title {
+    font-size: 1.45rem;
+  }
+}
