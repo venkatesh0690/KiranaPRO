@@ -1,302 +1,153 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Bell,
-  Search,
-  SlidersHorizontal,
-  ChevronRight,
-  Zap,
-  Star,
-  Clock,
-  Bike,
-  Sparkles,
-  MapPin,
-  ShoppingBag,
-  ArrowRight,
-  LayoutGrid,
-  Rows3,
-  UserPlus,
-  LogIn,
-  LogOut,
-  User,
-  ShieldCheck
-} from 'lucide-react';
+import { ArrowRight, ChevronDown, MapPin, Search, ShoppingBag, UserRound } from 'lucide-react';
 import { allCategories } from '../data/stores';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
 import StoreCard from '../components/StoreCard';
-import ProductDetailModal from '../components/ProductDetailModal';
 import CategoriesModal from '../components/CategoriesModal';
 import AuthModal from '../components/AuthModal';
 
-export default function HomePage() {
+const storeFilters = [
+  { id: 'all', label: 'All stores' },
+  { id: 'fast', label: 'Fast delivery' },
+  { id: 'rated', label: 'Top rated' },
+  { id: 'free', label: 'Free delivery' },
+];
+
+export default function HomePage({ userLocation }) {
   const navigate = useNavigate();
   const { stores } = useStore();
   const { totalItems } = useCart();
-  const { authSession, logout } = useSecurity();
+  const { authSession } = useSecurity();
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [authMode, setAuthMode] = useState(null);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
 
-  const [authModalMode, setAuthModalMode] = useState(null);
-  const [activeCategory, setActiveCategory] = useState('vegetables');
-  const [activeStoreFilter, setActiveStoreFilter] = useState('all');
-  const [storeViewMode, setStoreViewMode] = useState('grid'); // 'grid' | 'compact'
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [isCatModalOpen, setIsCatModalOpen] = useState(false);
-
-  const storeFilters = [
-    { id: 'all', label: 'All Stores' },
-    { id: 'fast', label: '⚡ 20–30 Mins' },
-    { id: 'rated', label: '⭐ Top Rated (4.7+)' },
-    { id: 'free', label: '🚚 Free Delivery' }
-  ];
-
-  const filteredStores = stores.filter((s) => {
-    if (activeStoreFilter === 'fast') return s.deliveryTime.toLowerCase().includes('30') || s.deliveryTime.toLowerCase().includes('20') || s.deliveryTime.toLowerCase().includes('15');
-    if (activeStoreFilter === 'rated') return s.rating >= 4.7;
-    if (activeStoreFilter === 'free') return s.deliveryFee === 0;
+  const filteredStores = stores.filter((store) => {
+    if (activeFilter === 'fast') return /15|20|30/.test(store.deliveryTime || '');
+    if (activeFilter === 'rated') return Number(store.rating) >= 4.7;
+    if (activeFilter === 'free') return Number(store.deliveryFee) === 0;
     return true;
   });
 
+  const openCategory = (categoryName) => {
+    setCategoriesOpen(false);
+    const preferred = stores.find(
+      (store) => String(store.id).toLowerCase() === 'localfresh' && store.categories?.includes(categoryName)
+    );
+    const match = preferred || stores.find((store) => store.categories?.includes(categoryName));
+    if (match) {
+      navigate(`/store/${match.id}`, { state: { category: categoryName } });
+    } else {
+      navigate('/search');
+    }
+  };
+
   return (
-    <div className="home-container">
-      {/* ── Deep Forest Green Brand Header (Matching Groceasy Design in Image 1 & 2) ── */}
-      <header className="minimal-header">
-        <div className="minimal-top-row">
-          {/* Left: Brand & Delivery Location */}
-          <div className="minimal-left-group">
-            <div className="minimal-brand" onClick={() => navigate('/home')}>
-              <span className="mb-bolt">⚡</span>
-              <span className="mb-text">Kirana<strong>PRO</strong></span>
-            </div>
-
-            <div className="minimal-loc-pill" onClick={() => navigate('/')}>
-              <MapPin size={12} color="#16A34A" />
-              <span className="minimal-loc-txt">Maddilapalem, Vizag • 2 km</span>
-              <ChevronRight size={11} color="#94A3B8" />
-            </div>
-
-            {authSession.isAuthenticated && (
-              <span className="minimal-user-badge">
-                <User size={11} color="#16A34A" />
-                <span>Hi, {authSession.userName.split(' ')[0]}</span>
-              </span>
-            )}
-          </div>
-
-          {/* Top Right Corner: Logout, Cart and Notification Icons */}
-          <div className="minimal-top-right-corner">
-            {/* Notification Bell */}
-            <button
-              type="button"
-              className="minimal-circle-btn notif"
-              onClick={() => alert('Nearby stores deliver within 20–30 mins! Mandi orders delivered in 2 hours.')}
-              aria-label="Notifications"
-              title="Notifications"
-            >
-              <Bell size={16} color="#334155" />
-              <span className="minimal-notif-dot" />
-            </button>
-
-            {/* Shopping Cart */}
-            <button
-              type="button"
-              className="minimal-circle-btn cart"
-              onClick={() => navigate('/cart')}
-              aria-label={`Cart with ${totalItems} items`}
-              title="Cart"
-            >
-              <ShoppingBag size={16} color="#334155" />
-              {totalItems > 0 && (
-                <span className="minimal-cart-badge">{totalItems}</span>
-              )}
-            </button>
-
-            {/* Logout / Login in Top Right Corner */}
-            {authSession.isAuthenticated ? (
-              <button
-                type="button"
-                className="minimal-circle-btn logout"
-                onClick={logout}
-                title="Log Out"
-                aria-label="Log Out"
-              >
-                <LogOut size={16} color="#EF4444" />
-              </button>
-            ) : (
-              <div className="minimal-auth-btns">
-                <button
-                  type="button"
-                  className="minimal-auth-btn signup"
-                  onClick={() => setAuthModalMode('signup')}
-                >
-                  <UserPlus size={12} />
-                  <span>Sign Up</span>
-                </button>
-                <button
-                  type="button"
-                  className="minimal-auth-btn login"
-                  onClick={() => setAuthModalMode('login')}
-                >
-                  <LogIn size={12} />
-                  <span>Log In</span>
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Minimalist Search Bar */}
-        <div className="minimal-search-bar" onClick={() => navigate('/search')}>
-          <Search size={16} color="#94A3B8" />
-          <span className="minimal-search-ph">Search farm vegetables, fresh fruits, groceries, dairy...</span>
-          <button
-            type="button"
-            className="minimal-search-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate('/search');
-            }}
-            aria-label="Filter"
-          >
-            <SlidersHorizontal size={14} />
+    <div className="home-container kp-home">
+      <header className="kp-header">
+        <div className="kp-header-top">
+          <button className="kp-wordmark" type="button" onClick={() => navigate('/home')} aria-label="KiranaPRO home">
+            <span className="kp-wordmark-symbol">K</span>
+            <span>Kirana<span className="kp-wordmark-accent">PRO</span></span>
           </button>
+          <div className="kp-header-actions">
+            <button className="kp-account-link" type="button" onClick={() => authSession.isAuthenticated ? navigate('/profile') : setAuthMode('login')}>
+              <UserRound size={17} />
+              <span>{authSession.isAuthenticated ? 'Account' : 'Sign in'}</span>
+            </button>
+            <button className="kp-cart-icon" type="button" onClick={() => navigate('/cart')} aria-label={`Cart with ${totalItems} items`}>
+              <ShoppingBag size={20} />
+              {totalItems > 0 && <span className="kp-cart-count">{totalItems}</span>}
+            </button>
+          </div>
         </div>
+
+        <button type="button" className="kp-delivery-location" onClick={() => navigate('/')}>
+          <MapPin size={15} aria-hidden="true" />
+          <span>Delivering to <strong>{userLocation || 'Choose your area'}</strong></span>
+          <ChevronDown size={15} aria-hidden="true" />
+        </button>
       </header>
 
-      {/* ── Selected by Category Section (Matching Image 1 Middle Screen) ── */}
-      <section className="home-section groceasy-cat-section">
-        <div className="section-header-row">
-          <div>
-            <h3 className="groceasy-sec-title">Selected by Category</h3>
-          </div>
-          <button
-            type="button"
-            className="groceasy-see-all-link"
-            onClick={() => setIsCatModalOpen(true)}
-          >
-            See All
+      <section className="kp-intro" aria-labelledby="kp-intro-title">
+        <span className="kp-eyebrow">SHOP LOCAL, EVERY DAY</span>
+        <h1 id="kp-intro-title">Your neighborhood, delivered.</h1>
+        <p>Fresh essentials from stores around you, all in one place.</p>
+        <button type="button" className="kp-search-trigger" onClick={() => navigate('/search')}>
+          <Search size={19} />
+          <span>Search groceries, vegetables, and more</span>
+          <ArrowRight size={18} className="kp-search-arrow" />
+        </button>
+      </section>
+
+      <section className="kp-section" aria-labelledby="kp-category-title">
+        <div className="kp-section-heading">
+          <h2 id="kp-category-title">Shop by category</h2>
+          <button type="button" className="kp-text-link" onClick={() => setCategoriesOpen(true)}>
+            View all <ArrowRight size={15} />
           </button>
         </div>
-
-        {/* Circular Avatar List: 1st is dark green filled circle with white icon */}
-        <div className="groceasy-cats-row">
-          {allCategories.slice(0, 8).map((cat) => {
-            const isActive = activeCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                className={`groceasy-cat-btn ${isActive ? 'is-active' : ''}`}
-                onClick={() => {
-                  setActiveCategory(cat.id);
-                  const catName = cat.name;
-                  const mandiCats = ['Vegetables', 'Fruits', 'Leafy Green', 'Groceries', 'Flowers', 'Pickles'];
-                  if (mandiCats.includes(catName)) {
-                    navigate('/store/localfresh', { state: { category: catName } });
-                  } else {
-                    navigate('/store/1', { state: { category: catName } });
-                  }
-                }}
-              >
-                <div className={`groceasy-cat-circle ${isActive ? 'filled-green' : 'soft-tint'}`}>
-                  <span className="groceasy-cat-emoji">{cat.icon}</span>
-                </div>
-                <span className="groceasy-cat-title">{cat.name.split(' ')[0]}</span>
-              </button>
-            );
-          })}
+        <div className="kp-category-scroll">
+          {allCategories.slice(0, 10).map((category) => (
+            <button
+              type="button"
+              className="kp-category"
+              key={category.id}
+              onClick={() => openCategory(category.name)}
+              aria-label={`Shop ${category.name}`}
+            >
+              <span className="kp-category-icon" aria-hidden="true">{category.icon}</span>
+              <span className="kp-category-name">{category.name}</span>
+            </button>
+          ))}
         </div>
       </section>
 
-      
-
-      {/* ── Featured Stores Catalog with AI Seller Posters ── */}
-      <section className="home-section">
-        <div className="section-header-row store-header-with-toggle">
+      <section className="kp-section kp-stores-section" aria-labelledby="kp-stores-title">
+        <div className="kp-section-heading">
           <div>
-            <h3 className="groceasy-sec-title">Stores in Your Locality</h3>
-            <p className="groceasy-sec-sub">Nearby stores deliver in 20–30 mins • Direct Mandi in 2 hrs</p>
+            <h2 id="kp-stores-title">Explore stores</h2>
+            <p>Find your everyday favorites nearby.</p>
           </div>
-
-          {/* 2-Kind View Switcher: Grid View vs Compact View */}
-          <div className="store-view-toggle-pill">
-            <button
-              type="button"
-              className={`store-vt-btn ${storeViewMode === 'grid' ? 'active' : ''}`}
-              onClick={() => setStoreViewMode('grid')}
-              title="Grid View (Poster Cards)"
-            >
-              <LayoutGrid size={15} />
-              <span>Grid</span>
-            </button>
-            <button
-              type="button"
-              className={`store-vt-btn ${storeViewMode === 'compact' ? 'active' : ''}`}
-              onClick={() => setStoreViewMode('compact')}
-              title="Compact View (Dense List)"
-            >
-              <Rows3 size={15} />
-              <span>Compact</span>
-            </button>
-          </div>
+          <span className="kp-result-count">{filteredStores.length} stores</span>
         </div>
-
-        {/* Store Filters */}
-        <div className="store-filter-pills">
-          {storeFilters.map((flt) => (
+        <div className="kp-filters" role="group" aria-label="Filter stores">
+          {storeFilters.map((filter) => (
             <button
-              key={flt.id}
               type="button"
-              className={`store-filter-pill ${activeStoreFilter === flt.id ? 'active' : ''}`}
-              onClick={() => setActiveStoreFilter(flt.id)}
+              key={filter.id}
+              className={`kp-filter ${activeFilter === filter.id ? 'active' : ''}`}
+              aria-pressed={activeFilter === filter.id}
+              onClick={() => setActiveFilter(filter.id)}
             >
-              {flt.label}
+              {filter.label}
             </button>
           ))}
         </div>
-
-        {/* Stores List with AI Posters */}
-        <div className={`stores-list-container view-${storeViewMode}`}>
-          {filteredStores.map((store) => (
-            <StoreCard
-              key={store.id}
-              store={store}
-              layout={storeViewMode}
-            />
-          ))}
-        </div>
+        {filteredStores.length ? (
+          <div className="kp-store-grid">
+            {filteredStores.map((store) => <StoreCard key={store.id} store={store} layout="compact" />)}
+          </div>
+        ) : (
+          <div className="kp-empty-stores">
+            <p>No stores match this filter right now.</p>
+            <button type="button" className="kp-text-link" onClick={() => setActiveFilter('all')}>See all stores</button>
+          </div>
+        )}
       </section>
 
-      {/* Product Detail Modal */}
-      {selectedProduct && (
-        <ProductDetailModal
-          product={selectedProduct}
-          storeId={selectedProduct.storeId}
-          storeName={selectedProduct.storeName}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
-
-      {/* Categories Modal */}
       <CategoriesModal
-        isOpen={isCatModalOpen}
-        onClose={() => setIsCatModalOpen(false)}
-        onSelectCategory={(catName) => {
-          setIsCatModalOpen(false);
-          const mandiCats = ['Vegetables', 'Fruits', 'Leafy Green', 'Groceries', 'Flowers', 'Pickles'];
-          if (mandiCats.includes(catName)) {
-            navigate('/store/localfresh', { state: { category: catName } });
-          } else {
-            navigate('/store/1', { state: { category: catName } });
-          }
-        }}
+        isOpen={categoriesOpen}
+        onClose={() => setCategoriesOpen(false)}
+        onSelectCategory={openCategory}
       />
-
-      {/* Auth Modal with Clean Sign Up / Log In */}
       <AuthModal
-        isOpen={Boolean(authModalMode)}
-        initialMode={authModalMode || 'signup'}
-        onClose={() => setAuthModalMode(null)}
+        isOpen={Boolean(authMode)}
+        initialMode={authMode || 'login'}
+        onClose={() => setAuthMode(null)}
       />
     </div>
   );

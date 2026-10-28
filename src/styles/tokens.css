@@ -1,77 +1,58 @@
-/* ══════════════════════════════════════════════════════════════════
-   DESIGN TOKENS — KiranaPRO (Curated from Uploaded Mobile UI Designs)
-   ══════════════════════════════════════════════════════════════════ */
+/* KiranaPRO — one calm, accessible design language across customer and portal views. */
 :root {
-  /* Brand Primary */
-  --brand: #FF5722;
-  --brand-light: #FFF0EB;
-  --brand-dark: #D84315;
-  --brand-gradient: linear-gradient(135deg, #FF6E40 0%, #FF3D00 100%);
-
-  /* Secondary Accents from Screenshots */
-  --accent-orange: #FF6B4A;
-  --accent-orange-light: #FFF2EE;
-  --accent-green: #0C8A4E;
-  --accent-green-light: #E8F5ED;
-  --accent-teal: #00A86B;
-  --accent-blue: #0284C7;
-  --accent-blue-light: #E0F2FE;
-  --accent-purple: #7C3AED;
-  --accent-purple-light: #EDE9FE;
-
-  /* Neutrals */
-  --n0: #FFFFFF;
-  --n25: #FCFCFD;
-  --n50: #F8F9FA;
-  --n100: #F1F3F5;
-  --n150: #E9ECEF;
-  --n200: #DEE2E6;
-  --n300: #CED4DA;
-  --n400: #ADB5BD;
-  --n500: #6C757D;
-  --n600: #495057;
-  --n700: #343A40;
-  --n800: #212529;
-  --n900: #121417;
-
-  /* Pastel Category Backgrounds (from Image 3) */
-  --pastel-orange: #FFF3E0;
-  --pastel-green: #E8F5E9;
-  --pastel-blue: #E3F2FD;
-  --pastel-pink: #FCE4EC;
-  --pastel-purple: #F3E5F5;
-  --pastel-yellow: #FFFDE7;
-  --pastel-teal: #E0F7FA;
-  --pastel-coral: #FBE9E7;
-
-  /* Typography */
-  --font: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-
-  /* Radius */
-  --r-xs: 6px;
-  --r-sm: 10px;
-  --r-md: 14px;
-  --r-lg: 18px;
-  --r-xl: 24px;
-  --r-2xl: 32px;
+  --brand: #28654a;
+  --brand-light: #edf5ef;
+  --brand-dark: #1e4e39;
+  --brand-gradient: linear-gradient(135deg, #28654a, #28654a);
+  --accent-orange: #b86e45;
+  --accent-orange-light: #faf2ed;
+  --accent-green: #28654a;
+  --accent-green-light: #edf5ef;
+  --accent-teal: #28654a;
+  --accent-blue: #426d89;
+  --accent-blue-light: #edf2f6;
+  --accent-purple: #68617c;
+  --accent-purple-light: #f1eff5;
+  --n0: #ffffff;
+  --n25: #fcfdfb;
+  --n50: #f7f9f6;
+  --n100: #eff2ee;
+  --n150: #e5eae4;
+  --n200: #d9e1d8;
+  --n300: #bfcabe;
+  --n400: #91a096;
+  --n500: #66766d;
+  --n600: #506157;
+  --n700: #36463c;
+  --n800: #25362c;
+  --n900: #18281f;
+  --pastel-orange: #f7f4ed;
+  --pastel-green: #f0f4ef;
+  --pastel-blue: #f1f4f6;
+  --pastel-pink: #f7f2f3;
+  --pastel-purple: #f5f2f6;
+  --pastel-yellow: #f8f7ee;
+  --pastel-teal: #f1f5f2;
+  --pastel-coral: #f7f3f0;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --r-xs: 5px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 14px;
+  --r-xl: 18px;
+  --r-2xl: 22px;
   --r-full: 9999px;
-
-  /* Modern Soft Shadows */
-  --sh-sm: 0 2px 8px rgba(18, 20, 23, 0.04);
-  --sh-md: 0 6px 18px rgba(18, 20, 23, 0.06);
-  --sh-lg: 0 12px 32px rgba(18, 20, 23, 0.08);
-  --sh-xl: 0 20px 48px rgba(18, 20, 23, 0.12);
-  --sh-nav: 0 -4px 20px rgba(18, 20, 23, 0.05);
-
-  /* Transitions */
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --sh-sm: 0 1px 3px rgba(24,40,31,.035);
+  --sh-md: 0 4px 16px rgba(24,40,31,.05);
+  --sh-lg: 0 8px 24px rgba(24,40,31,.07);
+  --sh-xl: 0 16px 32px rgba(24,40,31,.085);
+  --sh-nav: 0 -2px 14px rgba(24,40,31,.035);
+  --ease: cubic-bezier(.2,.7,.2,1);
+  --ease-spring: cubic-bezier(.2,.7,.2,1);
   --dur-fast: 150ms;
-  --dur-normal: 250ms;
-  --dur-slow: 400ms;
-
-  /* Layout */
-  --app-max-width: 480px; /* Mobile frame width */
+  --dur-normal: 200ms;
+  --dur-slow: 280ms;
+  --app-max-width: 480px;
   --nav-height: 64px;
   --bottom-bar-height: 68px;
 }

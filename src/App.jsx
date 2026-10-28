@@ -19,6 +19,7 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 import './styles/tokens.css';
 import './styles/global.css';
+import './styles/minimal.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();
@@ -42,7 +43,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
             path="/"
             element={
               userLocation ? (
-                <HomePage />
+                <HomePage userLocation={userLocation} />
               ) : (
                 <LocationPage onLocationSet={setUserLocation} />
               )
@@ -50,7 +51,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
           />
           <Route
             path="/home"
-            element={userLocation ? <HomePage /> : <Navigate to="/" />}
+            element={userLocation ? <HomePage userLocation={userLocation} /> : <Navigate to="/" />}
           />
           <Route
             path="/store/:id"
