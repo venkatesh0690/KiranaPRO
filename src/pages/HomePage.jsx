@@ -16,10 +16,10 @@ import {
   LayoutGrid,
   Rows3,
   UserPlus,
-  Store,
   LogIn,
   LogOut,
-  User
+  User,
+  ShieldCheck
 } from 'lucide-react';
 import { allCategories } from '../data/stores';
 import { useStore } from '../context/StoreContext';
@@ -33,7 +33,7 @@ import AuthModal from '../components/AuthModal';
 export default function HomePage() {
   const navigate = useNavigate();
   const { stores } = useStore();
-  const { totalItems, totalPrice } = useCart();
+  const { totalItems } = useCart();
   const { authSession, logout } = useSecurity();
   const [authModalMode, setAuthModalMode] = useState(null);
 
@@ -44,13 +44,13 @@ export default function HomePage() {
 
   const storeFilters = [
     { id: 'all', label: 'All Stores' },
-    { id: 'fast', label: '⚡ Fastest (Within 30m)' },
+    { id: 'fast', label: '⚡ Fastest (20–30m)' },
     { id: 'rated', label: '⭐ Top Rated (4.7+)' },
     { id: 'free', label: '🚚 Free Delivery' }
   ];
 
   const filteredStores = stores.filter((s) => {
-    if (activeStoreFilter === 'fast') return s.deliveryTime.toLowerCase().includes('30') || s.deliveryTime.toLowerCase().includes('15');
+    if (activeStoreFilter === 'fast') return s.deliveryTime.toLowerCase().includes('30') || s.deliveryTime.toLowerCase().includes('20') || s.deliveryTime.toLowerCase().includes('15');
     if (activeStoreFilter === 'rated') return s.rating >= 4.7;
     if (activeStoreFilter === 'free') return s.deliveryFee === 0;
     return true;
@@ -58,7 +58,7 @@ export default function HomePage() {
 
   return (
     <div className="home-container">
-      {/* ── Top App Bar (Inspired by Image 2, 3, 4) ── */}
+      {/* ── Top App Bar (Curated from Uploaded Design Images 1, 2, 3) ── */}
       <header className="home-top-bar">
         <div className="top-user-greeting">
           <div className="greeting-text">
@@ -74,46 +74,37 @@ export default function HomePage() {
                 : 'Welcome to KiranaPRO 👋'}
             </h1>
 
-            {/* User & Seller Sign Up Actions */}
+            {/* Requirement: Just Show Sign up and log in button (No clutter) */}
             {!authSession.isAuthenticated ? (
-              <div className="home-auth-strip">
+              <div className="home-auth-clean-strip">
                 <button
                   type="button"
-                  className="home-auth-pill user"
-                  onClick={() => setAuthModalMode('user-signup')}
-                  title="Create Customer Account"
+                  className="home-clean-btn signup"
+                  onClick={() => setAuthModalMode('signup')}
+                  title="Create an account"
                 >
-                  <UserPlus size={12} />
-                  <span>User Sign Up</span>
+                  <UserPlus size={13} />
+                  <span>Sign Up</span>
                 </button>
                 <button
                   type="button"
-                  className="home-auth-pill seller"
-                  onClick={() => setAuthModalMode('seller-signup')}
-                  title="Register your store as a partner"
+                  className="home-clean-btn login"
+                  onClick={() => setAuthModalMode('login')}
+                  title="Sign in to your account"
                 >
-                  <Store size={12} />
-                  <span>Seller Sign Up</span>
-                </button>
-                <button
-                  type="button"
-                  className="home-auth-pill login"
-                  onClick={() => setAuthModalMode('user-login')}
-                  title="Log in to your account"
-                >
-                  <LogIn size={12} />
-                  <span>Login</span>
+                  <LogIn size={13} />
+                  <span>Log In</span>
                 </button>
               </div>
             ) : (
-              <div className="home-auth-strip logged-in">
+              <div className="home-auth-clean-strip logged-in">
                 <span className="home-logged-tag">
                   <User size={12} />
                   <span>{authSession.userName}</span>
                 </span>
                 <button
                   type="button"
-                  className="home-auth-pill logout"
+                  className="home-clean-btn logout"
                   onClick={logout}
                   title="Sign Out"
                 >
@@ -129,14 +120,14 @@ export default function HomePage() {
             <button
               type="button"
               className="notif-bell-btn"
-              onClick={() => alert('Nearby stores deliver in 20 mins, other stores within 30 mins, and LocalFresh Mandi within 2 hours!')}
+              onClick={() => alert('Nearby stores deliver in 20–30 mins! Mandi orders delivered in 2 hours.')}
               aria-label="Notifications"
             >
               <Bell size={20} />
               <span className="notif-dot" />
             </button>
 
-            {/* Top-Right Shopping Cart Button with Real-time Count Badge (Requested) */}
+            {/* Shopping Cart Button with Real-time Count Badge */}
             <button
               type="button"
               className="top-cart-btn"
@@ -154,10 +145,10 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Search bar with filter icon (matching Image 1, 2, 4) */}
+        {/* Search bar with filter icon */}
         <div className="home-search-bar" onClick={() => navigate('/search')}>
           <Search size={18} color="var(--n400)" />
-          <span className="search-placeholder">Search "onion, milk, bread, mosambi, dal..."</span>
+          <span className="search-placeholder">Search "onion, milk, bread, spices, ghee, dal..."</span>
           <button
             type="button"
             className="search-filter-icon"
@@ -171,25 +162,39 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* ── Hero Banner (Curved Card matching Image 2 & 4) ── */}
-      <section className="home-hero-banner">
-        <div className="banner-content">
-          <span className="banner-tag">⚡ 20–30 Mins Delivery • Mandi in 2 Hrs</span>
-          <h2 className="banner-title">25% Off First Order</h2>
-          <p className="banner-code-text">Use coupon <strong>KIRANA25</strong> at checkout</p>
-          <button
-            type="button"
-            className="banner-cta-btn"
-            onClick={() => navigate('/store/localfresh')}
-          >
-            Shop Mandi & Kiranas
-          </button>
-        </div>
-        <div className="banner-visual">
-          <span className="banner-visual-emoji">🛵</span>
-          <div className="banner-floating-badge">
-            <Sparkles size={12} color="#FFAB00" />
-            <span>Under 2km</span>
+      {/* ── AI Hero Poster (Requirement: Just mention, 20-30 mins delivery in the poster) ── */}
+      <section className="home-ai-hero-poster">
+        <div className="hero-poster-card">
+          <div className="hero-poster-bg-img" />
+          <div className="hero-poster-overlay" />
+
+          <div className="hero-poster-content">
+            {/* Explicit 20-30 mins delivery pill badge right on the poster */}
+            <div className="hero-poster-pill">
+              <Clock size={13} strokeWidth={2.5} />
+              <span>20-30 mins delivery</span>
+            </div>
+
+            <h2 className="hero-poster-headline">
+              Shop Smarter, Eat Better
+            </h2>
+            <p className="hero-poster-subtext">
+              Fresh farm harvest & neighborhood kirana staples delivered right to your doorstep.
+            </p>
+
+            <div className="hero-poster-cta-row">
+              <button
+                type="button"
+                className="hero-poster-cta"
+                onClick={() => navigate('/store/localfresh')}
+              >
+                <span>Shop Now</span>
+                <ArrowRight size={15} />
+              </button>
+              <span className="hero-poster-guarantee">
+                <ShieldCheck size={14} color="#86EFAC" /> Sourced from Local Mandis
+              </span>
+            </div>
           </div>
         </div>
       </section>
@@ -197,7 +202,10 @@ export default function HomePage() {
       {/* ── Circular Categories Section (matching Image 1, 3, 4) ── */}
       <section className="home-section">
         <div className="section-header-row">
-          <h3 className="section-heading">Browse Categories</h3>
+          <div>
+            <h3 className="section-heading">Selected by Category</h3>
+            <p className="section-subtext-light">Curated essentials from local stores</p>
+          </div>
           <button
             type="button"
             className="see-all-btn"
@@ -230,21 +238,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Neighborhood Stores (LocalFresh Included as FIRST Store) ── */}
+      {/* ── AI Seller Posters & Stores Catalog ── */}
       <section className="home-section">
         <div className="section-header-row store-header-with-toggle">
           <div>
-            <h3 className="section-heading">Stores in Your Locality</h3>
-            <p className="section-subheading">Nearby stores deliver in 20 mins • Direct Mandi within 2 hrs</p>
+            <h3 className="section-heading">Featured Sellers & Kirana Stores</h3>
+            <p className="section-subheading">Verified neighborhood partners with live mandi stock</p>
           </div>
 
-          {/* 2-Kind View Switcher: Grid View vs Compact View (Requested) */}
+          {/* 2-Kind View Switcher: Grid View vs Compact View */}
           <div className="store-view-toggle-pill">
             <button
               type="button"
               className={`store-vt-btn ${storeViewMode === 'grid' ? 'active' : ''}`}
               onClick={() => setStoreViewMode('grid')}
-              title="Grid View (Cards)"
+              title="Grid View (Poster Cards)"
               aria-label="Switch to Grid View"
             >
               <LayoutGrid size={15} />
@@ -254,7 +262,7 @@ export default function HomePage() {
               type="button"
               className={`store-vt-btn ${storeViewMode === 'compact' ? 'active' : ''}`}
               onClick={() => setStoreViewMode('compact')}
-              title="Compact View (Dense Rows)"
+              title="Compact View (Dense List)"
               aria-label="Switch to Compact View"
             >
               <Rows3 size={15} />
@@ -263,13 +271,13 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Store Filter Tabs */}
-        <div className="trending-filter-tabs">
+        {/* Store Filters */}
+        <div className="store-filter-pills">
           {storeFilters.map((flt) => (
             <button
               key={flt.id}
               type="button"
-              className={`t-filter-pill ${activeStoreFilter === flt.id ? 'active' : ''}`}
+              className={`store-filter-pill ${activeStoreFilter === flt.id ? 'active' : ''}`}
               onClick={() => setActiveStoreFilter(flt.id)}
             >
               {flt.label}
@@ -277,46 +285,37 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Stores List with View Mode */}
+        {/* Stores List with AI Posters */}
         <div className={`stores-list-container view-${storeViewMode}`}>
           {filteredStores.map((store) => (
-            <StoreCard key={store.id} store={store} layout={storeViewMode} />
+            <StoreCard
+              key={store.id}
+              store={store}
+              layout={storeViewMode}
+            />
           ))}
         </div>
       </section>
-
-      {/* Categories Full Modal */}
-      <CategoriesModal
-        isOpen={isCatModalOpen}
-        onClose={() => setIsCatModalOpen(false)}
-        onSelectCategory={(catName) => {
-          if (['Vegetables', 'Fruits', 'Leafy Green', 'Flowers', 'Pickles', 'Groceries'].includes(catName)) {
-            navigate('/store/localfresh');
-          } else {
-            navigate('/store/1');
-          }
-        }}
-      />
 
       {/* Product Detail Modal */}
       {selectedProduct && (
         <ProductDetailModal
           product={selectedProduct}
-          storeId={1}
-          storeName="Sharma General Store"
           onClose={() => setSelectedProduct(null)}
         />
       )}
 
-      {/* Auth Modal for User & Seller Sign Up */}
+      {/* Categories Modal */}
+      <CategoriesModal
+        isOpen={isCatModalOpen}
+        onClose={() => setIsCatModalOpen(false)}
+      />
+
+      {/* Auth Modal with Clean Sign Up / Log In */}
       <AuthModal
         isOpen={Boolean(authModalMode)}
-        initialMode={authModalMode || 'user-signup'}
+        initialMode={authModalMode || 'signup'}
         onClose={() => setAuthModalMode(null)}
-        onSuccess={(type) => {
-          setAuthModalMode(null);
-          if (type === 'seller') navigate('/seller/dashboard');
-        }}
       />
     </div>
   );

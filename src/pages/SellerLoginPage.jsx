@@ -1,58 +1,76 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Store, ArrowLeft, ShieldCheck, CheckCircle2, ChevronRight, Lock, Phone, Eye, EyeOff, AlertTriangle } from 'lucide-react';
+import {
+  Store,
+  Phone,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertTriangle,
+  ChevronRight,
+  ShieldCheck,
+  CheckCircle2,
+  ArrowLeft
+} from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { useSecurity } from '../context/SecurityContext';
 
 export default function SellerLoginPage() {
   const navigate = useNavigate();
-  const { stores, setSellerStoreId, setActiveRole } = useStore();
+  const { stores, setCurrentSellerStore, setActiveRole } = useStore();
   const { loginSeller } = useSecurity();
-  const [selectedStoreId, setSelectedStoreId] = useState(1);
-  const [phone, setPhone] = useState('9848022334');
+
+  const [selectedStoreId, setSelectedStoreId] = useState(stores[1]?.id || 1); // Defaults to Sharma General Store
+  const [phone, setPhone] = useState('9876543210');
   const [pin, setPin] = useState('1234');
   const [showPin, setShowPin] = useState(false);
   const [authError, setAuthError] = useState('');
 
-  const selectedStore = stores.find((s) => s.id === selectedStoreId) || stores[1];
-
   const handleLogin = (e) => {
-    e?.preventDefault();
-    setAuthError('');
+    e.preventDefault();
+    const targetStore = stores.find((s) => s.id === selectedStoreId) || stores[1];
+    const res = loginSeller(targetStore.id, phone, pin, targetStore.name);
 
-    const res = loginSeller(selectedStoreId, phone, pin, selectedStore?.name);
-    if (!res.success) {
-      setAuthError(res.error);
-      return;
+    if (res.success) {
+      setCurrentSellerStore(targetStore);
+      setActiveRole('seller');
+      navigate('/seller/dashboard');
+    } else {
+      setAuthError(res.error || 'Authentication failed. Please check credentials.');
     }
-
-    setSellerStoreId(selectedStoreId);
-    setActiveRole('seller');
-    navigate('/seller/dashboard');
   };
 
   return (
-    <div className="portal-auth-page">
-      {/* Top Navigation */}
-      <div className="portal-auth-header">
-        <button type="button" className="p-back-btn" onClick={() => navigate('/')}>
-          <ArrowLeft size={18} />
-          <span>Back to Customer App</span>
+    <div className="portal-login-screen seller-theme">
+      {/* Top Navbar */}
+      <div className="portal-top-bar">
+        <button
+          type="button"
+          className="portal-back-btn"
+          onClick={() => {
+            setActiveRole('user');
+            navigate('/home');
+          }}
+        >
+          <ArrowLeft size={16} />
+          <span>Storefront</span>
         </button>
-        <span className="p-role-badge seller">🏪 Kirana Partner Portal</span>
+        <span className="portal-tag">Store Partner Console</span>
       </div>
 
-      <div className="portal-auth-card">
-        {/* Banner */}
-        <div className="portal-welcome-banner">
-          <div className="pwb-icon">🏪</div>
-          <h2>KiranaPRO Seller Hub</h2>
+      <div className="portal-card">
+        {/* Portal Header */}
+        <div className="portal-hd-icon seller">
+          <Store size={32} color="#FFFFFF" />
+        </div>
+        <div className="portal-hd-titles">
+          <h2>Kirana Partner Portal</h2>
           <p>
             Update live stocks, set daily mandi prices & dispatch orders (delivered in 20–30 mins) within your 2 km neighborhood.
           </p>
         </div>
 
-        {/* Quick Demo Store Selector */}
+        {/* Quick Store Selector */}
         <div className="quick-seller-select">
           <label className="auth-field-label">Select Your Registered Kirana Shop:</label>
           <div className="seller-stores-grid">
@@ -142,7 +160,7 @@ export default function SellerLoginPage() {
         {/* Security Indicators */}
         <div className="quick-access-test-note">
           <ShieldCheck size={14} color="#059669" />
-          <span>Protected with rate limiting & anti-brute force lock. Default PIN: <strong>1234</strong></span>
+          <span>Protected with enterprise rate limiting & anti-brute force lockout shield.</span>
         </div>
       </div>
     </div>

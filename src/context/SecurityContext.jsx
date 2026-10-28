@@ -44,6 +44,46 @@ export const SecurityProvider = ({ children }) => {
     };
   });
 
+  // Saved Shipping Addresses (Requirement: Add different shipping address)
+  const [savedAddresses, setSavedAddresses] = useState(() => {
+    try {
+      const saved = localStorage.getItem('kp_shipping_addresses');
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // Fallback
+    }
+    return [
+      {
+        id: 'addr-1',
+        type: 'Home',
+        title: 'Flat 402, Sai Residency',
+        street: 'Maddilapalem Main Road, Near AU Gate',
+        landmark: 'Opposite Andhra University Gate',
+        city: 'Visakhapatnam (Vizag)',
+        pincode: '530013',
+        isDefault: true
+      },
+      {
+        id: 'addr-2',
+        type: 'Work',
+        title: 'Tech Hub Office, Floor 3',
+        street: 'VIP Road, CBM Compound, Siripuram',
+        landmark: 'Near Circuit House',
+        city: 'Visakhapatnam (Vizag)',
+        pincode: '530003',
+        isDefault: false
+      }
+    ];
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('kp_shipping_addresses', JSON.stringify(savedAddresses));
+    } catch {
+      // Ignore
+    }
+  }, [savedAddresses]);
+
   // Security Audit Trail
   const [securityAuditLogs, setSecurityAuditLogs] = useState(() => {
     try {
@@ -378,6 +418,66 @@ export const SecurityProvider = ({ children }) => {
     return { success: true };
   }, [logSecurityEvent]);
 
+  // Modify User Name (Requirement: Add option to modify user name)
+  const updateUserName = useCallback((newName) => {
+    const sanitized = sanitizeInput(newName).trim();
+    if (!sanitized || sanitized.length < 2) {
+      return { success: false, error: 'Please enter a valid name (at least 2 letters).' };
+    }
+    setAuthSession(prev => ({
+      ...prev,
+      userName: sanitized,
+      isAuthenticated: true // Ensure active session
+    }));
+    logSecurityEvent('USER_PROFILE_UPDATED', `User changed name to: ${sanitized}`, 'info');
+    return { success: true, name: sanitized };
+  }, [logSecurityEvent]);
+
+  // Add Different Shipping Address
+  const addAddress = useCallback((newAddr) => {
+    const id = `addr-${Date.now()}`;
+    const cleanAddr = {
+      id,
+      type: newAddr.type || 'Home',
+      title: sanitizeInput(newAddr.title || 'My Address'),
+      street: sanitizeInput(newAddr.street || ''),
+      landmark: sanitizeInput(newAddr.landmark || ''),
+      city: sanitizeInput(newAddr.city || 'Visakhapatnam (Vizag)'),
+      pincode: sanitizeInput(newAddr.pincode || '530013'),
+      isDefault: Boolean(newAddr.isDefault)
+    };
+
+    setSavedAddresses(prev => {
+      let updated = prev;
+      if (cleanAddr.isDefault) {
+        updated = updated.map(a => ({ ...a, isDefault: false }));
+      }
+      return [cleanAddr, ...updated];
+    });
+
+    logSecurityEvent('ADDRESS_ADDED', `New shipping address added: ${cleanAddr.title}`, 'info');
+    return { success: true, address: cleanAddr };
+  }, [logSecurityEvent]);
+
+  const removeAddress = useCallback((id) => {
+    setSavedAddresses(prev => {
+      const filtered = prev.filter(a => a.id !== id);
+      if (filtered.length > 0 && !filtered.some(a => a.isDefault)) {
+        filtered[0].isDefault = true;
+      }
+      return filtered;
+    });
+    logSecurityEvent('ADDRESS_REMOVED', `Shipping address removed id: ${id}`, 'info');
+  }, [logSecurityEvent]);
+
+  const setDefaultAddress = useCallback((id) => {
+    setSavedAddresses(prev => prev.map(a => ({
+      ...a,
+      isDefault: a.id === id
+    })));
+    logSecurityEvent('ADDRESS_DEFAULT_SET', `Default shipping address set to id: ${id}`, 'info');
+  }, [logSecurityEvent]);
+
   // Secure Logout: Completely resets to logged out state (no user name shown)
   const logout = useCallback(() => {
     const previousRole = authSession.role;
@@ -404,6 +504,11 @@ export const SecurityProvider = ({ children }) => {
         signupSeller,
         loginAdmin,
         logout,
+        updateUserName,
+        savedAddresses,
+        addAddress,
+        removeAddress,
+        setDefaultAddress,
         securityAuditLogs,
         logSecurityEvent,
         sampleCredentials: SAMPLE_CREDENTIALS,

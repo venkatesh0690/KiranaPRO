@@ -1,16 +1,78 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Minus, Plus, Trash2, Clock, ShieldCheck, Sparkles, AlertCircle, CheckCircle2 } from 'lucide-react';
+import {
+  ArrowLeft,
+  Minus,
+  Plus,
+  Trash2,
+  Clock,
+  ShieldCheck,
+  Sparkles,
+  AlertCircle,
+  CheckCircle2,
+  Tag,
+  Check,
+  X,
+  ChevronRight
+} from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
 import { stores } from '../data/stores';
 
 export default function CartPage() {
   const { cart, addItem, removeItem, clearCart, totalItems, totalPrice } = useCart();
-  const { authSession, logSecurityEvent } = useSecurity();
+  const { authSession, logSecurityEvent, savedAddresses } = useSecurity();
   const navigate = useNavigate();
   const store = stores.find((s) => String(s.id).toLowerCase() === String(cart.storeId).toLowerCase());
   const [orderPlaced, setOrderPlaced] = useState(false);
+
+  // Coupon State (Matching Image 2 Checkout Design)
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponStatus, setCouponStatus] = useState(null); // { type: 'success' | 'error', message: '' }
+
+  // Available Valid Coupons
+  const VALID_COUPONS = {
+    'TASTY12': { type: 'flat', value: 30, min: 99, desc: 'Flat ₹30 off on orders ₹99+' },
+    'KIRANA50': { type: 'flat', value: 50, min: 199, desc: 'Flat ₹50 off on orders ₹199+' },
+    'WELCOME': { type: 'percent', percent: 15, max: 60, min: 120, desc: '15% discount on cart' },
+    'FREEDEL': { type: 'freedel', min: 0, desc: 'Free Delivery on current order' }
+  };
+
+  const handleApplyCoupon = (codeToApply) => {
+    const code = (codeToApply || couponCode).trim().toUpperCase();
+    if (!code) return;
+
+    const coupon = VALID_COUPONS[code];
+    if (!coupon) {
+      setCouponStatus({ type: 'error', message: 'Invalid coupon code. Try TASTY12 or KIRANA50.' });
+      return;
+    }
+
+    if (totalPrice < coupon.min) {
+      setCouponStatus({
+        type: 'error',
+        message: `Min cart value of ₹${coupon.min} required for coupon ${code}.`
+      });
+      return;
+    }
+
+    let discount = 0;
+    if (coupon.type === 'flat') {
+      discount = coupon.value;
+    } else if (coupon.type === 'percent') {
+      discount = Math.min(coupon.max, Math.round((totalPrice * coupon.percent) / 100));
+    }
+
+    setAppliedCoupon({ code, discount, ...coupon });
+    setCouponStatus({ type: 'success', message: `Coupon ${code} applied successfully!` });
+    setCouponCode('');
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponStatus(null);
+  };
 
   if (totalItems === 0) {
     return (
@@ -29,18 +91,24 @@ export default function CartPage() {
     );
   }
 
-  // Requirement: Remove delivery fee as 0, when the cart value reaches 301.
-  const isFreeDelivery = totalPrice >= 301;
+  // Delivery Calculation: Subtotal >= 301 gives Free Delivery rule
+  const isFreeDelivery = totalPrice >= 301 || appliedCoupon?.type === 'freedel';
   const baseDeliveryFee = store?.deliveryFee ?? 20;
   const deliveryFee = isFreeDelivery ? 0 : baseDeliveryFee;
+  const couponDiscount = appliedCoupon?.discount || 0;
   const handlingFee = 5;
-  const tax = Math.round(totalPrice * 0.05);
-  const grandTotal = totalPrice + deliveryFee + handlingFee + tax;
+  const tax = Math.round(Math.max(0, totalPrice - couponDiscount) * 0.05);
+  const grandTotal = Math.max(0, totalPrice - couponDiscount + deliveryFee + handlingFee + tax);
+
+  const defaultAddress = (savedAddresses || []).find((a) => a.isDefault) || savedAddresses?.[0] || {
+    title: 'Flat 402, Sai Residency',
+    street: 'Maddilapalem Main Road, Vizag'
+  };
 
   const handlePlaceOrder = () => {
     logSecurityEvent(
       'ORDER_PLACED',
-      `Order placed with ${store?.name || 'Local Store'}. Value: ₹${grandTotal} (Subtotal: ₹${totalPrice}, Delivery Fee: ₹${deliveryFee})`,
+      `Order placed with ${store?.name || 'Local Store'}. Value: ₹${grandTotal} (Subtotal: ₹${totalPrice}, Discount: ₹${couponDiscount})`,
       'info'
     );
     setOrderPlaced(true);
@@ -70,7 +138,7 @@ export default function CartPage() {
           <div className="order-success-box">
             <CheckCircle2 size={42} color="#16a34a" />
             <h2>Order Placed Successfully!</h2>
-            <p>Arriving from <strong>{store?.name || 'Kirana Store'}</strong> in {store?.deliveryTime || '30 mins'}.</p>
+            <p>Arriving from <strong>{store?.name || 'Kirana Store'}</strong> in {store?.deliveryTime || '20–30 mins'}.</p>
             <span>Redirecting to order tracking...</span>
           </div>
         </div>
@@ -83,7 +151,11 @@ export default function CartPage() {
             <span className="cdsc-emoji">🎉</span>
             <div className="cdsc-info">
               <span className="cdsc-title">FREE Delivery Unlocked!</span>
-              <span className="cdsc-subtitle">Cart value reached ₹301+ (Saved ₹{baseDeliveryFee} delivery fee)</span>
+              <span className="cdsc-subtitle">
+                {totalPrice >= 301
+                  ? `Cart reached ₹301+ (Saved ₹${baseDeliveryFee} delivery fee)`
+                  : 'Free delivery coupon active!'}
+              </span>
             </div>
             <span className="cdsc-tag">₹0 FEE</span>
           </div>
@@ -111,8 +183,8 @@ export default function CartPage() {
       {/* Store Banner */}
       <div className="cart-store-card">
         <div className="csc-img">
-          {store?.image?.startsWith('http') ? (
-            <img src={store.image} alt={store.name} />
+          {store?.posterImage ? (
+            <img src={store.posterImage} alt={store.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
           ) : (
             <span style={{ fontSize: '1.4rem' }}>{store?.image || '🏪'}</span>
           )}
@@ -123,122 +195,228 @@ export default function CartPage() {
         </div>
       </div>
 
-      {/* Cart Items List */}
+      {/* Cart Items List: Redesigned with small icons and item names (matching Image 2) */}
       <div className="cart-items-wrap">
         <div className="cart-items-hd">
           <span>Items in Basket ({totalItems})</span>
           <button type="button" className="cart-clear-btn" onClick={clearCart}>
-            <Trash2 size={14} /> Clear All
+            <Trash2 size={13} /> Clear All
           </button>
         </div>
 
-        <div className="cart-items-list">
+        <div className="cart-compact-items-list">
           {cart.items.map((it) => (
-            <div key={it.id} className="cart-item-row">
-              <div className="cir-left">
+            <div key={it.id} className="cart-compact-row">
+              {/* Small Icon Thumbnail (matching Image 2) */}
+              <div className="cc-thumb-wrap">
                 {it.image?.startsWith('http') ? (
-                  <img src={it.image} alt={it.name} className="cir-img" />
+                  <img src={it.image} alt={it.name} className="cc-thumb-img" />
                 ) : (
-                  <div className="cir-fallback">{it.image || '🥬'}</div>
+                  <div className="cc-thumb-emoji">{it.image || '🥬'}</div>
                 )}
-                <div>
-                  <h3 className="cir-name">{it.name}</h3>
-                  <div className="cir-meta">
-                    <span className="cir-unit">{it.unit || 'per unit'}</span>
-                    <span className="cir-price">₹{it.price}</span>
-                  </div>
+              </div>
+
+              {/* Item Name & Details */}
+              <div className="cc-info">
+                <h3 className="cc-name">{it.name}</h3>
+                <div className="cc-sub-meta">
+                  <span className="cc-unit">{it.unit || 'unit'}</span>
+                  <span className="cc-price">₹{it.price}</span>
                 </div>
               </div>
 
-              <div className="cir-controls">
+              {/* Compact Quantity Controls */}
+              <div className="cc-controls">
                 <button
                   type="button"
-                  className="cir-btn"
+                  className="cc-qty-btn minus"
                   onClick={() => removeItem(it.id)}
                   aria-label="Decrease quantity"
                 >
-                  <Minus size={13} />
+                  <Minus size={12} />
                 </button>
-                <span className="cir-qty">{it.quantity}</span>
+                <span className="cc-qty-count">{it.quantity}</span>
                 <button
                   type="button"
-                  className="cir-btn"
+                  className="cc-qty-btn plus"
                   onClick={() => addItem(cart.storeId, it)}
                   aria-label="Increase quantity"
                 >
-                  <Plus size={13} />
+                  <Plus size={12} />
                 </button>
               </div>
+
+              {/* Delete Cross Icon */}
+              <button
+                type="button"
+                className="cc-delete-btn"
+                onClick={() => {
+                  for (let i = 0; i < (it.quantity || 1); i++) {
+                    removeItem(it.id);
+                  }
+                }}
+                title="Remove item"
+              >
+                <X size={14} />
+              </button>
             </div>
           ))}
         </div>
+      </div>
 
-        {/* Bill Summary */}
-        <div className="bill-card">
-          <div className="bill-hd">Bill Details</div>
-          <div className="bill-body">
-            <div className="bill-row">
-              <span>Item Total</span>
-              <span>₹{totalPrice}</span>
-            </div>
-            <div className="bill-row">
-              <span>Delivery Fee</span>
-              <span>
-                {deliveryFee === 0 ? (
-                  <span className="bill-free">
-                    {baseDeliveryFee > 0 && <s style={{ color: '#94a3b8', marginRight: 4, fontWeight: 400 }}>₹{baseDeliveryFee}</s>}
-                    FREE
-                  </span>
-                ) : (
-                  `₹${deliveryFee}`
-                )}
-              </span>
-            </div>
-            <div className="bill-row">
-              <span>Handling Fee</span>
-              <span>₹{handlingFee}</span>
-            </div>
-            <div className="bill-row">
-              <span>Taxes & Charges (GST)</span>
-              <span>₹{tax}</span>
-            </div>
+      {/* ── Coupon Code Entry Field (Inspired by Image 2 Checkout Screen) ── */}
+      <div className="cart-coupon-card">
+        <div className="coupon-card-header">
+          <Tag size={16} color="var(--brand)" />
+          <span>Apply Promo Code</span>
+        </div>
 
-            <hr className="bill-dash" />
-
-            <div className="bill-row total">
-              <span>To Pay</span>
-              <span>₹{grandTotal}</span>
-            </div>
-
-            <div className="bill-eta">
-              <Clock size={16} />
-              <span>Arriving <strong>{store?.deliveryTime || 'within 30 mins'}</strong></span>
-            </div>
-
+        {!appliedCoupon ? (
+          <div className="coupon-input-box">
+            <input
+              type="text"
+              placeholder="Enter Promocode (e.g. TASTY12)"
+              value={couponCode}
+              onChange={(e) => {
+                setCouponCode(e.target.value);
+                setCouponStatus(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleApplyCoupon();
+              }}
+            />
             <button
               type="button"
-              className="bill-cta"
-              onClick={handlePlaceOrder}
+              className="coupon-apply-btn"
+              onClick={() => handleApplyCoupon()}
             >
-              Place Order • ₹{grandTotal}
+              <span>Apply</span>
             </button>
-
-            <div className="bill-note">
-              <ShieldCheck size={14} color="#00C853" />
-              <span>Cash on delivery / UPI at doorstep</span>
-            </div>
-
-            <div className="cart-security-badge-box">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#15803D', fontWeight: 800, fontSize: '0.75rem' }}>
-                <ShieldCheck size={16} color="#16A34A" />
-                <span>🔒 256-Bit SSL Encrypted Checkout</span>
+          </div>
+        ) : (
+          <div className="coupon-applied-pill">
+            <div className="cap-left">
+              <CheckCircle2 size={16} color="#16A34A" />
+              <div>
+                <strong>{appliedCoupon.code} Applied</strong>
+                <span>
+                  {appliedCoupon.type === 'freedel' ? 'Free Delivery Unlocked' : `Saved ₹${appliedCoupon.discount}`}
+                </span>
               </div>
-              <p style={{ margin: '4px 0 0', fontSize: '0.68rem', color: '#64748B' }}>
-                Prices verified against official Kirana price registry. Anti-tampering active. Free delivery applies automatically when cart reaches ₹301+.
-              </p>
             </div>
+            <button
+              type="button"
+              className="coupon-remove-btn"
+              onClick={handleRemoveCoupon}
+              title="Remove coupon"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        )}
+
+        {/* Quick Suggestion Chips */}
+        {!appliedCoupon && (
+          <div className="coupon-suggestions-row">
+            <span className="cs-label">Try:</span>
+            {['TASTY12', 'KIRANA50', 'WELCOME'].map((code) => (
+              <button
+                key={code}
+                type="button"
+                className="coupon-chip-btn"
+                onClick={() => handleApplyCoupon(code)}
+              >
+                {code}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {couponStatus && (
+          <div className={`coupon-msg-inline ${couponStatus.type}`}>
+            {couponStatus.type === 'success' ? <Check size={13} /> : <AlertCircle size={13} />}
+            <span>{couponStatus.message}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Delivery Address Chip */}
+      <div className="cart-delivery-address-card" onClick={() => navigate('/profile')}>
+        <div className="cdac-left">
+          <span className="cdac-icon">📍</span>
+          <div>
+            <span className="cdac-label">Delivering to {defaultAddress.title || 'Selected Address'}</span>
+            <span className="cdac-address">{defaultAddress.street}, {defaultAddress.city || 'Vizag'}</span>
           </div>
         </div>
+        <ChevronRight size={16} color="#94A3B8" />
+      </div>
+
+      {/* Bill Summary */}
+      <div className="cart-bill-card">
+        <h3 className="bill-title">Bill Details</h3>
+        <div className="bill-rows">
+          <div className="bill-row">
+            <span>Item Total</span>
+            <span>₹{totalPrice}</span>
+          </div>
+
+          <div className="bill-row">
+            <span>Delivery Fee</span>
+            <span>
+              {deliveryFee === 0 ? (
+                <span className="bill-free">
+                  {baseDeliveryFee > 0 && <s style={{ color: '#94a3b8', marginRight: 4, fontWeight: 400 }}>₹{baseDeliveryFee}</s>}
+                  FREE
+                </span>
+              ) : (
+                `₹${deliveryFee}`
+              )}
+            </span>
+          </div>
+
+          {couponDiscount > 0 && (
+            <div className="bill-row discount">
+              <span>Coupon Discount ({appliedCoupon?.code})</span>
+              <span className="bill-discount-txt">-₹{couponDiscount}</span>
+            </div>
+          )}
+
+          <div className="bill-row">
+            <span>Handling Fee</span>
+            <span>₹{handlingFee}</span>
+          </div>
+
+          <div className="bill-row">
+            <span>Taxes & Charges (GST)</span>
+            <span>₹{tax}</span>
+          </div>
+
+          <hr className="bill-dash" />
+
+          <div className="bill-row total">
+            <span>To Pay</span>
+            <span>₹{grandTotal}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating Checkout Button */}
+      <div className="cart-checkout-bar">
+        <div className="ccb-left">
+          <span className="ccb-amount">₹{grandTotal}</span>
+          <span className="ccb-savings">
+            {isFreeDelivery ? `Saved ₹${baseDeliveryFee} delivery` : `${totalItems} items in basket`}
+          </span>
+        </div>
+        <button
+          type="button"
+          className="cart-checkout-btn"
+          onClick={handlePlaceOrder}
+        >
+          <span>Place Order</span>
+          <ChevronRight size={18} />
+        </button>
       </div>
     </div>
   );

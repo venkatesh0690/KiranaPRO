@@ -18,6 +18,9 @@ export const localFreshStore = {
   offer: "⚡ Mandi Wholesale Direct • +₹4 Quality Surcharge Included",
   tags: ["Admin Managed", "Farm Fresh", "Direct Mandi", "Vegetables & Fruits"],
   image: "🥦",
+  posterImage: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80",
+  posterBadge: "🥦 Mandi Direct • Within 2 hrs",
+  posterTagline: "Farm-Fresh Wholesale Harvest Direct to Your Kitchen",
   coverFrom: "#16A34A",
   coverTo: "#15803D",
   categories: ["Vegetables", "Fruits", "Leafy Green", "Groceries", "Flowers", "Pickles"]
