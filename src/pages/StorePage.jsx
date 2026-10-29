@@ -19,7 +19,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { categoryMeta } from '../data/stores';
-import { isStoreAvailableInArea, FREE_DELIVERY_THRESHOLD } from '../data/deliveryAreas';
+import { isStoreAvailableInArea, FREE_DELIVERY_THRESHOLD, isLocalFreshStore } from '../data/deliveryAreas';
 import { navigateWithStoreTransition, storeImageTransitionName, storeTitleTransitionName } from '../utils/storeTransition';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
@@ -495,8 +495,8 @@ export default function StorePage({ userLocation }) {
                   <Bike size={16} color="#2563EB" />
                   <div>
                     <span className="sp-info-lbl">Delivery Fee</span>
-                    <span className="sp-info-val">{String(store.id).toLowerCase() === 'localfresh'
-                       ? `Calculated at checkout · FREE above ₹${FREE_DELIVERY_THRESHOLD}`
+                    <span className="sp-info-val">{isLocalFreshStore(store)
+                       ? 'Delivery fee calculated at checkout'
                        : `₹${store.deliveryFee} · FREE above ₹${FREE_DELIVERY_THRESHOLD}`}</span>
                   </div>
                 </div>

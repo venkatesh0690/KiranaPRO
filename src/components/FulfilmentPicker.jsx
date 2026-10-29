@@ -1,5 +1,6 @@
 import { CalendarDays, Check, ChevronLeft, Clock3, MapPin, PackageCheck, Truck } from 'lucide-react';
 import { FULFILMENT_MODES, getFulfilmentDates, getFulfilmentSlots, validateFulfilment } from '../utils/fulfilment';
+import { isLocalFreshStore } from '../data/deliveryAreas';
 
 const serviceIcons={standard:Truck,scheduled:CalendarDays,pickup:PackageCheck};
 
@@ -39,7 +40,9 @@ export default function FulfilmentPicker({value,onChange,store,area}) {
       {value.mode==='standard' && (
         <div className="kp-fulfilment-callout">
           <Truck size={19} aria-hidden="true"/>
-          <span>Delivery is free above ₹300. For smaller baskets, the store's normal delivery fee applies. Estimated arrival is not guaranteed.</span>
+          <span>{isLocalFreshStore(store)
+            ? 'Delivery charge is shown in your bill. Estimated arrival is not guaranteed.'
+            : "Delivery is free above ₹300. For smaller baskets, the store's normal delivery fee applies. Estimated arrival is not guaranteed."}</span>
         </div>
       )}
 
@@ -57,7 +60,10 @@ export default function FulfilmentPicker({value,onChange,store,area}) {
       {value.mode==='scheduled' && (
         <div className="kp-fulfilment-callout">
           <Clock3 size={19} aria-hidden="true"/>
-          <span>Choose a two-hour delivery window, such as 2:00 PM – 4:00 PM or 3:00 PM – 5:00 PM. The delivery fee follows the ₹300 rule.</span>
+          <span>Choose a two-hour delivery window, such as 2:00 PM – 4:00 PM or 3:00 PM – 5:00 PM.
+          {isLocalFreshStore(store)
+            ? ' Delivery charges are shown in your bill.'
+            : ' Delivery is free above ₹300.'}</span>
         </div>
       )}
 

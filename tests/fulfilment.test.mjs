@@ -56,8 +56,10 @@ test('standard and scheduled delivery use calculated LocalFresh fee and preserve
   for(const mode of ['standard','scheduled']){
     assert.equal(quoteFulfilment({store,subtotal:100,mode,items}).deliveryFee,10);
     assert.equal(quoteFulfilment({store,subtotal:300,mode,items}).deliveryFee,10);
-    assert.equal(quoteFulfilment({store,subtotal:301,mode,items}).deliveryFee,0);
+    assert.equal(quoteFulfilment({store,subtotal:301,mode,items}).deliveryFee,10);
+    assert.equal(quoteFulfilment({store,subtotal:900,mode,items}).deliveryFee,10);
     assert.equal(quoteFulfilment({store:otherStore,subtotal:100,mode,items}).deliveryFee,20);
+    assert.equal(quoteFulfilment({store:otherStore,subtotal:301,mode,items}).deliveryFee,0);
   }
 });
 test('pickup total has only item subtotal, handling and estimated GST minus discounts',()=>{
@@ -82,4 +84,18 @@ test('no negative quantities or invalid cart weights are applied',()=>{
   const items=[{id:'lf-1004',unit:'per kg',quantity:-4},{id:'lf-1004',unit:'per kg',quantity:2}];
   assert.equal(calculateLocalFreshDeliveryFee(items),10);
   assert.equal(calculateLocalFreshDeliveryFee([]),0);
+});
+
+test('LocalFresh remains chargeable above ₹300 even with coupon discounts; pickup remains free',()=>{
+  const items=[
+    {id:'lf-1004',name:'Potols',unit:'per kg',quantity:3},
+    {id:'lf-1005',name:'Baby Corn Pack 200gms',unit:'per piece',quantity:1}
+  ];
+  const standard=quoteFulfilment({store,subtotal:620,discount:30,items,mode:'standard'});
+  const scheduled=quoteFulfilment({store,subtotal:620,discount:30,items,mode:'scheduled'});
+  const pickup=quoteFulfilment({store,subtotal:620,discount:30,items,mode:'pickup'});
+  assert.equal(standard.deliveryFee,16);
+  assert.equal(scheduled.deliveryFee,16);
+  assert.equal(pickup.deliveryFee,0);
+  assert.equal(standard.total-pickup.total,16);
 });

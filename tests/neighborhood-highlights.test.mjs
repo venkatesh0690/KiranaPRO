@@ -72,11 +72,23 @@ for(const area of DELIVERY_AREAS){
     const slide=buildHomepageBanners(stores,productsByCategory,area,0);
     assert.ok(slide.length>=8);
     assert.equal(new Set(slide.map(s=>s.id)).size,slide.length);
-    assert.ok(slide.some(s=>s.kind==='global'));
+    const otherShops=nearby.filter(s=>!s.isSample && s.isOpen!==false && String(s.id)!=='localfresh');
+    const generic=slide.filter(s=>s.kind==='global');
+    assert.equal(generic.length,otherShops.length?1:0);
+    if(generic.length){
+      assert.notEqual(String(generic[0].store.id),'localfresh');
+      assert.match(generic[0].subtitle,/Excludes LocalFresh/);
+    }
     assert.ok(slide.some(s=>s.kind==='automatic' && s.minCart===501));
     assert.equal(slide.filter(s=>s.kind==='coupon').length,3);
     for (const item of slide){
-      if(item.kind==='store')assert.ok(orderable.has(String(item.store.id)));
+      if(item.kind==='store'){
+        assert.ok(orderable.has(String(item.store.id)));
+        if(String(item.store.id)==='localfresh'){
+          assert.doesNotMatch(item.subtitle,/Free delivery/i);
+          assert.equal(item.minCart,null);
+        }
+      }
       if(item.kind==='coupon')assert.ok(VALID_COUPONS[item.code]);
       if(item.minCart!==null)assert.ok(item.minCart>=301);
     }

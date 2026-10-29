@@ -3,6 +3,7 @@ import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { getDisplayProducts, getOrderHighlights, getProductImage } from '../utils/storeMerchandising';
 import { getCatalogVisual } from '../utils/catalogVisual';
 import { buildHomepageBanners } from '../utils/homepageBanners';
+import { isLocalFreshStore } from '../data/deliveryAreas';
 import { navigateWithStoreTransition } from '../utils/storeTransition';
 
 function ProductArt({ items }) {
@@ -30,7 +31,7 @@ export function StoreOffersCarousel({ store, catalog, orders, onOpenCategory, on
   const slides = [
     {
       id:'store',tag:'FROM YOUR STORE',title:store.isAdminManaged ? 'Fresh mandi essentials' : `Shop ${store.name}`,
-      subtitle:'Free delivery on carts above ₹300',
+      subtitle:isLocalFreshStore(store) ? 'Delivery fee shown at checkout' : 'Free delivery on carts above ₹300',
       cta:'Shop now',items:heroProducts.slice(0,3),category:firstCategory,tone:'sand'
     },
     {
@@ -54,7 +55,9 @@ export function HomeOffersCarousel({ stores, catalog, navigate, area, totalItems
     } else if (slide.kind==='picks' && slide.productTarget) {
       const pick=slide.productTarget;
       navigate(`/store/${pick.storeId}`,{state:{category:pick.category,productId:pick.id}});
-    } else if (slide.kind==='coupon' || slide.kind==='global' || slide.kind==='automatic') {
+    } else if (slide.kind==='global' && slide.store) {
+      navigate(totalItems > 0 ? '/cart' : `/store/${slide.store.id}`);
+    } else if (slide.kind==='coupon' || slide.kind==='automatic') {
       navigate(totalItems > 0 ? '/cart' : '/store/localfresh');
     }
   };

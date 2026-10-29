@@ -18,7 +18,7 @@ import {
 import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
 import { useStore } from '../context/StoreContext';
-import { FREE_DELIVERY_THRESHOLD, getDeliveryFee, isStoreAvailableInArea } from '../data/deliveryAreas';
+import { FREE_DELIVERY_THRESHOLD, getDeliveryFee, isStoreAvailableInArea, isLocalFreshStore } from '../data/deliveryAreas';
 import { VALID_COUPONS, MIN_PROMO_SUBTOTAL, evaluateCoupon, getOrderSavings, getAutomaticBasketDiscount } from '../data/checkoutOffers';
 import { useCustomerOrders, readCustomerOrders, getCustomerKey } from '../context/OrderHistoryContext';
 import FulfilmentPicker from '../components/FulfilmentPicker';
@@ -88,8 +88,9 @@ export default function CartPage({ userLocation }) {
     store,subtotal:totalPrice,discount:couponDiscount,mode:fulfilment.mode,items:cart.items
   });
   const {deliveryFee,handlingFee,tax,total:grandTotal} = currentQuote;
-  const isFreeDelivery = deliveryFee===0;
+  const isLocalFresh = isLocalFreshStore(store);
   const isPickup = fulfilment.mode==='pickup';
+  const isFreeDelivery = !isLocalFresh && totalPrice > FREE_DELIVERY_THRESHOLD;
   const fulfilmentValidation = validateFulfilment(fulfilment);
 
   const handlePlaceOrder = () => {
@@ -177,9 +178,17 @@ export default function CartPage({ userLocation }) {
 
       {checkoutStep==='review' ? (
         <>
-      {/* Free delivery applies once the item subtotal exceeds ₹300. */}
+      {/* Other stores offer free delivery above ₹300; LocalFresh has its own delivery fee. */}
       <div className={`cart-delivery-status-card ${isFreeDelivery ? 'unlocked' : 'locked'}`}>
-        {isFreeDelivery ? (
+        {isLocalFresh ? (
+          <div className="cdsc-inner">
+            <span className="cdsc-emoji">🚚</span>
+            <div className="cdsc-info">
+              <span className="cdsc-title">LocalFresh delivery</span>
+              <span className="cdsc-subtitle">Delivery charge is included in your bill. Pickup has no delivery fee.</span>
+            </div>
+          </div>
+        ) : isFreeDelivery ? (
           <div className="cdsc-inner">
             <span className="cdsc-emoji">🎉</span>
             <div className="cdsc-info">
@@ -459,7 +468,9 @@ export default function CartPage({ userLocation }) {
         </p>
       )}
       {checkoutStep==='review' && <div className="kp-coupon-eligibility-note">
-        <strong>Order #{nextOrderNumber}</strong> · Free delivery above ₹300.
+        <strong>Order #{nextOrderNumber}</strong> · {isLocalFresh
+          ? 'LocalFresh delivery charge is shown in your bill.'
+          : 'Free delivery above ₹300.'}
         {totalPrice>500
           ? ' Automatic basket saving up to ₹30 (5%, capped) applies if no eligible coupon is used.'
           : ' Basket discount up to ₹30 unlocks above ₹500.'}
@@ -474,8 +485,12 @@ export default function CartPage({ userLocation }) {
             {isPickup
               ? 'Only handling fee and estimated GST are charged in addition to the grocery total, after any eligible discount.'
               : fulfilment.mode==='scheduled'
-                ? 'Standard delivery fee applies at ₹300 or below; free above ₹300.'
-                : 'Normal delivery charges apply at ₹300 or below; free above ₹300.'}
+                ? isLocalFresh
+                  ? 'The delivery charge for this store is shown in your bill.'
+                  : 'Standard delivery fee applies at ₹300 or below; free above ₹300.'
+                : isLocalFresh
+                  ? 'The delivery charge for this store is shown in your bill.'
+                  : 'Normal delivery charges apply at ₹300 or below; free above ₹300.'}
           </span>
           {fulfilmentValidation.valid && fulfilment.mode!=='standard' && (
             <span className="kp-checkout-selected-time">

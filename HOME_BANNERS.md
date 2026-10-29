@@ -2,7 +2,7 @@
 
 ## Delivery and discount rules
 
-- Delivery is FREE only when the item subtotal is strictly greater than ₹300; fees apply at ₹300 or less, including LocalFresh.
+- Delivery is FREE for stores **other than LocalFresh** when the item subtotal is strictly greater than ₹300. LocalFresh retains its own delivery fee at every basket value for delivery, and pickup is always ₹0 delivery.
 - Above ₹500 item subtotal, an **automatic 5% discount capped at ₹30** is available. For example ₹501 -> ₹25 discount; ₹600 -> ₹30 discount.
 - `WELCOME` — ₹30 discount on the customer's **1st** order, cart above ₹300.
 - `REPEAT` — ₹20 discount on exactly the customer's **3rd, 5th or 7th** order, cart above ₹300.
@@ -19,7 +19,7 @@ The previous hard-coded demo orders have been replaced in the customer-facing Or
 
 ## Front page
 
-The single swipeable carousel immediately below search contains general discount rules, LocalFresh and other available shop highlights, and catalog-based grocery picks. Conditional coupon slides explain the correct order number and distinguish upcoming rewards from eligible offers.
+The single swipeable carousel immediately below search only promotes free delivery for eligible non-LocalFresh stores, plus LocalFresh's own catalog highlights without a free-delivery claim, other shop highlights, and catalog-based grocery picks. Conditional coupon slides explain the correct order number and distinguish upcoming rewards from eligible offers.
 
 The supplied Cosmos reference was inaccessible during development; existing Version B's layout was retained instead of claiming an exact reproduction.
 

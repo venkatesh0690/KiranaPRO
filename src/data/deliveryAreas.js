@@ -11,8 +11,14 @@ export const DELIVERY_AREAS = Object.freeze([
   'Gajuwaka'
 ]);
 
-export const FREE_DELIVERY_THRESHOLD = 300;
 import { calculateLocalFreshDeliveryFee } from '../utils/localfreshDelivery.js';
+export const FREE_DELIVERY_THRESHOLD = 300;
+export function isLocalFreshStore(store) {
+  return String(store?.id ?? '').toLowerCase() === 'localfresh';
+}
+export function qualifiesForFreeDelivery(store, itemSubtotal) {
+  return !isLocalFreshStore(store) && Number(itemSubtotal) > FREE_DELIVERY_THRESHOLD;
+}
 
 export function isDeliveryArea(area) {
   return DELIVERY_AREAS.includes(area);
@@ -20,7 +26,7 @@ export function isDeliveryArea(area) {
 
 export function isStoreAvailableInArea(store, area) {
   if (!isDeliveryArea(area) || !store) return false;
-  if (String(store.id).toLowerCase() === 'localfresh') return true;
+  if (isLocalFreshStore(store)) return true;
   return Array.isArray(store.serviceAreas) && store.serviceAreas.includes(area);
 }
 
@@ -30,9 +36,7 @@ export function getStoresForArea(stores, area) {
 }
 
 export function getDeliveryFee(store, itemSubtotal, coupon, cartItems=[]) {
-  if (Number(itemSubtotal) > FREE_DELIVERY_THRESHOLD) return 0;
-  if (String(store?.id).toLowerCase() === 'localfresh') {
-    return calculateLocalFreshDeliveryFee(cartItems);
-  }
+  if (isLocalFreshStore(store)) return calculateLocalFreshDeliveryFee(cartItems);
+  if (qualifiesForFreeDelivery(store, itemSubtotal)) return 0;
   return Math.max(0, Number(store?.deliveryFee) || 0);
 }

@@ -1,5 +1,5 @@
 import { FEATURED_CHECKOUT_OFFERS, VALID_COUPONS, MIN_PROMO_SUBTOTAL, isCouponForOrder, nextOrderNumber } from '../data/checkoutOffers.js';
-import { getStoresForArea } from '../data/deliveryAreas.js';
+import { getStoresForArea, isLocalFreshStore } from '../data/deliveryAreas.js';
 import { getAreaFeaturedPicks } from './areaFeaturedPicks.js';
 import { getDisplayProducts } from './storeMerchandising.js';
 
@@ -10,7 +10,7 @@ export function buildHomepageBanners(stores, catalog, area, orderCount=0) {
     .filter(store => !store.isSample && store.isOpen !== false);
   if (!available.length) return [];
 
-  const localFresh = available.find(store => String(store.id).toLowerCase() === 'localfresh');
+  const localFresh = available.find(isLocalFreshStore);
   const otherStores = available.filter(store => store !== localFresh);
   const slides = [];
   const storeSlide = (store, category, key, headline, tag) => {
@@ -20,8 +20,10 @@ export function buildHomepageBanners(stores, catalog, area, orderCount=0) {
     return {
       id:`store-${store.id}-${key}`, kind:'store', store, category,
       title:headline || store.name, tag, tone:'sage',
-      subtitle:`${store.name} · Free delivery on carts above ₹300`,
-      cta:'Explore store', items, minCart:MIN_PROMO_SUBTOTAL
+      subtitle:isLocalFreshStore(store)
+        ? `${store.name} · Delivery fee shown at checkout`
+        : `${store.name} · Free delivery on carts above ₹300`,
+      cta:'Explore store', items, minCart:isLocalFreshStore(store)?null:MIN_PROMO_SUBTOTAL
     };
   };
 
@@ -30,11 +32,14 @@ export function buildHomepageBanners(stores, catalog, area, orderCount=0) {
   }
 
   // Checkout offers: no coupon applies or is advertised for a cart <= ₹300.
-  slides.push({
-    ...FEATURED_CHECKOUT_OFFERS[0], kind:'global',tag:'ALL STORES · FREE DELIVERY',
-    items:localFresh ? getDisplayProducts(localFresh,catalog,3):getDisplayProducts(available[0],catalog,3),
-    cta:'Shop now', minCart:MIN_PROMO_SUBTOTAL
-  });
+  if (otherStores.length) {
+    slides.push({
+      ...FEATURED_CHECKOUT_OFFERS[0], kind:'global',
+      tag:'NEIGHBORHOOD STORES · FREE DELIVERY',
+      items:getDisplayProducts(otherStores[0],catalog,3),
+      store:otherStores[0],cta:'Shop now',minCart:MIN_PROMO_SUBTOTAL
+    });
+  }
 
   if (localFresh && Array.isArray(localFresh.categories)) {
     const next = localFresh.categories.includes('Fruits') ? 'Fruits'

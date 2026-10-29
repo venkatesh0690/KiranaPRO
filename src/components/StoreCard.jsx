@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, Clock3, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import StorePhotoCarousel from './StorePhotoCarousel';
-import { FREE_DELIVERY_THRESHOLD } from '../data/deliveryAreas';
+import { FREE_DELIVERY_THRESHOLD, isLocalFreshStore } from '../data/deliveryAreas';
 import { navigateWithStoreTransition, storeImageTransitionName, storeTitleTransitionName } from '../utils/storeTransition';
 
 export default function StoreCard({ store }) {
@@ -11,7 +11,7 @@ export default function StoreCard({ store }) {
   const pending = useRef(null);
   const swipeBlockedUntil = useRef(0);
   const rating = Number(store.rating);
-  const delivery = String(store.id).toLowerCase() === 'localfresh'
+  const delivery = isLocalFreshStore(store)
     ? 'Delivery fee at checkout'
     : Number(store.deliveryFee) === 0 ? 'Free delivery' : `₹${store.deliveryFee} delivery`;
   useEffect(() => () => clearTimeout(pending.current),[]);
@@ -60,7 +60,7 @@ export default function StoreCard({ store }) {
         <div className="kp-gallery-meta">
           {store.deliveryTime && <span><Clock3 size={14} aria-hidden="true" /> {store.deliveryTime}</span>}
           <span className="kp-gallery-middot" aria-hidden="true">·</span>
-          <span>{delivery} · Free above ₹{FREE_DELIVERY_THRESHOLD}</span>
+          <span>{delivery}{isLocalFreshStore(store) ? '' : ` · Free above ₹${FREE_DELIVERY_THRESHOLD}`}</span>
         </div>
       </div>
     </Link>

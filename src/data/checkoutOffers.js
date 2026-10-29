@@ -70,8 +70,8 @@ export function getOrderSavings(subtotal,orderNumber,selectedCoupon=null) {
 }
 
 export const FEATURED_CHECKOUT_OFFERS = Object.freeze([
-  {id:'free-delivery',kicker:'EVERY STORE',title:'Free delivery',highlight:'₹0 fee',
-   subtitle:'On orders above ₹300',code:null,icon:'🛵',tone:'sage',kind:'global'},
+  {id:'free-delivery',kicker:'NEIGHBORHOOD STORES',title:'Free delivery',highlight:'₹0 fee',
+   subtitle:'On orders above ₹300 · Excludes LocalFresh',code:null,icon:'🛵',tone:'sage',kind:'global'},
   {id:'basket30',kicker:'BASKET BONUS',title:'Save up to ₹30',highlight:'5% up to ₹30',
    subtitle:'Automatic discount on carts above ₹500',code:null,icon:'🛍️',tone:'sand',kind:'automatic'},
   {id:'welcome',kicker:'FIRST ORDER ONLY',title:'₹30 welcome gift',highlight:'₹30 off',
