@@ -1,0 +1,366 @@
+/* Full-photo welcome and post-login location sheet.
+   Reuses the existing KiranaPRO design tokens inside the app. */
+.kp-welcome {
+  isolation: isolate;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  width: 100%;
+  background: #343d30;
+  color: #fff;
+  overflow: hidden;
+}
+.kp-welcome-image {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: #4b614d url('/cosmos/cosmos-farm-0.webp') center center / cover no-repeat;
+}
+.kp-welcome-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(12,24,16,.26), rgba(12,24,16,.14) 35%, rgba(12,24,16,.78) 100%);
+}
+.kp-welcome-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px clamp(24px,5vw,80px);
+}
+.kp-welcome-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -.045em;
+}
+.kp-welcome-brand strong { font-weight: 800; }
+.kp-welcome-symbol {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: rgba(255,255,255,.96);
+  color: #263829;
+  font-weight: 800;
+  font-size: 19px;
+}
+.kp-welcome-main {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  padding: 70px clamp(24px, 6vw, 100px) clamp(65px, 10vh, 115px);
+}
+.kp-welcome-copy { max-width: 560px; }
+.kp-welcome-eyebrow {
+  display: block;
+  margin-bottom: 21px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: .17em;
+  color: rgba(255,255,255,.92);
+}
+.kp-welcome-copy h1 {
+  font-size: clamp(44px, 7.5vw, 84px);
+  font-weight: 630;
+  letter-spacing: -.066em;
+  line-height: 1.04;
+  margin: 0 0 22px;
+  color: white;
+}
+.kp-welcome-copy p {
+  font-size: clamp(13px, 1.3vw, 15px);
+  color: rgba(255,255,255,.9);
+  line-height: 1.7;
+  margin: 0;
+  max-width: 380px;
+}
+.kp-welcome-login {
+  margin-top: 32px;
+  width: min(100%, 338px);
+  min-height: 52px;
+  padding: 0 19px;
+  border-radius: 11px;
+  background: white;
+  color: #27352b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 13px;
+  transition: background .16s ease;
+}
+.kp-welcome-login:hover { background: #edf4ec; }
+.kp-welcome-note {
+  display: block;
+  margin-top: 16px;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255,255,255,.76);
+}
+.kp-welcome .auth-modal-backdrop { z-index: 9999; }
+
+/* Real stores appear behind the dimmed address sheet, similar to the
+   supplied location-permission reference. This preview is noninteractive. */
+.kp-address-page {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #f8f9f6;
+}
+.kp-address-preview {
+  margin: 0 auto;
+  padding: 32px clamp(18px,5vw,65px);
+  max-width: 1200px;
+  pointer-events: none;
+}
+.kp-preview-head { display: flex; flex-direction: column; gap: 9px; }
+.kp-preview-brand {
+  font-size: 23px;
+  font-weight: 750;
+  color: #29392c;
+  letter-spacing: -.05em;
+}
+.kp-preview-brand strong { color: #4b7657; }
+.kp-preview-sub { font-size: 13px; color: #728176; }
+.kp-address-preview .kp-preview-search {
+  width: min(100%,660px);
+  min-height: 54px;
+  padding: 0 17px;
+  margin: 26px 0 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #8d968e;
+  background: white;
+  border: 1px solid #e3e8e1;
+  border-radius: 11px;
+  font-size: 13px;
+}
+.kp-address-preview h2 {
+  margin-bottom: 20px;
+  font-size: clamp(22px,3vw,31px);
+  font-weight: 700;
+  color: #25352b;
+  letter-spacing: -.045em;
+}
+.kp-preview-stores {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 24px;
+}
+.kp-preview-store {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.kp-preview-store-image {
+  aspect-ratio: 1.45;
+  background: #e7eee6;
+  overflow: hidden;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  font-size: 40px;
+}
+.kp-preview-store-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.kp-preview-store strong {
+  font-size: 15px;
+  color: #29382c;
+  font-weight: 650;
+}
+.kp-preview-store > span { color: #7b877e; font-size: 12px; }
+.kp-address-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(28,34,31,.58);
+}
+.kp-address-sheet {
+  position: fixed;
+  inset: auto 0 0;
+  margin: 0 auto;
+  z-index: 201;
+  max-height: min(86dvh,760px);
+  background: white;
+  color: #303a36;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -15px 45px rgba(10,24,15,.14);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.kp-address-handle {
+  width: 38px;
+  height: 4px;
+  background: #dce2dc;
+  border-radius: 99px;
+  margin: 10px auto 12px;
+}
+.kp-location-permission {
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 19px clamp(18px,4vw,40px);
+  background: #0c56f5;
+  color: white;
+}
+.kp-location-permission-copy { flex: 1; min-width: 0; }
+.kp-permission-title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.kp-permission-title h2 {
+  color: white;
+  font-size: clamp(15px,2vw,18px);
+  font-weight: 750;
+  letter-spacing: -.018em;
+}
+.kp-location-permission-copy p {
+  margin: 8px 0 0;
+  max-width: 540px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(255,255,255,.92);
+}
+.kp-location-grant {
+  flex-shrink: 0;
+  min-width: 77px;
+  min-height: 40px;
+  border-radius: 9px;
+  background: white;
+  color: #0b54ea;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 0 12px;
+}
+.kp-location-grant:disabled { opacity: .65; }
+.kp-location-enabled {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px clamp(18px,4vw,40px);
+  color: #256347;
+  background: #edf7ee;
+  font-size: 12px;
+  font-weight: 650;
+}
+.kp-address-sheet-body {
+  padding: 25px clamp(18px,4vw,40px) 26px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.kp-address-sheet-body > h2 {
+  margin: 0 0 17px;
+  color: #303945;
+  font-size: clamp(18px,2.5vw,23px);
+  letter-spacing: -.037em;
+  font-weight: 750;
+}
+.kp-location-message {
+  color: #a04b3f;
+  background: #fff7f5;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 10px 11px;
+  margin-bottom: 9px;
+}
+.kp-address-option {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+  gap: 15px;
+  padding: 17px 7px;
+  background: #fff;
+  border: 0;
+  border-top: 1px solid #e7eae6;
+  color: #444e49;
+}
+.kp-address-option.selected { background: #f8faf7; }
+.kp-address-option-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 33px;
+  color: #0c56f5;
+}
+.kp-address-option-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+.kp-address-option-text strong {
+  color: #313b46;
+  font-size: 14px;
+  font-weight: 700;
+}
+.kp-address-option-text > span {
+  font-size: 12px;
+  color: #7a8289;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.kp-address-choice { flex-shrink: 0; color: #1c7148; }
+.kp-address-form { padding-top: 3px; border-top: 1px solid #e7eae6; }
+.kp-manual-field { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; font-size: 12px; font-weight: 650; }
+.kp-manual-field textarea {
+  width: 100%;
+  min-height: 74px;
+  resize: vertical;
+  color: #2c3831;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #dde6dc;
+  padding: 11px 13px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.kp-address-error { color: #af4949; margin: 10px 0 0; font-size: 12px; }
+.kp-address-continue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 16px;
+  width: 100%;
+  min-height: 48px;
+  border-radius: 10px;
+  padding: 0 16px;
+  color: white;
+  background: #283c2e;
+  font-size: 13px;
+  font-weight: 700;
+}
+.kp-address-continue:hover { background: #3b654a; }
+.kp-address-help { color: #89958a; margin: 14px 0 0; font-size: 11px; line-height: 1.5; }
+@media(min-width:960px) {
+  .kp-address-sheet {
+    max-width: 760px;
+    border-radius: 22px 22px 0 0;
+  }
+}
+@media(max-width:640px) {
+  .kp-welcome-header { padding: 20px 22px; }
+  .kp-welcome-main { padding: 40px 24px max(68px,env(safe-area-inset-bottom)); }
+  .kp-welcome-image { background-position: 57% center; }
+  .kp-welcome-copy h1 { font-size: clamp(43px,11vw,63px); }
+  .kp-welcome-copy p { max-width: 305px; font-size: 13px; }
+  .kp-welcome-login { margin-top: 29px; }
+  .kp-preview-stores { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 15px; }
+  .kp-preview-store:nth-child(3) { display: none; }
+  .kp-address-sheet { max-height: 89dvh; }
+  .kp-location-permission { padding: 19px 18px; }
+  .kp-location-permission-copy p { font-size: 11px; }
+  .kp-address-sheet-body { padding: 24px 22px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .kp-welcome-login { transition: none; }
+}

@@ -44,36 +44,20 @@ export const SecurityProvider = ({ children }) => {
     };
   });
 
-  // Saved Shipping Addresses (Requirement: Add different shipping address)
+  // Real saved addresses only; remove the two sample addresses previously
+  // prepopulated in new accounts. User-created addresses are retained.
   const [savedAddresses, setSavedAddresses] = useState(() => {
     try {
-      const saved = localStorage.getItem('kp_shipping_addresses');
-      if (saved) return JSON.parse(saved);
+      const stored = localStorage.getItem('kp_shipping_addresses');
+      const parsed = stored ? JSON.parse(stored) : [];
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((address) => !(
+        (address?.id === 'addr-1' && address?.title === 'Flat 402, Sai Residency') ||
+        (address?.id === 'addr-2' && address?.title === 'Tech Hub Office, Floor 3')
+      ));
     } catch {
-      // Fallback
+      return [];
     }
-    return [
-      {
-        id: 'addr-1',
-        type: 'Home',
-        title: 'Flat 402, Sai Residency',
-        street: 'Maddilapalem Main Road, Near AU Gate',
-        landmark: 'Opposite Andhra University Gate',
-        city: 'Visakhapatnam (Vizag)',
-        pincode: '530013',
-        isDefault: true
-      },
-      {
-        id: 'addr-2',
-        type: 'Work',
-        title: 'Tech Hub Office, Floor 3',
-        street: 'VIP Road, CBM Compound, Siripuram',
-        landmark: 'Near Circuit House',
-        city: 'Visakhapatnam (Vizag)',
-        pincode: '530003',
-        isDefault: false
-      }
-    ];
   });
 
   useEffect(() => {

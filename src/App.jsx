@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { StoreProvider } from './context/StoreContext';
-import { SecurityProvider } from './context/SecurityContext';
+import { SecurityProvider, useSecurity } from './context/SecurityContext';
 import { SellerProtectedRoute, AdminProtectedRoute } from './components/ProtectedRoutes';
 import BottomNav from './components/BottomNav';
 import InstallAppBanner from './components/InstallAppBanner';
@@ -22,9 +22,12 @@ import './styles/global.css';
 import './styles/minimal.css';
 import './styles/gallery.css';
 import './styles/unified.css';
+import './styles/onboarding.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();
+  const { authSession } = useSecurity();
+  const canShop = authSession.isAuthenticated && authSession.role === 'customer' && Boolean(userLocation);
 
   // Portal routes use their own navigation
   const isPortalRoute =
@@ -37,7 +40,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
       {/* Dynamic Route Content */}
       <main
         className={`app-content-area ${
-          userLocation && !isPortalRoute && !isLocationRoute ? 'with-bottom-nav' : ''
+          canShop && !isPortalRoute && !isLocationRoute ? 'with-bottom-nav' : ''
         } ${isStoreRoute ? 'store-view-mode' : ''}`}
       >
         <Routes>
@@ -53,27 +56,27 @@ function MainAppShell({ userLocation, setUserLocation }) {
           />
           <Route
             path="/home"
-            element={userLocation ? <HomePage userLocation={userLocation} /> : <Navigate to="/" />}
+            element={canShop ? <HomePage userLocation={userLocation} /> : <Navigate to="/" replace />}
           />
           <Route
             path="/store/:id"
-            element={userLocation ? <StorePage /> : <Navigate to="/" />}
+            element={canShop ? <StorePage /> : <Navigate to="/" replace />}
           />
           <Route
             path="/search"
-            element={userLocation ? <SearchPage /> : <Navigate to="/" />}
+            element={canShop ? <SearchPage /> : <Navigate to="/" replace />}
           />
           <Route
             path="/orders"
-            element={userLocation ? <OrdersPage /> : <Navigate to="/" />}
+            element={canShop ? <OrdersPage /> : <Navigate to="/" replace />}
           />
           <Route
             path="/cart"
-            element={userLocation ? <CartPage /> : <Navigate to="/" />}
+            element={canShop ? <CartPage /> : <Navigate to="/" replace />}
           />
           <Route
             path="/profile"
-            element={userLocation ? <ProfilePage /> : <Navigate to="/" />}
+            element={canShop ? <ProfilePage /> : <Navigate to="/" replace />}
           />
 
           {/* Seller Access Routes with RBAC Protection */}
@@ -106,7 +109,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
       {!isPortalRoute && !isLocationRoute && <InstallAppBanner />}
 
       {/* Bottom Navigation Bar (Customer mode only) */}
-      {userLocation && !isPortalRoute && !isLocationRoute && <BottomNav />}
+      {canShop && !isPortalRoute && !isLocationRoute && <BottomNav />}
     </div>
   );
 }
