@@ -43,3 +43,6 @@ non-LocalFresh store. These are representative photos, not actual store shots.
 
 Tests: `npm run test:sample-stores`, `npm run test:editorial`,
 then `npm run build`.
+
+## Landing-page category-first order
+Category shortcuts now sit immediately under search, with the same photo-backed, half-height offers-only swiper immediately beneath them. The old promotional heading and generic footer tagline are removed. The stores grid follows the offer carousel. Checkout and individual store product-list screens remain unchanged.

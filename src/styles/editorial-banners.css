@@ -447,3 +447,25 @@
     font-size:18px;
   }
 }
+
+/* New landing structure: compact categories first, then the photo-led
+   half-height offer rail, then neighborhood stores. */
+.kp-concept .kp-concept-search-line{padding-bottom:13px;}
+.kp-concept .kp-concept-compact-categories{margin:0 0 16px;}
+.kp-concept .kp-concept-compact-categories .kp-concept-section-heading{margin-bottom:12px;}
+.kp-concept .kp-concept-compact-categories .kp-concept-mini-category-list{padding-bottom:10px;}
+.kp-concept .kp-concept-feature{margin:0 0 28px;}
+.kp-concept-feature .kp-editorial-rail .kp-promo-top{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin:0 0 7px;
+}
+.kp-concept-feature .kp-editorial-rail .kp-promo-top > span{
+  font-size:11px;font-weight:750;letter-spacing:.02em;
+}
+.kp-concept .kp-concept-footer{justify-content:flex-start;}
+@media(max-width:720px){
+  .kp-concept .kp-concept-search-line{padding-bottom:12px;}
+  .kp-concept .kp-concept-compact-categories{margin-bottom:13px;}
+  .kp-concept .kp-concept-compact-categories .kp-concept-section-heading{margin-bottom:11px;}
+  .kp-concept .kp-concept-feature{margin-bottom:24px;}
+}

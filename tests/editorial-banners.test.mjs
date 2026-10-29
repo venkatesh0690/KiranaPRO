@@ -46,7 +46,7 @@ test('offer swiper retains real imagery and useful controls',()=>{
   assert.match(carousel,/kp-ed-coupon/);
   assert.match(carousel,/kp-promo-dots/);
   assert.match(homepage,/<HomeOffersCarousel/);
-  assert.match(homepage,/Delivery savings, cart rewards & coupons/);
+  assert.match(homepage,/Current delivery and basket offers/);
   assert.match(app,/import '\.\/styles\/editorial-banners\.css'/);
   assert.match(stylesheet,/kp-ed-backdrop img/);
   assert.match(stylesheet,/object-fit:cover/);
@@ -79,4 +79,20 @@ test('compact photo-backed offers keep the original slide width and exactly half
       assert.match(getEditorialBannerPhoto(slide).src,/h=250/);
     }
   }
+});
+
+test('category tiles appear directly after search, before the offer carousel',()=>{
+  const search=homepage.indexOf('kp-concept-search-line');
+  const category=homepage.indexOf('kp-concept-categories kp-concept-compact-categories');
+  const feature=homepage.indexOf('kp-concept-feature');
+  const stores=homepage.indexOf('kp-concept-stores');
+  assert.ok(search>=0 && search<category && category<feature && feature<stores);
+  assert.doesNotMatch(homepage.slice(search,category),/HomeOffersCarousel/);
+  const offerMarkup=homepage.slice(feature,stores);
+  assert.match(offerMarkup,/HomeOffersCarousel/);
+  assert.doesNotMatch(offerMarkup,/Offers worth opening|Delivery savings, cart rewards & coupons|kp-concept-section-heading/);
+  assert.doesNotMatch(homepage,/Fresh finds from your neighborhood/);
+  assert.match(homepage,/01 \/ EXPLORE/);
+  assert.match(homepage,/02 \/ YOUR MARKETPLACE/);
+  assert.match(carousel,/editorial \? 'Offers' : 'Offers & rewards'/);
 });
