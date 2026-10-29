@@ -38,7 +38,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 54,
       "brand": "LocalFresh Mandi",
@@ -61,7 +61,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 61,
       "brand": "LocalFresh Mandi",
@@ -84,7 +84,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 68,
       "brand": "LocalFresh Mandi",
@@ -107,7 +107,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1598030304671-5aa1d6f21128?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 82,
       "brand": "LocalFresh Mandi",
@@ -130,7 +130,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 96,
       "brand": "LocalFresh Mandi",
@@ -153,7 +153,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 110,
       "brand": "LocalFresh Mandi",
@@ -176,7 +176,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1587496679742-bad502958fbf?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 117,
       "brand": "LocalFresh Mandi",
@@ -199,7 +199,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 131,
       "brand": "LocalFresh Mandi",
@@ -222,7 +222,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1425543103986-22abb7d7e8d2?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 152,
       "brand": "LocalFresh Mandi",
@@ -245,7 +245,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 159,
       "brand": "LocalFresh Mandi",
@@ -268,7 +268,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 166,
       "brand": "LocalFresh Mandi",
@@ -291,7 +291,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 173,
       "brand": "LocalFresh Mandi",
@@ -314,7 +314,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 180,
       "brand": "LocalFresh Mandi",
@@ -337,7 +337,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 187,
       "brand": "LocalFresh Mandi",
@@ -360,7 +360,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 194,
       "brand": "LocalFresh Mandi",
@@ -383,7 +383,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 201,
       "brand": "LocalFresh Mandi",
@@ -406,7 +406,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 208,
       "brand": "LocalFresh Mandi",
@@ -429,7 +429,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 215,
       "brand": "LocalFresh Mandi",
@@ -452,7 +452,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 42,
       "brand": "LocalFresh Mandi",
@@ -475,7 +475,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 49,
       "brand": "LocalFresh Mandi",
@@ -498,7 +498,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 56,
       "brand": "LocalFresh Mandi",
@@ -521,7 +521,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 63,
       "brand": "LocalFresh Mandi",
@@ -544,7 +544,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 70,
       "brand": "LocalFresh Mandi",
@@ -567,7 +567,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1587496679742-bad502958fbf?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 77,
       "brand": "LocalFresh Mandi",
@@ -590,7 +590,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 84,
       "brand": "LocalFresh Mandi",
@@ -613,7 +613,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 91,
       "brand": "LocalFresh Mandi",
@@ -636,7 +636,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 98,
       "brand": "LocalFresh Mandi",
@@ -659,7 +659,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 105,
       "brand": "LocalFresh Mandi",
@@ -682,7 +682,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1546470427-0d4db154ceb7?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 112,
       "brand": "LocalFresh Mandi",
@@ -705,7 +705,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 119,
       "brand": "LocalFresh Mandi",
@@ -728,7 +728,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 126,
       "brand": "LocalFresh Mandi",
@@ -751,7 +751,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 133,
       "brand": "LocalFresh Mandi",
@@ -774,7 +774,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 140,
       "brand": "LocalFresh Mandi",
@@ -797,7 +797,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 147,
       "brand": "LocalFresh Mandi",
@@ -820,7 +820,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 154,
       "brand": "LocalFresh Mandi",
@@ -843,7 +843,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 168,
       "brand": "LocalFresh Mandi",
@@ -866,7 +866,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 182,
       "brand": "LocalFresh Mandi",
@@ -889,7 +889,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 189,
       "brand": "LocalFresh Mandi",
@@ -912,7 +912,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 196,
       "brand": "LocalFresh Mandi",
@@ -935,7 +935,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 203,
       "brand": "LocalFresh Mandi",
@@ -958,7 +958,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 217,
       "brand": "LocalFresh Mandi",
@@ -981,7 +981,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 44,
       "brand": "LocalFresh Mandi",
@@ -1004,7 +1004,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1593105544559-ecb03bf76f82?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 51,
       "brand": "LocalFresh Mandi",
@@ -1027,7 +1027,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 58,
       "brand": "LocalFresh Mandi",
@@ -1050,7 +1050,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 72,
       "brand": "LocalFresh Mandi",
@@ -1073,7 +1073,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 86,
       "brand": "LocalFresh Mandi",
@@ -1096,7 +1096,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 128,
       "brand": "LocalFresh Mandi",
@@ -1119,7 +1119,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 142,
       "brand": "LocalFresh Mandi",
@@ -1142,7 +1142,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1584270354949-c26b0d5b4a0c?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 149,
       "brand": "LocalFresh Mandi",
@@ -1165,7 +1165,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1598030304671-5aa1d6f21128?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 156,
       "brand": "LocalFresh Mandi",
@@ -1188,7 +1188,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 170,
       "brand": "LocalFresh Mandi",
@@ -1211,7 +1211,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 177,
       "brand": "LocalFresh Mandi",
@@ -1234,7 +1234,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 184,
       "brand": "LocalFresh Mandi",
@@ -1257,7 +1257,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 191,
       "brand": "LocalFresh Mandi",
@@ -1280,7 +1280,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 198,
       "brand": "LocalFresh Mandi",
@@ -1303,7 +1303,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 205,
       "brand": "LocalFresh Mandi",
@@ -1326,7 +1326,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 212,
       "brand": "LocalFresh Mandi",
@@ -1349,7 +1349,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 219,
       "brand": "LocalFresh Mandi",
@@ -1372,7 +1372,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 67,
       "brand": "LocalFresh Mandi",
@@ -1395,7 +1395,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 74,
       "brand": "LocalFresh Mandi",
@@ -1418,7 +1418,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Vegetables",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1546470427-0d4db154ceb7?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 81,
       "brand": "LocalFresh Mandi",
@@ -1443,7 +1443,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Fruits",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 47,
       "brand": "LocalFresh Mandi",
@@ -1466,7 +1466,7 @@ export const localFreshProductsByCategory = {
       "unit": "per dozen",
       "category": "Fruits",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 75,
       "brand": "LocalFresh Mandi",
@@ -1489,7 +1489,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Fruits",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 89,
       "brand": "LocalFresh Mandi",
@@ -1512,7 +1512,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Fruits",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 103,
       "brand": "LocalFresh Mandi",
@@ -1535,7 +1535,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Fruits",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 161,
       "brand": "LocalFresh Mandi",
@@ -1558,7 +1558,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Fruits",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 210,
       "brand": "LocalFresh Mandi",
@@ -1581,7 +1581,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Fruits",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 65,
       "brand": "LocalFresh Mandi",
@@ -1604,7 +1604,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Fruits",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 79,
       "brand": "LocalFresh Mandi",
@@ -1627,7 +1627,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Fruits",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1585059895524-72359e06133a?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 93,
       "brand": "LocalFresh Mandi",
@@ -1650,7 +1650,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Fruits",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 100,
       "brand": "LocalFresh Mandi",
@@ -1673,7 +1673,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Fruits",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 107,
       "brand": "LocalFresh Mandi",
@@ -1696,7 +1696,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Fruits",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 135,
       "brand": "LocalFresh Mandi",
@@ -1719,7 +1719,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Fruits",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 163,
       "brand": "LocalFresh Mandi",
@@ -1742,7 +1742,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Fruits",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 60,
       "brand": "LocalFresh Mandi",
@@ -1765,7 +1765,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Fruits",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1527325678964-54921661f888?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 165,
       "brand": "LocalFresh Mandi",
@@ -1790,7 +1790,7 @@ export const localFreshProductsByCategory = {
       "unit": "per bunch",
       "category": "Leafy Green",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 124,
       "brand": "LocalFresh Mandi",
@@ -1813,7 +1813,7 @@ export const localFreshProductsByCategory = {
       "unit": "per bunch",
       "category": "Leafy Green",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 138,
       "brand": "LocalFresh Mandi",
@@ -1836,7 +1836,7 @@ export const localFreshProductsByCategory = {
       "unit": "per bunch",
       "category": "Leafy Green",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 145,
       "brand": "LocalFresh Mandi",
@@ -1859,7 +1859,7 @@ export const localFreshProductsByCategory = {
       "unit": "per bunch",
       "category": "Leafy Green",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1628556270448-4d4e4148e1b1?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 175,
       "brand": "LocalFresh Mandi",
@@ -1882,7 +1882,7 @@ export const localFreshProductsByCategory = {
       "unit": "per bunch",
       "category": "Leafy Green",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 114,
       "brand": "LocalFresh Mandi",
@@ -1905,7 +1905,7 @@ export const localFreshProductsByCategory = {
       "unit": "per bunch",
       "category": "Leafy Green",
       "inStock": false,
-      "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 121,
       "brand": "LocalFresh Mandi",
@@ -1928,7 +1928,7 @@ export const localFreshProductsByCategory = {
       "unit": "per bunch",
       "category": "Leafy Green",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 55,
       "brand": "LocalFresh Mandi",
@@ -1951,7 +1951,7 @@ export const localFreshProductsByCategory = {
       "unit": "per bunch",
       "category": "Leafy Green",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1628556270448-4d4e4148e1b1?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 62,
       "brand": "LocalFresh Mandi",
@@ -1974,7 +1974,7 @@ export const localFreshProductsByCategory = {
       "unit": "per bunch",
       "category": "Leafy Green",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 69,
       "brand": "LocalFresh Mandi",
@@ -1999,7 +1999,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 88,
       "brand": "LocalFresh Mandi",
@@ -2022,7 +2022,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 95,
       "brand": "LocalFresh Mandi",
@@ -2045,7 +2045,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 102,
       "brand": "LocalFresh Mandi",
@@ -2068,7 +2068,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 109,
       "brand": "LocalFresh Mandi",
@@ -2091,7 +2091,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 116,
       "brand": "LocalFresh Mandi",
@@ -2114,7 +2114,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 123,
       "brand": "LocalFresh Mandi",
@@ -2137,7 +2137,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 130,
       "brand": "LocalFresh Mandi",
@@ -2160,7 +2160,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 137,
       "brand": "LocalFresh Mandi",
@@ -2183,7 +2183,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 144,
       "brand": "LocalFresh Mandi",
@@ -2206,7 +2206,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 151,
       "brand": "LocalFresh Mandi",
@@ -2229,7 +2229,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 158,
       "brand": "LocalFresh Mandi",
@@ -2252,7 +2252,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 172,
       "brand": "LocalFresh Mandi",
@@ -2275,7 +2275,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 179,
       "brand": "LocalFresh Mandi",
@@ -2298,7 +2298,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 186,
       "brand": "LocalFresh Mandi",
@@ -2321,7 +2321,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1581441363689-1f3c3c414635?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 193,
       "brand": "LocalFresh Mandi",
@@ -2344,7 +2344,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1551462147-ff29053bfc14?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 200,
       "brand": "LocalFresh Mandi",
@@ -2367,7 +2367,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 207,
       "brand": "LocalFresh Mandi",
@@ -2390,7 +2390,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 214,
       "brand": "LocalFresh Mandi",
@@ -2413,7 +2413,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 41,
       "brand": "LocalFresh Mandi",
@@ -2436,7 +2436,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Groceries",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1551462147-ff29053bfc14?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 48,
       "brand": "LocalFresh Mandi",
@@ -2461,7 +2461,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Flowers",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 46,
       "brand": "LocalFresh Mandi",
@@ -2484,7 +2484,7 @@ export const localFreshProductsByCategory = {
       "unit": "per kg",
       "category": "Flowers",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1597848212624-a19eb35e2651?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 53,
       "brand": "LocalFresh Mandi",
@@ -2508,7 +2508,7 @@ export const localFreshProductsByCategory = {
         "unit": "1 meter garland",
         "category": "Flowers",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.9,
         "reviewsCount": 85,
         "brand": "Direct Mandi Hub",
@@ -2531,7 +2531,7 @@ export const localFreshProductsByCategory = {
         "unit": "1 meter garland",
         "category": "Flowers",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.8,
         "reviewsCount": 62,
         "brand": "Direct Mandi Hub",
@@ -2554,7 +2554,7 @@ export const localFreshProductsByCategory = {
         "unit": "1 Mozham string",
         "category": "Flowers",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=400&q=80",
+
         "rating": 5.0,
         "reviewsCount": 140,
         "brand": "Direct Mandi Hub",
@@ -2577,7 +2577,7 @@ export const localFreshProductsByCategory = {
         "unit": "2 pcs pack",
         "category": "Flowers",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.9,
         "reviewsCount": 48,
         "brand": "Direct Mandi Hub",
@@ -2600,7 +2600,7 @@ export const localFreshProductsByCategory = {
         "unit": "10 pcs pack",
         "category": "Flowers",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.8,
         "reviewsCount": 55,
         "brand": "Direct Mandi Hub",
@@ -2623,7 +2623,7 @@ export const localFreshProductsByCategory = {
         "unit": "250 g box",
         "category": "Flowers",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.9,
         "reviewsCount": 112,
         "brand": "Direct Mandi Hub",
@@ -2646,7 +2646,7 @@ export const localFreshProductsByCategory = {
         "unit": "250 g pack",
         "category": "Flowers",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.7,
         "reviewsCount": 42,
         "brand": "Direct Mandi Hub",
@@ -2669,7 +2669,7 @@ export const localFreshProductsByCategory = {
         "unit": "1 bunch + Mala",
         "category": "Flowers",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=400&q=80",
+
         "rating": 5.0,
         "reviewsCount": 160,
         "brand": "Direct Mandi Hub",
@@ -2692,7 +2692,7 @@ export const localFreshProductsByCategory = {
         "unit": "10 leaves pack",
         "category": "Flowers",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.8,
         "reviewsCount": 78,
         "brand": "Direct Mandi Hub",
@@ -2715,7 +2715,7 @@ export const localFreshProductsByCategory = {
         "unit": "1 bundle (15 leaves)",
         "category": "Flowers",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.9,
         "reviewsCount": 65,
         "brand": "Direct Mandi Hub",
@@ -2739,7 +2739,7 @@ export const localFreshProductsByCategory = {
       "unit": "per piece",
       "category": "Pickles",
       "inStock": true,
-      "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
       "rating": 4.8,
       "reviewsCount": 40,
       "brand": "LocalFresh Mandi",
@@ -2763,7 +2763,7 @@ export const localFreshProductsByCategory = {
         "unit": "500 g jar",
         "category": "Pickles",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.9,
         "reviewsCount": 180,
         "brand": "Andhra Mandi Fresh",
@@ -2786,7 +2786,7 @@ export const localFreshProductsByCategory = {
         "unit": "500 g jar",
         "category": "Pickles",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.9,
         "reviewsCount": 142,
         "brand": "Andhra Mandi Fresh",
@@ -2809,7 +2809,7 @@ export const localFreshProductsByCategory = {
         "unit": "300 g jar",
         "category": "Pickles",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.8,
         "reviewsCount": 96,
         "brand": "Andhra Mandi Fresh",
@@ -2832,7 +2832,7 @@ export const localFreshProductsByCategory = {
         "unit": "400 g jar",
         "category": "Pickles",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.8,
         "reviewsCount": 120,
         "brand": "Andhra Mandi Fresh",
@@ -2855,7 +2855,7 @@ export const localFreshProductsByCategory = {
         "unit": "300 g jar",
         "category": "Pickles",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.9,
         "reviewsCount": 135,
         "brand": "Andhra Mandi Fresh",
@@ -2878,7 +2878,7 @@ export const localFreshProductsByCategory = {
         "unit": "400 g jar",
         "category": "Pickles",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.9,
         "reviewsCount": 88,
         "brand": "Andhra Mandi Fresh",
@@ -2901,7 +2901,7 @@ export const localFreshProductsByCategory = {
         "unit": "400 g jar",
         "category": "Pickles",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.7,
         "reviewsCount": 110,
         "brand": "Andhra Mandi Fresh",
@@ -2924,7 +2924,7 @@ export const localFreshProductsByCategory = {
         "unit": "400 g jar",
         "category": "Pickles",
         "inStock": true,
-        "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+
         "rating": 4.9,
         "reviewsCount": 94,
         "brand": "Andhra Mandi Fresh",
@@ -2950,7 +2950,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Pickles",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 40,
     "brand": "LocalFresh Mandi",
@@ -2973,7 +2973,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Fruits",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 47,
     "brand": "LocalFresh Mandi",
@@ -2996,7 +2996,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 54,
     "brand": "LocalFresh Mandi",
@@ -3019,7 +3019,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 61,
     "brand": "LocalFresh Mandi",
@@ -3042,7 +3042,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 68,
     "brand": "LocalFresh Mandi",
@@ -3065,7 +3065,7 @@ export const localFreshProductsList = [
     "unit": "per dozen",
     "category": "Fruits",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 75,
     "brand": "LocalFresh Mandi",
@@ -3088,7 +3088,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1598030304671-5aa1d6f21128?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 82,
     "brand": "LocalFresh Mandi",
@@ -3111,7 +3111,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Fruits",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 89,
     "brand": "LocalFresh Mandi",
@@ -3134,7 +3134,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 96,
     "brand": "LocalFresh Mandi",
@@ -3157,7 +3157,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Fruits",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 103,
     "brand": "LocalFresh Mandi",
@@ -3180,7 +3180,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 110,
     "brand": "LocalFresh Mandi",
@@ -3203,7 +3203,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1587496679742-bad502958fbf?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 117,
     "brand": "LocalFresh Mandi",
@@ -3226,7 +3226,7 @@ export const localFreshProductsList = [
     "unit": "per bunch",
     "category": "Leafy Green",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 124,
     "brand": "LocalFresh Mandi",
@@ -3249,7 +3249,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 131,
     "brand": "LocalFresh Mandi",
@@ -3272,7 +3272,7 @@ export const localFreshProductsList = [
     "unit": "per bunch",
     "category": "Leafy Green",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 138,
     "brand": "LocalFresh Mandi",
@@ -3295,7 +3295,7 @@ export const localFreshProductsList = [
     "unit": "per bunch",
     "category": "Leafy Green",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 145,
     "brand": "LocalFresh Mandi",
@@ -3318,7 +3318,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1425543103986-22abb7d7e8d2?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 152,
     "brand": "LocalFresh Mandi",
@@ -3341,7 +3341,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 159,
     "brand": "LocalFresh Mandi",
@@ -3364,7 +3364,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 166,
     "brand": "LocalFresh Mandi",
@@ -3387,7 +3387,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 173,
     "brand": "LocalFresh Mandi",
@@ -3410,7 +3410,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 180,
     "brand": "LocalFresh Mandi",
@@ -3433,7 +3433,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 187,
     "brand": "LocalFresh Mandi",
@@ -3456,7 +3456,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 194,
     "brand": "LocalFresh Mandi",
@@ -3479,7 +3479,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 201,
     "brand": "LocalFresh Mandi",
@@ -3502,7 +3502,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 208,
     "brand": "LocalFresh Mandi",
@@ -3525,7 +3525,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 215,
     "brand": "LocalFresh Mandi",
@@ -3548,7 +3548,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 42,
     "brand": "LocalFresh Mandi",
@@ -3571,7 +3571,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 49,
     "brand": "LocalFresh Mandi",
@@ -3594,7 +3594,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 56,
     "brand": "LocalFresh Mandi",
@@ -3617,7 +3617,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 63,
     "brand": "LocalFresh Mandi",
@@ -3640,7 +3640,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 70,
     "brand": "LocalFresh Mandi",
@@ -3663,7 +3663,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1587496679742-bad502958fbf?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 77,
     "brand": "LocalFresh Mandi",
@@ -3686,7 +3686,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 84,
     "brand": "LocalFresh Mandi",
@@ -3709,7 +3709,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 91,
     "brand": "LocalFresh Mandi",
@@ -3732,7 +3732,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 98,
     "brand": "LocalFresh Mandi",
@@ -3755,7 +3755,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 105,
     "brand": "LocalFresh Mandi",
@@ -3778,7 +3778,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1546470427-0d4db154ceb7?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 112,
     "brand": "LocalFresh Mandi",
@@ -3801,7 +3801,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 119,
     "brand": "LocalFresh Mandi",
@@ -3824,7 +3824,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 126,
     "brand": "LocalFresh Mandi",
@@ -3847,7 +3847,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 133,
     "brand": "LocalFresh Mandi",
@@ -3870,7 +3870,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 140,
     "brand": "LocalFresh Mandi",
@@ -3893,7 +3893,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 147,
     "brand": "LocalFresh Mandi",
@@ -3916,7 +3916,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 154,
     "brand": "LocalFresh Mandi",
@@ -3939,7 +3939,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Fruits",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 161,
     "brand": "LocalFresh Mandi",
@@ -3962,7 +3962,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 168,
     "brand": "LocalFresh Mandi",
@@ -3985,7 +3985,7 @@ export const localFreshProductsList = [
     "unit": "per bunch",
     "category": "Leafy Green",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1628556270448-4d4e4148e1b1?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 175,
     "brand": "LocalFresh Mandi",
@@ -4008,7 +4008,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 182,
     "brand": "LocalFresh Mandi",
@@ -4031,7 +4031,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 189,
     "brand": "LocalFresh Mandi",
@@ -4054,7 +4054,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 196,
     "brand": "LocalFresh Mandi",
@@ -4077,7 +4077,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 203,
     "brand": "LocalFresh Mandi",
@@ -4100,7 +4100,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Fruits",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 210,
     "brand": "LocalFresh Mandi",
@@ -4123,7 +4123,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 217,
     "brand": "LocalFresh Mandi",
@@ -4146,7 +4146,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 44,
     "brand": "LocalFresh Mandi",
@@ -4169,7 +4169,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1593105544559-ecb03bf76f82?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 51,
     "brand": "LocalFresh Mandi",
@@ -4192,7 +4192,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 58,
     "brand": "LocalFresh Mandi",
@@ -4215,7 +4215,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Fruits",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 65,
     "brand": "LocalFresh Mandi",
@@ -4238,7 +4238,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 72,
     "brand": "LocalFresh Mandi",
@@ -4261,7 +4261,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Fruits",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 79,
     "brand": "LocalFresh Mandi",
@@ -4284,7 +4284,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 86,
     "brand": "LocalFresh Mandi",
@@ -4307,7 +4307,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Fruits",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1585059895524-72359e06133a?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 93,
     "brand": "LocalFresh Mandi",
@@ -4330,7 +4330,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Fruits",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 100,
     "brand": "LocalFresh Mandi",
@@ -4353,7 +4353,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Fruits",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 107,
     "brand": "LocalFresh Mandi",
@@ -4376,7 +4376,7 @@ export const localFreshProductsList = [
     "unit": "per bunch",
     "category": "Leafy Green",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 114,
     "brand": "LocalFresh Mandi",
@@ -4399,7 +4399,7 @@ export const localFreshProductsList = [
     "unit": "per bunch",
     "category": "Leafy Green",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 121,
     "brand": "LocalFresh Mandi",
@@ -4422,7 +4422,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 128,
     "brand": "LocalFresh Mandi",
@@ -4445,7 +4445,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Fruits",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 135,
     "brand": "LocalFresh Mandi",
@@ -4468,7 +4468,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 142,
     "brand": "LocalFresh Mandi",
@@ -4491,7 +4491,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1584270354949-c26b0d5b4a0c?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 149,
     "brand": "LocalFresh Mandi",
@@ -4514,7 +4514,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1598030304671-5aa1d6f21128?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 156,
     "brand": "LocalFresh Mandi",
@@ -4537,7 +4537,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Fruits",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 163,
     "brand": "LocalFresh Mandi",
@@ -4560,7 +4560,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 170,
     "brand": "LocalFresh Mandi",
@@ -4583,7 +4583,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 177,
     "brand": "LocalFresh Mandi",
@@ -4606,7 +4606,7 @@ export const localFreshProductsList = [
     "unit": "per piece",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1558818498-28c1e002b655?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 184,
     "brand": "LocalFresh Mandi",
@@ -4629,7 +4629,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 191,
     "brand": "LocalFresh Mandi",
@@ -4652,7 +4652,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 198,
     "brand": "LocalFresh Mandi",
@@ -4675,7 +4675,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 205,
     "brand": "LocalFresh Mandi",
@@ -4698,7 +4698,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 212,
     "brand": "LocalFresh Mandi",
@@ -4721,7 +4721,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": false,
-    "image": "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 219,
     "brand": "LocalFresh Mandi",
@@ -4744,7 +4744,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Flowers",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 46,
     "brand": "LocalFresh Mandi",
@@ -4767,7 +4767,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Flowers",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1597848212624-a19eb35e2651?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 53,
     "brand": "LocalFresh Mandi",
@@ -4790,7 +4790,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Fruits",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 60,
     "brand": "LocalFresh Mandi",
@@ -4813,7 +4813,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 67,
     "brand": "LocalFresh Mandi",
@@ -4836,7 +4836,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 74,
     "brand": "LocalFresh Mandi",
@@ -4859,7 +4859,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Vegetables",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1546470427-0d4db154ceb7?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 81,
     "brand": "LocalFresh Mandi",
@@ -4882,7 +4882,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 88,
     "brand": "LocalFresh Mandi",
@@ -4905,7 +4905,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 95,
     "brand": "LocalFresh Mandi",
@@ -4928,7 +4928,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 102,
     "brand": "LocalFresh Mandi",
@@ -4951,7 +4951,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 109,
     "brand": "LocalFresh Mandi",
@@ -4974,7 +4974,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 116,
     "brand": "LocalFresh Mandi",
@@ -4997,7 +4997,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 123,
     "brand": "LocalFresh Mandi",
@@ -5020,7 +5020,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 130,
     "brand": "LocalFresh Mandi",
@@ -5043,7 +5043,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 137,
     "brand": "LocalFresh Mandi",
@@ -5066,7 +5066,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 144,
     "brand": "LocalFresh Mandi",
@@ -5089,7 +5089,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 151,
     "brand": "LocalFresh Mandi",
@@ -5112,7 +5112,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 158,
     "brand": "LocalFresh Mandi",
@@ -5135,7 +5135,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Fruits",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1527325678964-54921661f888?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 165,
     "brand": "LocalFresh Mandi",
@@ -5158,7 +5158,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 172,
     "brand": "LocalFresh Mandi",
@@ -5181,7 +5181,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 179,
     "brand": "LocalFresh Mandi",
@@ -5204,7 +5204,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 186,
     "brand": "LocalFresh Mandi",
@@ -5227,7 +5227,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1581441363689-1f3c3c414635?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 193,
     "brand": "LocalFresh Mandi",
@@ -5250,7 +5250,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1551462147-ff29053bfc14?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 200,
     "brand": "LocalFresh Mandi",
@@ -5273,7 +5273,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 207,
     "brand": "LocalFresh Mandi",
@@ -5296,7 +5296,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 214,
     "brand": "LocalFresh Mandi",
@@ -5319,7 +5319,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 41,
     "brand": "LocalFresh Mandi",
@@ -5342,7 +5342,7 @@ export const localFreshProductsList = [
     "unit": "per kg",
     "category": "Groceries",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1551462147-ff29053bfc14?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 48,
     "brand": "LocalFresh Mandi",
@@ -5365,7 +5365,7 @@ export const localFreshProductsList = [
     "unit": "per bunch",
     "category": "Leafy Green",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 55,
     "brand": "LocalFresh Mandi",
@@ -5388,7 +5388,7 @@ export const localFreshProductsList = [
     "unit": "per bunch",
     "category": "Leafy Green",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1628556270448-4d4e4148e1b1?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 62,
     "brand": "LocalFresh Mandi",
@@ -5411,7 +5411,7 @@ export const localFreshProductsList = [
     "unit": "per bunch",
     "category": "Leafy Green",
     "inStock": true,
-    "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80",
+
     "rating": 4.8,
     "reviewsCount": 69,
     "brand": "LocalFresh Mandi",

@@ -22,6 +22,7 @@ import { FREE_DELIVERY_THRESHOLD, getDeliveryFee, isStoreAvailableInArea, isLoca
 import { VALID_COUPONS, MIN_PROMO_SUBTOTAL, evaluateCoupon, getOrderSavings, getAutomaticBasketDiscount } from '../data/checkoutOffers';
 import { useCustomerOrders, readCustomerOrders, getCustomerKey } from '../context/OrderHistoryContext';
 import FulfilmentPicker from '../components/FulfilmentPicker';
+import CatalogProductVisual from '../components/CatalogProductVisual';
 import { quoteFulfilment, validateFulfilment } from '../utils/fulfilment';
 
 export default function CartPage({ userLocation }) {
@@ -249,11 +250,7 @@ export default function CartPage({ userLocation }) {
             <div key={it.id} className="cart-compact-row">
               {/* Small Icon Thumbnail (matching Image 2) */}
               <div className="cc-thumb-wrap">
-                {it.image?.startsWith('http') ? (
-                  <img src={it.image} alt={it.name} className="cc-thumb-img" />
-                ) : (
-                  <div className="cc-thumb-emoji">{it.image || '🥬'}</div>
-                )}
+                <CatalogProductVisual product={it} />
               </div>
 
               {/* Item Name & Details */}

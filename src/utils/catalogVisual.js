@@ -8,7 +8,32 @@
  * All entries remain editable through the actual product/catalog records;
  * these illustrations do not change prices, stock or store inventory.
  */
-const photo = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=520&q=80`;
+// A small first image, with optional modest 2x density. Never fetch original-size files.
+const photo = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=240&q=52&fm=webp`;
+// File names below are taken from verified Commons file pages. Wikimedia's
+// width parameter requests a thumbnail instead of a multi-megabyte original.
+const commons = file => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=240`;
+const exactPhotoRules = [
+  [/^ash gourd$/i, commons('India Ash Gourd.jpg')],
+  [/^(?:potols?|pointed gourd|parval)$/i, commons('Pointed gourd 20220828 165712.jpg')],
+  [/\b(?:lady finger|bhindi|okra)\b/i, commons('Lady fingers at Gara market, Srikakulam.jpg')],
+  [/^bottle gourd$/i, commons('Bottle gourd in andhra farm.jpg')],
+  [/\b(?:beerakaya|ridge gourd)\b/i, commons('Ridge Gourd Southern India.jpg')],
+  [/^ivy gourd$/i, commons('Ivy gourd.jpg')],
+  [/^carrot$|^gaajar carrot$|^crunchy orange ooty carrots$/i, commons('Carrots ooty.JPG')],
+  [/^coriander$/i, commons('Coriander Leaves.jpg')],
+  [/^chana dal$/i, commons('Chana Dal (split Bengal gram).JPG')],
+  [/^rajma beans$/i, commons('Chitra Rajma.jpg')],
+  [/^green chilli$|^spicy andhra green chillies$/i, commons('Green-chillies.jpg')]
+];
+const responsivePhoto = url => {
+  if (!url) return null;
+  if (url.startsWith('https://images.unsplash.com/'))
+    return [url, url.replace('w=240&q=52','w=420&q=56')];
+  if (url.startsWith('https://commons.wikimedia.org/'))
+    return [url, url.replace('width=240','width=420')];
+  return [url,url];
+};
 // Known representative commodity photos (not claims about a particular brand/package).
 const photoRules = [
   [/\b(tomato|tamatar)\b|tomato\(/i, photo('photo-1546470427-0d4db154ceb7')],
@@ -82,6 +107,13 @@ const iconRules = [
   [/chilli powder|spice|turmeric|coriander powder|masala/i, ['🌶️','#f6ebe0']],
   [/oil|sunflower/i, ['🫙','#f5eedb']],
   [/juice|soda|cola|pepsi|sprite|drink|water bottle/i, ['🥤','#e8f1ec']],
+  [/vermicelli/i, ['🍝','#f3e9d7']],
+  [/idly ravva|minapagundlu/i, ['🌾','#efe7d7']],
+  [/avakaya|gongura pickle|pachadi/i, ['🫙','#f9ebdf']],
+  [/biscuit|parle-g|cookies/i, ['🍪','#f4eadd']],
+  [/cucumber|dosakaya|beerakaya|potols/i, ['🥒','#e8f1de']],
+  [/chrysanthemum|marigold/i, ['🌼','#fff1cf']],
+  [/amla/i, ['🟢','#e6f0e2']],
   [/noodle|maggi/i, ['🍜','#f3e9d7']],
   [/snack|bhujia|kurkure|chips|lay's/i, ['🍿','#faebdf']],
   [/chocolate|oreo|sweet/i, ['🍫','#f4e6dd']],
@@ -105,11 +137,21 @@ export function getCatalogVisual(product) {
     || [null,['🛒','#edf1e9']];
   // Restrict photos to single raw commodity names, never substitute packaged
   // products, pickles or regional specialty variants with unrelated stock photos.
-  const isSpecialty = /pickle|pachadi|avakaya|dried|powder|masala|processed|flavoured|packed|package|juice|drink|garland|small|raw banana|mango ginger|flowers|leaves|lotus|chrysanthemum|jasmine|hibiscus|betel|marigold/i.test(key);
-  const photoMatch = !isSpecialty ? photoRules.find(([rx])=>rx.test(name)) : null;
+  const isSpecialty = /pickle|pachadi|avakaya|dried|powder|masala|processed|flavoured|packed|package|baby corn|juice|drink|garland|small|raw banana|mango ginger|flowers|leaves|lotus|chrysanthemum|jasmine|hibiscus|betel|marigold/i.test(key);
+  const photoMatch = !isSpecialty ? [...exactPhotoRules,...photoRules].find(([rx])=>rx.test(name)) : null;
   const isBrandSpecific = /\b(amul|heritage|epigamia|britannia|fortune|saffola|aashirvaad|srilalitha|double horse|tata|catch|everest|24 mantra|pri?ya|bambino|maggi|lay|haldiram|parle|pepsi|coca|sprite|thums|real activ|paper boat|pampers|himalaya|johnson|whisper|dove|colgate|vim|surf excel)\b/i.test(name);
+  const matchedPhoto = !isBrandSpecific && photoMatch ? photoMatch[1] : null;
+  const commonsName = matchedPhoto?.includes('/Special:FilePath/')
+    ? decodeURIComponent(matchedPhoto.split('/Special:FilePath/')[1].split('?')[0])
+    : null;
+  const variants=responsivePhoto(matchedPhoto);
   return {
-    photo: !isBrandSpecific && photoMatch ? photoMatch[1] : null,
+    photo: matchedPhoto,
+    photoSrcSet: variants ? `${variants[0]} 240w, ${variants[1]} 420w` : null,
+    photoSource: matchedPhoto?.includes('wikimedia.org') ? 'Wikimedia Commons' : matchedPhoto ? 'Unsplash' : null,
+    photoCreditUrl: commonsName
+      ? `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(commonsName)}`
+      : null,
     emoji: icon[1][0],
     background: icon[1][1],
     label: shortLabel(name),

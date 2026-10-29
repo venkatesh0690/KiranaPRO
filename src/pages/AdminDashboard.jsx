@@ -30,6 +30,7 @@ import {
 import { useStore } from '../context/StoreContext';
 import { useSecurity } from '../context/SecurityContext';
 import { categoryMeta } from '../data/stores';
+import CatalogProductVisual from '../components/CatalogProductVisual';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -459,11 +460,7 @@ export default function AdminDashboard() {
                 <div key={product.id} className={`ad-lf-item-card ${!product.inStock ? 'oos' : ''}`}>
                   <div className="ad-lf-item-left">
                     <span className="ad-lf-emoji" style={{ background: meta.bg, overflow: 'hidden' }}>
-                      {product.image && product.image.startsWith('http') ? (
-                        <img src={product.image} alt={product.name} referrerPolicy="no-referrer" crossOrigin="anonymous" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} />
-                      ) : (
-                        product.image
-                      )}
+                      <CatalogProductVisual product={product} />
                     </span>
                     <div className="ad-lf-name-block">
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>

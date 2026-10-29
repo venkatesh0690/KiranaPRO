@@ -34,3 +34,32 @@
  .pc-img-wrap .kp-catalog-emoji { font-size:39px; }
  .pc-img-wrap .kp-catalog-visual-caption { font-size:9px; }
 }
+
+/* Tiny stock and cart thumbnails reuse exactly the same audited imagery. */
+.cc-thumb-wrap .kp-catalog-product-visual,
+.ad-lf-emoji .kp-catalog-product-visual,
+.ssi-emoji .kp-catalog-product-visual{
+  width:100%;height:100%;min-height:0;border-radius:inherit;
+}
+.cc-thumb-wrap .kp-catalog-illustration,
+.ad-lf-emoji .kp-catalog-illustration,
+.ssi-emoji .kp-catalog-illustration{
+  padding:2px;gap:0;
+}
+.cc-thumb-wrap .kp-catalog-emoji,
+.ad-lf-emoji .kp-catalog-emoji,
+.ssi-emoji .kp-catalog-emoji{font-size:clamp(18px,3vw,29px);}
+.cc-thumb-wrap .kp-catalog-visual-caption,
+.ad-lf-emoji .kp-catalog-visual-caption,
+.ssi-emoji .kp-catalog-visual-caption{display:none;}
+.cc-thumb-wrap .kp-catalog-photo,
+.ad-lf-emoji .kp-catalog-photo,
+.ssi-emoji .kp-catalog-photo{padding:2px;}
+.kp-product-image-credit{
+  position:absolute;right:9px;bottom:9px;z-index:2;
+  padding:5px 7px;border-radius:6px;
+  font-size:10px;line-height:1.15;font-weight:650;
+  color:#3d5a44;background:rgba(255,255,255,.94);
+  text-decoration:none;border:1px solid #e1e8df;
+}
+.kp-product-image-credit:hover{text-decoration:underline;}

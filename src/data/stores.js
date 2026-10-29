@@ -172,7 +172,7 @@ export const productsByCategory = {
       price: 54,
       mrp: 58,
       unit: "1 Litre",
-      image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🥛",
       inStock: true,
       rating: 4.9,
@@ -188,7 +188,7 @@ export const productsByCategory = {
       price: 75,
       mrp: 85,
       unit: "6 pcs pack",
-      image: "https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🥚",
       inStock: true,
       rating: 4.8,
@@ -204,7 +204,7 @@ export const productsByCategory = {
       price: 35,
       mrp: 40,
       unit: "450 g pouch",
-      image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🥣",
       inStock: true,
       rating: 4.7,
@@ -220,7 +220,7 @@ export const productsByCategory = {
       price: 56,
       mrp: 60,
       unit: "100 g pack",
-      image: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🧈",
       inStock: true,
       rating: 4.9,
@@ -236,7 +236,7 @@ export const productsByCategory = {
       price: 45,
       mrp: 50,
       unit: "400 g loaf",
-      image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🍞",
       inStock: true,
       rating: 4.6,
@@ -334,7 +334,7 @@ export const productsByCategory = {
       price: 36,
       mrp: 45,
       unit: "1 kg",
-      image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🍅",
       inStock: true,
       rating: 4.8,
@@ -350,7 +350,7 @@ export const productsByCategory = {
       price: 38,
       mrp: 44,
       unit: "1 kg",
-      image: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🧅",
       inStock: true,
       rating: 4.7,
@@ -366,7 +366,7 @@ export const productsByCategory = {
       price: 32,
       mrp: 38,
       unit: "1 kg",
-      image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🥔",
       inStock: true,
       rating: 4.9,
@@ -382,7 +382,7 @@ export const productsByCategory = {
       price: 18,
       mrp: 24,
       unit: "200 g",
-      image: "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🌶️",
       inStock: true,
       rating: 4.8,
@@ -398,7 +398,7 @@ export const productsByCategory = {
       price: 45,
       mrp: 55,
       unit: "6 pcs",
-      image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🍌",
       inStock: true,
       rating: 4.7,
@@ -495,7 +495,7 @@ export const productsByCategory = {
       price: 99,
       mrp: 120,
       unit: "250 ml bottle",
-      image: "https://images.unsplash.com/photo-1556881286-fc6915169721?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🥤",
       inStock: true,
       rating: 4.9,
@@ -511,7 +511,7 @@ export const productsByCategory = {
       price: 95,
       mrp: 110,
       unit: "240 ml bottle",
-      image: "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🧃",
       inStock: true,
       rating: 4.8,
@@ -527,7 +527,7 @@ export const productsByCategory = {
       price: 130,
       mrp: 145,
       unit: "1 Litre tetra",
-      image: "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🍊",
       inStock: true,
       rating: 4.7,
@@ -543,7 +543,7 @@ export const productsByCategory = {
       price: 40,
       mrp: 40,
       unit: "250 ml can",
-      image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🥫",
       inStock: true,
       rating: 4.8,
@@ -559,7 +559,7 @@ export const productsByCategory = {
       price: 40,
       mrp: 40,
       unit: "250 ml can",
-      image: "https://images.unsplash.com/photo-1554866585-cd94860890b7?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🥤",
       inStock: true,
       rating: 4.9,
@@ -634,7 +634,7 @@ export const productsByCategory = {
       price: 52,
       mrp: 58,
       unit: "200 g pack",
-      image: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🍟",
       inStock: true,
       rating: 4.9,
@@ -650,7 +650,7 @@ export const productsByCategory = {
       price: 20,
       mrp: 20,
       unit: "50 g pack",
-      image: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🥔",
       inStock: true,
       rating: 4.8,
@@ -666,7 +666,7 @@ export const productsByCategory = {
       price: 32,
       mrp: 35,
       unit: "150 g pack",
-      image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🍪",
       inStock: true,
       rating: 4.7,
@@ -682,7 +682,7 @@ export const productsByCategory = {
       price: 14,
       mrp: 14,
       unit: "70 g pack",
-      image: "https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🍜",
       inStock: true,
       rating: 4.9,
@@ -757,7 +757,7 @@ export const productsByCategory = {
       price: 142,
       mrp: 165,
       unit: "1 kg pack",
-      image: "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🫘",
       inStock: true,
       rating: 4.9,
@@ -773,7 +773,7 @@ export const productsByCategory = {
       price: 155,
       mrp: 175,
       unit: "1 Litre pouch",
-      image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🌻",
       inStock: true,
       rating: 4.8,
@@ -789,7 +789,7 @@ export const productsByCategory = {
       price: 245,
       mrp: 275,
       unit: "5 kg pack",
-      image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🌾",
       inStock: true,
       rating: 4.9,
@@ -807,7 +807,7 @@ export const productsByCategory = {
       price: 52,
       mrp: 60,
       unit: "100 g",
-      image: "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🧼",
       inStock: true,
       rating: 4.9,
@@ -823,7 +823,7 @@ export const productsByCategory = {
       price: 98,
       mrp: 115,
       unit: "150 g tube",
-      image: "https://images.unsplash.com/photo-1559599101-f09722fb4948?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🪥",
       inStock: true,
       rating: 4.8,
@@ -841,7 +841,7 @@ export const productsByCategory = {
       price: 142,
       mrp: 165,
       unit: "1 kg pack",
-      image: "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🫘",
       inStock: true,
       rating: 4.9,
@@ -857,7 +857,7 @@ export const productsByCategory = {
       price: 128,
       mrp: 145,
       unit: "1 kg pack",
-      image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🫘",
       inStock: true,
       rating: 4.8,
@@ -873,7 +873,7 @@ export const productsByCategory = {
       price: 158,
       mrp: 175,
       unit: "1 kg pack",
-      image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "⚪",
       inStock: true,
       rating: 4.9,
@@ -889,7 +889,7 @@ export const productsByCategory = {
       price: 310,
       mrp: 350,
       unit: "5 kg bag",
-      image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🌾",
       inStock: true,
       rating: 4.9,
@@ -905,7 +905,7 @@ export const productsByCategory = {
       price: 115,
       mrp: 135,
       unit: "1 kg pack",
-      image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🍚",
       inStock: true,
       rating: 4.7,
@@ -923,7 +923,7 @@ export const productsByCategory = {
       price: 48,
       mrp: 55,
       unit: "200 g pack",
-      image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🟡",
       inStock: true,
       rating: 4.9,
@@ -939,7 +939,7 @@ export const productsByCategory = {
       price: 65,
       mrp: 75,
       unit: "200 g pack",
-      image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🌶️",
       inStock: true,
       rating: 4.8,
@@ -955,7 +955,7 @@ export const productsByCategory = {
       price: 52,
       mrp: 60,
       unit: "200 g pack",
-      image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🌿",
       inStock: true,
       rating: 4.7,
@@ -971,7 +971,7 @@ export const productsByCategory = {
       price: 85,
       mrp: 95,
       unit: "100 g pack",
-      image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🥣",
       inStock: true,
       rating: 4.9,
@@ -987,7 +987,7 @@ export const productsByCategory = {
       price: 32,
       mrp: 38,
       unit: "100 g pack",
-      image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "⚫",
       inStock: true,
       rating: 4.8,
@@ -1005,7 +1005,7 @@ export const productsByCategory = {
       price: 138,
       mrp: 155,
       unit: "1 Litre pouch",
-      image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🌻",
       inStock: true,
       rating: 4.9,
@@ -1021,7 +1021,7 @@ export const productsByCategory = {
       price: 325,
       mrp: 355,
       unit: "500 ml tin",
-      image: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🧈",
       inStock: true,
       rating: 4.9,
@@ -1037,7 +1037,7 @@ export const productsByCategory = {
       price: 165,
       mrp: 185,
       unit: "1 Litre pouch",
-      image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🫙",
       inStock: true,
       rating: 4.8,
@@ -1053,7 +1053,7 @@ export const productsByCategory = {
       price: 195,
       mrp: 220,
       unit: "500 ml bottle",
-      image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🫒",
       inStock: true,
       rating: 4.8,
@@ -1071,7 +1071,7 @@ export const productsByCategory = {
       price: 85,
       mrp: 95,
       unit: "300 g bottle",
-      image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🫙",
       inStock: true,
       rating: 4.9,
@@ -1087,7 +1087,7 @@ export const productsByCategory = {
       price: 85,
       mrp: 95,
       unit: "300 g bottle",
-      image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🌿",
       inStock: true,
       rating: 4.9,
@@ -1103,7 +1103,7 @@ export const productsByCategory = {
       price: 82,
       mrp: 90,
       unit: "300 g bottle",
-      image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🍅",
       inStock: true,
       rating: 4.7,
@@ -1121,7 +1121,7 @@ export const productsByCategory = {
       price: 299,
       mrp: 349,
       unit: "20 pcs pack",
-      image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "👶",
       inStock: true,
       rating: 4.8,
@@ -1137,7 +1137,7 @@ export const productsByCategory = {
       price: 125,
       mrp: 140,
       unit: "72 wipes pack",
-      image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🧻",
       inStock: true,
       rating: 4.9,
@@ -1153,7 +1153,7 @@ export const productsByCategory = {
       price: 58,
       mrp: 65,
       unit: "100 g bar",
-      image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🧼",
       inStock: true,
       rating: 4.8,
@@ -1169,7 +1169,7 @@ export const productsByCategory = {
       price: 48,
       mrp: 52,
       unit: "6 pads pack",
-      image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🌸",
       inStock: true,
       rating: 4.9,
@@ -1187,7 +1187,7 @@ export const productsByCategory = {
       price: 140,
       mrp: 155,
       unit: "1 kg pack",
-      image: "https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🧺",
       inStock: true,
       rating: 4.9,
@@ -1203,7 +1203,7 @@ export const productsByCategory = {
       price: 115,
       mrp: 130,
       unit: "500 ml bottle",
-      image: "https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🍋",
       inStock: true,
       rating: 4.8,
@@ -1219,7 +1219,7 @@ export const productsByCategory = {
       price: 65,
       mrp: 75,
       unit: "3 packs",
-      image: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🪔",
       inStock: true,
       rating: 4.9,
@@ -1235,7 +1235,7 @@ export const productsByCategory = {
       price: 45,
       mrp: 55,
       unit: "50 g jar",
-      image: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=400&q=80",
+
       fallbackEmoji: "🔥",
       inStock: true,
       rating: 4.9,

@@ -24,6 +24,7 @@ import { useStore } from '../context/StoreContext';
 import { useSecurity } from '../context/SecurityContext';
 import { maskPhone } from '../utils/security';
 import { allCategories } from '../data/stores';
+import CatalogProductVisual from '../components/CatalogProductVisual';
 
 export default function SellerDashboard() {
   const navigate = useNavigate();
@@ -280,7 +281,7 @@ export default function SellerDashboard() {
               return (
                 <div key={p.id} className={`sd-stock-item-card ${!p.inStock ? 'out-of-stock' : ''}`}>
                   <div className="ssi-left">
-                    <span className="ssi-emoji">{p.image}</span>
+                    <span className="ssi-emoji"><CatalogProductVisual product={p} /></span>
                     <div className="ssi-details">
                       <div className="ssi-name-row">
                         <h4 className="ssi-name">{p.name}</h4>
