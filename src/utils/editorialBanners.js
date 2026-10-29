@@ -29,13 +29,13 @@ export function getEditorialBannerStyle(slide, index=0) {
 
 export function getEditorialBannerHeadline(slide) {
   if(slide?.isSample) return String(slide?.store?.name||slide?.title||'LOCAL STORE').toUpperCase();
-  if(slide?.kind==='global') return 'DELIVERY.\nON US.';
-  if(slide?.kind==='automatic') return 'GOOD CART.\nGOOD SAVINGS.';
+  if(slide?.kind==='global') return 'FREE\nDELIVERY.';
+  if(slide?.kind==='automatic') return 'SAVE UP TO\n₹30.';
   if(slide?.kind==='coupon') {
     const code=String(slide?.code||'');
-    if(code==='WELCOME') return slide.rewardEligible===false?'YOUR FIRST.\nBIG HELLO.':'FIRST ORDER.\n₹30 OFF.';
-    if(code==='REPEAT') return 'COME BACK.\nSAVE MORE.';
-    if(code==='ADDICTED') return 'YOUR TENTH.\n₹50 OFF.';
+    if(code==='WELCOME') return 'WELCOME.\n₹30 OFF.';
+    if(code==='REPEAT') return 'REPEAT.\n₹20 OFF.';
+    if(code==='ADDICTED') return '10TH ORDER.\n₹50 OFF.';
   }
   if(slide?.kind==='picks')return 'GOOD THINGS.\nNEAR YOU.';
   if(String(slide?.id||'').includes('mandi')) return 'FRESH FROM\nTHE MANDI.';

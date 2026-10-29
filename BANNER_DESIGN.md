@@ -21,3 +21,6 @@ Every generated homepage banner resolves to an HTTPS real-photography URL using 
 ## Offers-only photo banners (October 29, 2026)
 
 The landing carousel contains **only checkout offers**: free delivery for participating neighborhood stores above ₹300 (not LocalFresh), the automatic 5% basket discount capped at ₹30 above ₹500, and the WELCOME, REPEAT, ADDICTED order-milestone codes above ₹300. There are no store names, store previews, unverified merchant offers, catalog suggestions or sample listings in its slides. All banners use full-bleed representative real photographs and a readable editorial text overlay, not plain color panels. Store names and gallery photos continue in the **store discovery cards** beneath the carousel. The product-list page remains banner-free.
+
+## Compact half-height offer banners
+The homepage featured photo-backed banner is now half the original height: desktop uses 133–163 px instead of 265–325 px, and phone cards use 139 px instead of 278 px. **Carousel width and swipe behavior are unchanged.** Banner copy has been compacted to the verified offer and eligibility terms so it fits the shallower layout. The photo renderer now requests 900×250 WebP instead of 900×500, reducing image transfer. No merchant/store names appear inside the banner rail, and individual store product-list pages remain banner-free.

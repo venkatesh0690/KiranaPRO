@@ -26,7 +26,7 @@ export function buildHomepageBanners(stores, _catalog, area, orderCount=0) {
       ...FEATURED_CHECKOUT_OFFERS[0],kind:'global',
       id:'offer-free-delivery',tag:'FREE DELIVERY · SELECTED STORES',
       title:'Free delivery above ₹300',
-      subtitle:'₹0 delivery on carts above ₹300 at participating neighborhood stores.',
+      subtitle:'Free above ₹300 at participating stores. LocalFresh excluded.',
       store:participatingDeliveryStores[0],
       cta:'Explore eligible stores',minCart:MIN_PROMO_SUBTOTAL
     });
@@ -36,7 +36,7 @@ export function buildHomepageBanners(stores, _catalog, area, orderCount=0) {
   if(basket)slides.push({
     ...basket,id:'offer-basket-savings',
     title:'Save up to ₹30',tag:'AUTOMATIC BASKET REWARD',
-    subtitle:'5% off, capped at ₹30, automatically on carts above ₹500.',
+    subtitle:'Automatic 5% off, up to ₹30, on carts above ₹500.',
     cta:'Shop & save',minCart:501
   });
 
@@ -44,14 +44,19 @@ export function buildHomepageBanners(stores, _catalog, area, orderCount=0) {
     const rule=VALID_COUPONS[offer.code];
     if(!rule)continue;
     const eligible=isCouponForOrder(offer.code,nextOrderNumber(orderCount));
-    const description=rule.desc;
+    const shortTerms={
+      WELCOME:'First order only · ₹30 off · Cart above ₹300',
+      REPEAT:'3rd, 5th or 7th order · ₹20 off · Cart above ₹300',
+      ADDICTED:'10th order only · ₹50 off · Cart above ₹300'
+    };
+    const description=shortTerms[offer.code] || rule.desc;
     slides.push({
       ...offer,id:`offer-${offer.code.toLowerCase()}`,kind:'coupon',
       title:offer.title,
       tag:eligible?'COUPON REWARD':'UPCOMING ORDER REWARD',
       subtitle:eligible
         ? description
-        : `${description} · Available only on your eligible order, not order #${nextOrderNumber(orderCount)}.`,
+        : `${description} · Upcoming reward`,
       rewardEligible:eligible,
       cta:eligible?'Shop & redeem':'See reward details',
       minCart:rule.min

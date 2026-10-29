@@ -313,3 +313,137 @@
       linear-gradient(0deg,rgba(7,21,16,.4),transparent 36%,transparent 83%,rgba(9,23,17,.27));
   }
 }
+
+/* Compact, half-height offer photography cards (original wide rail preserved).
+   Desktop 265–325px becomes 133–163px; 278px phone cards become 139px. */
+.kp-concept-feature .kp-editorial-rail .kp-promo-slide.kp-editorial-slide{
+  height:clamp(133px,18vw,163px);
+  /* Keep the original flex-basis and horizontal swipe width unchanged. */
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-head,
+.kp-editorial-rail .kp-ed-photographic .kp-ed-footer {
+  display:none;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-body {
+  flex:1;
+  grid-template-columns:minmax(0,69%) minmax(0,31%);
+  min-height:0;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-copy {
+  justify-content:center;
+  padding:8px 5px 7px 20px;
+  overflow:hidden;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-label {
+  font-size:8px;letter-spacing:.08em;line-height:1.15;
+}
+.kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-copy h3,
+.kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-copy h3.kp-ed-title-long{
+  font-size:clamp(22px,3vw,29px);
+  line-height:.98;
+  letter-spacing:-.025em;
+  margin:3px 0 2px;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-copy p {
+  font-size:10px;line-height:1.18;
+  margin:2px 0 4px;
+  -webkit-line-clamp:2;
+  max-width:42ch;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-coupon{
+  font-size:8px;
+  line-height:1.1;
+  padding:2px 4px;
+  margin:0 0 3px;
+  border-radius:2px;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-action {
+  font-size:10px;
+  line-height:1.15;
+  padding:4px 0 2px;
+  margin-top:2px;
+  min-width:0;
+  gap:5px;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-action svg{
+  height:12px;width:12px;flex-shrink:0;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-visual{
+  padding:6px 10px 6px 3px;
+  min-height:0;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-price-art{
+  width:min(100%,155px);
+  aspect-ratio:1.5;
+  padding:5px 3px;
+  border-width:1px;
+  transform:rotate(3deg);
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-price-art strong{
+  font-size:clamp(33px,5.1vw,53px);
+  line-height:1;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-price-decoration{
+  font-size:7px;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-price-art>span:last-child{
+  font-size:7px;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-accent-square{
+  width:13px;height:13px;bottom:5px;right:7px;
+}
+@media(max-width:720px){
+  .kp-concept-feature .kp-editorial-rail .kp-promo-slide.kp-editorial-slide{
+    height:139px;
+    /* flex-basis remains 93%, unchanged */
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-body{
+    grid-template-columns:minmax(0,73%) minmax(0,27%);
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-copy{
+    padding:7px 3px 7px 12px;
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-label{
+    font-size:7px;
+  }
+  .kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-copy h3,
+  .kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-copy h3.kp-ed-title-long {
+    font-size:clamp(19px,5.3vw,23px);
+    line-height:1;
+    margin:2px 0 2px;
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-copy p{
+    font-size:9px;line-height:1.12;
+    margin:2px 0 3px;
+    -webkit-line-clamp:2;
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-coupon{
+    font-size:7px;padding:2px 3px;margin-bottom:2px;
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-action{
+    font-size:9px;padding:3px 0 2px;gap:4px;
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-price-art{
+    width:100%;min-width:0;aspect-ratio:1.0;
+    padding:4px 2px;transform:rotate(2deg);
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-price-art strong{
+    font-size:clamp(25px,7.2vw,34px);
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-price-decoration,
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-price-art>span:last-child{
+    font-size:6px;
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-visual{
+    padding:8px 9px 8px 0;
+  }
+}
+@media(max-width:360px){
+  .kp-concept-feature .kp-editorial-rail .kp-promo-slide.kp-editorial-slide{
+    height:139px;
+  }
+  .kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-copy h3,
+  .kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-copy h3.kp-ed-title-long{
+    font-size:18px;
+  }
+}

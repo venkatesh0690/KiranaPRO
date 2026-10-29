@@ -57,3 +57,24 @@ test('store listings retain photographs but the product pages remain distraction
   assert.match(stylesheet,/@media\(max-width:720px\)/);
   assert.match(stylesheet,/prefers-reduced-motion:reduce/);
 });
+
+test('compact photo-backed offers keep the original slide width and exactly half-height mobile cards',()=>{
+  const bannerCss=stylesheet;
+  assert.match(bannerCss,/height:clamp\(133px,18vw,163px\)/);
+  assert.match(bannerCss,/height:139px/);
+  assert.match(bannerCss,/kp-ed-photo-scrim/);
+  assert.match(bannerCss,/\.kp-ed-photographic \.kp-ed-head/);
+  assert.match(bannerCss,/\.kp-ed-photographic \.kp-ed-footer/);
+  assert.match(bannerCss,/grid-template-columns:minmax\(0,73%\) minmax\(0,27%\)/);
+  assert.doesNotMatch(bannerCss.split('Compact, half-height offer photography cards')[1],/flex:\s*0\s+0\s+93%/);
+  for(const area of DELIVERY_AREAS){
+    const slides=buildHomepageBanners(stores,productsByCategory,area,0);
+    assert.ok(slides.every(s=>['global','automatic','coupon'].includes(s.kind)));
+    assert.ok(slides.every(s=>!s.isSample && !s.bannerPhoto && s.id.startsWith('offer-')));
+    for(const slide of slides){
+      assert.ok(slide.subtitle.length<120);
+      assert.ok(getEditorialBannerHeadline(slide).length>5);
+      assert.match(getEditorialBannerPhoto(slide).src,/h=250/);
+    }
+  }
+});
