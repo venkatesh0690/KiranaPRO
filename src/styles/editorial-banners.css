@@ -293,3 +293,23 @@
   .kp-ed-scene-stamp strong{font-size:clamp(20px,6vw,28px);}
   .kp-ed-photographic .kp-ed-price-art {background:rgba(10,26,18,.32);}
 }
+
+/* Photo-only offer rail — keep backgrounds recognizably photographic. */
+.kp-concept-feature .kp-editorial-rail .kp-ed-photographic {
+  background:#25392e; /* visible only while remote photo is loading */
+}
+.kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-backdrop img {
+  filter:saturate(1.06) contrast(1.03) brightness(1.01);
+}
+.kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-photo-scrim {
+  background:
+    linear-gradient(90deg,rgba(8,20,15,.87) 0%,rgba(12,26,18,.74) 30%,rgba(12,27,20,.33) 64%,rgba(10,26,19,.11) 100%),
+    linear-gradient(0deg,rgba(8,23,17,.48),transparent 31%,transparent 77%,rgba(8,22,17,.28));
+}
+@media(max-width:720px){
+  .kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-photo-scrim {
+    background:
+      linear-gradient(90deg,rgba(8,22,15,.91) 0%,rgba(8,23,16,.78) 39%,rgba(9,25,17,.24) 81%,rgba(9,23,17,.12)),
+      linear-gradient(0deg,rgba(7,21,16,.4),transparent 36%,transparent 83%,rgba(9,23,17,.27));
+  }
+}

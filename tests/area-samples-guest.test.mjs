@@ -43,13 +43,13 @@ test('temporary guest session is not a verified customer or an admin',()=>{
   assert.match(location,/loginTemporaryCustomer\(\)/);
 });
 
-test('first-position homepage banner displays real store photo, not empty product art',()=>{
-  const carousel=readFileSync(new URL('../src/components/StoreOffersCarousel.jsx',import.meta.url),'utf8');
-  assert.match(carousel,/slide\.bannerPhoto\s*\?/);
-  assert.match(carousel,/kp-promo-store-art/);
-  assert.match(carousel,/alt=\{\`Representative shop photo/);
+test('homepage shows only offers, while store discovery cards keep photo galleries',()=>{
   const banners=readFileSync(new URL('../src/utils/homepageBanners.js',import.meta.url),'utf8');
-  assert.match(banners,/bannerPhoto:store\.gallery\?\.\[0\]\?\.src \|\| store\.posterImage/);
+  assert.doesNotMatch(banners,/kind:'store'|kind:'picks'|SAMPLE STORE · PREVIEW/);
+  const carousel=readFileSync(new URL('../src/components/StoreOffersCarousel.jsx',import.meta.url),'utf8');
+  assert.match(carousel,/kp-ed-backdrop/);
+  const cards=readFileSync(new URL('../src/components/StoreCard.jsx',import.meta.url),'utf8');
+  assert.match(cards,/StorePhotoCarousel/);
 });
 test('demo customer profile never shows fabricated phone or unselected neighborhood',()=>{
   const profile=readFileSync(new URL('../src/pages/ProfilePage.jsx',import.meta.url),'utf8');

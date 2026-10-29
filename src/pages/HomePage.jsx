@@ -95,13 +95,13 @@ export default function HomePage({ userLocation }) {
         </button>
       </div>
 
-      <section className="kp-concept-feature" aria-label="Offers at neighborhood stores">
+      <section className="kp-concept-feature" aria-label="Current offers and loyalty rewards">
         <div className="kp-concept-section-heading">
           <div className="kp-concept-heading-copy">
             <span className="kp-concept-index">01 / FEATURED</span>
-            <h2>Good things, nearby.</h2>
+            <h2>Offers worth opening.</h2>
           </div>
-          <span className="kp-concept-subnote">Offers, store specials & grocery picks</span>
+          <span className="kp-concept-subnote">Delivery savings, cart rewards & coupons</span>
         </div>
         <HomeOffersCarousel stores={areaStores} catalog={products} navigate={navigate} area={userLocation} totalItems={totalItems} orderCount={orderCount} />
       </section>

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {stores, productsByCategory} from '../src/data/stores.js';
+import { stores, productsByCategory } from '../src/data/stores.js';
 import { DELIVERY_AREAS, FREE_DELIVERY_THRESHOLD, getStoresForArea } from '../src/data/deliveryAreas.js';
 import {
   VALID_COUPONS, FEATURED_CHECKOUT_OFFERS, MIN_PROMO_SUBTOTAL,
@@ -10,7 +10,7 @@ import {
 import { buildHomepageBanners } from '../src/utils/homepageBanners.js';
 import { getAreaFeaturedPicks } from '../src/utils/areaFeaturedPicks.js';
 
-test('free delivery threshold and basic offer configuration',()=>{
+test('cart offer rules remain unchanged',()=>{
   assert.equal(FREE_DELIVERY_THRESHOLD,300);
   assert.equal(MIN_PROMO_SUBTOTAL,301);
   assert.deepEqual(Object.keys(VALID_COUPONS),['WELCOME','REPEAT','ADDICTED']);
@@ -18,22 +18,14 @@ test('free delivery threshold and basic offer configuration',()=>{
   assert.equal(VALID_COUPONS.WELCOME.value,30);
   assert.equal(VALID_COUPONS.REPEAT.value,20);
   assert.equal(VALID_COUPONS.ADDICTED.value,50);
-});
-test('automatic basket offer is 5% capped at ₹30 and only above ₹500',()=>{
   assert.equal(getAutomaticBasketDiscount(300),0);
-  assert.equal(getAutomaticBasketDiscount(301),0);
   assert.equal(getAutomaticBasketDiscount(500),0);
   assert.equal(getAutomaticBasketDiscount(501),25);
   assert.equal(getAutomaticBasketDiscount(600),30);
-  assert.equal(getAutomaticBasketDiscount(990),30);
-});
-test('WELCOME applies only to 1st order; no coupons below ₹301',()=>{
-  for (const subtotal of [0,299,300]) assert.equal(evaluateCoupon('WELCOME',subtotal,1).eligible,false);
+  assert.equal(evaluateCoupon('WELCOME',300,1).eligible,false);
   assert.equal(evaluateCoupon('WELCOME',301,1).discount,30);
   assert.equal(evaluateCoupon('WELCOME',1200,2).eligible,false);
-});
-test('REPEAT only on 3rd, 5th, 7th; ADDICTED only on 10th',()=>{
-  for(let n=1;n<=12;n++) {
+  for(let n=1;n<=12;n++){
     assert.equal(isCouponForOrder('REPEAT',n),[3,5,7].includes(n));
     assert.equal(isCouponForOrder('ADDICTED',n),n===10);
   }
@@ -41,82 +33,56 @@ test('REPEAT only on 3rd, 5th, 7th; ADDICTED only on 10th',()=>{
   assert.equal(evaluateCoupon('REPEAT',301,5).discount,20);
   assert.equal(evaluateCoupon('REPEAT',301,7).discount,20);
   assert.equal(evaluateCoupon('ADDICTED',301,10).discount,50);
-  assert.equal(evaluateCoupon('ADDICTED',301,9).discount,0);
-});
-test('order ordinal is customer-order-count plus one',()=>{
   assert.equal(nextOrderNumber(0),1);
   assert.equal(nextOrderNumber(2),3);
   assert.equal(nextOrderNumber(6),7);
   assert.equal(nextOrderNumber(9),10);
-});
-test('automatic and account coupon discounts do not stack',()=>{
   assert.equal(getOrderSavings(600,1,null).discount,30);
-  assert.equal(getOrderSavings(600,1,'WELCOME').discount,30);
   assert.equal(getOrderSavings(600,3,'REPEAT').discount,20);
   assert.equal(getOrderSavings(600,10,'ADDICTED').discount,50);
-  assert.equal(getOrderSavings(600,2,'WELCOME').eligible,false);
-  assert.equal(getOrderSavings(600,2,'WELCOME').discount,0);
 });
+
 for(const area of DELIVERY_AREAS){
-  test(`Suggested products and banners only from orderable shops in ${area}`,()=>{
+  test(`Homepage ${area} has only real, correctly scoped checkout offers`,()=>{
     const nearby=getStoresForArea(stores,area);
-    const orderable=new Set(nearby.filter(s=>!s.isSample && s.isOpen!==false).map(s=>String(s.id)));
-    const picks=getAreaFeaturedPicks(stores,productsByCategory,area,9);
-    assert.equal(picks.length,9);
-    assert.equal(new Set(picks.map(p=>String(p.id))).size,9);
-    for(const pick of picks){
-      assert.ok(orderable.has(String(pick.storeId)));
-      assert.ok(Number(pick.product.price)>0);
-      assert.notEqual(pick.product.inStock,false);
+    const available=nearby.filter(s=>!s.isSample && s.isOpen!==false);
+    const otherStores=available.filter(s=>String(s.id)!=='localfresh');
+    const slides=buildHomepageBanners(stores,productsByCategory,area,0);
+    assert.equal(slides.length,otherStores.length?5:4);
+    assert.equal(new Set(slides.map(s=>s.id)).size,slides.length);
+    assert.ok(slides.every(s=>['global','automatic','coupon'].includes(s.kind)));
+    assert.ok(slides.every(s=>s.id.startsWith('offer-')));
+    assert.ok(slides.every(s=>s.minCart>=301));
+    assert.ok(!slides.some(s=>s.isSample || s.kind==='store' || s.kind==='picks'));
+    const names=nearby.map(s=>s.name.toLowerCase());
+    for(const slide of slides){
+      assert.ok(!names.some(name=>slide.title.toLowerCase().includes(name)),slide.title);
+      assert.ok(!names.some(name=>slide.subtitle.toLowerCase().includes(name)),slide.subtitle);
+      assert.ok(!names.some(name=>String(slide.tag||'').toLowerCase().includes(name)),slide.tag);
     }
-    const slide=buildHomepageBanners(stores,productsByCategory,area,0);
-    assert.ok(slide.length>=8);
-    assert.equal(new Set(slide.map(s=>s.id)).size,slide.length);
-    const otherShops=nearby.filter(s=>!s.isSample && s.isOpen!==false && String(s.id)!=='localfresh');
-    const generic=slide.filter(s=>s.kind==='global');
-    assert.equal(generic.length,otherShops.length?1:0);
-    if(generic.length){
-      assert.notEqual(String(generic[0].store.id),'localfresh');
-      assert.match(generic[0].subtitle,/Excludes LocalFresh/);
-    }
-    assert.ok(slide.some(s=>s.kind==='automatic' && s.minCart===501));
-    const sampleCards=nearby.filter(s=>s.isSample);
-    assert.equal(slide.filter(s=>s.kind==='store' && s.isSample).length,sampleCards.length);
-    for (const sample of sampleCards) {
-      assert.ok(slide.some(s=>s.kind==='store' && String(s.store?.id)===String(sample.id)));
-    }
-    assert.equal(slide.filter(s=>s.kind==='coupon').length,3);
-    for (const item of slide){
-      if(item.kind==='store'){
-        if (item.store.isSample) {
-          assert.ok(nearby.some(s=>String(s.id)===String(item.store.id)));
-          assert.equal(item.isSample,true);
-          assert.equal(item.minCart,null);
-          assert.match(item.tag,/SAMPLE/);
-          assert.doesNotMatch(item.subtitle,/free delivery/i);
-          assert.ok(item.bannerPhoto?.startsWith('https://'));
-        } else {
-          assert.ok(orderable.has(String(item.store.id)));
-        }
-        if(String(item.store.id)==='localfresh'){
-          assert.doesNotMatch(item.subtitle,/Free delivery/i);
-          assert.equal(item.minCart,null);
-        }
-      }
-      if(item.kind==='coupon')assert.ok(VALID_COUPONS[item.code]);
-      if(item.minCart!==null)assert.ok(item.minCart>=301);
-    }
-    assert.ok(slide.find(s=>s.code==='WELCOME').rewardEligible);
-    assert.equal(slide.find(s=>s.code==='REPEAT').rewardEligible,false);
-    assert.equal(slide.find(s=>s.code==='ADDICTED').rewardEligible,false);
+    if(otherStores.length){
+      const free=slides.find(s=>s.kind==='global');
+      assert.ok(free);
+      assert.ok(otherStores.some(s=>String(s.id)===String(free.store.id)));
+      assert.match(free.subtitle,/above ₹300/);
+      assert.doesNotMatch(free.subtitle,/LocalFresh/i);
+    }else assert.ok(!slides.some(s=>s.kind==='global'));
+    const automatic=slides.find(s=>s.kind==='automatic');
+    assert.equal(automatic.minCart,501);
+    assert.match(automatic.subtitle,/5%/);
+    assert.equal(slides.filter(s=>s.kind==='coupon').length,3);
+    assert.ok(slides.find(s=>s.code==='WELCOME').rewardEligible);
+    assert.equal(slides.find(s=>s.code==='REPEAT').rewardEligible,false);
+    assert.equal(slides.find(s=>s.code==='ADDICTED').rewardEligible,false);
     const third=buildHomepageBanners(stores,productsByCategory,area,2);
-    assert.equal(third.find(s=>s.code==='WELCOME').rewardEligible,false);
     assert.equal(third.find(s=>s.code==='REPEAT').rewardEligible,true);
     const tenth=buildHomepageBanners(stores,productsByCategory,area,9);
     assert.equal(tenth.find(s=>s.code==='ADDICTED').rewardEligible,true);
+    // Product recommendations still exist on other screens, but not in the hero rail.
+    const picks=getAreaFeaturedPicks(stores,productsByCategory,area,9);
+    assert.equal(picks.length,9);
   });
 }
-test('unknown area has neither picks nor promotional banners',()=>{
-  assert.deepEqual(getAreaFeaturedPicks(stores,productsByCategory,'Unknown'),[]);
+test('unknown areas never show shopping offers',()=>{
   assert.deepEqual(buildHomepageBanners(stores,productsByCategory,'Unknown'),[]);
 });

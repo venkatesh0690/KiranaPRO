@@ -74,7 +74,7 @@ export function HomeOffersCarousel({ stores, catalog, navigate, area, totalItems
     }
   };
   return <SwipeBanners slides={slides} onAction={openSlide}
-    label={`Offers, featured stores and grocery picks for ${area}`}
+    label={`Delivery, basket savings and coupon offers for ${area}`}
     autoAdvance editorial />;
 }
 
@@ -213,7 +213,7 @@ function SwipeBanners({ slides, onAction, label, autoAdvance = false, editorial 
   return (
     <section className={`kp-promo-section kp-combined-featured ${editorial?'kp-editorial-rail':''}`} aria-label={label}>
       <div className="kp-promo-top">
-        <span><Sparkles size={15} aria-hidden="true"/> Offers & store specials</span>
+        <span><Sparkles size={15} aria-hidden="true"/> Offers & rewards</span>
         <div className="kp-promo-arrows">
           <span className="kp-promo-counter">{current+1} / {slides.length}</span>
           <button type="button" aria-label="Previous banner" onClick={()=>slideTo(current-1,true)} disabled={slides.length<2}><ChevronLeft size={18}/></button>

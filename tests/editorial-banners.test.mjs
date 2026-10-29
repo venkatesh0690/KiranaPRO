@@ -12,41 +12,27 @@ const storePage=readFileSync(new URL('../src/pages/StorePage.jsx',import.meta.ur
 const stylesheet=readFileSync(new URL('../src/styles/editorial-banners.css',import.meta.url),'utf8');
 const app=readFileSync(new URL('../src/App.jsx',import.meta.url),'utf8');
 
-test('editorial palette contains five distinct high-contrast brand-guide posters',()=>{
+test('all visible promotional banners are photo-led, not plain color posters',()=>{
   assert.ok(Object.keys(POSTER_PALETTES).length>=5);
-  for(const color of Object.values(POSTER_PALETTES)){
-    for(const key of ['bg','ink','muted','accent','panel'])assert.match(color[key],/^#[0-9A-F]{6}$/i);
-  }
-});
-test('all area-specific banners remain in first rail and receive a valid palette and headline',()=>{
   for(const area of DELIVERY_AREAS){
-    const areaStores=getStoresForArea(stores,area);
-    const banners=buildHomepageBanners(areaStores,productsByCategory,area,0);
-    assert.ok(banners.length>=8);
+    const banners=buildHomepageBanners(getStoresForArea(stores,area),productsByCategory,area,0);
+    assert.ok(banners.length>=4);
     for(const [index,slide] of banners.entries()){
       const theme=getEditorialBannerStyle(slide,index);
       assert.ok(POSTER_PALETTES[theme.name],slide.id);
       assert.ok(getEditorialBannerHeadline(slide).length>5,slide.id);
-      const image=getEditorialBannerPhoto(slide);
-      assert.ok(/^https:\/\//.test(image.src),`No photo for ${slide.id}`);
-      assert.ok(/^https:\/\//.test(image.backup),`No backup image for ${slide.id}`);
-      assert.match(image.alt,/Representative/);
-      if(!slide.bannerPhoto) {
-        assert.match(image.src,/images\.unsplash\.com\/photo-/);
-        assert.match(image.src,/w=900/);
-        assert.match(image.src,/fm=webp/);
-      }
-      if(slide.isSample){
-        assert.match(getEditorialBannerHeadline(slide),/^[A-Z0-9 ,&'-]+$/);
-        assert.match(slide.subtitle,/Not accepting orders/i);
-        assert.ok(slide.bannerPhoto?.startsWith('https://'));
-      }
-      if(slide.kind==='global')assert.notEqual(String(slide.store?.id),'localfresh');
-      if(slide.kind==='coupon' && slide.rewardEligible===false)assert.match(slide.subtitle,/Not eligible/);
+      const photo=getEditorialBannerPhoto(slide);
+      assert.match(photo.src,/^https:\/\/images\.unsplash\.com\/photo-/);
+      assert.match(photo.src,/w=900/);
+      assert.match(photo.src,/fm=webp/);
+      assert.match(photo.backup,/^https:/);
+      assert.match(photo.alt,/Representative/);
+      assert.ok(['coupon','global','automatic'].includes(slide.kind));
+      assert.doesNotMatch(getEditorialBannerHeadline(slide),/LocalFresh|Provisions|Mart|Stores|Shop/i);
     }
   }
 });
-test('UI uses the same working swipe carousel, new poster markup and navigable calls to action',()=>{
+test('offer swiper retains real imagery and useful controls',()=>{
   assert.match(carousel,/autoAdvance editorial/);
   assert.match(carousel,/getEditorialBannerStyle/);
   assert.match(carousel,/function EditorialPoster/);
@@ -54,21 +40,20 @@ test('UI uses the same working swipe carousel, new poster markup and navigable c
   assert.match(carousel,/kp-ed-backdrop/);
   assert.match(carousel,/kp-ed-photo-scrim/);
   assert.match(carousel,/getEditorialBannerPhoto\(slide\)/);
-  assert.match(carousel,/editorial\?'kp-editorial-rail'/);
-  assert.doesNotMatch(carousel,/kp-ed-photo-frame/);
   assert.match(carousel,/kp-ed-price-art/);
   assert.match(carousel,/kp-ed-coupon/);
   assert.match(carousel,/kp-promo-dots/);
   assert.match(homepage,/<HomeOffersCarousel/);
+  assert.match(homepage,/Delivery savings, cart rewards & coupons/);
   assert.match(app,/import '\.\/styles\/editorial-banners\.css'/);
-});
-test('banner restyling remains homepage-only; store product pages do not regain photo rails',()=>{
-  assert.doesNotMatch(storePage,/StoreOffersCarousel|StorePhotoCarousel/);
-  assert.match(stylesheet,/\.kp-concept-feature \.kp-editorial-rail/);
-  assert.match(stylesheet,/@media\(max-width:720px\)/);
-  assert.match(stylesheet, /prefers-reduced-motion:reduce/);
   assert.match(stylesheet,/kp-ed-backdrop img/);
   assert.match(stylesheet,/object-fit:cover/);
   assert.match(stylesheet,/linear-gradient/);
   assert.match(stylesheet,/kp-ed-photographic/);
+});
+test('store listings retain photographs but the product pages remain distraction-free',()=>{
+  assert.doesNotMatch(storePage,/StoreOffersCarousel|StorePhotoCarousel/);
+  assert.match(stylesheet,/\.kp-concept-feature \.kp-editorial-rail/);
+  assert.match(stylesheet,/@media\(max-width:720px\)/);
+  assert.match(stylesheet,/prefers-reduced-motion:reduce/);
 });

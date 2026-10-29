@@ -1,111 +1,61 @@
-import { FEATURED_CHECKOUT_OFFERS, VALID_COUPONS, MIN_PROMO_SUBTOTAL, isCouponForOrder, nextOrderNumber } from '../data/checkoutOffers.js';
+import {
+  FEATURED_CHECKOUT_OFFERS, VALID_COUPONS, MIN_PROMO_SUBTOTAL,
+  isCouponForOrder, nextOrderNumber
+} from '../data/checkoutOffers.js';
 import { getStoresForArea, isLocalFreshStore } from '../data/deliveryAreas.js';
-import { getAreaFeaturedPicks } from './areaFeaturedPicks.js';
-import { getDisplayProducts } from './storeMerchandising.js';
 
-// Single first-position rail: active merchant offers plus clearly identified
-// visual previews for sample shops (which never accept checkout orders).
-export function buildHomepageBanners(stores, catalog, area, orderCount=0) {
-  const areaStores = getStoresForArea(stores,area);
-  const available = areaStores.filter(store => !store.isSample && store.isOpen !== false);
-  const demoStores = areaStores.filter(store => store.isSample);
-  if (!available.length) return [];
+/**
+ * Landing-page banner rail: offers ONLY.
+ * Store-specific previews, catalog picks and names belong in the
+ * store discovery section, not in the promotional banner rail.
+ *
+ * All terms come from the same discount configuration used by checkout.
+ * Images are chosen by the editorial photo resolver at render time.
+ */
+export function buildHomepageBanners(stores, _catalog, area, orderCount=0) {
+  const available = getStoresForArea(stores,area)
+    .filter(store=>!store.isSample && store.isOpen!==false);
+  if(!available.length)return [];
 
-  const localFresh = available.find(isLocalFreshStore);
-  const otherStores = available.filter(store => store !== localFresh);
-  const slides = [];
-  const storeSlide = (store, category, key, headline, tag) => {
-    const items = category
-      ? (catalog?.[category] || []).filter(p => p.inStock !== false && Number(p.price) > 0).slice(0,3)
-      : getDisplayProducts(store,catalog,3);
-    return {
-      id:`store-${store.id}-${key}`, kind:'store', store, category,
-      title:headline || store.name, tag, tone:'sage',
-      subtitle:isLocalFreshStore(store)
-        ? `${store.name} · Delivery fee shown at checkout`
-        : `${store.name} · Free delivery on carts above ₹300`,
-      bannerPhoto:store.gallery?.[0]?.src || store.posterImage || null,
-      cta:'Explore store', items, minCart:isLocalFreshStore(store)?null:MIN_PROMO_SUBTOTAL
-    };
-  };
+  const participatingDeliveryStores=available.filter(store=>!isLocalFreshStore(store));
+  const slides=[];
 
-  if (localFresh) {
-    slides.push(storeSlide(localFresh,'Vegetables','mandi','Fresh from the mandi','LOCALFRESH · STORE SPECIAL'));
-  }
-
-  // Checkout offers: no coupon applies or is advertised for a cart <= ₹300.
-  if (otherStores.length) {
+  // Free delivery is not advertised if the area has only LocalFresh.
+  if(participatingDeliveryStores.length){
     slides.push({
-      ...FEATURED_CHECKOUT_OFFERS[0], kind:'global',
-      tag:'NEIGHBORHOOD STORES · FREE DELIVERY',
-      items:getDisplayProducts(otherStores[0],catalog,3),
-      store:otherStores[0],cta:'Shop now',minCart:MIN_PROMO_SUBTOTAL
+      ...FEATURED_CHECKOUT_OFFERS[0],kind:'global',
+      id:'offer-free-delivery',tag:'FREE DELIVERY · SELECTED STORES',
+      title:'Free delivery above ₹300',
+      subtitle:'₹0 delivery on carts above ₹300 at participating neighborhood stores.',
+      store:participatingDeliveryStores[0],
+      cta:'Explore eligible stores',minCart:MIN_PROMO_SUBTOTAL
     });
   }
 
-  if (localFresh && Array.isArray(localFresh.categories)) {
-    const next = localFresh.categories.includes('Fruits') ? 'Fruits'
-      : localFresh.categories.includes('Flowers') ? 'Flowers' : localFresh.categories[1];
-    if (next) slides.push(storeSlide(localFresh,next,'fresh',
-      next === 'Fruits' ? 'Fresh fruit favourites' : 'Fresh picks for today',
-      'LOCALFRESH · STORE SPECIAL'));
-  }
-
-  for (const store of demoStores) {
-    slides.push({
-      id:`store-${store.id}-preview`,kind:'store',store,
-      title:store.name,tag:'SAMPLE STORE · PREVIEW',
-      tone:'sage',isSample:true,category:store.categories?.[0],
-      subtitle:'Illustrative store preview · Not accepting orders',
-      cta:'View sample store',
-      bannerPhoto:store.gallery?.[0]?.src || store.posterImage || null,
-      minCart:null,items:[]
-    });
-  }
-  for (const store of otherStores.slice(0,4)) {
-    slides.push(storeSlide(store,store.categories?.[0], 'offer',
-      `${store.name} essentials`,`${store.name.toUpperCase()} · STORE OFFER`));
-  }
-
-  // Automatic basket discount is available above ₹500 on all stores.
-  const automatic = FEATURED_CHECKOUT_OFFERS.find(offer=>offer.kind==='automatic');
-  if(automatic) slides.push({
-    ...automatic,
-    items:localFresh ? getDisplayProducts(localFresh,catalog,3):getDisplayProducts(available[0],catalog,3),
+  const basket=FEATURED_CHECKOUT_OFFERS.find(offer=>offer.kind==='automatic');
+  if(basket)slides.push({
+    ...basket,id:'offer-basket-savings',
+    title:'Save up to ₹30',tag:'AUTOMATIC BASKET REWARD',
+    subtitle:'5% off, capped at ₹30, automatically on carts above ₹500.',
     cta:'Shop & save',minCart:501
   });
 
-  // Order milestones refer to the customer's NEXT order, never sample order data.
-  for(const offer of FEATURED_CHECKOUT_OFFERS.filter(item=>item.code)) {
+  for(const offer of FEATURED_CHECKOUT_OFFERS.filter(item=>item.code)){
     const rule=VALID_COUPONS[offer.code];
     if(!rule)continue;
     const eligible=isCouponForOrder(offer.code,nextOrderNumber(orderCount));
+    const description=rule.desc;
     slides.push({
-      ...offer,kind:'coupon',
-      tag:eligible ? offer.kicker : 'ORDER MILESTONE · UPCOMING',
+      ...offer,id:`offer-${offer.code.toLowerCase()}`,kind:'coupon',
+      title:offer.title,
+      tag:eligible?'COUPON REWARD':'UPCOMING ORDER REWARD',
+      subtitle:eligible
+        ? description
+        : `${description} · Available only on your eligible order, not order #${nextOrderNumber(orderCount)}.`,
       rewardEligible:eligible,
-      subtitle:eligible ? offer.subtitle : `${offer.subtitle} · Not eligible on order #${nextOrderNumber(orderCount)}`,
-      cta:eligible?'Shop & redeem':'View the reward',
-      minCart:rule.min,
-      items:localFresh ? getDisplayProducts(localFresh,catalog,3):getDisplayProducts(available[0],catalog,3)
+      cta:eligible?'Shop & redeem':'See reward details',
+      minCart:rule.min
     });
   }
-
-  const picks = getAreaFeaturedPicks(stores,catalog,area,6);
-  for (let i=0;i<picks.length;i+=3) {
-    const group=picks.slice(i,i+3);
-    const first=group[0];
-    if(!first) continue;
-    slides.push({
-      id:`area-picks-${i}`,kind:'picks',
-      tag:'GROCERIES NEAR YOU',tone:i===0?'sage':'sand',
-      title:i===0 ? `Popular picks in ${area}` : 'More grocery favourites',
-      subtitle:'Suggested from available catalog · not verified sales trends',
-      cta:'Explore product',
-      items:group.map(p=>p.product),productTarget:first,
-      minCart:null
-    });
-  }
-
   return slides;
 }
