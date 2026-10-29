@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run test:areas && vite build",
     "mobile:build": "vite build && npx cap sync android",
     "mobile:sync": "npx cap sync android",
     "mobile:open": "npx cap open android",
     "db:migrate": "node scripts/neon_migrate_and_seed.js",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:areas": "node --test tests/delivery-areas.test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",

@@ -9,7 +9,7 @@ export const localFreshStore = {
   rating: 4.9,
   reviewCount: 684,
   deliveryTime: "Within 2 hours",
-  deliveryFee: 0,
+  deliveryFee: 20,
   distance: "0.2 km",
   minOrder: 49,
   address: "KiranaPRO Central Direct Mandi Hub, MVP Colony, Vizag",

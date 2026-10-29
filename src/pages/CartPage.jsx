@@ -17,13 +17,16 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
-import { stores } from '../data/stores';
+import { useStore } from '../context/StoreContext';
+import { FREE_DELIVERY_THRESHOLD, getDeliveryFee, isStoreAvailableInArea } from '../data/deliveryAreas';
 
-export default function CartPage() {
+export default function CartPage({ userLocation }) {
   const { cart, addItem, removeItem, clearCart, totalItems, totalPrice } = useCart();
+  const { stores } = useStore();
   const { authSession, logSecurityEvent, savedAddresses } = useSecurity();
   const navigate = useNavigate();
   const store = stores.find((s) => String(s.id).toLowerCase() === String(cart.storeId).toLowerCase());
+  const storeServesArea = store && isStoreAvailableInArea(store,userLocation);
   const [orderPlaced, setOrderPlaced] = useState(false);
 
   // Coupon State (Matching Image 2 Checkout Design)
@@ -91,21 +94,19 @@ export default function CartPage() {
     );
   }
 
-  // Delivery Calculation: Subtotal >= 301 gives Free Delivery rule
-  const isFreeDelivery = totalPrice >= 301 || appliedCoupon?.type === 'freedel';
+  // Delivery Calculation: cart subtotal above ₹300 gets free delivery across all stores
+  const isFreeDelivery = totalPrice > FREE_DELIVERY_THRESHOLD || appliedCoupon?.type === 'freedel';
   const baseDeliveryFee = store?.deliveryFee ?? 20;
-  const deliveryFee = isFreeDelivery ? 0 : baseDeliveryFee;
+  const deliveryFee = getDeliveryFee(store, totalPrice, appliedCoupon);
   const couponDiscount = appliedCoupon?.discount || 0;
   const handlingFee = 5;
   const tax = Math.round(Math.max(0, totalPrice - couponDiscount) * 0.05);
   const grandTotal = Math.max(0, totalPrice - couponDiscount + deliveryFee + handlingFee + tax);
 
-  const defaultAddress = (savedAddresses || []).find((a) => a.isDefault) || savedAddresses?.[0] || {
-    title: 'Flat 402, Sai Residency',
-    street: 'Maddilapalem Main Road, Vizag'
-  };
+
 
   const handlePlaceOrder = () => {
+    if (!storeServesArea || store?.isSample) return;
     logSecurityEvent(
       'ORDER_PLACED',
       `Order placed with ${store?.name || 'Local Store'}. Value: ₹${grandTotal} (Subtotal: ₹${totalPrice}, Discount: ₹${couponDiscount})`,
@@ -144,7 +145,7 @@ export default function CartPage() {
         </div>
       )}
 
-      {/* Free Delivery Threshold Banner (Requirement: Free Delivery when cart value reaches 301) */}
+      {/* Free delivery applies once the item subtotal exceeds ₹300. */}
       <div className={`cart-delivery-status-card ${isFreeDelivery ? 'unlocked' : 'locked'}`}>
         {isFreeDelivery ? (
           <div className="cdsc-inner">
@@ -152,8 +153,8 @@ export default function CartPage() {
             <div className="cdsc-info">
               <span className="cdsc-title">FREE Delivery Unlocked!</span>
               <span className="cdsc-subtitle">
-                {totalPrice >= 301
-                  ? `Cart reached ₹301+ (Saved ₹${baseDeliveryFee} delivery fee)`
+                {totalPrice > FREE_DELIVERY_THRESHOLD
+                  ? `Cart is above ₹300 (Saved ₹${baseDeliveryFee} delivery fee)`
                   : 'Free delivery coupon active!'}
               </span>
             </div>
@@ -165,14 +166,14 @@ export default function CartPage() {
             <div className="cdsc-info">
               <div className="cdsc-header-row">
                 <span className="cdsc-title">
-                  Add <strong>₹{301 - totalPrice}</strong> more for <strong>FREE Delivery</strong>!
+                  Add <strong>₹{Math.max(0, FREE_DELIVERY_THRESHOLD + 1 - totalPrice)}</strong> more for <strong>FREE Delivery</strong>!
                 </span>
-                <span className="cdsc-needed">Reach ₹301</span>
+                <span className="cdsc-needed">Above ₹300</span>
               </div>
               <div className="cdsc-progress-bar">
                 <div
                   className="cdsc-progress-fill"
-                  style={{ width: `${Math.min(100, Math.round((totalPrice / 301) * 100))}%` }}
+                  style={{ width: `${Math.min(100, Math.round((totalPrice / (FREE_DELIVERY_THRESHOLD + 1)) * 100))}%` }}
                 />
               </div>
             </div>
@@ -340,17 +341,17 @@ export default function CartPage() {
         )}
       </div>
 
-      {/* Delivery Address Chip */}
-      <div className="cart-delivery-address-card" onClick={() => navigate('/profile')}>
+      {/* Delivery area is selected from five fixed Vizag zones. */}
+      <button type="button" className="cart-delivery-address-card" onClick={() => navigate('/')}>
         <div className="cdac-left">
           <span className="cdac-icon">📍</span>
           <div>
-            <span className="cdac-label">Delivering to {defaultAddress.title || 'Selected Address'}</span>
-            <span className="cdac-address">{defaultAddress.street}, {defaultAddress.city || 'Vizag'}</span>
+            <span className="cdac-label">Delivery area: {userLocation}</span>
+            <span className="cdac-address">Change delivery area</span>
           </div>
         </div>
         <ChevronRight size={16} color="#94A3B8" />
-      </div>
+      </button>
 
       {/* Bill Summary */}
       <div className="cart-bill-card">
@@ -401,6 +402,13 @@ export default function CartPage() {
         </div>
       </div>
 
+      {(!storeServesArea || store?.isSample) && (
+        <p role="status" className="kp-cart-unavailable">
+          {store?.isSample
+            ? 'This is a sample store listing. Checkout will open when a verified merchant is onboarded.'
+            : 'This store is not available in your selected delivery area. Choose another area or store.'}
+        </p>
+      )}
       {/* Floating Checkout Button */}
       <div className="cart-checkout-bar">
         <div className="ccb-left">
@@ -413,8 +421,9 @@ export default function CartPage() {
           type="button"
           className="cart-checkout-btn"
           onClick={handlePlaceOrder}
+          disabled={!storeServesArea || Boolean(store?.isSample)}
         >
-          <span>Place Order</span>
+          <span>{store?.isSample ? 'Sample store — checkout unavailable' : 'Place Order'}</span>
           <ChevronRight size={18} />
         </button>
       </div>

@@ -52,6 +52,16 @@ export default function StorePhotoCarousel({ store, className = '', onSwipe }) {
   };
 
   const fallback = getStoreImageFallback(store);
+  if (!gallery.length) {
+    return (
+      <div className={`kp-store-slideshow kp-sample-photo ${className}`}
+        aria-label={`Sample store listing without a verified photograph: ${store.name}`}>
+        <span aria-hidden="true">{store.image || '🏪'}</span>
+        <strong>Sample store</strong>
+        <small>Photo pending merchant registration</small>
+      </div>
+    );
+  }
   return (
     <div
       ref={root}

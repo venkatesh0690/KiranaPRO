@@ -19,6 +19,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { categoryMeta } from '../data/stores';
+import { isStoreAvailableInArea, FREE_DELIVERY_THRESHOLD } from '../data/deliveryAreas';
 import { navigateWithStoreTransition, storeImageTransitionName, storeTitleTransitionName } from '../utils/storeTransition';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
@@ -29,13 +30,13 @@ import { getStoreGallery, getStoreImageFallback } from '../data/storeGallery';
 import CartBar from '../components/CartBar';
 import ProductDetailModal from '../components/ProductDetailModal';
 
-export default function StorePage() {
+export default function StorePage({ userLocation }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const { stores, products: productsByCategory, orders } = useStore();
   const { totalItems } = useCart();
-  const store = stores.find((s) => String(s.id).toLowerCase() === String(id).toLowerCase());
+  const store = stores.find((s) => String(s.id).toLowerCase() === String(id).toLowerCase() && isStoreAvailableInArea(s,userLocation));
 
   const [activeCategory, setActiveCategory] = useState('');
   const [search, setSearch] = useState('');
@@ -115,7 +116,7 @@ export default function StorePage() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 16 }}>
         <span style={{ fontSize: '3rem' }}>🏪</span>
-        <h2>Store not found</h2>
+        <h2>Store not available in {userLocation}</h2>
         <button
           type="button"
           onClick={() => navigateWithStoreTransition(navigate, '/home')}
@@ -167,7 +168,9 @@ export default function StorePage() {
           <div className="sp-hdr-title-area" onClick={() => setShowStoreInfo(true)} style={{ cursor: 'pointer' }}>
             <div className="sp-hdr-name-row">
               <div className="sp-hdr-store-photo" style={{ viewTransitionName: storeImageTransitionName(store.id) }}>
-                <img
+                {store.isSample ? (
+                  <span className="kp-sample-header-icon" aria-label="Sample store">{store.image || '🏪'}</span>
+                ) : <img
                   src={getStoreGallery(store)[0]?.src || getStoreImageFallback(store) || ''}
                   alt=""
                   decoding="async"
@@ -178,7 +181,7 @@ export default function StorePage() {
                       event.currentTarget.src=fallback;
                     } else event.currentTarget.style.display='none';
                   }}
-                />
+                />}
               </div>
               <h1 className="sp-hdr-store-name" style={{ viewTransitionName: storeTitleTransitionName(store.id) }}>{store.name}</h1>
               {store.isAdminManaged && (
@@ -344,6 +347,7 @@ export default function StorePage() {
 
         {/* Right Column: Independently Scrollable Products List */}
         <main className="sp-scrollable-products" ref={productsScrollRef}>
+          {store.isSample && <p className="kp-demo-disclaimer">Sample storefront · Merchant registration pending. Products are for preview only, and checkout is unavailable.</p>}
           {!search && <StorePhotoCarousel store={store} className="kp-store-detail-slideshow" />}
           {!search && (
             <StoreOffersCarousel
@@ -474,21 +478,21 @@ export default function StorePage() {
                   <Star size={16} color="#16A34A" />
                   <div>
                     <span className="sp-info-lbl">Rating</span>
-                    <span className="sp-info-val">{store.rating} ({store.reviewCount}+ reviews)</span>
+                    <span className="sp-info-val">{store.isSample ? 'Not rated' : `${store.rating} (${store.reviewCount}+ reviews)`}</span>
                   </div>
                 </div>
                 <div className="sp-info-tile">
                   <Bike size={16} color="#2563EB" />
                   <div>
                     <span className="sp-info-lbl">Delivery Fee</span>
-                    <span className="sp-info-val">{store.deliveryFee === 0 ? 'FREE' : `₹${store.deliveryFee}`}</span>
+                    <span className="sp-info-val">{`₹${store.deliveryFee} · FREE above ₹${FREE_DELIVERY_THRESHOLD}`}</span>
                   </div>
                 </div>
                 <div className="sp-info-tile">
                   <MapPin size={16} color="#7C3AED" />
                   <div>
                     <span className="sp-info-lbl">Radius</span>
-                    <span className="sp-info-val">{store.distance} (Up to 2 km)</span>
+                    <span className="sp-info-val">{store.isSample ? 'Coverage: selected area' : `${store.distance} (Up to 2 km)`}</span>
                   </div>
                 </div>
               </div>

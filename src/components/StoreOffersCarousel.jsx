@@ -49,7 +49,7 @@ export function StoreOffersCarousel({ store, catalog, orders, onOpenCategory, on
 }
 
 export function HomeOffersCarousel({ stores, catalog, navigate }) {
-  const slides = stores.filter(s=>s.isOpen !== false).slice(0,5).map((store,i)=>{
+  const slides = stores.filter(s=>s.isOpen !== false && !s.isSample).slice(0,5).map((store,i)=>{
     const picks=getDisplayProducts(store,catalog,3);
     return {
       id:String(store.id),tag:store.isAdminManaged?'DIRECT MARKET':'LOCAL STORE OFFER',

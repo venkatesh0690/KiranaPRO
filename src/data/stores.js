@@ -1,7 +1,9 @@
 import { localFreshStore, localFreshProductsByCategory, localFreshProductsList } from './localfresh.js';
+import { sampleAreaStores } from './sampleAreaStores.js';
 
 export const stores = [
   localFreshStore,
+  ...sampleAreaStores,
   {
     id: 1,
     name: "Sharma General Store",
@@ -32,18 +34,19 @@ export const stores = [
     rating: 4.9,
     reviewCount: 428,
     deliveryTime: "Within 20 mins",
-    deliveryFee: 0,
+    deliveryFee: 20,
     distance: "0.3 km",
     minOrder: 79,
     address: "Near Hanuman Temple, MVP Colony, Vizag",
     isOpen: true,
     isFeatured: true,
-    offer: "Free delivery on all orders",
+    offer: "Free delivery above ₹300",
     tags: ["Authentic Spices", "Pulses & Grains", "Ghee & Oils"],
     image: "🛒",
     posterImage: "https://unsplash.com/photos/Gwf6GRmkT1Y/download?force=true&w=960",
     posterBadge: "⚡ 20-30 mins delivery",
     posterTagline: "Handpicked South Indian Spices, Cold-Pressed Oils & Heritage Grains",
+    serviceAreas: ["MVP Colony"],
     coverFrom: "#00A86B",
     coverTo: "#0C8A4E",
     categories: ["Pulses & Grains", "Spices & Masala", "Oils & Ghee", "Dairy & Breakfast", "Pickles & Chutneys"],
@@ -84,7 +87,7 @@ export const stores = [
     address: "Dwaraka Nagar 2nd Lane, Vizag",
     isOpen: true,
     isFeatured: false,
-    offer: "Free delivery above ₹199",
+    offer: "Free delivery above ₹300",
     tags: ["Supermart", "Organic Produce", "Packaged Snacks"],
     image: "🛍️",
     posterImage: "https://unsplash.com/photos/2h1O8DtRu3g/download?force=true&w=960",

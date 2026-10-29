@@ -1,12 +1,15 @@
 import { useState, useMemo } from 'react';
 import { ArrowLeft, Search, SlidersHorizontal, Star, Clock, X, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { stores, productsByCategory } from '../data/stores';
+import { useStore } from '../context/StoreContext';
+import { getStoresForArea } from '../data/deliveryAreas';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import ProductDetailModal from '../components/ProductDetailModal';
 
-export default function SearchPage() {
+export default function SearchPage({ userLocation }) {
+  const { stores, products: productsByCategory } = useStore();
+  const availableStores = useMemo(() => getStoresForArea(stores, userLocation), [stores,userLocation]);
   const navigate = useNavigate();
   const { totalItems } = useCart();
   const [query, setQuery] = useState('');
@@ -19,12 +22,16 @@ export default function SearchPage() {
   const allProductsList = useMemo(() => {
     const list = [];
     Object.entries(productsByCategory).forEach(([cat, prods]) => {
+      // Search only products sold by a shop serving the chosen area.
+      const seller = availableStores.find(s => s.categories?.includes(cat) && !s.isSample)
+        || availableStores.find(s => s.categories?.includes(cat));
+      if (!seller) return;
       prods.forEach((p) => {
-        list.push({ ...p, category: cat });
+        list.push({ ...p, category: cat, storeId: seller.id, storeName: seller.name });
       });
     });
     return list;
-  }, []);
+  }, [productsByCategory, availableStores]);
 
   const filteredProducts = useMemo(() => {
     return allProductsList.filter((p) => {
@@ -112,7 +119,7 @@ export default function SearchPage() {
       {/* Search Results */}
       <div className="search-results-container">
         <div className="search-results-meta">
-          <span>Found <strong>{filteredProducts.length}</strong> items in neighborhood kiranas</span>
+          <span>Found <strong>{filteredProducts.length}</strong> items in stores serving {userLocation}</span>
         </div>
 
         <div className="search-products-grid">
@@ -120,7 +127,7 @@ export default function SearchPage() {
             <div key={p.id} onClick={() => setSelectedProduct(p)}>
               <ProductCard
                 product={p}
-                storeId={1}
+                storeId={p.storeId}
                 layout="big"
                 categoryBg="var(--pastel-orange)"
               />
@@ -133,8 +140,8 @@ export default function SearchPage() {
       {selectedProduct && (
         <ProductDetailModal
           product={selectedProduct}
-          storeId={1}
-          storeName="Sharma General Store"
+          storeId={selectedProduct.storeId}
+          storeName={selectedProduct.storeName}
           onClose={() => setSelectedProduct(null)}
         />
       )}

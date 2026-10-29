@@ -5,6 +5,7 @@ import {
   SlidersHorizontal
 } from 'lucide-react';
 import { allCategories } from '../data/stores';
+import { getStoresForArea, FREE_DELIVERY_THRESHOLD } from '../data/deliveryAreas';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
@@ -17,7 +18,6 @@ const storeFilters = [
   { id: 'all', label: 'All stores' },
   { id: 'fast', label: 'Fast delivery' },
   { id: 'rated', label: 'Top rated' },
-  { id: 'free', label: 'Free delivery' },
 ];
 
 export default function HomePage({ userLocation }) {
@@ -29,19 +29,19 @@ export default function HomePage({ userLocation }) {
   const [authMode, setAuthMode] = useState(null);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
 
-  const filteredStores = stores.filter(store => {
+  const areaStores = getStoresForArea(stores,userLocation);
+  const filteredStores = areaStores.filter(store => {
     if (activeFilter === 'fast') return /15|20|30/.test(store.deliveryTime || '');
     if (activeFilter === 'rated') return Number(store.rating) >= 4.7;
-    if (activeFilter === 'free') return Number(store.deliveryFee) === 0;
     return true;
   });
 
   const openCategory = (categoryName) => {
     setCategoriesOpen(false);
-    const preferred = stores.find(store =>
+    const preferred = areaStores.find(store =>
       String(store.id).toLowerCase() === 'localfresh' && store.categories?.includes(categoryName)
     );
-    const match = preferred || stores.find(store => store.categories?.includes(categoryName));
+    const match = preferred || areaStores.find(store => store.categories?.includes(categoryName));
     if (match) {
       navigate(`/store/${match.id}`, { state: { category: categoryName } });
     } else {
@@ -101,7 +101,7 @@ export default function HomePage({ userLocation }) {
           </div>
           <span className="kp-concept-subnote">Explore what's in store</span>
         </div>
-        <HomeOffersCarousel stores={stores} catalog={products} navigate={navigate} />
+        <HomeOffersCarousel stores={areaStores.filter(store => !store.isSample)} catalog={products} navigate={navigate} />
       </section>
 
       <section className="kp-concept-categories kp-concept-compact-categories" aria-labelledby="kp-concept-categories-title">
@@ -134,7 +134,7 @@ export default function HomePage({ userLocation }) {
         <div className="kp-concept-section-heading kp-concept-stores-heading">
           <div className="kp-concept-heading-copy">
             <span className="kp-concept-index">03 / YOUR MARKETPLACE</span>
-            <h2 id="kp-concept-stores-title">Meet your local stores.</h2>
+            <h2 id="kp-concept-stores-title">Stores in {userLocation}</h2>
           </div>
           <span className="kp-concept-count">{filteredStores.length} stores</span>
         </div>
@@ -152,6 +152,7 @@ export default function HomePage({ userLocation }) {
             </button>
           ))}
         </div>
+        <p className="kp-zone-list-note">LocalFresh serves all areas. Sample stores are previews and cannot accept orders yet.</p>
         {filteredStores.length ? (
           <div className="kp-concept-store-grid">
             {filteredStores.map(store => <StoreCard key={store.id} store={store} />)}

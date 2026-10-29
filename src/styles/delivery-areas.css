@@ -1,0 +1,45 @@
+/* Fixed 5-area delivery selector. Location is an explicit selection, never
+   inferred from device position or arbitrary text. */
+.kp-zone-page {position:relative;min-height:100dvh;background:#edf1e9;overflow:hidden;color:#283c2d;}
+.kp-zone-preview {padding:clamp(24px,6vw,64px);width:min(100%,1080px);margin:0 auto;}
+.kp-zone-preview-brand {font-size:clamp(25px,4vw,41px);font-weight:800;letter-spacing:-.055em;}
+.kp-zone-preview-brand strong {color:#467350;}
+.kp-zone-preview p {color:#718272;font-size:14px;margin-top:13px;}
+.kp-zone-preview-graphics {display:flex;justify-content:space-around;align-items:center;margin:45px 0;gap:12px;font-size:clamp(44px,8vw,89px);opacity:.72;}
+.kp-zone-overlay {position:fixed;inset:0;background:rgba(34,51,40,.47);z-index:100;}
+.kp-zone-sheet {position:fixed;bottom:0;left:0;right:0;z-index:101;width:min(100%,650px);margin:0 auto;background:#fff;max-height:90dvh;overflow-y:auto;overscroll-behavior:contain;border-radius:23px 23px 0 0;padding:0 25px max(22px,env(safe-area-inset-bottom));box-shadow:0 -14px 42px rgba(30,45,31,.12);}
+.kp-zone-handle {display:block;background:#dce4db;width:42px;height:4px;border-radius:50px;margin:12px auto 22px;}
+.kp-zone-intro {margin:0 0 19px;}
+.kp-zone-overline {display:flex;gap:6px;align-items:center;font-size:10px;letter-spacing:.095em;color:#4d7d55;font-weight:800;}
+.kp-zone-intro h1 {font-size:clamp(25px,4vw,33px);font-weight:760;letter-spacing:-.045em;margin:11px 0 8px;color:#26392d;}
+.kp-zone-intro p {font-size:12px;line-height:1.6;color:#6e7d70;margin:0;}
+.kp-zone-choices {display:flex;flex-direction:column;gap:9px;}
+.kp-zone-option {width:100%;display:flex;align-items:center;gap:13px;min-height:64px;text-align:left;border:1px solid #e1e8df;border-radius:12px;background:#fff;padding:10px 12px;color:#34473a;transition:border-color .18s ease,background .18s ease;}
+.kp-zone-option:hover {border-color:#9fbea3;background:#f7faf5;}
+.kp-zone-option.selected {border-color:#448b56;background:#eff7ee;}
+.kp-zone-option-icon {display:grid;place-items:center;flex:0 0 39px;width:39px;height:39px;border-radius:10px;background:#edf1e9;color:#446c4d;}
+.kp-zone-option-name {display:flex;flex-direction:column;flex:1;gap:3px;min-width:0;}
+.kp-zone-option-name strong {font-size:13px;font-weight:730;color:#294532;}
+.kp-zone-option-name span {font-size:11px;color:#7c887c;line-height:1.3;}
+.kp-zone-check {display:grid;place-items:center;flex:0 0 26px;width:26px;height:26px;color:#2c7b43;}
+.kp-zone-continue {display:flex;align-items:center;justify-content:space-between;gap:15px;width:100%;min-height:49px;margin:17px 0 0;padding:0 17px;border-radius:11px;background:#263f2d;color:white;font-size:13px;font-weight:750;}
+.kp-zone-continue:hover {background:#356243;}
+.kp-zone-continue:disabled {opacity:.45;cursor:not-allowed;}
+.kp-zone-error {font-size:12px;color:#af4444;margin:9px 0 0;}
+.kp-zone-footnote {margin:12px 0 0;color:#829082;font-size:10px;line-height:1.45;}
+.kp-zone-list-note {font-size:12px;color:#6a806e;line-height:1.55;margin:-5px 0 20px;}
+.kp-sample-photo {display:flex;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:5px;background:linear-gradient(145deg,#e8eee4,#f2eadd);color:#607660;text-align:center;}
+.kp-sample-photo>span {font-size:clamp(40px,6vw,65px);line-height:1.3;}
+.kp-sample-photo strong {font-size:13px;letter-spacing:-.01em;}
+.kp-sample-photo small {font-size:10px;color:#839382;}
+.kp-sample-header-icon {display:grid;place-items:center;width:100%;height:100%;background:#edf1e7;font-size:25px;}
+.kp-demo-disclaimer,.kp-cart-unavailable {margin:12px 0;padding:13px 16px;background:#f5f2e8;border:1px solid #e8dfc9;color:#785d39;border-radius:11px;font-size:12px;line-height:1.55;}
+.kp-concept-store-grid .kp-gallery-card:has(.kp-sample-photo) .kp-gallery-description {color:#7a846d;}
+.cart-checkout-btn:disabled {opacity:.5;cursor:not-allowed;}
+@media(max-width:620px){
+ .kp-zone-sheet {max-height:94dvh;padding:0 18px max(20px,env(safe-area-inset-bottom));border-radius:20px 20px 0 0;}
+ .kp-zone-handle {margin:10px auto 17px;}
+ .kp-zone-option {min-height:59px;}
+ .kp-zone-preview-graphics {margin:32px 0;}
+}
+@media(prefers-reduced-motion:reduce){.kp-zone-option {transition:none;}}

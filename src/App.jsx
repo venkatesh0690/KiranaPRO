@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { CartProvider } from './context/CartContext';
-import { StoreProvider } from './context/StoreContext';
+import { CartProvider, useCart } from './context/CartContext';
+import { getStoresForArea, isDeliveryArea } from './data/deliveryAreas';
+import { StoreProvider, useStore } from './context/StoreContext';
 import { SecurityProvider, useSecurity } from './context/SecurityContext';
 import { SellerProtectedRoute, AdminProtectedRoute } from './components/ProtectedRoutes';
 import BottomNav from './components/BottomNav';
@@ -31,11 +32,22 @@ import './styles/catalog-integrity.css';
 import './styles/concept-experiment.css';
 import './styles/concept-category-refinement.css';
 import './styles/store-photos.css';
+import './styles/delivery-areas.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();
   const { authSession } = useSecurity();
-  const canShop = authSession.isAuthenticated && authSession.role === 'customer' && Boolean(userLocation);
+  const { cart, clearCart } = useCart();
+  const { stores } = useStore();
+  const canShop = authSession.isAuthenticated && authSession.role === 'customer' && isDeliveryArea(userLocation);
+
+  const chooseDeliveryArea = nextArea => {
+    if (!isDeliveryArea(nextArea)) return;
+    if (cart.storeId && !getStoresForArea(stores,nextArea).some(store => String(store.id) === String(cart.storeId))) {
+      clearCart();
+    }
+    setUserLocation(nextArea);
+  };
 
   // Portal routes use their own navigation
   const isPortalRoute =
@@ -58,7 +70,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
             element={
               <LocationPage
                 initialLocation={userLocation || ''}
-                onLocationSet={setUserLocation}
+                onLocationSet={chooseDeliveryArea}
               />
             }
           />
@@ -68,11 +80,11 @@ function MainAppShell({ userLocation, setUserLocation }) {
           />
           <Route
             path="/store/:id"
-            element={canShop ? <StorePage /> : <Navigate to="/" replace />}
+            element={canShop ? <StorePage userLocation={userLocation} /> : <Navigate to="/" replace />}
           />
           <Route
             path="/search"
-            element={canShop ? <SearchPage /> : <Navigate to="/" replace />}
+            element={canShop ? <SearchPage userLocation={userLocation} /> : <Navigate to="/" replace />}
           />
           <Route
             path="/orders"
@@ -80,7 +92,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
           />
           <Route
             path="/cart"
-            element={canShop ? <CartPage /> : <Navigate to="/" replace />}
+            element={canShop ? <CartPage userLocation={userLocation} /> : <Navigate to="/" replace />}
           />
           <Route
             path="/profile"
