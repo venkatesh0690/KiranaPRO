@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run test:areas && npm run test:highlights && vite build",
+    "build": "npm run test:areas && npm run test:highlights && npm run test:app && vite build",
     "mobile:build": "vite build && npx cap sync android",
     "mobile:sync": "npx cap sync android",
     "mobile:open": "npx cap open android",
@@ -13,7 +13,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test:areas": "node --test tests/delivery-areas.test.mjs",
-    "test:highlights": "node --test tests/neighborhood-highlights.test.mjs"
+    "test:highlights": "node --test tests/neighborhood-highlights.test.mjs",
+    "test:app": "node --test tests/app-providers.test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",

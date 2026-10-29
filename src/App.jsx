@@ -4,6 +4,7 @@ import { CartProvider, useCart } from './context/CartContext';
 import { getStoresForArea, isDeliveryArea } from './data/deliveryAreas';
 import { StoreProvider, useStore } from './context/StoreContext';
 import { SecurityProvider, useSecurity } from './context/SecurityContext';
+import { OrderHistoryProvider } from './context/OrderHistoryContext';
 import { SellerProtectedRoute, AdminProtectedRoute } from './components/ProtectedRoutes';
 import BottomNav from './components/BottomNav';
 import InstallAppBanner from './components/InstallAppBanner';
@@ -143,6 +144,7 @@ export default function App() {
 
   return (
     <SecurityProvider>
+      <OrderHistoryProvider>
       <StoreProvider>
         <CartProvider>
           <BrowserRouter>
@@ -153,6 +155,7 @@ export default function App() {
           </BrowserRouter>
         </CartProvider>
       </StoreProvider>
+      </OrderHistoryProvider>
     </SecurityProvider>
   );
 }
