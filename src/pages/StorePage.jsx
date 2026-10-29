@@ -24,8 +24,6 @@ import { navigateWithStoreTransition, storeImageTransitionName, storeTitleTransi
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
-import { StoreOffersCarousel } from '../components/StoreOffersCarousel';
-import StorePhotoCarousel from '../components/StorePhotoCarousel';
 import { getStoreGallery, getStoreImageFallback } from '../data/storeGallery';
 import CartBar from '../components/CartBar';
 import ProductDetailModal from '../components/ProductDetailModal';
@@ -34,7 +32,7 @@ export default function StorePage({ userLocation }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { stores, products: productsByCategory, orders } = useStore();
+  const { stores, products: productsByCategory } = useStore();
   const { totalItems } = useCart();
   const store = stores.find((s) => String(s.id).toLowerCase() === String(id).toLowerCase() && isStoreAvailableInArea(s,userLocation));
 
@@ -358,16 +356,6 @@ export default function StorePage({ userLocation }) {
         {/* Right Column: Independently Scrollable Products List */}
         <main className="sp-scrollable-products" ref={productsScrollRef}>
           {store.isSample && <p className="kp-demo-disclaimer">Sample storefront · Merchant registration pending. Products are for preview only, and checkout is unavailable.</p>}
-          {!search && <StorePhotoCarousel store={store} className="kp-store-detail-slideshow" />}
-          {!search && (
-            <StoreOffersCarousel
-              store={store}
-              catalog={productsByCategory}
-              orders={orders}
-              onOpenCategory={scrollToCategory}
-              onOpenProduct={setSelectedProduct}
-            />
-          )}
           {visibleCategories.length === 0 ? (
             <div className="sp-no-results">
               <span style={{ fontSize: '2.5rem' }}>🔍</span>

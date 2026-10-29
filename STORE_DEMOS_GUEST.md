@@ -7,3 +7,7 @@ Each sample shop has three responsive, illustrative stock photographs in swipeab
 The sample customer is named **Laxman**. One-tap guest access grants a 30-minute session-only browsing mode. A guest can choose a zone, explore stores, and build a cart; guest mode does not create a verified account, share real customer order history, or save orders. Login is required to save a demo order. Seller and admin access are not affected. The regular fee and coupon rules are unchanged.
 
 Commands: `npm run test:sample-stores`, `npm run build`.
+
+## Product-list layout revision
+
+The individual store's product-list page now starts directly with the category/product grid (after any sample-store warning). Its redundant full-width store-photo slideshow and offer-image carousel have been removed. Homepage featured banners, store discovery card photos, and compact product thumbnails remain available. This reduces vertical scrolling and image requests in the shop aisle screen.

@@ -58,3 +58,19 @@ test('demo customer profile never shows fabricated phone or unselected neighborh
   assert.match(profile,/Guest preview · no phone linked/);
   assert.match(profile,/userLocation \|\| 'Delivery area not selected'/);
 });
+
+test('store product-list screen opens directly on categories without swipe photo rails',()=>{
+  const page=readFileSync(new URL('../src/pages/StorePage.jsx',import.meta.url),'utf8');
+  assert.doesNotMatch(page,/StorePhotoCarousel|StoreOffersCarousel/);
+  assert.doesNotMatch(page,/kp-store-detail-slideshow/);
+  const itemsStart=page.indexOf('<main className="sp-scrollable-products"');
+  const categoryStart=page.indexOf('{visibleCategories.length === 0 ?',itemsStart);
+  assert.ok(itemsStart>=0 && categoryStart>itemsStart,'Store product grid is missing');
+  const beforeItems=page.slice(itemsStart,categoryStart);
+  assert.doesNotMatch(beforeItems,/kp-promo-track|kp-store-slideshow|SwipeBanners/);
+  assert.match(beforeItems,/store\.isSample/,'Keep sample store disclosure');
+  const home=readFileSync(new URL('../src/pages/HomePage.jsx',import.meta.url),'utf8');
+  const card=readFileSync(new URL('../src/components/StoreCard.jsx',import.meta.url),'utf8');
+  assert.match(home,/HomeOffersCarousel/,'Homepage promotional banners should remain');
+  assert.match(card,/StorePhotoCarousel/,'Store discovery cards should retain photo previews');
+});
