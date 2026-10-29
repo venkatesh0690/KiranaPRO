@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { getDisplayProducts, getOrderHighlights, getProductImage } from '../utils/storeMerchandising';
+import { getCatalogVisual } from '../utils/catalogVisual';
 import { navigateWithStoreTransition } from '../utils/storeTransition';
 
 function ProductArt({ items }) {
@@ -10,7 +11,7 @@ function ProductArt({ items }) {
         <div className="kp-promo-product" key={p.id} style={{'--item':i}}>
           {getProductImage(p)
             ? <img src={getProductImage(p)} alt="" loading="lazy" onError={event => { event.currentTarget.style.display='none'; }} />
-            : <span>{p.fallbackEmoji || '🛍️'}</span>}
+            : <span aria-label={p.name} title={p.name}>{getCatalogVisual(p).emoji}</span>}
         </div>
       ))}
     </div>

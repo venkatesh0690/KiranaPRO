@@ -1,5 +1,6 @@
 import { Plus, Minus } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import CatalogProductVisual from './CatalogProductVisual';
 
 export default function ProductCard({ product, storeId, layout = 'big', categoryBg = '#FFF3E0' }) {
   const { cart, addItem, removeItem } = useCart();
@@ -13,30 +14,7 @@ export default function ProductCard({ product, storeId, layout = 'big', category
     <div className={`pc ${layout} ${!product.inStock ? 'oos' : ''}`}>
       {/* Product Image Box */}
       <div className="pc-img-wrap" style={{ background: categoryBg }}>
-        {product.image && (product.image.startsWith('http') || product.image.startsWith('/')) ? (
-          <img
-            src={product.image}
-            alt={product.name}
-            className="pc-real-img"
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            crossOrigin="anonymous"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              if (e.currentTarget.nextElementSibling) {
-                e.currentTarget.nextElementSibling.style.display = 'block';
-              }
-            }}
-          />
-        ) : null}
-        <span
-          className="pc-emoji"
-          style={{
-            display: product.image && (product.image.startsWith('http') || product.image.startsWith('/')) ? 'none' : 'block'
-          }}
-        >
-          {product.fallbackEmoji || (product.image?.startsWith('http') ? '🥬' : product.image)}
-        </span>
+        <CatalogProductVisual product={product} />
         {discount > 0 && (
           <div className="pc-disc">{discount}% OFF</div>
         )}

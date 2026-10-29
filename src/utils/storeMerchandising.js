@@ -1,3 +1,4 @@
+import { getCatalogVisual } from './catalogVisual';
 /* Store-specific items, selected only from categories this store sells.
    Purchase history is used only if present; no artificial order-count data. */
 export function getDisplayProducts(store, catalog, limit = 5) {
@@ -36,7 +37,5 @@ export function getOrderHighlights(store, catalog, orders, limit = 3) {
   return {label:'Popular picks',items:popular.slice(0,limit),basedOnOrders:false};
 }
 export function getProductImage(product) {
-  const image = product?.image;
-  return typeof image === 'string' && (image.startsWith('https://') || image.startsWith('/') || image.startsWith('http://'))
-    ? image : null;
+  return getCatalogVisual(product).photo;
 }

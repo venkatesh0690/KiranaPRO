@@ -27,6 +27,7 @@ import './styles/store-transitions.css';
 import './styles/store-experience.css';
 import './styles/home-refinement.css';
 import './styles/home-polish.css';
+import './styles/catalog-integrity.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();

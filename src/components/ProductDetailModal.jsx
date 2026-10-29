@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import CatalogProductVisual from './CatalogProductVisual';
 import { X, Heart, Star, ShieldCheck, Clock, Share2, Plus, Minus, ArrowLeft } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
@@ -42,32 +43,7 @@ export default function ProductDetailModal({ product, storeId, storeName, onClos
         <div className="pdm-body">
           {/* Showcase visual container with 360-degree indicator */}
           <div className="pdm-showcase">
-            {product.image && (product.image.startsWith('http') || product.image.startsWith('/')) ? (
-              <img
-                src={product.image}
-                alt={product.name}
-                className="pdm-real-img"
-                referrerPolicy="no-referrer"
-                crossOrigin="anonymous"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  if (e.currentTarget.nextElementSibling) {
-                    e.currentTarget.nextElementSibling.style.display = 'block';
-                  }
-                }}
-              />
-            ) : null}
-            <span
-              className="pdm-emoji"
-              style={{
-                display: product.image && (product.image.startsWith('http') || product.image.startsWith('/')) ? 'none' : 'block'
-              }}
-            >
-              {product.fallbackEmoji || (product.image?.startsWith('http') ? '🥬' : product.image)}
-            </span>
-            <div className="pdm-360-pill">
-              <span>360° Authentic Local Stock</span>
-            </div>
+            <CatalogProductVisual product={product} className="kp-modal-catalog-image" />
             {discount > 0 && (
               <span className="pdm-discount-badge">{discount}% OFF</span>
             )}
