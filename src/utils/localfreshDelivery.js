@@ -36,7 +36,7 @@ const SKU_ESTIMATE_KG = Object.freeze({
 
 function parseExplicitWeightKg(text) {
   // 500 g jar, 200gms pack, 1kg bag, 1.5 kg (unit and name).
-  const match = String(text||'').match(/(?:^|\s|\b)(\d+(?:\.\d+)?)\s*(kg|kilograms?|gms?|grams?)\b/i);
+  const match = String(text||'').match(/(?:^|\s|\b)(\d+(?:\.\d+)?)\s*(kg|kilograms?|g|gm|gms|grams?)\b/i);
   if (!match) return null;
   const quantity = Number(match[1]);
   if (!(quantity>0)) return null;
