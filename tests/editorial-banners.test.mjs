@@ -95,7 +95,9 @@ test('category tiles appear directly after search, before the offer carousel',()
   assert.doesNotMatch(offerMarkup,/Offers worth opening|Delivery savings, cart rewards & coupons|kp-concept-section-heading/);
   assert.doesNotMatch(homepage,/Fresh finds from your neighborhood/);
   assert.match(homepage,/01 \/ EXPLORE/);
-  assert.match(homepage,/02 \/ YOUR MARKETPLACE/);
+  assert.match(homepage,/Featured categories/);
+  assert.match(homepage,/Stores near you/);
+  assert.match(homepage,/kp-nearby-stores/);
   assert.match(carousel,/editorial \? 'Offers' : 'Offers & rewards'/);
 });
 
