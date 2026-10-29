@@ -253,7 +253,7 @@ export const productsByCategory = {
         "price": 85,
         "mrp": 95,
         "unit": "200 g pack",
-        "image": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83e\uddc0",
         "inStock": true,
         "rating": 4.9,
@@ -273,7 +273,7 @@ export const productsByCategory = {
         "price": 60,
         "mrp": 65,
         "unit": "100 g cup",
-        "image": "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83e\udd63",
         "inStock": true,
         "rating": 4.8,
@@ -293,7 +293,7 @@ export const productsByCategory = {
         "price": 140,
         "mrp": 150,
         "unit": "10 slices pack",
-        "image": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83e\uddc0",
         "inStock": true,
         "rating": 4.9,
@@ -313,7 +313,7 @@ export const productsByCategory = {
         "price": 38,
         "mrp": 40,
         "unit": "500 ml pouch",
-        "image": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83e\udd5b",
         "inStock": true,
         "rating": 4.9,
@@ -415,7 +415,7 @@ export const productsByCategory = {
         "price": 42,
         "mrp": 50,
         "unit": "500 g",
-        "image": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83e\udd55",
         "inStock": true,
         "rating": 4.8,
@@ -435,7 +435,7 @@ export const productsByCategory = {
         "price": 35,
         "mrp": 42,
         "unit": "500 g",
-        "image": "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83e\uded1",
         "inStock": true,
         "rating": 4.7,
@@ -454,7 +454,7 @@ export const productsByCategory = {
         "price": 32,
         "mrp": 38,
         "unit": "250 g",
-        "image": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83e\udeda",
         "inStock": true,
         "rating": 4.8,
@@ -474,7 +474,7 @@ export const productsByCategory = {
         "price": 45,
         "mrp": 55,
         "unit": "250 g",
-        "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83e\uddc4",
         "inStock": true,
         "rating": 4.9,
@@ -576,7 +576,7 @@ export const productsByCategory = {
         "price": 40,
         "mrp": 40,
         "unit": "250 ml can",
-        "image": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\u26a1",
         "inStock": true,
         "rating": 4.9,
@@ -595,7 +595,7 @@ export const productsByCategory = {
         "price": 40,
         "mrp": 40,
         "unit": "250 ml can",
-        "image": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83c\udf4b",
         "inStock": true,
         "rating": 4.8,
@@ -614,7 +614,7 @@ export const productsByCategory = {
         "price": 35,
         "mrp": 40,
         "unit": "200 ml pouch",
-        "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83e\udd6d",
         "inStock": true,
         "rating": 4.9,
@@ -699,7 +699,7 @@ export const productsByCategory = {
         "price": 20,
         "mrp": 20,
         "unit": "75 g pack",
-        "image": "https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83c\udf7f",
         "inStock": true,
         "rating": 4.8,
@@ -718,7 +718,7 @@ export const productsByCategory = {
         "price": 30,
         "mrp": 30,
         "unit": "250 g pack",
-        "image": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83c\udf6a",
         "inStock": true,
         "rating": 4.9,
@@ -737,7 +737,7 @@ export const productsByCategory = {
         "price": 35,
         "mrp": 40,
         "unit": "120 g pack",
-        "image": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=400&q=80",
+
         "fallbackEmoji": "\ud83c\udf6b",
         "inStock": true,
         "rating": 4.8,
