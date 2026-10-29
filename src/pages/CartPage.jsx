@@ -78,14 +78,14 @@ export default function CartPage({ userLocation }) {
   }
 
   // Free delivery is independent of coupons: only when subtotal > ₹300.
-  const baseDeliveryFee = store?.deliveryFee ?? 20;
+  const baseDeliveryFee = getDeliveryFee(store,Math.min(totalPrice,FREE_DELIVERY_THRESHOLD),null,cart.items);
   const activePromo = getOrderSavings(totalPrice,nextOrderNumber,appliedCoupon);
   const couponQualified = Boolean(appliedCoupon) && activePromo.eligible;
   const autoDiscount = getAutomaticBasketDiscount(totalPrice);
   const couponDiscount = couponQualified ? activePromo.discount : autoDiscount;
   const savingLabel = couponQualified ? appliedCoupon : (autoDiscount>0 ? 'Basket discount' : null);
   const currentQuote = quoteFulfilment({
-    store,subtotal:totalPrice,discount:couponDiscount,mode:fulfilment.mode
+    store,subtotal:totalPrice,discount:couponDiscount,mode:fulfilment.mode,items:cart.items
   });
   const {deliveryFee,handlingFee,tax,total:grandTotal} = currentQuote;
   const isFreeDelivery = deliveryFee===0;
@@ -118,7 +118,7 @@ export default function CartPage({ userLocation }) {
       return;
     }
     const finalQuote=quoteFulfilment({
-      store,subtotal:totalPrice,discount:effectiveDiscount,mode:requested.mode
+      store,subtotal:totalPrice,discount:effectiveDiscount,mode:requested.mode,items:cart.items
     });
     const saved=recordOrder({
       storeId:cart.storeId,storeName:store?.name || 'Local Store',

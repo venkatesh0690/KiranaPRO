@@ -1,3 +1,4 @@
+import { calculateLocalFreshDeliveryFee, getLineWeightKg, getCartWeightKg } from '../src/utils/localfreshDelivery.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -8,7 +9,8 @@ import {
 const now=new Date('2026-10-29T07:00:00Z'); // 12:30 PM IST
 const date='2026-10-29';
 const tomorrow='2026-10-30';
-const store={deliveryFee:20,name:'LocalFresh'};
+const store={id:'localfresh',deliveryFee:20,name:'LocalFresh'};
+const otherStore={id:2,deliveryFee:20,name:'Sri Lakshmi Provisions'};
 
 test('dates use Indian timezone and include seven calendar dates',()=>{
   const days=getFulfilmentDates(now);
@@ -42,21 +44,42 @@ test('rejects missing, expired, out-of-range and malformed dates',()=>{
 });
 test('pickup is always ₹0 delivery even with subtotal below ₹300',()=>{
   for(const subtotal of [99,299,300,301,900]){
-    const q=quoteFulfilment({store,subtotal,mode:'pickup'});
+    const q=quoteFulfilment({store,subtotal,mode:'pickup',items:[{id:'lf-1004',unit:'per kg',quantity:2}]});
     assert.equal(q.deliveryFee,0);
     assert.equal(q.handlingFee,5);
     assert.equal(q.tax,Math.round(subtotal*0.05));
     assert.equal(q.total,subtotal+q.handlingFee+q.tax);
   }
 });
-test('standard and scheduled delivery follow same threshold',()=>{
+test('standard and scheduled delivery use calculated LocalFresh fee and preserve other stores',()=>{
+  const items=[{id:'lf-1004',unit:'per kg',quantity:2}];
   for(const mode of ['standard','scheduled']){
-    assert.equal(quoteFulfilment({store,subtotal:100,mode}).deliveryFee,20);
-    assert.equal(quoteFulfilment({store,subtotal:300,mode}).deliveryFee,20);
-    assert.equal(quoteFulfilment({store,subtotal:301,mode}).deliveryFee,0);
+    assert.equal(quoteFulfilment({store,subtotal:100,mode,items}).deliveryFee,10);
+    assert.equal(quoteFulfilment({store,subtotal:300,mode,items}).deliveryFee,10);
+    assert.equal(quoteFulfilment({store,subtotal:301,mode,items}).deliveryFee,0);
+    assert.equal(quoteFulfilment({store:otherStore,subtotal:100,mode,items}).deliveryFee,20);
   }
 });
 test('pickup total has only item subtotal, handling and estimated GST minus discounts',()=>{
   const result=quoteFulfilment({store,subtotal:600,discount:30,mode:'pickup'});
   assert.deepEqual(result,{subtotal:600,discount:30,deliveryFee:0,handlingFee:5,tax:29,total:604});
+});
+
+test('LocalFresh uses weights and cart quantities, with rupee paise precision',()=>{
+  const items=[
+    {id:'lf-1004',name:'Potols',unit:'per kg',quantity:2},
+    {id:'lf-1005',name:'Baby Corn Pack 200gms',unit:'per piece',quantity:2},
+    {id:'lf-1006',name:'Banana',unit:'per dozen',quantity:1}
+  ];
+  assert.equal(getLineWeightKg(items[0]),1);
+  assert.equal(getLineWeightKg(items[1]),0.2);
+  assert.equal(getLineWeightKg(items[2]),1.2);
+  assert.equal(getCartWeightKg(items),3.6);
+  assert.equal(calculateLocalFreshDeliveryFee(items),18);
+  assert.equal(calculateLocalFreshDeliveryFee([{id:'lf-fl-06',unit:'250 g box',quantity:1}]),1.25);
+});
+test('no negative quantities or invalid cart weights are applied',()=>{
+  const items=[{id:'lf-1004',unit:'per kg',quantity:-4},{id:'lf-1004',unit:'per kg',quantity:2}];
+  assert.equal(calculateLocalFreshDeliveryFee(items),10);
+  assert.equal(calculateLocalFreshDeliveryFee([]),0);
 });

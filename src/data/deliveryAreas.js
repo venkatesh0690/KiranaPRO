@@ -12,7 +12,7 @@ export const DELIVERY_AREAS = Object.freeze([
 ]);
 
 export const FREE_DELIVERY_THRESHOLD = 300;
-export const LOCALFRESH_DELIVERY_FEE = 20;
+import { calculateLocalFreshDeliveryFee } from '../utils/localfreshDelivery.js';
 
 export function isDeliveryArea(area) {
   return DELIVERY_AREAS.includes(area);
@@ -29,7 +29,10 @@ export function getStoresForArea(stores, area) {
   return stores.filter(store => isStoreAvailableInArea(store, area));
 }
 
-export function getDeliveryFee(store, itemSubtotal, coupon) {
+export function getDeliveryFee(store, itemSubtotal, coupon, cartItems=[]) {
   if (Number(itemSubtotal) > FREE_DELIVERY_THRESHOLD) return 0;
+  if (String(store?.id).toLowerCase() === 'localfresh') {
+    return calculateLocalFreshDeliveryFee(cartItems);
+  }
   return Math.max(0, Number(store?.deliveryFee) || 0);
 }

@@ -24,21 +24,25 @@ for(const area of DELIVERY_AREAS) {
   });
 }
 
-test('every configured store charges for a cart of ₹300 or less', () => {
+test('delivery threshold remains ₹300 for every store', () => {
+  const items=[{id:'lf-1004',name:'Potols',unit:'per kg',quantity:2}];
   for(const store of stores){
     if(store.isSample || store.id===2 || String(store.id)==='localfresh'){
-      assert.ok(store.deliveryFee>0, `Missing fee at ${store.name}`);
-      assert.equal(getDeliveryFee(store,300),store.deliveryFee);
-      assert.equal(getDeliveryFee(store,301),0);
-      assert.equal(getDeliveryFee(store,420),0);
+      const fee=getDeliveryFee(store,300,null,items);
+      assert.ok(fee>0, `Missing charge below threshold for ${store.name}`);
+      if (String(store.id)==='localfresh') assert.equal(fee,10);
+      else assert.equal(fee,store.deliveryFee);
+      assert.equal(getDeliveryFee(store,301,null,items),0);
+      assert.equal(getDeliveryFee(store,420,null,items),0);
     }
   }
   assert.equal(FREE_DELIVERY_THRESHOLD,300);
 });
 
-test('no coupon can waive the delivery fee at or below ₹300', () => {
- const localFresh=stores.find(s=>s.id==='localfresh');
- assert.equal(getDeliveryFee(localFresh,90,{type:'freedel'}),localFresh.deliveryFee);
- assert.equal(getDeliveryFee(localFresh,300,{type:'freedel'}),localFresh.deliveryFee);
- assert.equal(getDeliveryFee(localFresh,301),0);
+test('coupons do not waive LocalFresh delivery below threshold', () => {
+  const localFresh=stores.find(s=>s.id==='localfresh');
+  const items=[{id:'lf-1004',name:'Potols',unit:'per kg',quantity:1}];
+  assert.equal(getDeliveryFee(localFresh,90,{type:'freedel'},items),5);
+  assert.equal(getDeliveryFee(localFresh,300,{type:'freedel'},items),5);
+  assert.equal(getDeliveryFee(localFresh,301,{type:'freedel'},items),0);
 });

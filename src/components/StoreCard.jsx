@@ -11,7 +11,9 @@ export default function StoreCard({ store }) {
   const pending = useRef(null);
   const swipeBlockedUntil = useRef(0);
   const rating = Number(store.rating);
-  const delivery = Number(store.deliveryFee) === 0 ? 'Free delivery' : `₹${store.deliveryFee} delivery`;
+  const delivery = String(store.id).toLowerCase() === 'localfresh'
+    ? 'Delivery fee at checkout'
+    : Number(store.deliveryFee) === 0 ? 'Free delivery' : `₹${store.deliveryFee} delivery`;
   useEffect(() => () => clearTimeout(pending.current),[]);
 
   const openStore = (event) => {

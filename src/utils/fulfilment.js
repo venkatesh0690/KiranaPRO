@@ -1,3 +1,4 @@
+import { getDeliveryFee } from '../data/deliveryAreas.js';
 /* Indicative fulfilment requests for the client-side demo checkout.
  * No store calendar or capacity provider is connected; these are NOT confirmed slots.
  * Every time is in Asia/Kolkata (IST), not the browser's local timezone. */
@@ -69,11 +70,10 @@ export function validateFulfilment(selection,now=new Date()) {
     timezone:FULFILMENT_ZONE,
     requestedStart:new Date(getSlotTimestamp(date,match.startMinutes)).toISOString()};
 }
-export function quoteFulfilment({store,subtotal,discount=0,mode='standard',handlingFee=HANDLING_FEE}) {
+export function quoteFulfilment({store,subtotal,discount=0,mode='standard',handlingFee=HANDLING_FEE,items=[]}) {
   const itemTotal=Math.max(0,Number(subtotal)||0);
   const savings=Math.min(itemTotal,Math.max(0,Number(discount)||0));
-  const deliveryFee=mode==='pickup'?0:
-    itemTotal>300 ? 0 : Math.max(0,Number(store?.deliveryFee)||0);
+  const deliveryFee=mode==='pickup'?0:getDeliveryFee(store,itemTotal,null,items);
   // Current app uses 5% estimated tax on discounted goods; no category-level GST engine exists.
   const tax=Math.round((itemTotal-savings)*0.05);
   return {subtotal:itemTotal,discount:savings,deliveryFee,

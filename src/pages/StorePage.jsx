@@ -495,7 +495,9 @@ export default function StorePage({ userLocation }) {
                   <Bike size={16} color="#2563EB" />
                   <div>
                     <span className="sp-info-lbl">Delivery Fee</span>
-                    <span className="sp-info-val">{`₹${store.deliveryFee} · FREE above ₹${FREE_DELIVERY_THRESHOLD}`}</span>
+                    <span className="sp-info-val">{String(store.id).toLowerCase() === 'localfresh'
+                       ? `Calculated at checkout · FREE above ₹${FREE_DELIVERY_THRESHOLD}`
+                       : `₹${store.deliveryFee} · FREE above ₹${FREE_DELIVERY_THRESHOLD}`}</span>
                   </div>
                 </div>
                 <div className="sp-info-tile">
