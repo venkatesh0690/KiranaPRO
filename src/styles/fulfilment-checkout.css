@@ -56,3 +56,11 @@
  .kp-fulfilment-date{flex-basis:81px;padding:12px 5px;}
 }
 @media(prefers-reduced-motion:reduce){.kp-fulfilment-mode{transition:none;}}
+
+/* Clear pickup pricing and customer-visible request summary. */
+.kp-checkout-mode-summary {display:flex;flex-direction:column;gap:5px;}
+.kp-checkout-mode-summary>strong{font-weight:760;color:#275538;font-size:13px;}
+.kp-checkout-mode-summary>span{display:block;}
+.kp-checkout-selected-time{font-weight:720;color:#235a37;padding-top:4px;}
+.kp-checkout-pickup-warning{padding-top:7px;border-top:1px solid #c9ddc6;color:#5f735f;}
+.kp-fulfilment-pickup-address em{font-style:normal;color:#8c6a3a;font-size:10px;}

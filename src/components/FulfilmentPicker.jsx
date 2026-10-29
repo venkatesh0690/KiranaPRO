@@ -48,8 +48,8 @@ export default function FulfilmentPicker({value,onChange,store,area}) {
           <MapPin size={19} aria-hidden="true"/>
           <div>
             <strong>Pick up at {store?.name||'the selected store'}</strong>
-            <span>{store?.address||area}</span>
-            <small>No delivery fee, including orders below ₹300.</small>
+            <span>{store?.address||area} <em>(listed address; verify before travel)</em></span>
+            <small>₹0 delivery even below ₹300 · Handling fee and estimated GST only.</small>
           </div>
         </div>
       )}
@@ -107,7 +107,8 @@ export default function FulfilmentPicker({value,onChange,store,area}) {
       <p className="kp-fulfilment-disclaimer">
         These are <strong>requested</strong> times for a demo order, not confirmed bookings.
         Store opening hours, packing capacity and delivery slots have not yet been connected.
-        No payment or fulfillment is arranged by submitting this form.
+        A store must separately accept the request and confirm any pickup point and readiness time.
+        No payment or fulfilment is arranged by submitting this form.
       </p>
     </section>
   );

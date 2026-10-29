@@ -412,7 +412,9 @@ export default function CartPage({ userLocation }) {
           <div className="bill-row">
             <span>{isPickup?'Store pickup — no delivery':'Delivery fee'}</span>
             <span>
-              {deliveryFee === 0 ? (
+              {isPickup ? (
+                <span className="bill-free">₹0 · Customer pickup</span>
+              ) : deliveryFee === 0 ? (
                 <span className="bill-free">
                   {baseDeliveryFee > 0 && <s style={{ color: '#94a3b8', marginRight: 4, fontWeight: 400 }}>₹{baseDeliveryFee}</s>}
                   FREE
@@ -465,13 +467,27 @@ export default function CartPage({ userLocation }) {
       </div>}
       {orderError && <p role="alert" className="kp-cart-unavailable">{orderError}</p>}
       {checkoutStep==='fulfilment' && (
-        <p className="kp-checkout-mode-summary" role="status">
-          {isPickup
-            ? 'Pickup selected — ₹0 delivery at every cart value. Only the existing handling fee and estimated GST are added.'
-            : fulfilment.mode==='scheduled'
-              ? 'Scheduled delivery request — normal delivery charge below or at ₹300; free above ₹300.'
-              : 'Standard delivery — normal delivery charge below or at ₹300; free above ₹300.'}
-        </p>
+        <div className="kp-checkout-mode-summary" role="status">
+          <strong>{isPickup ? 'Collect from store · ₹0 delivery' :
+            fulfilment.mode==='scheduled' ? 'Scheduled delivery' : 'Standard delivery'}</strong>
+          <span>
+            {isPickup
+              ? 'Only handling fee and estimated GST are charged in addition to the grocery total, after any eligible discount.'
+              : fulfilment.mode==='scheduled'
+                ? 'Standard delivery fee applies at ₹300 or below; free above ₹300.'
+                : 'Normal delivery charges apply at ₹300 or below; free above ₹300.'}
+          </span>
+          {fulfilmentValidation.valid && fulfilment.mode!=='standard' && (
+            <span className="kp-checkout-selected-time">
+              Requested: {fulfilmentValidation.date} · {fulfilmentValidation.label} IST
+            </span>
+          )}
+          {isPickup && (
+            <span className="kp-checkout-pickup-warning">
+              Pickup point and packing readiness require the store's confirmation. Do not travel based on this demo request.
+            </span>
+          )}
+        </div>
       )}
       {/* Floating Checkout Button */}
       <div className="cart-checkout-bar">
