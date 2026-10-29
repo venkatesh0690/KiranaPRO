@@ -6,6 +6,7 @@ import { buildHomepageBanners } from '../utils/homepageBanners';
 import { isLocalFreshStore } from '../data/deliveryAreas';
 import { getStoreGallery } from '../data/storeGallery';
 import { navigateWithStoreTransition } from '../utils/storeTransition';
+import { getEditorialBannerStyle, getEditorialBannerHeadline, getEditorialBannerMarker } from '../utils/editorialBanners.js';
 
 function ProductArt({ items }) {
   return (
@@ -74,10 +75,83 @@ export function HomeOffersCarousel({ stores, catalog, navigate, area, totalItems
   };
   return <SwipeBanners slides={slides} onAction={openSlide}
     label={`Offers, featured stores and grocery picks for ${area}`}
-    autoAdvance />;
+    autoAdvance editorial />;
 }
 
-function SwipeBanners({ slides, onAction, label, autoAdvance = false }) {
+function EditorialPoster({ slide, index, total, onAction }) {
+  const theme=getEditorialBannerStyle(slide,index);
+  const headline=getEditorialBannerHeadline(slide);
+  const longHeadline=headline.replace(/\n/g,' ').length>24;
+  const photo=slide.bannerPhoto;
+  const value=slide.kind==='global' ? '₹0'
+    : slide.kind==='automatic' ? '5%'
+    : slide.kind==='coupon' ? slide.highlight?.match(/₹\d+/)?.[0] || 'REWARD'
+    : null;
+
+  return (
+    <div className={`kp-ed-poster kp-ed-${theme.name}`}
+      style={{
+        '--kp-ed-bg':theme.bg,
+        '--kp-ed-ink':theme.ink,
+        '--kp-ed-muted':theme.muted,
+        '--kp-ed-accent':theme.accent,
+        '--kp-ed-panel':theme.panel
+      }}>
+      <div className="kp-ed-head">
+        <span className="kp-ed-brand">KIRANA<span>PRO</span> / GOODS NEAR YOU</span>
+        <span className="kp-ed-edition">VIZAG LOCAL EDITION <strong>{String(index+1).padStart(2,'0')}</strong></span>
+      </div>
+      <div className="kp-ed-body">
+        <div className="kp-ed-copy">
+          <span className="kp-ed-label">{getEditorialBannerMarker(slide,index)}</span>
+          <h3 className={longHeadline?'kp-ed-title-long':''}>
+            {headline.split('\n').map((line,i)=><span key={i}>{line}</span>)}
+          </h3>
+          <p>{slide.subtitle}</p>
+          {slide.code && <span className="kp-ed-coupon">{slide.rewardEligible===false?'REWARD UPCOMING · ':''}CODE {slide.code}</span>}
+          <button type="button" className="kp-ed-action" onClick={()=>onAction(slide)}
+            aria-label={`${slide.cta||'Explore'}: ${slide.title}`}>
+            <span>{slide.cta||'Explore stores'}</span><ArrowRight size={16} aria-hidden="true"/>
+          </button>
+        </div>
+        <div className="kp-ed-visual">
+          {photo ? (
+            <div className="kp-ed-photo-frame">
+              <img src={photo}
+                alt={`Representative photography: ${slide.store?.name||slide.title}`}
+                loading={index===0?'eager':'lazy'} decoding="async"
+                onError={event=>{
+                  const image=event.currentTarget;
+                  if(image.dataset.fallback) {image.style.visibility='hidden';return;}
+                  const alternate=getStoreGallery(slide.store).find(item=>item.src!==photo)?.src;
+                  if(alternate){image.dataset.fallback='true';image.src=alternate;}
+                  else image.style.visibility='hidden';
+                }}/>
+              <span className="kp-ed-photo-label">{slide.isSample?'SAMPLE STORE · PREVIEW':'REPRESENTATIVE PHOTO'}</span>
+            </div>
+          ) : value ? (
+            <div className="kp-ed-price-art" aria-hidden="true">
+              <span className="kp-ed-price-decoration">KP / PERKS</span>
+              <strong>{value}</strong>
+              <span>{slide.kind==='global'?'DELIVERY FEE':slide.kind==='automatic'?'UP TO ₹30 OFF':'OFF YOUR ORDER'}</span>
+            </div>
+          ) : Array.isArray(slide.items)&&slide.items.length ? (
+            <div className="kp-ed-product-art"><ProductArt items={slide.items}/></div>
+          ) : (
+            <div className="kp-ed-name-art" aria-hidden="true">K<span>.</span></div>
+          )}
+          <span className="kp-ed-accent-square" aria-hidden="true"/>
+        </div>
+      </div>
+      <div className="kp-ed-footer">
+        <span>{slide.isSample?'ILLUSTRATIVE STORE · NOT ACCEPTING ORDERS':'LOCAL FINDS. EVERY DAY.'}</span>
+        <span>{String(index+1).padStart(2,'0')} / {String(total).padStart(2,'0')}</span>
+      </div>
+    </div>
+  );
+}
+
+function SwipeBanners({ slides, onAction, label, autoAdvance = false, editorial = false }) {
   const listRef = useRef(null);
   const activeRef = useRef(0);
   const pausedUntil = useRef(0);
@@ -159,9 +233,13 @@ function SwipeBanners({ slides, onAction, label, autoAdvance = false }) {
         }}
         role="region" aria-roledescription="carousel" aria-label={label} tabIndex={0}>
         {slides.map((slide,i) => (
-          <article className={`kp-promo-slide kp-promo-${slide.tone || 'sage'}`} key={slide.id}
+          <article className={`kp-promo-slide kp-promo-${slide.tone || 'sage'} ${editorial?'kp-editorial-slide':''}`} key={slide.id}
             role="group" aria-roledescription="slide"
             aria-label={`${i+1} of ${slides.length}: ${slide.title}`}>
+            {editorial ? (
+              <EditorialPoster slide={slide} index={i} total={slides.length} onAction={onAction}/>
+            ) : (
+              <>
             <div className="kp-promo-text">
               <span className="kp-promo-eyebrow">{slide.tag || 'FEATURED'}</span>
               <h3>{slide.title}</h3>
@@ -199,6 +277,8 @@ function SwipeBanners({ slides, onAction, label, autoAdvance = false }) {
                   <span>{slide.highlight}</span>
                 </div>
               : <ProductArt items={slide.items || []}/>}
+              </>
+            )}
           </article>
         ))}
       </div>
