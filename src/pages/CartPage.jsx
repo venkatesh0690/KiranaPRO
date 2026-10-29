@@ -21,6 +21,8 @@ import { useStore } from '../context/StoreContext';
 import { FREE_DELIVERY_THRESHOLD, getDeliveryFee, isStoreAvailableInArea } from '../data/deliveryAreas';
 import { VALID_COUPONS, MIN_PROMO_SUBTOTAL, evaluateCoupon, getOrderSavings, getAutomaticBasketDiscount } from '../data/checkoutOffers';
 import { useCustomerOrders, readCustomerOrders, getCustomerKey } from '../context/OrderHistoryContext';
+import FulfilmentPicker from '../components/FulfilmentPicker';
+import { quoteFulfilment, validateFulfilment } from '../utils/fulfilment';
 
 export default function CartPage({ userLocation }) {
   const { cart, addItem, removeItem, clearCart, totalItems, totalPrice } = useCart();
@@ -32,6 +34,8 @@ export default function CartPage({ userLocation }) {
   const storeServesArea = store && isStoreAvailableInArea(store,userLocation);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const placingRef = useRef(false);
+  const [checkoutStep,setCheckoutStep] = useState('review');
+  const [fulfilment,setFulfilment] = useState({mode:'standard',date:'',slot:''});
 
   // Coupon selection is tied to the customer's next successfully placed order.
   const [couponCode, setCouponCode] = useState('');
@@ -74,17 +78,19 @@ export default function CartPage({ userLocation }) {
   }
 
   // Free delivery is independent of coupons: only when subtotal > ₹300.
-  const isFreeDelivery = totalPrice > FREE_DELIVERY_THRESHOLD;
   const baseDeliveryFee = store?.deliveryFee ?? 20;
-  const deliveryFee = getDeliveryFee(store,totalPrice);
   const activePromo = getOrderSavings(totalPrice,nextOrderNumber,appliedCoupon);
   const couponQualified = Boolean(appliedCoupon) && activePromo.eligible;
   const autoDiscount = getAutomaticBasketDiscount(totalPrice);
   const couponDiscount = couponQualified ? activePromo.discount : autoDiscount;
   const savingLabel = couponQualified ? appliedCoupon : (autoDiscount>0 ? 'Basket discount' : null);
-  const handlingFee = 5;
-  const tax = Math.round(Math.max(0,totalPrice-couponDiscount)*.05);
-  const grandTotal = Math.max(0,totalPrice-couponDiscount+deliveryFee+handlingFee+tax);
+  const currentQuote = quoteFulfilment({
+    store,subtotal:totalPrice,discount:couponDiscount,mode:fulfilment.mode
+  });
+  const {deliveryFee,handlingFee,tax,total:grandTotal} = currentQuote;
+  const isFreeDelivery = deliveryFee===0;
+  const isPickup = fulfilment.mode==='pickup';
+  const fulfilmentValidation = validateFulfilment(fulfilment);
 
   const handlePlaceOrder = () => {
     if(placingRef.current || orderPlaced || !storeServesArea || store?.isSample) return;
@@ -105,14 +111,23 @@ export default function CartPage({ userLocation }) {
       ? latest.discount : getAutomaticBasketDiscount(totalPrice);
     const effectiveCode=latest.eligible ? latest.code
       : (effectiveDiscount>0 ? 'BASKET30' : null);
-    const finalTax=Math.round(Math.max(0,totalPrice-effectiveDiscount)*.05);
-    const finalTotal=Math.max(0,totalPrice-effectiveDiscount+deliveryFee+handlingFee+finalTax);
+    const requested = validateFulfilment(fulfilment,new Date());
+    if(!requested.valid || checkoutStep!=='fulfilment') {
+      setOrderError(requested.reason || 'Choose an order service before continuing.');
+      placingRef.current=false;
+      return;
+    }
+    const finalQuote=quoteFulfilment({
+      store,subtotal:totalPrice,discount:effectiveDiscount,mode:requested.mode
+    });
     const saved=recordOrder({
       storeId:cart.storeId,storeName:store?.name || 'Local Store',
       storeArea:userLocation,
       items:cart.items.map(i=>({id:i.id,name:i.name,qty:i.quantity,price:i.price,unit:i.unit})),
-      subtotal:totalPrice,deliveryFee,discount:effectiveDiscount,
-      discountCode:effectiveCode,total:finalTotal,handlingFee,tax:finalTax,
+      subtotal:totalPrice,deliveryFee:finalQuote.deliveryFee,discount:effectiveDiscount,
+      discountCode:effectiveCode,total:finalQuote.total,
+      handlingFee:finalQuote.handlingFee,tax:finalQuote.tax,
+      fulfilment:requested,
       paymentMethod:'Demo checkout — no payment processed'
     });
     if(!saved.success) {
@@ -121,7 +136,7 @@ export default function CartPage({ userLocation }) {
       return;
     }
     logSecurityEvent('DEMO_ORDER_RECORDED',
-      `Demo order #${saved.order.orderNumber} saved for ${store?.name}; subtotal ₹${totalPrice}, discount ₹${effectiveDiscount}`,'info');
+      `Demo order #${saved.order.orderNumber} recorded for ${store?.name}; mode ${requested.mode}, no booking or payment made`,'info');
     setOrderPlaced(true);
     window.setTimeout(()=>{
       clearCart();
@@ -136,12 +151,12 @@ export default function CartPage({ userLocation }) {
         <button
           type="button"
           className="cart-back"
-          onClick={() => navigate(-1)}
-          aria-label="Back"
+          onClick={() => checkoutStep==='fulfilment' ? (setCheckoutStep('review'),setOrderError(null)) : navigate(-1)}
+          aria-label={checkoutStep==='fulfilment' ? 'Back to cart review' : 'Back'}
         >
           <ArrowLeft size={18} />
         </button>
-        <h1 className="cart-title">Your Order Cart</h1>
+        <h1 className="cart-title">{checkoutStep==='review'?'Review your basket':'Choose order service'}</h1>
       </div>
 
       {orderPlaced && (
@@ -149,12 +164,19 @@ export default function CartPage({ userLocation }) {
           <div className="order-success-box">
             <CheckCircle2 size={42} color="#16a34a" />
             <h2>Demo Order Saved</h2>
-            <p>Your order was saved locally. No payment or delivery has been scheduled.</p>
+            <p>Order request saved on this device. No payment, delivery booking or pickup arrangement has been made.</p>
             <span>Redirecting to order tracking...</span>
           </div>
         </div>
       )}
 
+      <div className="kp-cart-progress" aria-label="Checkout progress">
+        <span className={checkoutStep==='review'?'current':'done'}>01 / Basket</span>
+        <span className={checkoutStep==='fulfilment'?'current':''}>02 / Delivery or pickup</span>
+      </div>
+
+      {checkoutStep==='review' ? (
+        <>
       {/* Free delivery applies once the item subtotal exceeds ₹300. */}
       <div className={`cart-delivery-status-card ${isFreeDelivery ? 'unlocked' : 'locked'}`}>
         {isFreeDelivery ? (
@@ -368,6 +390,16 @@ export default function CartPage({ userLocation }) {
         <ChevronRight size={16} color="#94A3B8" />
       </button>
 
+        </>
+      ) : (
+        <FulfilmentPicker
+          value={fulfilment}
+          onChange={next=>{setFulfilment(next);setOrderError(null);}}
+          store={store}
+          area={userLocation}
+        />
+      )}
+
       {/* Bill Summary */}
       <div className="cart-bill-card">
         <h3 className="bill-title">Bill Details</h3>
@@ -378,7 +410,7 @@ export default function CartPage({ userLocation }) {
           </div>
 
           <div className="bill-row">
-            <span>Delivery Fee</span>
+            <span>{isPickup?'Store pickup — no delivery':'Delivery fee'}</span>
             <span>
               {deliveryFee === 0 ? (
                 <span className="bill-free">
@@ -399,12 +431,12 @@ export default function CartPage({ userLocation }) {
           )}
 
           <div className="bill-row">
-            <span>Handling Fee</span>
+            <span>Handling fee</span>
             <span>₹{handlingFee}</span>
           </div>
 
           <div className="bill-row">
-            <span>Taxes & Charges (GST)</span>
+            <span>Estimated GST (demo)</span>
             <span>₹{tax}</span>
           </div>
 
@@ -424,29 +456,50 @@ export default function CartPage({ userLocation }) {
             : 'This store is not available in your selected delivery area. Choose another area or store.'}
         </p>
       )}
-      <div className="kp-coupon-eligibility-note">
+      {checkoutStep==='review' && <div className="kp-coupon-eligibility-note">
         <strong>Order #{nextOrderNumber}</strong> · Free delivery above ₹300.
         {totalPrice>500
           ? ' Automatic basket saving up to ₹30 (5%, capped) applies if no eligible coupon is used.'
           : ' Basket discount up to ₹30 unlocks above ₹500.'}
         {' '}Only one discount applies per order.
-      </div>
+      </div>}
       {orderError && <p role="alert" className="kp-cart-unavailable">{orderError}</p>}
+      {checkoutStep==='fulfilment' && (
+        <p className="kp-checkout-mode-summary" role="status">
+          {isPickup
+            ? 'Pickup selected — ₹0 delivery at every cart value. Only the existing handling fee and estimated GST are added.'
+            : fulfilment.mode==='scheduled'
+              ? 'Scheduled delivery request — normal delivery charge below or at ₹300; free above ₹300.'
+              : 'Standard delivery — normal delivery charge below or at ₹300; free above ₹300.'}
+        </p>
+      )}
       {/* Floating Checkout Button */}
       <div className="cart-checkout-bar">
         <div className="ccb-left">
           <span className="ccb-amount">₹{grandTotal}</span>
           <span className="ccb-savings">
-            {isFreeDelivery ? `Saved ₹${baseDeliveryFee} delivery` : `${totalItems} items in basket`}
+            {isPickup ? 'Pickup · ₹0 delivery' : isFreeDelivery ? `Saved ₹${baseDeliveryFee} delivery` : `${totalItems} items in basket`}
           </span>
         </div>
         <button
           type="button"
           className="cart-checkout-btn"
-          onClick={handlePlaceOrder}
-          disabled={orderPlaced || !storeServesArea || Boolean(store?.isSample)}
+          onClick={() => {
+            if(checkoutStep==='review') {
+              setCheckoutStep('fulfilment');
+              setOrderError(null);
+              window.scrollTo?.({top:0,behavior:'smooth'});
+              document.querySelector('.app-content-area')?.scrollTo?.({top:0,behavior:'smooth'});
+            } else handlePlaceOrder();
+          }}
+          disabled={orderPlaced || !storeServesArea || Boolean(store?.isSample) ||
+            (checkoutStep==='fulfilment' && !fulfilmentValidation.valid)}
         >
-          <span>{store?.isSample ? 'Sample store — checkout unavailable' : 'Save Demo Order'}</span>
+          <span>{store?.isSample ? 'Sample store — checkout unavailable' :
+            checkoutStep==='review' ? 'Continue to order service' :
+            fulfilment.mode==='pickup' ? 'Save pickup request (demo)' :
+            fulfilment.mode==='scheduled' ? 'Save delivery request (demo)' :
+            'Save demo order'}</span>
           <ChevronRight size={18} />
         </button>
       </div>

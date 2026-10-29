@@ -41,6 +41,15 @@ export default function OrdersPage() {
             </div>
             <div className="kp-order-info-row"><MapPin size={15}/>{active.storeArea}</div>
             <div className="kp-order-info-row"><Clock size={15}/>{new Date(active.placedAt).toLocaleString('en-IN')}</div>
+            {active.fulfilment && (
+              <div className="kp-order-info-row">
+                <Clock size={15}/>
+                {active.fulfilment.mode==='pickup'?'Pickup request'
+                  :active.fulfilment.mode==='scheduled'?'Scheduled delivery request':'Standard delivery request'}
+                {active.fulfilment.date && ` · ${active.fulfilment.date}`}
+                {active.fulfilment.slot && ` · ${active.fulfilment.label}`}
+              </div>
+            )}
             <div className="order-stepper">
               <div className="step-item done">
                 <div className="step-circle-track"><div className="step-circle"><CheckCircle2 size={15}/></div></div>
@@ -49,7 +58,8 @@ export default function OrdersPage() {
             </div>
             <div className="kp-order-receipt">
               <strong>Items: ₹{active.subtotal}</strong>
-              <span>Delivery: ₹{active.deliveryFee}</span>
+              <span>{active.fulfilment?.mode==='pickup'?'Pickup delivery fee':'Delivery'}: ₹{active.deliveryFee}</span>
+              <span>Handling: ₹{active.handlingFee ?? 5} · Estimated GST: ₹{active.tax ?? 0}</span>
               <span>Discount: -₹{active.discount} {active.discountCode ? `(${active.discountCode})` : ''}</span>
               <strong>Total: ₹{active.total}</strong>
             </div>
@@ -65,6 +75,11 @@ export default function OrdersPage() {
                     <div>
                       <span className="osc-id">#{ord.orderNumber} · {ord.storeName}</span>
                       <span className="osc-date">{new Date(ord.placedAt).toLocaleString('en-IN')}</span>
+                      <span className="osc-date">
+                        {ord.fulfilment?.mode==='pickup'?'Store pickup'
+                          :ord.fulfilment?.mode==='scheduled'?'Scheduled delivery':'Standard delivery'}
+                        {ord.fulfilment?.date ? ` · ${ord.fulfilment.date} · ${ord.fulfilment.label}` : ''}
+                      </span>
                     </div>
                     <span className="osc-badge">Demo saved</span>
                   </div>
