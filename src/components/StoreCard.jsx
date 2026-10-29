@@ -1,21 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, Clock3, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useStore } from '../context/StoreContext';
-import { getDisplayProducts, getProductImage } from '../utils/storeMerchandising';
+import StorePhotoCarousel from './StorePhotoCarousel';
 import { navigateWithStoreTransition, storeImageTransitionName, storeTitleTransitionName } from '../utils/storeTransition';
 
 export default function StoreCard({ store }) {
   const navigate = useNavigate();
-  const { products } = useStore();
   const [opening, setOpening] = useState(false);
   const pending = useRef(null);
-  const display = useMemo(() => getDisplayProducts(store,products,3),[store,products]);
+  const swipeBlockedUntil = useRef(0);
   const rating = Number(store.rating);
   const delivery = Number(store.deliveryFee) === 0 ? 'Free delivery' : `₹${store.deliveryFee} delivery`;
   useEffect(() => () => clearTimeout(pending.current),[]);
 
   const openStore = (event) => {
+    if (Date.now() < swipeBlockedUntil.current) { event.preventDefault(); return; }
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || opening) return;
     event.preventDefault();
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -38,26 +37,12 @@ export default function StoreCard({ store }) {
       aria-label={`Open ${store.name}`}
     >
       <div className="kp-gallery-media" style={{ viewTransitionName: storeImageTransitionName(store.id) }}>
-        <img className="kp-motion-gif" src={store.posterImage} alt="" loading="lazy" decoding="async" />
-        <div className="kp-motion-products" aria-hidden="true">
-          {display.map((product,i)=>(
-            <div className="kp-motion-product" key={product.id} style={{'--product-index':i}}>
-              {getProductImage(product) ? (
-                <img
-                  src={getProductImage(product)}
-                  alt=""
-                  loading="lazy"
-                  onError={event => { event.currentTarget.style.display='none'; }}
-                />
-              ) : <span className="kp-motion-emoji">{product.fallbackEmoji || '🛒'}</span>}
-              <span>{product.name}</span>
-            </div>
-          ))}
-        </div>
+        <StorePhotoCarousel
+          store={store}
+          onSwipe={() => { swipeBlockedUntil.current = Date.now() + 650; }}
+        />
         {store.isOpen === false && <span className="kp-gallery-closed">Currently closed</span>}
-        <span className="kp-gallery-open-icon" aria-hidden="true">
-          <ArrowUpRight size={19} strokeWidth={1.7}/>
-        </span>
+        <span className="kp-gallery-open-icon" aria-hidden="true"><ArrowUpRight size={19} strokeWidth={1.7}/></span>
       </div>
       <div className="kp-gallery-copy">
         <div className="kp-gallery-kicker">

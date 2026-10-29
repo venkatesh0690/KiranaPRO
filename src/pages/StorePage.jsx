@@ -24,6 +24,8 @@ import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import { StoreOffersCarousel } from '../components/StoreOffersCarousel';
+import StorePhotoCarousel from '../components/StorePhotoCarousel';
+import { getStoreGallery, getStoreImageFallback } from '../data/storeGallery';
 import CartBar from '../components/CartBar';
 import ProductDetailModal from '../components/ProductDetailModal';
 
@@ -165,7 +167,7 @@ export default function StorePage() {
           <div className="sp-hdr-title-area" onClick={() => setShowStoreInfo(true)} style={{ cursor: 'pointer' }}>
             <div className="sp-hdr-name-row">
               <div className="sp-hdr-store-photo" style={{ viewTransitionName: storeImageTransitionName(store.id) }}>
-                <img src={store.posterImage} alt="" decoding="async" />
+                <img src={getStoreGallery(store)[0].src} alt="" decoding="async" onError={event => { event.currentTarget.src = getStoreImageFallback(store); }} />
               </div>
               <h1 className="sp-hdr-store-name" style={{ viewTransitionName: storeTitleTransitionName(store.id) }}>{store.name}</h1>
               {store.isAdminManaged && (
@@ -331,6 +333,7 @@ export default function StorePage() {
 
         {/* Right Column: Independently Scrollable Products List */}
         <main className="sp-scrollable-products" ref={productsScrollRef}>
+          {!search && <StorePhotoCarousel store={store} className="kp-store-detail-slideshow" />}
           {!search && (
             <StoreOffersCarousel
               store={store}

@@ -1,0 +1,125 @@
+/* Homepage: search immediately after location, followed by the featured swipe banners. */
+.kp-home .kp-header { padding-bottom: 0; }
+.kp-home-search { display: flex; align-items: center; margin: 12px 0 20px; }
+.kp-home .kp-home-search .kp-search-compact {
+  width: 50%;
+  max-width: 350px;
+  min-width: 148px;
+  min-height: 46px;
+  height: 46px;
+  margin: 0;
+  padding: 0 13px;
+  gap: 9px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+.kp-home .kp-home-search .kp-search-compact span {
+  min-width: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.kp-home .kp-home-search .kp-search-compact svg {
+  flex-shrink: 0;
+}
+.kp-home > .kp-promo-section {
+  margin-top: 0;
+  margin-bottom: 33px;
+}
+.kp-home .kp-section-heading { margin-top: 0; }
+.kp-home .kp-stores-section { margin-top: 43px; }
+
+/* Realistic store/market photo galleries instead of animated cartoon grocery items. */
+.kp-gallery-media .kp-store-slideshow,
+.kp-store-detail-slideshow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #e8eee8;
+  border-radius: inherit;
+  touch-action: pan-y;
+}
+.kp-store-slideshow .kp-store-slide {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transform: scale(1.025);
+  transition: opacity 700ms ease-in-out, transform 3.6s ease;
+  pointer-events: none;
+}
+.kp-store-slideshow .kp-store-slide.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+.kp-gallery-card:hover .kp-store-slideshow .kp-store-slide {
+  transform: scale(1.025);
+}
+.kp-store-photo-dots {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  left: 12px;
+  bottom: 12px;
+  z-index: 2;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(17,24,19,.36);
+  pointer-events: none;
+}
+.kp-store-photo-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.56);
+  transition: width .3s ease, background .3s ease;
+}
+.kp-store-photo-dots span.is-active {
+  width: 17px;
+  background: white;
+}
+.kp-gallery-media .kp-gallery-open-icon { z-index: 3; }
+.kp-gallery-media .kp-gallery-closed { z-index: 3; }
+.kp-store-detail-slideshow {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: clamp(130px,23vw,210px);
+  margin: 5px 0 16px;
+  border-radius: 13px;
+}
+.sp-scrollable-products .kp-store-detail-slideshow .kp-store-slide { max-height: none; }
+.kp-store-detail-slideshow .kp-store-photo-dots {
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 11px;
+}
+@media (max-width: 650px) {
+  .kp-home .kp-header { padding-top: 15px; }
+  .kp-home-search { margin: 10px 0 15px; }
+  .kp-home .kp-home-search .kp-search-compact {
+    width: 50%;
+    max-width: none;
+    min-height: 43px;
+    height: 43px;
+    font-size: 11px;
+    gap: 7px;
+    padding: 0 10px;
+  }
+  .kp-home .kp-home-search .kp-search-compact .kp-search-arrow { display: none; }
+  .kp-home > .kp-promo-section { margin-bottom: 28px; }
+  .kp-home .kp-stores-section { margin-top: 37px; }
+  .kp-store-detail-slideshow { height: 145px; margin-bottom: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kp-store-slideshow .kp-store-slide,
+  .kp-store-photo-dots span { transition: none !important; transform: none !important; }
+}
