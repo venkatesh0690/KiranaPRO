@@ -1,105 +1,144 @@
-/* Curated, non-overlapping representative photographs, one set per store.
-   Unsplash images are editorial examples, not verified photographs of the specific retailers.
-   Seller-provided real premises photos can replace these later. */
+/* Real photographs sourced from Unsplash free-use photo pages.
+ * These are representative market/store scenes, not verified photos of named shops.
+ * See STORE_PHOTO_CREDITS.md for image pages and photographer attribution.
+ * No generated storefront art or GIF imagery is used.
+ */
 const galleries = {
   "1": [
     {
+      "src": "https://unsplash.com/photos/bAKYjjvAQIE/download?force=true&w=960",
+      "alt": "Representative real photograph: Indian kirana shop with daily essentials",
+      "author": "Zoshua Colah",
+      "source": "https://unsplash.com/photos/bAKYjjvAQIE"
+    },
+    {
+      "src": "https://unsplash.com/photos/HJ8Pptkz0Gk/download?force=true&w=960",
+      "alt": "Representative real photograph: Grocery packets on shelves at a Delhi shop",
+      "author": "Ravi Sharma",
+      "source": "https://unsplash.com/photos/HJ8Pptkz0Gk"
+    },
+    {
       "src": "https://unsplash.com/photos/rWMIbqmOxrY/download?force=true&w=960",
-      "alt": "Grocery aisle with stocked shelves"
-    },
-    {
-      "src": "https://unsplash.com/photos/IH65r4HEQWQ/download?force=true&w=960",
-      "alt": "Rows of packaged food in store"
-    },
-    {
-      "src": "https://unsplash.com/photos/ivfp_yxZuYQ/download?force=true&w=960",
-      "alt": "Groceries, grains and dairy shelves"
+      "alt": "Representative real photograph: Groceries on retail shelves",
+      "author": "Nathália Rosa",
+      "source": "https://unsplash.com/photos/rWMIbqmOxrY"
     }
   ],
   "2": [
     {
-      "src": "https://unsplash.com/photos/GZ0BQCskZRc/download?force=true&w=960",
-      "alt": "Packaged pantry staples in shop"
+      "src": "https://unsplash.com/photos/Gwf6GRmkT1Y/download?force=true&w=960",
+      "alt": "Representative real photograph: Indian spice and dry-goods shop",
+      "author": "Colin White",
+      "source": "https://unsplash.com/photos/Gwf6GRmkT1Y"
     },
     {
-      "src": "https://unsplash.com/photos/iDGTGktD97Q/download?force=true&w=960",
-      "alt": "Shelves with provisions and daily essentials"
+      "src": "https://unsplash.com/photos/aIcw-jdp53s/download?force=true&w=960",
+      "alt": "Representative real photograph: Indian masala spices in glass jars",
+      "author": "Unsplash contributor",
+      "source": "https://unsplash.com/photos/aIcw-jdp53s"
     },
     {
-      "src": "https://unsplash.com/photos/o7pi47fEjNI/download?force=true&w=960",
-      "alt": "Store shelf with packaged goods"
+      "src": "https://unsplash.com/photos/PDBnKupmi7E/download?force=true&w=960",
+      "alt": "Representative real photograph: Masala jars on shop shelves",
+      "author": "Unsplash contributor",
+      "source": "https://unsplash.com/photos/PDBnKupmi7E"
     }
   ],
   "3": [
     {
+      "src": "https://unsplash.com/photos/7H-CWW3rz9U/download?force=true&w=960",
+      "alt": "Representative real photograph: Indian shop snack shelves",
+      "author": "Zoshua Colah",
+      "source": "https://unsplash.com/photos/7H-CWW3rz9U"
+    },
+    {
       "src": "https://unsplash.com/photos/aSEA8rcaz2w/download?force=true&w=960",
-      "alt": "Convenience store shelves and beverages"
+      "alt": "Representative real photograph: Convenience store shelves and beverages",
+      "author": "Sobolev Maksim",
+      "source": "https://unsplash.com/photos/aSEA8rcaz2w"
     },
     {
-      "src": "https://unsplash.com/photos/WTOWyep_ErY/download?force=true&w=960",
-      "alt": "Modern shelf displays and bottles"
-    },
-    {
-      "src": "https://unsplash.com/photos/3v5yG5u8L0Y/download?force=true&w=960",
-      "alt": "Grocery shelves and packaged food"
+      "src": "https://unsplash.com/photos/DOycDWzx-dQ/download?force=true&w=960",
+      "alt": "Representative real photograph: Local convenience store shelving",
+      "author": "Bruno BD",
+      "source": "https://unsplash.com/photos/DOycDWzx-dQ"
     }
   ],
   "4": [
     {
       "src": "https://unsplash.com/photos/2h1O8DtRu3g/download?force=true&w=960",
-      "alt": "Fresh produce and grocery section"
+      "alt": "Representative real photograph: Grocery aisle with produce",
+      "author": "Tim Photoguy",
+      "source": "https://unsplash.com/photos/2h1O8DtRu3g"
     },
     {
       "src": "https://unsplash.com/photos/mBMl2OkGgAg/download?force=true&w=960",
-      "alt": "Supermarket vegetables and snacks"
+      "alt": "Representative real photograph: Fruit and grocery shelf",
+      "author": "Chang Duong",
+      "source": "https://unsplash.com/photos/mBMl2OkGgAg"
     },
     {
-      "src": "https://unsplash.com/photos/oxTEjCULfwQ/download?force=true&w=960",
-      "alt": "Produce and staple shelves"
+      "src": "https://unsplash.com/photos/sCSBLCaybds/download?force=true&w=960",
+      "alt": "Representative real photograph: Supermarket fruit and vegetables",
+      "author": "Xuan Ma",
+      "source": "https://unsplash.com/photos/sCSBLCaybds"
     }
   ],
   "5": [
     {
-      "src": "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=960&q=78",
-      "alt": "Well stocked store cupboards"
+      "src": "https://unsplash.com/photos/48gk2I7mRs8/download?force=true&w=960",
+      "alt": "Representative real photograph: Household cleaning products in shop",
+      "author": "Franki Chamaki",
+      "source": "https://unsplash.com/photos/48gk2I7mRs8"
     },
     {
-      "src": "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=960&q=78",
-      "alt": "Home and kitchen storage shelves"
+      "src": "https://unsplash.com/photos/Jj8-Q0kekCo/download?force=true&w=960",
+      "alt": "Representative real photograph: Detergent bottles on retail shelves",
+      "author": "Adhitya Sibikumar",
+      "source": "https://unsplash.com/photos/Jj8-Q0kekCo"
     },
     {
-      "src": "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=960&q=78",
-      "alt": "Departmental store grocery shelving"
+      "src": "https://unsplash.com/photos/3v5yG5u8L0Y/download?force=true&w=960",
+      "alt": "Representative real photograph: Household groceries in department store",
+      "author": "Brad",
+      "source": "https://unsplash.com/photos/3v5yG5u8L0Y"
     }
   ],
   "localfresh": [
     {
-      "src": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=960&q=78",
-      "alt": "Fresh vegetable market stands"
+      "src": "https://unsplash.com/photos/wguVC8oG3qw/download?force=true&w=960",
+      "alt": "Representative real photograph: Vegetable baskets at Indian mandi",
+      "author": "Harshal More",
+      "source": "https://unsplash.com/photos/wguVC8oG3qw"
     },
     {
-      "src": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=960&q=78",
-      "alt": "Freshly arranged vegetables and gourds"
+      "src": "https://unsplash.com/photos/9KTwGdcwbp4/download?force=true&w=960",
+      "alt": "Representative real photograph: Indian street vegetable market",
+      "author": "Unsplash contributor",
+      "source": "https://unsplash.com/photos/9KTwGdcwbp4"
     },
     {
-      "src": "https://images.unsplash.com/photo-1659465856958-aaa0e5891796?auto=format&fit=crop&w=960&q=78",
-      "alt": "Fruit and flower market display"
+      "src": "https://unsplash.com/photos/Jo0usTWfuSQ/download?force=true&w=960",
+      "alt": "Representative real photograph: Beans and eggplants at market",
+      "author": "iKshana Productions",
+      "source": "https://unsplash.com/photos/Jo0usTWfuSQ"
     }
   ]
 };
-
+const fallback = {
+  localfresh: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=960&q=75',
+  '1': 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=960&q=75',
+  '2': 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=960&q=75',
+  '3': 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=960&q=75',
+  '4': 'https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=960&q=75',
+  '5': 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=960&q=75'
+};
 export function getStoreGallery(store) {
-  const key = String(store?.id ?? '').toLowerCase();
-  return galleries[key] || [{ src: '/stores/sharma-general.svg', alt: 'Illustrative grocery shelves' }];
+  const key=String(store?.id??'').toLowerCase();
+  if(galleries[key]) return galleries[key];
+  return typeof store?.posterImage==='string' && /^https:\/\//.test(store.posterImage)
+    ? [{src:store.posterImage,alt:'Store-provided photo'}] : [];
 }
 export function getStoreImageFallback(store) {
-  const fallback = {
-    localfresh:'/stores/localfresh.svg',
-    '1':'/stores/sharma-general.svg',
-    '2':'/stores/sri-lakshmi.svg',
-    '3':'/stores/venkateswara.svg',
-    '4':'/stores/ramaiah.svg',
-    '5':'/stores/annapurna.svg'
-  };
-  return fallback[String(store?.id??'').toLowerCase()] || '/stores/sharma-general.svg';
+  return fallback[String(store?.id??'').toLowerCase()] || null;
 }

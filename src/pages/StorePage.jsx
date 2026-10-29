@@ -167,7 +167,18 @@ export default function StorePage() {
           <div className="sp-hdr-title-area" onClick={() => setShowStoreInfo(true)} style={{ cursor: 'pointer' }}>
             <div className="sp-hdr-name-row">
               <div className="sp-hdr-store-photo" style={{ viewTransitionName: storeImageTransitionName(store.id) }}>
-                <img src={getStoreGallery(store)[0].src} alt="" decoding="async" onError={event => { event.currentTarget.src = getStoreImageFallback(store); }} />
+                <img
+                  src={getStoreGallery(store)[0]?.src || getStoreImageFallback(store) || ''}
+                  alt=""
+                  decoding="async"
+                  onError={event => {
+                    const fallback = getStoreImageFallback(store);
+                    if (fallback && !event.currentTarget.dataset.fallback) {
+                      event.currentTarget.dataset.fallback='true';
+                      event.currentTarget.src=fallback;
+                    } else event.currentTarget.style.display='none';
+                  }}
+                />
               </div>
               <h1 className="sp-hdr-store-name" style={{ viewTransitionName: storeTitleTransitionName(store.id) }}>{store.name}</h1>
               {store.isAdminManaged && (
