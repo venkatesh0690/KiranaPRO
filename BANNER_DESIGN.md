@@ -11,3 +11,9 @@ The existing single first-position homepage swiper now uses the supplied food-br
 - Verify using `npm run test:editorial`, `npm run build`.
 
 The reference image was used as visual direction, not as a pixel-for-pixel copy.
+
+## Photo-led revision (October 29, 2026)
+
+The landing banners are NOT plain-color posters. The same editorial typography is placed over full-bleed representative real photos of vegetable markets, grocery stores, pantry shelves and household retail, with gradient contrast overlays and restrained outline accents. The name, offer amount, CTA and sample-store disclosure stay readable at narrow phone widths.
+
+Every generated homepage banner resolves to an HTTPS real-photography URL using `getEditorialBannerPhoto`, with a second representative URL as a backup if the first is unavailable. Generic offer images use compressed 900×500 WebP Unsplash assets; registered and sample storefront slides prefer the store's own existing representative gallery image. Store product-list pages remain banner-free. The ₹300 delivery exclusions and loyalty promo terms are unchanged.

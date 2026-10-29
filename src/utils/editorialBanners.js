@@ -52,3 +52,44 @@ export function getEditorialBannerMarker(slide,index=0) {
   if(slide?.kind==='store')return 'THE LOCAL EDITION';
   return 'DAILY ESSENTIALS';
 }
+
+/**
+ * Every homepage poster has genuine representative food/market photography,
+ * never just a flat fill. Prefer the selected store's existing photograph;
+ * use small, responsive WebP images for offer and generic category posters.
+ * These are editorial illustrations of the shopping theme, NOT photos of
+ * registered merchants or exact branded packages.
+ */
+const posterPhoto = (id) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&h=500&q=58&fm=webp`;
+
+const HERO_PHOTOS=Object.freeze({
+  market:posterPhoto('photo-1578916171728-46686eac8d58'),
+  fresh:posterPhoto('photo-1542838132-92c53300491e'),
+  produce:posterPhoto('photo-1590779033100-9f60a05a013d'),
+  pantry:posterPhoto('photo-1606787366850-de6330128bfc'),
+  grocery:posterPhoto('photo-1604719312566-8912e9227c6a'),
+  home:posterPhoto('photo-1556909114-f6e7ad7d3136')
+});
+
+export function getEditorialBannerPhoto(slide) {
+  const id=String(slide?.id||'').toLowerCase();
+  const name=String(slide?.title||'').toLowerCase();
+  let photo=HERO_PHOTOS.market;
+  if(slide?.bannerPhoto && /^https:\/\//.test(slide.bannerPhoto)) {
+    return {src:slide.bannerPhoto,backup:HERO_PHOTOS.market,
+      alt:`Representative store imagery for ${slide.store?.name||slide.title}`};
+  }
+  if(id.includes('mandi')||id.includes('fresh')||name.includes('fruit'))
+    photo=HERO_PHOTOS.fresh;
+  else if(slide?.kind==='global')photo=HERO_PHOTOS.grocery;
+  else if(slide?.kind==='automatic')photo=HERO_PHOTOS.pantry;
+  else if(slide?.kind==='coupon') {
+    photo=slide.code==='WELCOME'?HERO_PHOTOS.produce:
+      slide.code==='REPEAT'?HERO_PHOTOS.grocery:HERO_PHOTOS.pantry;
+  }
+  else if(slide?.kind==='picks')photo=HERO_PHOTOS.produce;
+  else if(name.includes('home')||name.includes('clean'))photo=HERO_PHOTOS.home;
+  return {src:photo,backup:photo===HERO_PHOTOS.market?HERO_PHOTOS.fresh:HERO_PHOTOS.market,
+    alt:`Representative grocery photography for ${slide?.title||'local shopping'}`};
+}

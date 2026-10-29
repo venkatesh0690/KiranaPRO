@@ -6,7 +6,7 @@ import { buildHomepageBanners } from '../utils/homepageBanners';
 import { isLocalFreshStore } from '../data/deliveryAreas';
 import { getStoreGallery } from '../data/storeGallery';
 import { navigateWithStoreTransition } from '../utils/storeTransition';
-import { getEditorialBannerStyle, getEditorialBannerHeadline, getEditorialBannerMarker } from '../utils/editorialBanners.js';
+import { getEditorialBannerStyle, getEditorialBannerHeadline, getEditorialBannerMarker, getEditorialBannerPhoto } from '../utils/editorialBanners.js';
 
 function ProductArt({ items }) {
   return (
@@ -81,22 +81,33 @@ export function HomeOffersCarousel({ stores, catalog, navigate, area, totalItems
 function EditorialPoster({ slide, index, total, onAction }) {
   const theme=getEditorialBannerStyle(slide,index);
   const headline=getEditorialBannerHeadline(slide);
+  const photo=getEditorialBannerPhoto(slide);
   const longHeadline=headline.replace(/\n/g,' ').length>24;
-  const photo=slide.bannerPhoto;
   const value=slide.kind==='global' ? '₹0'
     : slide.kind==='automatic' ? '5%'
     : slide.kind==='coupon' ? slide.highlight?.match(/₹\d+/)?.[0] || 'REWARD'
     : null;
 
   return (
-    <div className={`kp-ed-poster kp-ed-${theme.name}`}
+    <div className={`kp-ed-poster kp-ed-${theme.name} kp-ed-photographic`}
       style={{
-        '--kp-ed-bg':theme.bg,
-        '--kp-ed-ink':theme.ink,
-        '--kp-ed-muted':theme.muted,
         '--kp-ed-accent':theme.accent,
         '--kp-ed-panel':theme.panel
       }}>
+      <div className="kp-ed-backdrop" aria-hidden="true">
+        <img src={photo.src} alt="" loading={index===0?'eager':'lazy'}
+          decoding="async" width="900" height="500"
+          onError={event=>{
+            const img=event.currentTarget;
+            if(img.dataset.fallback) {
+              img.style.opacity='0';
+              return;
+            }
+            img.dataset.fallback='true';
+            img.src=photo.backup;
+          }}/>
+      </div>
+      <div className="kp-ed-photo-scrim" aria-hidden="true"/>
       <div className="kp-ed-head">
         <span className="kp-ed-brand">KIRANA<span>PRO</span> / GOODS NEAR YOU</span>
         <span className="kp-ed-edition">VIZAG LOCAL EDITION <strong>{String(index+1).padStart(2,'0')}</strong></span>
@@ -114,37 +125,25 @@ function EditorialPoster({ slide, index, total, onAction }) {
             <span>{slide.cta||'Explore stores'}</span><ArrowRight size={16} aria-hidden="true"/>
           </button>
         </div>
-        <div className="kp-ed-visual">
-          {photo ? (
-            <div className="kp-ed-photo-frame">
-              <img src={photo}
-                alt={`Representative photography: ${slide.store?.name||slide.title}`}
-                loading={index===0?'eager':'lazy'} decoding="async"
-                onError={event=>{
-                  const image=event.currentTarget;
-                  if(image.dataset.fallback) {image.style.visibility='hidden';return;}
-                  const alternate=getStoreGallery(slide.store).find(item=>item.src!==photo)?.src;
-                  if(alternate){image.dataset.fallback='true';image.src=alternate;}
-                  else image.style.visibility='hidden';
-                }}/>
-              <span className="kp-ed-photo-label">{slide.isSample?'SAMPLE STORE · PREVIEW':'REPRESENTATIVE PHOTO'}</span>
-            </div>
-          ) : value ? (
-            <div className="kp-ed-price-art" aria-hidden="true">
+        <div className="kp-ed-visual" aria-hidden="true">
+          {value ? (
+            <div className="kp-ed-price-art">
               <span className="kp-ed-price-decoration">KP / PERKS</span>
               <strong>{value}</strong>
               <span>{slide.kind==='global'?'DELIVERY FEE':slide.kind==='automatic'?'UP TO ₹30 OFF':'OFF YOUR ORDER'}</span>
             </div>
-          ) : Array.isArray(slide.items)&&slide.items.length ? (
-            <div className="kp-ed-product-art"><ProductArt items={slide.items}/></div>
           ) : (
-            <div className="kp-ed-name-art" aria-hidden="true">K<span>.</span></div>
+            <div className="kp-ed-scene-stamp">
+              <span>{slide.isSample?'PHOTO PREVIEW':'KIRANA / LOCAL'}</span>
+              <strong>{slide.isSample?'SAMPLE':'FRESH'}</strong>
+              <small>{slide.isSample?'UNREGISTERED STORE':'EVERYDAY ESSENTIALS'}</small>
+            </div>
           )}
-          <span className="kp-ed-accent-square" aria-hidden="true"/>
+          <span className="kp-ed-accent-square"/>
         </div>
       </div>
       <div className="kp-ed-footer">
-        <span>{slide.isSample?'ILLUSTRATIVE STORE · NOT ACCEPTING ORDERS':'LOCAL FINDS. EVERY DAY.'}</span>
+        <span>{slide.isSample?'REPRESENTATIVE PHOTO · NO ORDERS':'REAL GROCERY & MARKET PHOTOGRAPHY'}</span>
         <span>{String(index+1).padStart(2,'0')} / {String(total).padStart(2,'0')}</span>
       </div>
     </div>
@@ -212,7 +211,7 @@ function SwipeBanners({ slides, onAction, label, autoAdvance = false, editorial 
 
   if (!slides.length) return null;
   return (
-    <section className="kp-promo-section kp-combined-featured" aria-label={label}>
+    <section className={`kp-promo-section kp-combined-featured ${editorial?'kp-editorial-rail':''}`} aria-label={label}>
       <div className="kp-promo-top">
         <span><Sparkles size={15} aria-hidden="true"/> Offers & store specials</span>
         <div className="kp-promo-arrows">

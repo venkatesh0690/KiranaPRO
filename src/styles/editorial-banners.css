@@ -191,3 +191,105 @@
   .kp-editorial-rail .kp-promo-track{scroll-behavior:auto;}
   .kp-editorial-rail .kp-ed-photo-frame{transform:none;}
 }
+
+/* Photo-first redesign. Every home banner has real market/grocery imagery. */
+.kp-concept-feature .kp-editorial-rail .kp-promo-slide.kp-editorial-slide {
+  background:#1f3227;
+  box-shadow:0 11px 27px rgba(23,35,24,.16);
+}
+.kp-ed-poster.kp-ed-photographic {
+  position:relative;isolation:isolate;
+  background:#263a2d;color:#fff;
+}
+.kp-ed-photographic .kp-ed-backdrop,
+.kp-ed-photographic .kp-ed-photo-scrim {
+  position:absolute;inset:0;pointer-events:none;
+}
+.kp-ed-photographic .kp-ed-backdrop {z-index:0;overflow:hidden;}
+.kp-ed-photographic .kp-ed-backdrop img {
+  display:block;width:100%;height:100%;object-fit:cover;
+  object-position:center;filter:saturate(.92) contrast(1.05);
+}
+.kp-ed-photographic .kp-ed-photo-scrim {
+  z-index:1;
+  background:
+    linear-gradient(90deg,rgba(12,28,21,.94) 0%,rgba(14,30,21,.88) 25%,rgba(13,28,22,.58) 52%,rgba(13,28,22,.13) 82%),
+    linear-gradient(0deg,rgba(5,20,16,.5) 0%,transparent 24%,transparent 74%,rgba(7,21,15,.32) 100%);
+}
+.kp-ed-photographic .kp-ed-head,
+.kp-ed-photographic .kp-ed-body,
+.kp-ed-photographic .kp-ed-footer {
+  position:relative;z-index:2;color:#fff;
+}
+.kp-ed-photographic .kp-ed-label {
+  color:var(--kp-ed-accent);letter-spacing:.115em;
+  text-shadow:0 1px 7px rgba(0,0,0,.24);
+}
+.kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-copy h3{
+  color:#fff;text-shadow:0 3px 20px rgba(0,0,0,.28);
+  letter-spacing:-.018em;
+}
+.kp-ed-photographic .kp-ed-copy p {
+  color:rgba(255,255,255,.91);text-shadow:0 1px 4px rgba(0,0,0,.2);
+}
+.kp-ed-photographic .kp-ed-coupon {
+  color:#fff;border-color:rgba(255,255,255,.75);
+  background:rgba(10,30,21,.35);backdrop-filter:blur(4px);
+}
+.kp-ed-photographic .kp-ed-action {
+  color:#fff;border-color:#fff;background:transparent;
+}
+.kp-ed-photographic .kp-ed-head,
+.kp-ed-photographic .kp-ed-footer {
+  text-shadow:0 1px 6px rgba(0,0,0,.2);
+}
+.kp-ed-photographic .kp-ed-visual::before{display:none;}
+.kp-ed-photographic .kp-ed-visual {
+  display:flex;align-items:center;justify-content:center;z-index:2;
+}
+.kp-ed-photographic .kp-ed-price-art {
+  color:#fff;border:2px solid rgba(255,255,255,.85);
+  background:rgba(13,30,20,.24);
+  backdrop-filter:blur(2px);
+  transform:rotate(5deg);
+  box-shadow:0 12px 33px rgba(0,0,0,.16);
+}
+.kp-ed-photographic .kp-ed-price-art strong {text-shadow:0 1px 11px rgba(0,0,0,.15);}
+.kp-ed-scene-stamp {
+  position:relative;display:flex;flex-direction:column;
+  justify-content:space-around;align-items:center;
+  width:clamp(105px,80%,208px);aspect-ratio:1.18;
+  padding:13px 8px;transform:rotate(5deg);
+  border:2px solid rgba(255,255,255,.9);
+  background:rgba(19,40,28,.2);color:#fff;
+  backdrop-filter:blur(1.8px);
+  box-shadow:0 12px 27px rgba(0,0,0,.12);
+  text-align:center;
+}
+.kp-ed-scene-stamp span {
+  font-size:8px;line-height:1.2;font-weight:800;letter-spacing:.07em;
+}
+.kp-ed-scene-stamp strong {
+  font-family:Impact,'Arial Black',system-ui,sans-serif;
+  font-size:clamp(22px,3.6vw,43px);
+  font-weight:900;line-height:1;letter-spacing:-.01em;
+}
+.kp-ed-scene-stamp small {
+  font-size:8px;font-weight:700;line-height:1.2;letter-spacing:.04em;
+}
+.kp-ed-photographic .kp-ed-accent-square {
+  background:var(--kp-ed-accent);opacity:.95;
+  box-shadow:0 2px 9px rgba(0,0,0,.13);
+}
+@media(max-width:720px) {
+  .kp-ed-photographic .kp-ed-photo-scrim {
+    background:
+      linear-gradient(90deg,rgba(10,25,18,.96) 0%,rgba(12,30,21,.84) 39%,rgba(14,27,20,.37) 77%,rgba(13,27,20,.18) 100%),
+      linear-gradient(0deg,rgba(6,23,16,.47),transparent 32%,transparent 82%,rgba(7,21,15,.3));
+  }
+  .kp-ed-photographic .kp-ed-backdrop img {object-position:58% center;}
+  .kp-ed-scene-stamp {width:94%;padding:7px 3px;aspect-ratio:1.04;transform:rotate(4deg);}
+  .kp-ed-scene-stamp span,.kp-ed-scene-stamp small{font-size:6px;}
+  .kp-ed-scene-stamp strong{font-size:clamp(20px,6vw,28px);}
+  .kp-ed-photographic .kp-ed-price-art {background:rgba(10,26,18,.32);}
+}
