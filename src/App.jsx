@@ -28,6 +28,9 @@ import './styles/store-experience.css';
 import './styles/home-refinement.css';
 import './styles/home-polish.css';
 import './styles/catalog-integrity.css';
+import './styles/concept-experiment.css';
+import './styles/concept-category-refinement.css';
+import './styles/store-photos.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();

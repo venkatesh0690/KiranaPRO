@@ -71,14 +71,17 @@ export default function StorePhotoCarousel({ store, className = '', onSwipe }) {
           loading={index === 0 ? 'eager' : 'lazy'}
           decoding="async"
           onError={(event) => {
-            const target = event.currentTarget;
-            if (target.dataset.fallback !== 'true') {
-              target.dataset.fallback = 'true';
-              target.src = fallback;
+            const image = event.currentTarget;
+            if (fallback && !image.dataset.fallback) {
+              image.dataset.fallback = 'true';
+              image.src = fallback;
+            } else {
+              image.style.display = 'none';
             }
           }}
         />
       ))}
+      <span className="kp-photo-disclosure">Representative store photography</span>
       <div className="kp-store-photo-dots" aria-hidden="true">
         {gallery.map((_, index) => (
           <span key={index} className={index === active ? 'is-active' : ''} />

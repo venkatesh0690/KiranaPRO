@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ChevronDown, MapPin, Search, ShoppingBag, UserRound } from 'lucide-react';
+import {
+  ArrowRight, ArrowUpRight, ChevronDown, MapPin, Search, ShoppingBag, UserRound,
+  SlidersHorizontal
+} from 'lucide-react';
 import { allCategories } from '../data/stores';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
@@ -26,7 +29,7 @@ export default function HomePage({ userLocation }) {
   const [authMode, setAuthMode] = useState(null);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
 
-  const filteredStores = stores.filter((store) => {
+  const filteredStores = stores.filter(store => {
     if (activeFilter === 'fast') return /15|20|30/.test(store.deliveryTime || '');
     if (activeFilter === 'rated') return Number(store.rating) >= 4.7;
     if (activeFilter === 'free') return Number(store.deliveryFee) === 0;
@@ -35,10 +38,10 @@ export default function HomePage({ userLocation }) {
 
   const openCategory = (categoryName) => {
     setCategoriesOpen(false);
-    const preferred = stores.find(
-      (store) => String(store.id).toLowerCase() === 'localfresh' && store.categories?.includes(categoryName)
+    const preferred = stores.find(store =>
+      String(store.id).toLowerCase() === 'localfresh' && store.categories?.includes(categoryName)
     );
-    const match = preferred || stores.find((store) => store.categories?.includes(categoryName));
+    const match = preferred || stores.find(store => store.categories?.includes(categoryName));
     if (match) {
       navigate(`/store/${match.id}`, { state: { category: categoryName } });
     } else {
@@ -47,84 +50,106 @@ export default function HomePage({ userLocation }) {
   };
 
   return (
-    <div className="home-container kp-home">
-      <header className="kp-header">
-        <div className="kp-header-top">
-          <button className="kp-wordmark" type="button" onClick={() => navigate('/home')} aria-label="KiranaPRO home">
-            <span className="kp-wordmark-symbol">K</span>
-            <span>Kirana<span className="kp-wordmark-accent">PRO</span></span>
+    <div className="home-container kp-home kp-concept">
+      <div className="kp-concept-preview-note">
+        <span>DESIGN STUDY</span>
+        <span>Version B · Preview only</span>
+      </div>
+
+      <header className="kp-concept-header">
+        <div className="kp-concept-header-top">
+          <button
+            type="button"
+            className="kp-concept-wordmark"
+            aria-label="KiranaPRO home"
+            onClick={() => navigate('/home')}
+          >
+            <span className="kp-concept-monogram">K.</span>
+            <span>Kirana<span>PRO</span></span>
           </button>
-          <div className="kp-header-actions">
-            <button className="kp-account-link" type="button" onClick={() => authSession.isAuthenticated ? navigate('/profile') : setAuthMode('login')}>
-              <UserRound size={17} />
-              <span>{authSession.isAuthenticated ? 'Account' : 'Sign in'}</span>
+          <div className="kp-concept-header-actions">
+            <button
+              type="button"
+              className="kp-concept-header-icon"
+              onClick={() => authSession.isAuthenticated ? navigate('/profile') : setAuthMode('login')}
+              aria-label={authSession.isAuthenticated ? 'Open account' : 'Log in'}
+            >
+              <UserRound size={18} strokeWidth={1.9} />
             </button>
-            <button className="kp-cart-icon" type="button" onClick={() => navigate('/cart')} aria-label={`Cart with ${totalItems} items`}>
-              <ShoppingBag size={20} />
-              {totalItems > 0 && <span className="kp-cart-count">{totalItems}</span>}
+            <button type="button" className="kp-concept-header-icon kp-concept-cart" onClick={() => navigate('/cart')} aria-label={`Cart with ${totalItems} items`}>
+              <ShoppingBag size={19} strokeWidth={1.9} />
+              {totalItems > 0 && <span>{totalItems}</span>}
             </button>
           </div>
         </div>
 
-        <button type="button" className="kp-delivery-location" onClick={() => navigate('/')}>
-          <MapPin size={15} aria-hidden="true" />
-          <span>Delivering to <strong>{userLocation || 'Choose your area'}</strong></span>
-          <ChevronDown size={15} aria-hidden="true" />
+        <button type="button" className="kp-concept-location" onClick={() => navigate('/')}>
+          <span className="kp-concept-pin"><MapPin size={17} strokeWidth={2} /></span>
+          <span className="kp-concept-location-label">Delivering to <strong>{userLocation || 'Choose your delivery area'}</strong></span>
+          <ChevronDown size={16} aria-hidden="true" />
         </button>
       </header>
 
-      <section className="kp-home-search" aria-label="Search groceries and stores">
-        <button
-          type="button"
-          className="kp-search-trigger kp-search-compact"
-          onClick={() => navigate('/search')}
-          aria-label="Search groceries, vegetables and stores"
-        >
+      <div className="kp-concept-search-line">
+        <button type="button" className="kp-concept-search" onClick={() => navigate('/search')} aria-label="Search all groceries, vegetables and stores">
           <Search size={19} aria-hidden="true" />
-          <span>Search groceries, vegetables, and stores</span>
-          <ArrowRight size={17} className="kp-search-arrow" aria-hidden="true" />
+          <span>What are you looking for?</span>
+          <span className="kp-concept-search-arrow"><ArrowRight size={18} aria-hidden="true" /></span>
         </button>
+      </div>
+
+      <section className="kp-concept-feature" aria-label="Offers at neighborhood stores">
+        <div className="kp-concept-section-heading">
+          <div className="kp-concept-heading-copy">
+            <span className="kp-concept-index">01 / FEATURED</span>
+            <h2>Good things, nearby.</h2>
+          </div>
+          <span className="kp-concept-subnote">Explore what's in store</span>
+        </div>
+        <HomeOffersCarousel stores={stores} catalog={products} navigate={navigate} />
       </section>
 
-      <HomeOffersCarousel stores={stores} catalog={products} navigate={navigate}/>
-
-      <section className="kp-section" aria-labelledby="kp-category-title">
-        <div className="kp-section-heading">
-          <h2 id="kp-category-title">Shop by category</h2>
-          <button type="button" className="kp-text-link" onClick={() => setCategoriesOpen(true)}>
-            View all <ArrowRight size={15} />
+      <section className="kp-concept-categories kp-concept-compact-categories" aria-labelledby="kp-concept-categories-title">
+        <div className="kp-concept-section-heading">
+          <div className="kp-concept-heading-copy">
+            <span className="kp-concept-index">02 / EXPLORE</span>
+            <h2 id="kp-concept-categories-title">Shop by category</h2>
+          </div>
+          <button className="kp-concept-link" type="button" onClick={() => setCategoriesOpen(true)}>
+            View all <ArrowUpRight size={16} aria-hidden="true" />
           </button>
         </div>
-        <div className="kp-category-scroll">
-          {allCategories.slice(0, 10).map((category) => (
+        <div className="kp-concept-mini-category-list" aria-label="Swipe through shopping categories" tabIndex={0}>
+          {allCategories.slice(0, 10).map(category => (
             <button
-              type="button"
-              className="kp-category"
               key={category.id}
+              className="kp-concept-mini-category-card"
+              type="button"
               onClick={() => openCategory(category.name)}
               aria-label={`Shop ${category.name}`}
             >
-              <span className="kp-category-icon" aria-hidden="true">{category.icon}</span>
-              <span className="kp-category-name">{category.name}</span>
+              <span className="kp-concept-mini-category-art" aria-hidden="true">{category.icon}</span>
+              <span className="kp-concept-mini-category-name">{category.name}</span>
             </button>
           ))}
         </div>
       </section>
 
-      <section className="kp-section kp-stores-section" aria-labelledby="kp-stores-title">
-        <div className="kp-section-heading">
-          <div>
-            <h2 id="kp-stores-title">Explore stores</h2>
-            <p>Find your everyday favorites nearby.</p>
+      <section className="kp-concept-stores" aria-labelledby="kp-concept-stores-title">
+        <div className="kp-concept-section-heading kp-concept-stores-heading">
+          <div className="kp-concept-heading-copy">
+            <span className="kp-concept-index">03 / YOUR MARKETPLACE</span>
+            <h2 id="kp-concept-stores-title">Meet your local stores.</h2>
           </div>
-          <span className="kp-result-count">{filteredStores.length} stores</span>
+          <span className="kp-concept-count">{filteredStores.length} stores</span>
         </div>
-        <div className="kp-filters" role="group" aria-label="Filter stores">
-          {storeFilters.map((filter) => (
+        <div className="kp-concept-filters" role="group" aria-label="Filter local stores">
+          <SlidersHorizontal size={17} aria-hidden="true" />
+          {storeFilters.map(filter => (
             <button
-              type="button"
               key={filter.id}
-              className={`kp-filter ${activeFilter === filter.id ? 'active' : ''}`}
+              type="button"
+              className={activeFilter === filter.id ? 'is-active' : ''}
               aria-pressed={activeFilter === filter.id}
               onClick={() => setActiveFilter(filter.id)}
             >
@@ -133,27 +158,24 @@ export default function HomePage({ userLocation }) {
           ))}
         </div>
         {filteredStores.length ? (
-          <div className="kp-store-grid">
-            {filteredStores.map((store) => <StoreCard key={store.id} store={store} layout="compact" />)}
+          <div className="kp-concept-store-grid">
+            {filteredStores.map(store => <StoreCard key={store.id} store={store} />)}
           </div>
         ) : (
-          <div className="kp-empty-stores">
-            <p>No stores match this filter right now.</p>
-            <button type="button" className="kp-text-link" onClick={() => setActiveFilter('all')}>See all stores</button>
+          <div className="kp-concept-empty">
+            <p>No stores match this filter.</p>
+            <button type="button" onClick={() => setActiveFilter('all')}>See all stores <ArrowRight size={16} /></button>
           </div>
         )}
       </section>
 
-      <CategoriesModal
-        isOpen={categoriesOpen}
-        onClose={() => setCategoriesOpen(false)}
-        onSelectCategory={openCategory}
-      />
-      <AuthModal
-        isOpen={Boolean(authMode)}
-        initialMode={authMode || 'login'}
-        onClose={() => setAuthMode(null)}
-      />
+      <div className="kp-concept-footer">
+        <span>KiranaPRO</span>
+        <span>Fresh finds from your neighborhood.</span>
+      </div>
+
+      <CategoriesModal isOpen={categoriesOpen} onClose={() => setCategoriesOpen(false)} onSelectCategory={openCategory} />
+      <AuthModal isOpen={Boolean(authMode)} initialMode={authMode || 'login'} onClose={() => setAuthMode(null)} />
     </div>
   );
 }
