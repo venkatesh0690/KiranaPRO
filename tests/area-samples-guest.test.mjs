@@ -5,7 +5,7 @@ import {sampleAreaStores} from '../src/data/sampleAreaStores.js';
 import {getStoresForArea,DELIVERY_AREAS} from '../src/data/deliveryAreas.js';
 import {stores} from '../src/data/stores.js';
 import {getStoreGallery} from '../src/data/storeGallery.js';
-import { getEditorialBannerPhoto, NEIGHBORHOOD_BANNER_PHOTO_IDS } from '../src/utils/editorialBanners.js';
+import { getEditorialBannerPhoto, NEON_PHOTO_IDS } from '../src/utils/editorialBanners.js';
 import { NEIGHBORHOOD_PHOTO_GROUPS } from '../src/data/sampleStoreImages.js';
 import { getStoreImageFallback } from '../src/data/storeGallery.js';
 import {SAMPLE_CREDENTIALS} from '../src/utils/security.js';
@@ -104,8 +104,8 @@ test('only LocalFresh can show fruits, vegetables or leafy greens in storefront 
   assert.ok(localfresh);
   const localVisuals=getStoreGallery(localfresh);
   assert.ok(localVisuals.some(i=>/vegetable|produce/i.test(i.alt)),'LocalFresh must retain fresh imagery');
-  const localPoster=getEditorialBannerPhoto({kind:'store',store:localfresh});
-  assert.match(localPoster.alt,/LocalFresh fresh vegetable market/);
+  // Promotional banners contain only coupons/delivery/basket offers.
+  // LocalFresh's produce photography belongs to its storefront gallery.
 });
 test('all fictional shop gallery photo groups exclude green produce and use packaged-goods photos',()=>{
   for(const [type,photos] of Object.entries(NEIGHBORHOOD_PHOTO_GROUPS)){
@@ -117,17 +117,18 @@ test('all fictional shop gallery photo groups exclude green produce and use pack
     }
   }
 });
-test('offer banners use packaged grocery imagery, not LocalFresh produce scenes',()=>{
-  assert.equal(NEIGHBORHOOD_BANNER_PHOTO_IDS.length,5);
+test('offer banners use neon light photography, not store or produce scenes',()=>{
+  assert.ok(Object.keys(NEON_PHOTO_IDS).length>=5);
   const forbidden=['photo-1542838132-92c53300491e','photo-1590779033100-9f60a05a013d',
     'wguVC8oG3qw','9KTwGdcwbp4','Jo0usTWfuSQ'];
   for(const area of DELIVERY_AREAS){
     const banners=buildHomepageBanners(stores,null,area,0);
     for(const offer of banners){
       const image=getEditorialBannerPhoto(offer);
-      assert.ok(NEIGHBORHOOD_BANNER_PHOTO_IDS.some(id=>image.src.includes(id)),offer.id);
+      assert.ok(Object.values(NEON_PHOTO_IDS).some(id=>image.src.includes(id)),offer.id);
       assert.ok(!forbidden.some(id=>image.src.includes(id)),offer.id);
-      assert.doesNotMatch(image.alt,/fruit|vegetable|produce|leafy greens/i);
+      assert.doesNotMatch(image.alt,/fruit|vegetable|produce|leafy greens|store|shop/i);
+      assert.match(image.alt,/neon|bokeh|light trails/i);
       assert.doesNotMatch(offer.title,/LocalFresh|Provisions|Mart|Stores|Shop/i);
     }
   }
