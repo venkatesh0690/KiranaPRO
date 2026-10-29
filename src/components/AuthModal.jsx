@@ -3,7 +3,7 @@ import { X, User, Store, Shield, ArrowRight, CheckCircle2, AlertCircle, KeyRound
 import { useSecurity } from '../context/SecurityContext';
 
 export default function AuthModal({ isOpen, onClose, initialMode = 'signup', onSuccess }) {
-  const { loginCustomer, signupCustomer, signupSeller } = useSecurity();
+  const { loginCustomer, loginTemporaryCustomer, signupCustomer, signupSeller } = useSecurity();
   const [activeTab, setActiveTab] = useState(initialMode === 'login' ? 'login' : 'signup'); // 'signup' | 'login'
   const [signupRole, setSignupRole] = useState('user'); // 'user' | 'seller'
 
@@ -29,6 +29,14 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup', onS
   const [successMsg, setSuccessMsg] = useState('');
 
   if (!isOpen) return null;
+
+  const handleGuestStart = () => {
+    const result=loginTemporaryCustomer();
+    if(result.success){
+      onClose();
+      onSuccess?.('user',result.user);
+    }
+  };
 
   const handleUserSignupSubmit = (e) => {
     e.preventDefault();
@@ -156,7 +164,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup', onS
                     <User size={16} className="auth-icon" />
                     <input
                       type="text"
-                      placeholder="e.g. Venkatesh Rao"
+                      placeholder="e.g. Laxman"
                       value={userName}
                       onChange={e => setUserName(e.target.value)}
                       required
@@ -343,6 +351,10 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup', onS
               <ArrowRight size={16} />
             </button>
 
+            <button type="button" className="kp-auth-guest" onClick={handleGuestStart}>
+              Explore as guest — one tap
+            </button>
+            <p className="kp-auth-guest-note">Temporary 30-minute preview. No customer account or order history is created.</p>
             <div className="auth-portal-links-sub">
               <span>Looking for store portals? </span>
               <a href="/seller/login">Seller Hub</a> • <a href="/admin/login">Admin Console</a>

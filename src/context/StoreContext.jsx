@@ -14,7 +14,7 @@ export function StoreProvider({ children }) {
   const [orders, setOrders] = useState([
     {
       id: 'KP-94821',
-      customerName: 'Venkatesh Rao',
+      customerName: 'Laxman',
       customerPhone: '+91 98480 22334',
       customerAddress: 'Flat 302, Sai Residency, Maddilapalem, Vizag (0.4 km)',
       storeId: 1,

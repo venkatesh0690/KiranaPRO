@@ -3,11 +3,12 @@ import { getStoresForArea, isLocalFreshStore } from '../data/deliveryAreas.js';
 import { getAreaFeaturedPicks } from './areaFeaturedPicks.js';
 import { getDisplayProducts } from './storeMerchandising.js';
 
-// Single first-position banner rail for all valid checkout offers, store
-// promotions and area catalog picks. Never list unonboarded sample merchants.
+// Single first-position rail: active merchant offers plus clearly identified
+// visual previews for sample shops (which never accept checkout orders).
 export function buildHomepageBanners(stores, catalog, area, orderCount=0) {
-  const available = getStoresForArea(stores,area)
-    .filter(store => !store.isSample && store.isOpen !== false);
+  const areaStores = getStoresForArea(stores,area);
+  const available = areaStores.filter(store => !store.isSample && store.isOpen !== false);
+  const demoStores = areaStores.filter(store => store.isSample);
   if (!available.length) return [];
 
   const localFresh = available.find(isLocalFreshStore);
@@ -23,6 +24,7 @@ export function buildHomepageBanners(stores, catalog, area, orderCount=0) {
       subtitle:isLocalFreshStore(store)
         ? `${store.name} · Delivery fee shown at checkout`
         : `${store.name} · Free delivery on carts above ₹300`,
+      bannerPhoto:store.gallery?.[0]?.src || store.posterImage || null,
       cta:'Explore store', items, minCart:isLocalFreshStore(store)?null:MIN_PROMO_SUBTOTAL
     };
   };
@@ -49,6 +51,17 @@ export function buildHomepageBanners(stores, catalog, area, orderCount=0) {
       'LOCALFRESH · STORE SPECIAL'));
   }
 
+  for (const store of demoStores) {
+    slides.push({
+      id:`store-${store.id}-preview`,kind:'store',store,
+      title:store.name,tag:'SAMPLE STORE · PREVIEW',
+      tone:'sage',isSample:true,category:store.categories?.[0],
+      subtitle:'Illustrative store preview · Not accepting orders',
+      cta:'View sample store',
+      bannerPhoto:store.gallery?.[0]?.src || store.posterImage || null,
+      minCart:null,items:[]
+    });
+  }
   for (const store of otherStores.slice(0,4)) {
     slides.push(storeSlide(store,store.categories?.[0], 'offer',
       `${store.name} essentials`,`${store.name.toUpperCase()} · STORE OFFER`));

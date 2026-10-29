@@ -23,6 +23,7 @@ import { VALID_COUPONS, MIN_PROMO_SUBTOTAL, evaluateCoupon, getOrderSavings, get
 import { useCustomerOrders, readCustomerOrders, getCustomerKey } from '../context/OrderHistoryContext';
 import FulfilmentPicker from '../components/FulfilmentPicker';
 import CatalogProductVisual from '../components/CatalogProductVisual';
+import AuthModal from '../components/AuthModal';
 import { quoteFulfilment, validateFulfilment } from '../utils/fulfilment';
 
 export default function CartPage({ userLocation }) {
@@ -34,6 +35,7 @@ export default function CartPage({ userLocation }) {
   const store = stores.find((s) => String(s.id).toLowerCase() === String(cart.storeId).toLowerCase());
   const storeServesArea = store && isStoreAvailableInArea(store,userLocation);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [guestAuthOpen,setGuestAuthOpen] = useState(false);
   const placingRef = useRef(false);
   const [checkoutStep,setCheckoutStep] = useState('review');
   const [fulfilment,setFulfilment] = useState({mode:'standard',date:'',slot:''});
@@ -95,6 +97,11 @@ export default function CartPage({ userLocation }) {
   const fulfilmentValidation = validateFulfilment(fulfilment);
 
   const handlePlaceOrder = () => {
+    if(authSession.isTemporary) {
+      setOrderError('Sign in with a customer account to save an order. Guest preview is for browsing only.');
+      setGuestAuthOpen(true);
+      return;
+    }
     if(placingRef.current || orderPlaced || !storeServesArea || store?.isSample) return;
     placingRef.current = true;
     setOrderError(null);
@@ -501,6 +508,13 @@ export default function CartPage({ userLocation }) {
           )}
         </div>
       )}
+      {authSession.isTemporary && (
+        <div className="kp-guest-cart-message" role="status">
+          Guest preview — browse and build your basket. Log in to save a demo order.
+        </div>
+      )}
+      <AuthModal isOpen={guestAuthOpen} initialMode="login"
+        onClose={()=>setGuestAuthOpen(false)} onSuccess={()=>setGuestAuthOpen(false)}/>
       {/* Floating Checkout Button */}
       <div className="cart-checkout-bar">
         <div className="ccb-left">
@@ -518,13 +532,15 @@ export default function CartPage({ userLocation }) {
               setOrderError(null);
               window.scrollTo?.({top:0,behavior:'smooth'});
               document.querySelector('.app-content-area')?.scrollTo?.({top:0,behavior:'smooth'});
-            } else handlePlaceOrder();
+            } else if(authSession.isTemporary) setGuestAuthOpen(true);
+            else handlePlaceOrder();
           }}
           disabled={orderPlaced || !storeServesArea || Boolean(store?.isSample) ||
             (checkoutStep==='fulfilment' && !fulfilmentValidation.valid)}
         >
           <span>{store?.isSample ? 'Sample store — checkout unavailable' :
             checkoutStep==='review' ? 'Continue to order service' :
+            authSession.isTemporary ? 'Sign in to save order' :
             fulfilment.mode==='pickup' ? 'Save pickup request (demo)' :
             fulfilment.mode==='scheduled' ? 'Save delivery request (demo)' :
             'Save demo order'}</span>

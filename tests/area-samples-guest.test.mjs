@@ -1,0 +1,44 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {sampleAreaStores} from '../src/data/sampleAreaStores.js';
+import {getStoresForArea,DELIVERY_AREAS} from '../src/data/deliveryAreas.js';
+import {stores} from '../src/data/stores.js';
+import {getStoreGallery} from '../src/data/storeGallery.js';
+import {SAMPLE_CREDENTIALS} from '../src/utils/security.js';
+test('all fictional storefronts have three lightweight, representative swipe images',()=>{
+  assert.equal(sampleAreaStores.length,19);
+  for(const store of sampleAreaStores){
+    const gallery=getStoreGallery(store);
+    assert.equal(gallery.length,3,store.name);
+    assert.equal(new Set(gallery.map(image=>image.src)).size,3,store.name);
+    assert.ok(gallery.every(image=>image.alt.includes(store.name)),store.name);
+    assert.ok(gallery.every(image=>image.src.includes('w=600')),store.name);
+    assert.equal(store.posterImage,gallery[0].src);
+    assert.equal(store.isSample,true);
+  }
+  for(const area of DELIVERY_AREAS){
+    assert.equal(getStoresForArea(stores,area).length,5);
+  }
+});
+test('example customer is Laxman',()=>{
+  assert.equal(SAMPLE_CREDENTIALS.user.name,'Laxman');
+});
+test('temporary guest session is not a verified customer or an admin',()=>{
+  const security=readFileSync(new URL('../src/context/SecurityContext.jsx',import.meta.url),'utf8');
+  const guestCode=security.slice(security.indexOf('const loginTemporaryCustomer'),
+    security.indexOf('// Customer Login with Rate Limiting'));
+  assert.match(guestCode,/role:'customer'/);
+  assert.match(guestCode,/isTemporary:true/);
+  assert.match(guestCode,/userPhone:null/);
+  assert.match(guestCode,/userName:'Laxman'/);
+  assert.match(guestCode,/30\*60\*1000/);
+  assert.doesNotMatch(guestCode,/localStorage|signupSeller|loginAdmin/);
+  const history=readFileSync(new URL('../src/context/OrderHistoryContext.jsx',import.meta.url),'utf8');
+  assert.match(history,/session\.isTemporary\) return null/);
+  const cart=readFileSync(new URL('../src/pages/CartPage.jsx',import.meta.url),'utf8');
+  assert.match(cart,/if\(authSession\.isTemporary\)/);
+  assert.match(cart,/Sign in to save order/);
+  const location=readFileSync(new URL('../src/pages/LocationPage.jsx',import.meta.url),'utf8');
+  assert.match(location,/loginTemporaryCustomer\(\)/);
+});

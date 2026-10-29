@@ -8,7 +8,7 @@ import { DELIVERY_AREAS, getStoresForArea, isDeliveryArea } from '../data/delive
 
 export default function LocationPage({ onLocationSet, initialLocation = '' }) {
   const navigate = useNavigate();
-  const { authSession } = useSecurity();
+  const { authSession, loginTemporaryCustomer } = useSecurity();
   const { stores } = useStore();
   const isCustomer = authSession.isAuthenticated && authSession.role === 'customer';
   const [showLogin,setShowLogin] = useState(false);
@@ -49,7 +49,11 @@ export default function LocationPage({ onLocationSet, initialLocation = '' }) {
             <button type="button" className="kp-welcome-login" onClick={() => setShowLogin(true)}>
               <span>Log in to continue</span><ArrowRight size={20} aria-hidden="true" />
             </button>
-            <span className="kp-welcome-note">Local shopping, made simple.</span>
+            <button type="button" className="kp-welcome-guest"
+              onClick={() => loginTemporaryCustomer()}>
+              Explore as guest <ArrowRight size={17} aria-hidden="true"/>
+            </button>
+            <span className="kp-welcome-note">Guest preview expires in 30 minutes. Browsing only; sign in to place an order.</span>
           </div>
         </main>
         <AuthModal isOpen={showLogin} initialMode="login"
@@ -73,7 +77,7 @@ export default function LocationPage({ onLocationSet, initialLocation = '' }) {
         <div className="kp-zone-intro">
           <span className="kp-zone-overline"><MapPin size={15} /> VISAKHAPATNAM DELIVERY</span>
           <h1 id="kp-zone-heading">Select your area</h1>
-          <p>We currently serve five areas. LocalFresh is available in every area.</p>
+          <p>Browse four neighborhood stores plus LocalFresh in each area. Sample stores are previews.</p>
         </div>
         <form onSubmit={selectArea}>
           <div className="kp-zone-choices" role="group" aria-label="Available delivery areas">

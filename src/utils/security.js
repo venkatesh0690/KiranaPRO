@@ -10,7 +10,7 @@ export const SAMPLE_CREDENTIALS = {
     role: 'Customer (User)',
     phone: '9848022334',
     pin: '1234',
-    name: 'Venkatesh Rao',
+    name: 'Laxman',
     address: 'Flat 402, Sai Residency, Maddilapalem, Vizag'
   },
   seller: {

@@ -4,6 +4,7 @@ import { getDisplayProducts, getOrderHighlights } from '../utils/storeMerchandis
 import CatalogProductVisual from './CatalogProductVisual';
 import { buildHomepageBanners } from '../utils/homepageBanners';
 import { isLocalFreshStore } from '../data/deliveryAreas';
+import { getStoreGallery } from '../data/storeGallery';
 import { navigateWithStoreTransition } from '../utils/storeTransition';
 
 function ProductArt({ items }) {
@@ -23,16 +24,29 @@ export function StoreOffersCarousel({ store, catalog, orders, onOpenCategory, on
   const highlights = useMemo(() => getOrderHighlights(store,catalog,orders,3),[store,catalog,orders]);
   const featured = highlights.items.length ? highlights.items : heroProducts.slice(0,3);
   const firstCategory = store.categories?.[0];
+  const gallery=getStoreGallery(store).slice(0,3);
+  const isSample=Boolean(store.isSample);
 
   // No unimplemented discount claims. Base delivery applies up to ₹300.
   const slides = [
+    ...gallery.map((photo,index)=>({
+      id:`photo-${index}`,kind:'store',bannerPhoto:photo.src,
+      tag:isSample?'SAMPLE SHOP · PHOTO PREVIEW':`STORE PHOTO ${index+1} / ${gallery.length}`,
+      title:isSample?store.name:`Explore ${store.name}`,
+      subtitle:isSample?'Illustrative image — store not registered yet'
+        : 'Representative store photography, not a verified shop photo',
+      cta:isSample?'Preview catalog':'Shop products',
+      category:firstCategory,tone:index%2?'sand':'sage',isSample
+    })),
     {
-      id:'store',tag:'FROM YOUR STORE',title:store.isAdminManaged ? 'Fresh mandi essentials' : `Shop ${store.name}`,
-      subtitle:isLocalFreshStore(store) ? 'Delivery fee shown at checkout' : 'Free delivery on carts above ₹300',
+      id:'store',tag:isSample?'SAMPLE SHOP · PREVIEW':'FROM YOUR STORE',title:store.isAdminManaged ? 'Fresh mandi essentials' : `Shop ${store.name}`,
+      subtitle:isSample?'Sample storefront — orders unavailable' :
+        isLocalFreshStore(store) ? 'Delivery fee shown at checkout' : 'Free delivery on carts above ₹300',
       cta:'Shop now',items:heroProducts.slice(0,3),category:firstCategory,tone:'sand'
     },
     {
-      id:'popular',tag:highlights.basedOnOrders ? 'BASED ON AVAILABLE ORDERS' : 'CATALOG PICKS',
+      id:'popular',tag:isSample?'SAMPLE CATALOG · PREVIEW' :
+        highlights.basedOnOrders ? 'BASED ON AVAILABLE ORDERS' : 'CATALOG PICKS',
       title:highlights.label,subtitle:featured.map(p=>p.name).slice(0,2).join(' · '),
       cta:'Explore products',items:featured,category:featured[0]?.category || firstCategory,tone:'sage'
     }

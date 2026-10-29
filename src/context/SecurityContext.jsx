@@ -134,6 +134,26 @@ export const SecurityProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, [authSession, logSecurityEvent]);
 
+  // Temporary preview: browsing only, no verified identity, order history,
+  // seller/admin privileges or persistent customer account.
+  const loginTemporaryCustomer = useCallback(() => {
+    const session={
+      isAuthenticated:true,
+      isTemporary:true,
+      role:'customer',
+      storeId:null,
+      userName:'Laxman',
+      userPhone:null,
+      token:generateSecureToken(),
+      loginTime:new Date().toLocaleTimeString(),
+      expiresAt:Date.now()+30*60*1000
+    };
+    setAuthSession(session);
+    logSecurityEvent('TEMPORARY_PREVIEW_STARTED',
+      'Temporary customer preview opened; no verified account or checkout permission','info');
+    return {success:true,user:session};
+  },[logSecurityEvent]);
+
   // Customer Login with Rate Limiting & 4-Digit PIN
   const loginCustomer = useCallback((phone, pin) => {
     const cleanPhone = String(phone || '').replace(/\D/g, '');
@@ -483,6 +503,7 @@ export const SecurityProvider = ({ children }) => {
       value={{
         authSession,
         loginCustomer,
+        loginTemporaryCustomer,
         signupCustomer,
         loginSeller,
         signupSeller,

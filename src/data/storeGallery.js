@@ -135,6 +135,7 @@ const fallback = {
 };
 export function getStoreGallery(store) {
   const key=String(store?.id??'').toLowerCase();
+  if(Array.isArray(store?.gallery) && store.gallery.length) return store.gallery;
   if(galleries[key]) return galleries[key];
   return typeof store?.posterImage==='string' && /^https:\/\//.test(store.posterImage)
     ? [{src:store.posterImage,alt:'Store-provided photo'}] : [];

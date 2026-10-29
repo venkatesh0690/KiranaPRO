@@ -38,6 +38,7 @@ import './styles/neighborhood-highlights.css';
 import './styles/unified-banner.css';
 import './styles/order-rewards.css';
 import './styles/fulfilment-checkout.css';
+import './styles/sample-stores-guest.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();

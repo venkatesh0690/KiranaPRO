@@ -80,10 +80,24 @@ for(const area of DELIVERY_AREAS){
       assert.match(generic[0].subtitle,/Excludes LocalFresh/);
     }
     assert.ok(slide.some(s=>s.kind==='automatic' && s.minCart===501));
+    const sampleCards=nearby.filter(s=>s.isSample);
+    assert.equal(slide.filter(s=>s.kind==='store' && s.isSample).length,sampleCards.length);
+    for (const sample of sampleCards) {
+      assert.ok(slide.some(s=>s.kind==='store' && String(s.store?.id)===String(sample.id)));
+    }
     assert.equal(slide.filter(s=>s.kind==='coupon').length,3);
     for (const item of slide){
       if(item.kind==='store'){
-        assert.ok(orderable.has(String(item.store.id)));
+        if (item.store.isSample) {
+          assert.ok(nearby.some(s=>String(s.id)===String(item.store.id)));
+          assert.equal(item.isSample,true);
+          assert.equal(item.minCart,null);
+          assert.match(item.tag,/SAMPLE/);
+          assert.doesNotMatch(item.subtitle,/free delivery/i);
+          assert.ok(item.bannerPhoto?.startsWith('https://'));
+        } else {
+          assert.ok(orderable.has(String(item.store.id)));
+        }
         if(String(item.store.id)==='localfresh'){
           assert.doesNotMatch(item.subtitle,/Free delivery/i);
           assert.equal(item.minCart,null);

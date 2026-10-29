@@ -8,7 +8,7 @@ const KEY_PREFIX='kp_customer_history_v1:';
 const OrderHistoryContext=createContext(null);
 
 export function getCustomerKey(session) {
-  if(!session?.isAuthenticated || session.role!=='customer') return null;
+  if(!session?.isAuthenticated || session.role!=='customer' || session.isTemporary) return null;
   const phone=String(session.userPhone||'').replace(/\D/g,'');
   return phone.length>=10 ? phone.slice(-10) : null;
 }

@@ -21,6 +21,16 @@ for(const area of DELIVERY_AREAS) {
     assert.equal(visible.filter(s=>String(s.id)!=='localfresh').length,4);
     assert.equal(visible.filter(s=>s.isSample||s.id===2).length,4);
     assert.equal(new Set(visible.map(s=>String(s.id))).size,5);
+    const shops=visible.filter(s=>String(s.id)!=='localfresh');
+    assert.equal(new Set(shops.map(s=>s.name)).size,4);
+    for(const store of shops.filter(s=>s.isSample)){
+      assert.ok(!/Daily Groceries|Fresh & Pantry|Snack Corner|Home Essentials/.test(store.name),
+        'Generic old store name found: '+store.name);
+      assert.ok(Array.isArray(store.gallery)&&store.gallery.length>=3);
+      assert.equal(new Set(store.gallery.map(x=>x.src)).size,3);
+      assert.ok(store.gallery.every(x=>x.src.includes('w=600') && x.alt.includes(store.name)));
+      assert.ok(store.isSample);
+    }
   });
 }
 
@@ -62,4 +72,11 @@ test('the non-LocalFresh free-delivery rule is not confused with pickup', async 
   assert.equal(qualifiesForFreeDelivery(localFresh,999),false);
   assert.equal(qualifiesForFreeDelivery(otherStore,300),false);
   assert.equal(qualifiesForFreeDelivery(otherStore,301),true);
+});
+
+test('unique neighborhood names across all five areas',()=>{
+  const names=DELIVERY_AREAS.flatMap(area=>getStoresForArea(stores,area)
+    .filter(store=>String(store.id)!=='localfresh').map(store=>store.name));
+  assert.equal(names.length,20);
+  assert.equal(new Set(names).size,20);
 });
