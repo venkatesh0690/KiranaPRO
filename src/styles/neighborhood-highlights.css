@@ -1,0 +1,75 @@
+/* KiranaPRO: additional swipeable offers and local catalog discovery.
+   Kept separate from Version B so layout changes are easy to maintain. */
+.kp-concept .kp-area-section {margin:0 0 36px; min-width:0;}
+.kp-concept .kp-area-section-head {display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 13px;}
+.kp-concept .kp-area-section-head h2 {margin:0;color:#2a4232;font-size:clamp(22px,2.5vw,31px);line-height:1.08;font-weight:690;letter-spacing:-.045em;}
+.kp-concept .kp-area-section-head p {margin:7px 0 0;font-size:12px;line-height:1.45;color:#7d887c;}
+.kp-concept .kp-area-head-icon {display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border:1px solid #dfebdb;border-radius:50%;background:#edf1e8;color:#547055;}
+.kp-area-rail {min-width:0;}
+.kp-area-rail-actions {display:flex;align-items:center;justify-content:flex-end;gap:7px;margin:0 0 10px;}
+.kp-area-rail-actions span {margin-right:7px;font-variant-numeric:tabular-nums;font-size:11px;color:#89958b;font-weight:700;}
+.kp-area-rail-actions button {border:1px solid #dde6db;border-radius:50%;width:29px;height:29px;background:#fff;color:#34543c;display:grid;place-items:center;}
+.kp-area-rail-actions button:hover {background:#eaf2e8;}
+.kp-area-rail-actions button:disabled {opacity:.4;cursor:not-allowed;}
+.kp-area-rail-track {display:flex;gap:13px;min-width:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scroll-behavior:smooth;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 1px 8px;touch-action:pan-x pan-y;}
+.kp-area-rail-track::-webkit-scrollbar {display:none;}
+.kp-area-rail-track:focus-visible {outline:2px solid #42784d;outline-offset:2px;border-radius:11px;}
+.kp-area-rail-item {flex:0 0 auto;scroll-snap-align:start;min-width:0;}
+.kp-area-offer-rail .kp-area-rail-item {width:min(77%,420px);}
+.kp-area-offer-card {height:214px;display:flex;position:relative;overflow:hidden;border:1px solid rgba(35,70,40,.08);border-radius:16px;}
+.kp-area-offer-leaf {background:#e4efd9;}
+.kp-area-offer-peach {background:#f3e4d9;}
+.kp-area-offer-blue {background:#e1e9ee;}
+.kp-area-offer-cream {background:#f2ecd9;}
+.kp-area-offer-content {z-index:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;flex:1;min-width:0;padding:20px 8px 16px 20px;}
+.kp-area-offer-kicker {font-size:9px;font-weight:800;letter-spacing:.11em;color:#607860;}
+.kp-area-offer-content h3 {margin:9px 0 5px;color:#253e2b;font-size:clamp(24px,2.7vw,35px);font-weight:780;line-height:1;letter-spacing:-.057em;}
+.kp-area-offer-content p {margin:0;color:#5c6e5c;font-size:12px;line-height:1.45;max-width:200px;}
+.kp-area-offer-bottom {display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:auto;}
+.kp-area-code {border:1px dashed #819d7e;padding:4px 7px;border-radius:6px;font-size:10px;color:#325f3b;font-weight:800;letter-spacing:.015em;}
+.kp-area-offer-bottom button {display:flex;gap:6px;align-items:center;font-size:11px;color:#fff;background:#273f2e;border-radius:8px;min-height:31px;padding:0 11px;font-weight:700;}
+.kp-area-offer-bottom button:hover {background:#376346;}
+.kp-area-offer-graphic {align-self:center;display:flex;flex:0 0 37%;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-width:0;height:100%;padding:15px 8px 15px 0;transform:rotate(-6deg);}
+.kp-area-offer-graphic span {display:grid;place-items:center;width:min(113px,100%);height:106px;border-radius:27px;background:rgba(255,255,255,.65);box-shadow:0 9px 18px rgba(29,58,32,.08);font-size:58px;}
+.kp-area-offer-graphic strong {font-size:13px;font-weight:800;text-align:center;color:#355340;letter-spacing:-.03em;}
+.kp-area-rail-dots {display:flex;justify-content:center;gap:7px;align-items:center;min-height:15px;margin-top:3px;}
+.kp-area-rail-dots button {height:6px;width:6px;background:#becfba;border-radius:99px;transition:width .2s ease,background .2s ease;}
+.kp-area-rail-dots button.active {width:20px;background:#336b44;}
+.kp-area-picks-rail .kp-area-rail-track {gap:12px;}
+.kp-area-picks-rail .kp-area-rail-item {width:clamp(165px,21vw,212px);}
+.kp-area-pick-card {width:100%;min-height:295px;display:flex;flex-direction:column;align-items:stretch;text-align:left;border:1px solid #e2e8dc;border-radius:15px;background:#fff;padding:9px;box-shadow:0 1px 2px rgba(30,54,32,.02);color:#354839;transition:border-color .17s ease,transform .17s ease;}
+.kp-area-pick-card:hover {border-color:#afc5ae;transform:translateY(-2px);}
+.kp-area-pick-photo {display:block;position:relative;height:134px;overflow:hidden;background:#eef3e8;border-radius:9px;margin:0 0 10px;}
+.kp-area-pick-photo .kp-catalog-product-visual {min-height:0;width:100%;height:100%;}
+.kp-area-pick-photo .kp-catalog-emoji {font-size:55px;}
+.kp-area-pick-photo .kp-catalog-visual-caption {font-size:9px;}
+.kp-area-pick-arrow {position:absolute;display:grid;place-items:center;right:7px;top:7px;border-radius:50%;width:26px;height:26px;background:rgba(255,255,255,.86);color:#365340;}
+.kp-area-pick-category {display:block;color:#628067;font-size:9px;letter-spacing:.07em;text-transform:uppercase;font-weight:800;padding:0 3px;}
+.kp-area-pick-card>strong {display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:12px;line-height:1.32;font-weight:730;letter-spacing:-.02em;min-height:32px;margin:6px 3px 2px;}
+.kp-area-pick-unit {font-size:10px;color:#8b958b;margin:0 3px 4px;}
+.kp-area-pick-bottom {display:flex;align-items:baseline;gap:7px;margin:auto 3px 0;}
+.kp-area-pick-bottom b {font-size:15px;font-weight:800;color:#263b2b;}
+.kp-area-pick-bottom del {font-size:10px;color:#9ba89b;}
+.kp-area-pick-store {display:block;margin:6px 3px 2px;padding-top:6px;border-top:1px solid #eef2ea;font-size:10px;color:#6b7d6e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.kp-area-disclaimer {font-size:10px;color:#8a9688;line-height:1.5;margin:8px 0 0;}
+@media(max-width:720px){
+ .kp-concept .kp-area-section {margin-bottom:28px;}
+ .kp-concept .kp-area-section-head h2 {font-size:23px;}
+ .kp-concept .kp-area-section-head p {font-size:11px;}
+ .kp-area-rail-actions {margin-bottom:8px;}
+ .kp-area-offer-rail .kp-area-rail-item {width:min(88%,350px);}
+ .kp-area-offer-card {height:196px;border-radius:14px;}
+ .kp-area-offer-content {padding:17px 6px 13px 16px;}
+ .kp-area-offer-content h3 {font-size:27px;}
+ .kp-area-offer-content p {font-size:11px;}
+ .kp-area-offer-graphic span {height:88px;width:88px;font-size:47px;border-radius:21px;}
+ .kp-area-offer-graphic strong {font-size:11px;}
+ .kp-area-picks-rail .kp-area-rail-item {width:162px;}
+ .kp-area-pick-card {min-height:286px;}
+ .kp-area-pick-photo {height:126px;}
+}
+@media(prefers-reduced-motion:reduce){
+ .kp-area-rail-track {scroll-behavior:auto;}
+ .kp-area-rail-dots button,.kp-area-pick-card {transition:none;}
+ .kp-area-pick-card:hover {transform:none;}
+}

@@ -33,6 +33,7 @@ import './styles/concept-experiment.css';
 import './styles/concept-category-refinement.css';
 import './styles/store-photos.css';
 import './styles/delivery-areas.css';
+import './styles/neighborhood-highlights.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();

@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run test:areas && vite build",
+    "build": "npm run test:areas && npm run test:highlights && vite build",
     "mobile:build": "vite build && npx cap sync android",
     "mobile:sync": "npx cap sync android",
     "mobile:open": "npx cap open android",
     "db:migrate": "node scripts/neon_migrate_and_seed.js",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test:areas": "node --test tests/delivery-areas.test.mjs"
+    "test:areas": "node --test tests/delivery-areas.test.mjs",
+    "test:highlights": "node --test tests/neighborhood-highlights.test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",

@@ -46,6 +46,16 @@ export default function StorePage({ userLocation }) {
   const [showStoreInfo, setShowStoreInfo] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  // Open a specific area highlight product when its card is tapped on Home.
+  useEffect(() => {
+    const requestedId = location.state?.productId;
+    const category = location.state?.category;
+    if (!requestedId || !store?.categories?.includes(category)) return;
+    const requestedProduct = (productsByCategory[category] || [])
+      .find(product => String(product.id) === String(requestedId) && product.inStock !== false);
+    if (requestedProduct) setSelectedProduct(requestedProduct);
+  }, [store, productsByCategory, location.state]);
+
   const sectionRefs = useRef({});
   const productsScrollRef = useRef(null);
   const isUserScrollingRef = useRef(false);

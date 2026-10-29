@@ -19,6 +19,7 @@ import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
 import { useStore } from '../context/StoreContext';
 import { FREE_DELIVERY_THRESHOLD, getDeliveryFee, isStoreAvailableInArea } from '../data/deliveryAreas';
+import { VALID_COUPONS } from '../data/checkoutOffers';
 
 export default function CartPage({ userLocation }) {
   const { cart, addItem, removeItem, clearCart, totalItems, totalPrice } = useCart();
@@ -35,12 +36,6 @@ export default function CartPage({ userLocation }) {
   const [couponStatus, setCouponStatus] = useState(null); // { type: 'success' | 'error', message: '' }
 
   // Available Valid Coupons
-  const VALID_COUPONS = {
-    'TASTY12': { type: 'flat', value: 30, min: 99, desc: 'Flat ₹30 off on orders ₹99+' },
-    'KIRANA50': { type: 'flat', value: 50, min: 199, desc: 'Flat ₹50 off on orders ₹199+' },
-    'WELCOME': { type: 'percent', percent: 15, max: 60, min: 120, desc: '15% discount on cart' },
-    'FREEDEL': { type: 'freedel', min: 0, desc: 'Free Delivery on current order' }
-  };
 
   const handleApplyCoupon = (codeToApply) => {
     const code = (codeToApply || couponCode).trim().toUpperCase();

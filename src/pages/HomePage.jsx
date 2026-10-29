@@ -11,6 +11,7 @@ import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
 import StoreCard from '../components/StoreCard';
 import { HomeOffersCarousel } from '../components/StoreOffersCarousel';
+import { NeighborhoodOffers, NeighborhoodPicks } from '../components/NeighborhoodHighlights';
 import CategoriesModal from '../components/CategoriesModal';
 import AuthModal from '../components/AuthModal';
 
@@ -104,10 +105,12 @@ export default function HomePage({ userLocation }) {
         <HomeOffersCarousel stores={areaStores.filter(store => !store.isSample)} catalog={products} navigate={navigate} />
       </section>
 
+      <NeighborhoodOffers area={userLocation} navigate={navigate} totalItems={totalItems} />
+
       <section className="kp-concept-categories kp-concept-compact-categories" aria-labelledby="kp-concept-categories-title">
         <div className="kp-concept-section-heading">
           <div className="kp-concept-heading-copy">
-            <span className="kp-concept-index">02 / EXPLORE</span>
+            <span className="kp-concept-index">03 / EXPLORE</span>
             <h2 id="kp-concept-categories-title">Shop by category</h2>
           </div>
           <button className="kp-concept-link" type="button" onClick={() => setCategoriesOpen(true)}>
@@ -130,10 +133,17 @@ export default function HomePage({ userLocation }) {
         </div>
       </section>
 
+      <NeighborhoodPicks
+        area={userLocation}
+        stores={areaStores}
+        catalog={products}
+        navigate={navigate}
+      />
+
       <section className="kp-concept-stores" aria-labelledby="kp-concept-stores-title">
         <div className="kp-concept-section-heading kp-concept-stores-heading">
           <div className="kp-concept-heading-copy">
-            <span className="kp-concept-index">03 / YOUR MARKETPLACE</span>
+            <span className="kp-concept-index">05 / YOUR MARKETPLACE</span>
             <h2 id="kp-concept-stores-title">Stores in {userLocation}</h2>
           </div>
           <span className="kp-concept-count">{filteredStores.length} stores</span>
