@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight, ArrowUpRight, ChevronDown, MapPin, Search, ShoppingBag, UserRound,
-  SlidersHorizontal, Sparkles, Store as StoreIcon, ChevronRight, LayoutGrid
+  SlidersHorizontal
 } from 'lucide-react';
 import { allCategories } from '../data/stores';
-import { getFeaturedCategories, getQuickCategories } from '../data/homeDiscovery.js';
 import { getStoresForArea, FREE_DELIVERY_THRESHOLD } from '../data/deliveryAreas';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
@@ -31,11 +30,8 @@ export default function HomePage({ userLocation }) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [authMode, setAuthMode] = useState(null);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
-  const [showAllStores, setShowAllStores] = useState(false);
 
   const areaStores = getStoresForArea(stores,userLocation);
-  const featuredCategories = getFeaturedCategories(areaStores,products);
-  const quickCategories=getQuickCategories(areaStores,allCategories);
   const filteredStores = areaStores.filter(store => {
     if (activeFilter === 'fast') return /15|20|30/.test(store.deliveryTime || '');
     if (activeFilter === 'rated') return Number(store.rating) >= 4.7;
@@ -110,7 +106,7 @@ export default function HomePage({ userLocation }) {
           </button>
         </div>
         <div className="kp-concept-mini-category-list" aria-label="Swipe through shopping categories" tabIndex={0}>
-          {quickCategories.map(category => (
+          {allCategories.slice(0, 10).map(category => (
             <button
               key={category.id}
               className="kp-concept-mini-category-card"
@@ -122,11 +118,6 @@ export default function HomePage({ userLocation }) {
               <span className="kp-concept-mini-category-name">{category.name}</span>
             </button>
           ))}
-          <button type="button" className="kp-concept-mini-category-card kp-category-more"
-            onClick={()=>setCategoriesOpen(true)} aria-label="See all categories">
-            <span className="kp-concept-mini-category-art"><LayoutGrid size={24} aria-hidden="true"/></span>
-            <span className="kp-concept-mini-category-name">More</span>
-          </button>
         </div>
       </section>
 
@@ -135,48 +126,13 @@ export default function HomePage({ userLocation }) {
           navigate={navigate} area={userLocation} totalItems={totalItems} orderCount={orderCount} />
       </section>
 
-      <section className="kp-home-featured-categories" aria-labelledby="kp-featured-heading">
-        <div className="kp-home-reference-heading">
-          <div className="kp-home-heading-icon"><Sparkles size={20} aria-hidden="true" /></div>
-          <div className="kp-home-reference-heading-text">
-            <h2 id="kp-featured-heading">Featured categories</h2>
-            <p>Everyday essentials at your fingertips</p>
+      <section className="kp-concept-stores" aria-labelledby="kp-concept-stores-title">
+        <div className="kp-concept-section-heading kp-concept-stores-heading">
+          <div className="kp-concept-heading-copy">
+            <span className="kp-concept-index">02 / YOUR MARKETPLACE</span>
+            <h2 id="kp-concept-stores-title">Stores in {userLocation}</h2>
           </div>
-          <button type="button" className="kp-home-see-all" onClick={()=>setCategoriesOpen(true)}>
-            See all <ChevronRight size={15} aria-hidden="true"/>
-          </button>
-        </div>
-        <div className="kp-featured-category-rail" aria-label="Featured categories" tabIndex={0}>
-          {featuredCategories.map(category=>(
-            <button type="button" className="kp-featured-category-tile"
-              key={category.id} aria-label={`Browse ${category.name}`}
-              onClick={()=>openCategory(category.name)}>
-              <div className="kp-featured-category-photo">
-                <img src={category.image} alt={`Representative photograph of ${category.name}`}
-                  loading="lazy" decoding="async" width="480" height="300"/>
-              </div>
-              <div className="kp-featured-category-meta">
-                <strong>{category.name}</strong>
-                <span>{category.count} {category.isSampleOnly?'preview items':'items'}</span>
-                <span className="kp-featured-category-arrow"><ArrowRight size={14} aria-hidden="true"/></span>
-              </div>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className={`kp-concept-stores kp-nearby-stores ${showAllStores?'is-expanded':''}`}
-        aria-labelledby="kp-concept-stores-title">
-        <div className="kp-home-reference-heading kp-concept-stores-heading">
-          <div className="kp-home-heading-icon"><StoreIcon size={20} aria-hidden="true"/></div>
-          <div className="kp-home-reference-heading-text">
-            <h2 id="kp-concept-stores-title">Stores near you</h2>
-            <p>{areaStores.length} nearby listings · {userLocation}</p>
-          </div>
-          <button type="button" className="kp-home-see-all"
-            onClick={()=>{setShowAllStores(current=>!current);setActiveFilter('all');}}>
-            {showAllStores?'Show less':'View all'} <ChevronRight size={15} aria-hidden="true"/>
-          </button>
+          <span className="kp-concept-count">{filteredStores.length} stores</span>
         </div>
         <div className="kp-concept-filters" role="group" aria-label="Filter local stores">
           <SlidersHorizontal size={17} aria-hidden="true" />

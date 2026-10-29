@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run test:areas && npm run test:highlights && npm run test:app && npm run test:fulfilment && npm run test:catalog && npm run test:photos && npm run test:sample-stores && npm run test:editorial && npm run test:home-layout && vite build",
+    "build": "npm run test:areas && npm run test:highlights && npm run test:app && npm run test:fulfilment && npm run test:catalog && npm run test:photos && npm run test:sample-stores && npm run test:editorial && vite build",
     "mobile:build": "vite build && npx cap sync android",
     "mobile:sync": "npx cap sync android",
     "mobile:open": "npx cap open android",
@@ -19,8 +19,7 @@
     "test:catalog": "node --test tests/catalog-visuals.test.mjs",
     "test:photos": "node --test tests/photo-search.test.mjs",
     "test:sample-stores": "node --test tests/area-samples-guest.test.mjs",
-    "test:editorial": "node --test tests/editorial-banners.test.mjs",
-    "test:home-layout": "node --test tests/home-layout.test.mjs"
+    "test:editorial": "node --test tests/editorial-banners.test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",
