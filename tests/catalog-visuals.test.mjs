@@ -42,7 +42,8 @@ test('do not show a raw commodity photograph as the product packaging',()=>{
   }
 });
 test('specific fresh produce photographs are not misleading generic product shots',()=>{
-  for (const name of ['Ash Gourd','Potols','Lady Finger / Bhindi','Bottle Gourd','Beerakaya','Ivy gourd','Coriander','Chana dal','Guava','Avocado','Pomegranate','Red Dragon Fruit','Cluster Beans','Drumsticks']) {
+  for (const name of ['Ash Gourd','Potols','Lady Finger / Bhindi','Bottle Gourd','Beerakaya','Ivy gourd','Coriander','Chana dal','Guava','Avocado','Pomegranate','Red Dragon Fruit','Cluster Beans','Drumsticks',
+  'Zucchini','Ginger','Sweet Potato','Cucumber','Cauliflower','Mushrooms 200 gms Pack','Beetroot']) {
     const visual=getCatalogVisual({name,category:'Vegetables'});
     assert.ok(visual.photo,`No verified photo for ${name}`);
     assert.ok(visual.photo.includes('wikimedia.org'));

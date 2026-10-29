@@ -11,7 +11,13 @@ const commons = (file,w) => "https://commons.wikimedia.org/wiki/Special:FilePath
 const unsplash = (id,w,q) => "https://images.unsplash.com/"+id+"?auto=format&fit=crop&w="+w+"&q="+q+"&fm=webp";
 const COMMONS_DATA=[["^ash gourd$","India Ash Gourd.jpg"],["^(potols?|pointed gourd|parval)$","Pointed gourds at a market.jpg"],["^(lady finger(?:\\s*/\\s*bhindi)?|bhindi|okra)$","Lady fingers at Gara market, Srikakulam.jpg"],["^(beerakaya|ridge gourd)$","Beerakaayalu.JPG"],["^bottle gourd$","Bottle gourd in andhra farm.jpg"],["^ivy gourd$","Ivy gourd.jpg"],["^bitter gourd$","Bitter gourd at Hyderabad market.jpg"],["^cluster beans?$","Cluster bean.jpg"],["^white radish(?: 3 piece)?$","White Radish.jpg"],["^drumsticks$","Munaga kaayalu.JPG"],["^yam$","Local variety of Yam at Anandapuram 02.jpg"],["^coriander$","Coriander Leaves.jpg"],["^curry leaves$","Fresh curry leaves.jpg"],["^chana dal$","Chana Dal (split Bengal gram).JPG"],["^rajma beans$","Chitra Rajma.jpg"],["^sesame seeds$","Sesame-Seeds.jpg"],["^guava$","Guava Slices.jpg"],["^avocado$","Avocado fruit.jpg"],
 ["^pomegranate$","Pomegranate fruit - whole and piece with arils.jpg"],
-["^red dragon fruit$","Dragon Fruit Sliced.jpg"],["^(carrot|gaajar carrot|crunchy orange ooty carrots)$","Carrots ooty.JPG"],["^(bajji mirchi|green chilli|spicy andhra green chillies)$","Green-chillies.jpg"],["^(black brinjal|black eggplant|brinjal\\(long\\)|brinjal \\(long-white\\)|white brinjal)$","Brinjal of Tamilnadu.jpg"],["^garlic$","Garlic of Chinna Salem.jpg"],["^(french beans|beans\\(pencil\\)|barabati|barbati)$","Beans for sale.JPG"]];
+["^red dragon fruit$","Dragon Fruit Sliced.jpg"],["^zucchini$","Green zucchini.jpg"],
+["^ginger$","Fresh ginger rhizome 01.jpg"],
+["^sweet potato$","Sweet potato image.jpg"],
+["^cucumber$","Green Cucumbers 1.jpg"],
+["^cauliflower(?:\\(with leaves\\))?$","Liat Portal for Foodie Disorder - Cauliflower from SF farmers' market.jpg"],
+["^mushrooms 200 gms pack$","Mushrooms in a cardboard box.jpg"],
+["^beetroot$","Beetroots and carrots.jpg"],["^(carrot|gaajar carrot|crunchy orange ooty carrots)$","Carrots ooty.JPG"],["^(bajji mirchi|green chilli|spicy andhra green chillies)$","Green-chillies.jpg"],["^(black brinjal|black eggplant|brinjal\\(long\\)|brinjal \\(long-white\\)|white brinjal)$","Brinjal of Tamilnadu.jpg"],["^garlic$","Garlic of Chinna Salem.jpg"],["^(french beans|beans\\(pencil\\)|barabati|barbati)$","Beans for sale.JPG"]];
 const UNSPLASH_DATA=[["^(tomato(?:\\(small\\))?|hybrid juicy red tomatoes)$","photo-1546470427-0d4db154ceb7"],["^(potato|jyoti smooth skin potatoes)$","photo-1518977676601-b53f82aba655"],["^(onion|fresh red onions(?: \\(medium size\\))?)$","photo-1618512496248-a07fe83aa8cb"],["^cabbage$","photo-1598030304671-5aa1d6f21128"],["^sweet corn$","photo-1551754655-cd27e38d2076"],["^lemon$","photo-1587496679742-bad502958fbf"],["^(apple|apple royal gala)$","photo-1560806887-1e4cd0b6cbd6"],["^water\\s?melon$","photo-1587049352846-4a222e784d38"],["^(banana|robusta sweet bananas)$","photo-1571771894821-ce9b6c11b08e"],["^(mosambi|baby oranges|pulpy orange)$","photo-1582979512210-99b6a53386f9"],["^spinach dock$","photo-1576045057995-568f588f82fbf"],["^fresh farm eggs(?: \\(golden yolk\\))?$","photo-1506976785307-8732e854ad03"]];
 const commonsRules=COMMONS_DATA.map(([pattern,file])=>[new RegExp(pattern,"i"),{kind:"commons",file}]);
 const unsplashRules=UNSPLASH_DATA.map(([pattern,id])=>[new RegExp(pattern,"i"),{kind:"unsplash",id}]);
@@ -114,7 +120,8 @@ export function getCatalogVisual(product) {
   const merchant=product?.verifiedImageUrl;
   const exactPhoto=typeof merchant==="string" && /^https:\/\//.test(merchant)
     && typeof product.imageSourceUrl==="string" && /^https:\/\//.test(product.imageSourceUrl);
-  const allowed=!blockedBranded.test(name) && !blockedProcessed.test(name);
+  const allowed=!blockedBranded.test(name) &&
+    (!blockedProcessed.test(name) || /^mushrooms 200 gms pack$/i.test(name));
   const item=allowed?knownPhotos.find(([pattern])=>pattern.test(name))?.[1]:null;
   const photo=exactPhoto ? merchant : item ? thumbSource(item,160) : null;
   const highRes=item && !exactPhoto ? thumbSource(item,320) : null;

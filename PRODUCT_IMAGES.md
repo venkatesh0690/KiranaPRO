@@ -86,3 +86,5 @@ a previous inconsistency where a missing hero photo could create a blank card.
 Merchant-supplied exact packaging images can be used only with
 `verifiedImageUrl` and `imageSourceUrl` fields, after authenticity and
 rights are checked. Legacy generic `image` fields are deliberately ignored.
+
+Additional directly identified thumbnail examples (photos remain representative and linked to author/license at Wikimedia Commons): [Green zucchini](https://commons.wikimedia.org/wiki/File:Green_zucchini.jpg), [fresh ginger rhizome](https://commons.wikimedia.org/wiki/File:Fresh_ginger_rhizome_01.jpg), [sweet potato](https://commons.wikimedia.org/wiki/File:Sweet_potato_image.jpg), [green cucumbers](https://commons.wikimedia.org/wiki/File:Green_Cucumbers_1.jpg), [whole cauliflower](https://commons.wikimedia.org/wiki/File:Liat_Portal_for_Foodie_Disorder_-_Cauliflower_from_SF_farmers%27_market.jpg), [mushrooms at a grocery store](https://commons.wikimedia.org/wiki/File:Mushrooms_in_a_cardboard_box.jpg), and [beetroots with carrots](https://commons.wikimedia.org/wiki/File:Beetroots_and_carrots.jpg).
