@@ -1,0 +1,54 @@
+/* 2026 compact editorial refresh. Search now broad, but offers stay in the first viewport. */
+.kp-home .kp-home-search {
+  margin: 13px 0 18px;
+  padding: 0;
+  display: flex;
+  width: 100%;
+}
+.kp-home .kp-home-search .kp-search-compact {
+  width: min(100%, 660px);
+  max-width: none;
+  min-width: 0;
+  min-height: 50px;
+  height: 50px;
+  margin: 0;
+  padding: 0 17px;
+  font-size: 13px;
+  gap: 13px;
+  background: #fff;
+  border: 1px solid #e3e7e1;
+  border-radius: 13px;
+  box-shadow: none;
+}
+.kp-home .kp-home-search .kp-search-compact span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kp-home .kp-home-search .kp-search-compact svg { flex-shrink: 0; }
+.kp-home .kp-home-search .kp-search-compact:hover { border-color:#9ab39e; }
+.kp-home > .kp-promo-section { margin-top: 0; }
+.kp-home .kp-header { padding-bottom: 0; }
+.kp-home .kp-section-heading h2 { font-weight: 680; }
+.kp-home .kp-promo-slide { border-radius: 15px; }
+.kp-home .kp-gallery-media { border-radius: 13px; }
+.kp-home .kp-store-grid { row-gap: clamp(37px,5vw,65px); }
+.kp-home .kp-category { text-align: center; }
+.kp-home .kp-category-name { font-size:12px; font-weight:600; }
+@media(max-width:650px) {
+  .kp-home .kp-home-search { margin: 10px 0 14px; }
+  .kp-home .kp-home-search .kp-search-compact {
+    width: 100%;
+    min-height: 48px;
+    height: 48px;
+    padding: 0 14px;
+    gap: 11px;
+    font-size: 12px;
+  }
+  .kp-home .kp-home-search .kp-search-compact .kp-search-arrow { display: block; }
+  .kp-home > .kp-promo-section { margin-bottom: 25px; }
+  .kp-home .kp-stores-section { margin-top: 32px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .kp-home .kp-gallery-media img { transition:none; }
+}

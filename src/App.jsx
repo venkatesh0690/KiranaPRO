@@ -26,6 +26,7 @@ import './styles/onboarding.css';
 import './styles/store-transitions.css';
 import './styles/store-experience.css';
 import './styles/home-refinement.css';
+import './styles/home-polish.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();

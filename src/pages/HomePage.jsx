@@ -73,10 +73,15 @@ export default function HomePage({ userLocation }) {
         </button>
       </header>
 
-      <section className="kp-home-search" aria-label="Search the marketplace">
-        <button type="button" className="kp-search-trigger kp-search-compact" onClick={() => navigate('/search')}>
-          <Search size={18} aria-hidden="true" />
-          <span>Search groceries</span>
+      <section className="kp-home-search" aria-label="Search groceries and stores">
+        <button
+          type="button"
+          className="kp-search-trigger kp-search-compact"
+          onClick={() => navigate('/search')}
+          aria-label="Search groceries, vegetables and stores"
+        >
+          <Search size={19} aria-hidden="true" />
+          <span>Search groceries, vegetables, and stores</span>
           <ArrowRight size={17} className="kp-search-arrow" aria-hidden="true" />
         </button>
       </section>
