@@ -61,7 +61,7 @@ export function getEditorialBannerMarker(slide,index=0) {
  * registered merchants or exact branded packages.
  */
 const posterPhoto = (id) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&h=500&q=58&fm=webp`;
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&h=250&q=54&fm=webp`;
 
 const HERO_PHOTOS=Object.freeze({
   market:posterPhoto('photo-1578916171728-46686eac8d58'),
