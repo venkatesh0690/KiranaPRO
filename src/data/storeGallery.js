@@ -66,22 +66,22 @@ const galleries = {
   ],
   "4": [
     {
-      "src": "https://unsplash.com/photos/2h1O8DtRu3g/download?force=true&w=960",
-      "alt": "Representative real photograph: Grocery aisle with produce",
-      "author": "Tim Photoguy",
-      "source": "https://unsplash.com/photos/2h1O8DtRu3g"
+      "src": "https://unsplash.com/photos/FAziP8fKUNg/download?force=true&w=600&h=370&q=54&fm=webp",
+      "alt": "Representative real photograph: Aisle of packaged rice and beans",
+      "author": "Bernd Dittrich",
+      "source": "https://unsplash.com/photos/FAziP8fKUNg"
     },
     {
-      "src": "https://unsplash.com/photos/mBMl2OkGgAg/download?force=true&w=960",
-      "alt": "Representative real photograph: Fruit and grocery shelf",
-      "author": "Chang Duong",
-      "source": "https://unsplash.com/photos/mBMl2OkGgAg"
+      "src": "https://unsplash.com/photos/3VoUDb-sVt4/download?force=true&w=600&h=370&q=54&fm=webp",
+      "alt": "Representative real photograph: Shelves of packaged snacks and groceries",
+      "author": "Adiptalk",
+      "source": "https://unsplash.com/photos/3VoUDb-sVt4"
     },
     {
-      "src": "https://unsplash.com/photos/sCSBLCaybds/download?force=true&w=960",
-      "alt": "Representative real photograph: Supermarket fruit and vegetables",
-      "author": "Xuan Ma",
-      "source": "https://unsplash.com/photos/sCSBLCaybds"
+      "src": "https://unsplash.com/photos/ku-iy4fOVIQ/download?force=true&w=600&h=370&q=54&fm=webp",
+      "alt": "Representative real photograph: Packaged foods and beverage shelves",
+      "author": "Adiptalk",
+      "source": "https://unsplash.com/photos/ku-iy4fOVIQ"
     }
   ],
   "5": [
@@ -130,7 +130,7 @@ const fallback = {
   '1': 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=960&q=75',
   '2': 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=960&q=75',
   '3': 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=960&q=75',
-  '4': 'https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=960&q=75',
+  '4': 'https://unsplash.com/photos/FAziP8fKUNg/download?force=true&w=600&h=370&q=54&fm=webp',
   '5': 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=960&q=75'
 };
 export function getStoreGallery(store) {

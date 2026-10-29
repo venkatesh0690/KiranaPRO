@@ -5,7 +5,11 @@ import {sampleAreaStores} from '../src/data/sampleAreaStores.js';
 import {getStoresForArea,DELIVERY_AREAS} from '../src/data/deliveryAreas.js';
 import {stores} from '../src/data/stores.js';
 import {getStoreGallery} from '../src/data/storeGallery.js';
+import { getEditorialBannerPhoto, NEIGHBORHOOD_BANNER_PHOTO_IDS } from '../src/utils/editorialBanners.js';
+import { NEIGHBORHOOD_PHOTO_GROUPS } from '../src/data/sampleStoreImages.js';
+import { getStoreImageFallback } from '../src/data/storeGallery.js';
 import {SAMPLE_CREDENTIALS} from '../src/utils/security.js';
+import {buildHomepageBanners} from '../src/utils/homepageBanners.js';
 test('all fictional storefronts have three lightweight, representative swipe images',()=>{
   assert.equal(sampleAreaStores.length,19);
   for(const store of sampleAreaStores){
@@ -73,4 +77,58 @@ test('store product-list screen opens directly on categories without swipe photo
   const card=readFileSync(new URL('../src/components/StoreCard.jsx',import.meta.url),'utf8');
   assert.match(home,/HomeOffersCarousel/,'Homepage promotional banners should remain');
   assert.match(card,/StorePhotoCarousel/,'Store discovery cards should retain photo previews');
+});
+
+test('only LocalFresh can show fruits, vegetables or leafy greens in storefront photography',()=>{
+  const prohibited=['photo-1542838132-92c53300491e','photo-1590779033100-9f60a05a013d',
+    'photo-2h1O8DtRu3g','photo-mBMl2OkGgAg','photo-sCSBLCaybds',
+    '2h1O8DtRu3g','mBMl2OkGgAg','sCSBLCaybds'];
+  const allStores=stores.filter(s=>String(s.id).toLowerCase()!=='localfresh');
+  assert.ok(allStores.length>=20);
+  for(const store of allStores) {
+    const gallery=getStoreGallery(store);
+    assert.ok(gallery.length>=3,'Expected 3 neighborhood photos for '+store.name);
+    for(const image of gallery) {
+      assert.ok(image.src.startsWith('https://'),store.name);
+      assert.ok(!prohibited.some(id=>image.src.includes(id)),
+        'Produce-market image found in non-LocalFresh store: '+store.name);
+      assert.doesNotMatch(image.alt,/fruit|vegetable|fresh produce|leafy greens|produce display/i,store.name);
+    }
+    if(store.posterImage){
+      assert.ok(!prohibited.some(id=>store.posterImage.includes(id)),store.name);
+    }
+    const fallback=getStoreImageFallback(store);
+    if(fallback)assert.ok(!prohibited.some(id=>fallback.includes(id)),store.name);
+  }
+  const localfresh=stores.find(s=>String(s.id).toLowerCase()==='localfresh');
+  assert.ok(localfresh);
+  const localVisuals=getStoreGallery(localfresh);
+  assert.ok(localVisuals.some(i=>/vegetable|produce/i.test(i.alt)),'LocalFresh must retain fresh imagery');
+  const localPoster=getEditorialBannerPhoto({kind:'store',store:localfresh});
+  assert.match(localPoster.alt,/LocalFresh fresh vegetable market/);
+});
+test('all fictional shop gallery photo groups exclude green produce and use packaged-goods photos',()=>{
+  for(const [type,photos] of Object.entries(NEIGHBORHOOD_PHOTO_GROUPS)){
+    assert.ok(photos.length>=3,type);
+    for(const [id,description] of photos){
+      assert.match(description,/packaged|pantry|shelves|products|grocer|drinks|detergent|dairy|beverages|rice|pulses|chips|snacks/i);
+      assert.doesNotMatch(description,/fruit|vegetables|leafy|greens|produce/i);
+      assert.ok(id.length>=9);
+    }
+  }
+});
+test('offer banners use packaged grocery imagery, not LocalFresh produce scenes',()=>{
+  assert.equal(NEIGHBORHOOD_BANNER_PHOTO_IDS.length,5);
+  const forbidden=['photo-1542838132-92c53300491e','photo-1590779033100-9f60a05a013d',
+    'wguVC8oG3qw','9KTwGdcwbp4','Jo0usTWfuSQ'];
+  for(const area of DELIVERY_AREAS){
+    const banners=buildHomepageBanners(stores,null,area,0);
+    for(const offer of banners){
+      const image=getEditorialBannerPhoto(offer);
+      assert.ok(NEIGHBORHOOD_BANNER_PHOTO_IDS.some(id=>image.src.includes(id)),offer.id);
+      assert.ok(!forbidden.some(id=>image.src.includes(id)),offer.id);
+      assert.doesNotMatch(image.alt,/fruit|vegetable|produce|leafy greens/i);
+      assert.doesNotMatch(offer.title,/LocalFresh|Provisions|Mart|Stores|Shop/i);
+    }
+  }
 });

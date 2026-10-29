@@ -90,7 +90,7 @@ export const stores = [
     offer: "Free delivery above ₹300",
     tags: ["Supermart", "Organic Produce", "Packaged Snacks"],
     image: "🛍️",
-    posterImage: "https://unsplash.com/photos/2h1O8DtRu3g/download?force=true&w=960",
+    posterImage: "https://unsplash.com/photos/FAziP8fKUNg/download?force=true&w=600&h=370&q=54&fm=webp",
     posterBadge: "⚡ 20-30 mins delivery",
     posterTagline: "Modern Supermart Selection • Organic Produce & Packaged Delights",
     coverFrom: "#7C3AED",

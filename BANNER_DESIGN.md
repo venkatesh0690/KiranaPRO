@@ -24,3 +24,22 @@ The landing carousel contains **only checkout offers**: free delivery for partic
 
 ## Compact half-height offer banners
 The homepage featured photo-backed banner is now half the original height: desktop uses 133–163 px instead of 265–325 px, and phone cards use 139 px instead of 278 px. **Carousel width and swipe behavior are unchanged.** Banner copy has been compacted to the verified offer and eligibility terms so it fits the shallower layout. The photo renderer now requests 900×250 WebP instead of 900×500, reducing image transfer. No merchant/store names appear inside the banner rail, and individual store product-list pages remain banner-free.
+
+## Neighborhood-store image restriction
+
+For all non-LocalFresh store discovery banners and swipeable shop cards, only
+real representative photographs of packaged groceries, rice, pulses, snack
+packets, bottled drinks, spices, dairy shelves, cleaning products and household
+goods are permitted. The previous vegetable-market images in the demo shop
+photo groups (including demo stores labeled 'fresh') and Ramaiah Supermart's
+three-photo gallery have been replaced.
+
+LocalFresh retains its vegetable/fruit market photography. The compact homepage
+promotional rail stays *offers only* (no merchant names, no store previews,
+same width, 139px mobile and 133–163px desktop). Generic offer backgrounds now
+use documented Unsplash photos of packaged groceries, snack shelves and drinks;
+they cannot accidentally inherit a vegetable photograph from a selected
+non-LocalFresh store. These are representative photos, not actual store shots.
+
+Tests: `npm run test:sample-stores`, `npm run test:editorial`,
+then `npm run build`.

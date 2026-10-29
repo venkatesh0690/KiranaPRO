@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { getEditorialBannerStyle,getEditorialBannerHeadline,getEditorialBannerPhoto,POSTER_PALETTES } from '../src/utils/editorialBanners.js';
+import { getEditorialBannerStyle,getEditorialBannerHeadline,getEditorialBannerPhoto,POSTER_PALETTES, NEIGHBORHOOD_BANNER_PHOTO_IDS } from '../src/utils/editorialBanners.js';
 import { buildHomepageBanners } from '../src/utils/homepageBanners.js';
 import { stores,productsByCategory } from '../src/data/stores.js';
 import { DELIVERY_AREAS,getStoresForArea } from '../src/data/deliveryAreas.js';
@@ -22,10 +22,12 @@ test('all visible promotional banners are photo-led, not plain color posters',()
       assert.ok(POSTER_PALETTES[theme.name],slide.id);
       assert.ok(getEditorialBannerHeadline(slide).length>5,slide.id);
       const photo=getEditorialBannerPhoto(slide);
-      assert.match(photo.src,/^https:\/\/images\.unsplash\.com\/photo-/);
+      assert.match(photo.src,/^https:\/\/unsplash\.com\/photos\/[A-Za-z0-9_-]+\/download\?/);
       assert.match(photo.src,/w=900/);
       assert.match(photo.src,/fm=webp/);
       assert.match(photo.backup,/^https:/);
+      assert.ok(NEIGHBORHOOD_BANNER_PHOTO_IDS.some(id=>photo.src.includes('/'+id+'/download')),slide.id);
+      assert.doesNotMatch(photo.alt,/fruit|vegetable|leafy|greens|produce/i);
       assert.match(photo.alt,/Representative/);
       assert.ok(['coupon','global','automatic'].includes(slide.kind));
       assert.doesNotMatch(getEditorialBannerHeadline(slide),/LocalFresh|Provisions|Mart|Stores|Shop/i);

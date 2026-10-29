@@ -1,3 +1,5 @@
+import { isLocalFreshStore } from '../data/deliveryAreas.js';
+
 /**
  * Editorial poster styling for the single homepage featured carousel.
  * Presentation-only: never changes coupon eligibility, store availability
@@ -54,42 +56,57 @@ export function getEditorialBannerMarker(slide,index=0) {
 }
 
 /**
- * Every homepage poster has genuine representative food/market photography,
- * never just a flat fill. Prefer the selected store's existing photograph;
- * use small, responsive WebP images for offer and generic category posters.
- * These are editorial illustrations of the shopping theme, NOT photos of
- * registered merchants or exact branded packages.
+ * Banner photography policy:
+ * - Non-LocalFresh store previews and all generic checkout offers show ONLY
+ *   packaged groceries, pulses, snacks, bottled drinks or household products.
+ * - Fruit, vegetables and leafy produce are exclusive to LocalFresh visuals.
+ * No photo is represented as the actual merchant's premises.
+ *
+ * All non-LocalFresh source pages were selected as retail-packaging scenes.
+ * The server returns a small photo from Unsplash, not an original large image.
  */
-const posterPhoto = (id) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&h=250&q=54&fm=webp`;
-
-const HERO_PHOTOS=Object.freeze({
-  market:posterPhoto('photo-1578916171728-46686eac8d58'),
-  fresh:posterPhoto('photo-1542838132-92c53300491e'),
-  produce:posterPhoto('photo-1590779033100-9f60a05a013d'),
-  pantry:posterPhoto('photo-1606787366850-de6330128bfc'),
-  grocery:posterPhoto('photo-1604719312566-8912e9227c6a'),
-  home:posterPhoto('photo-1556909114-f6e7ad7d3136')
+export const NEIGHBORHOOD_BANNER_PHOTO_IDS=Object.freeze([
+  'FAziP8fKUNg', // packaged rice and pulses aisle
+  '3VoUDb-sVt4', // supermarket snack shelves
+  'ku-iy4fOVIQ', // packaged foods and beverages
+  'ivfp_yxZuYQ', // cereal, dairy and grocery aisles
+  '7H-CWW3rz9U'  // Indian packet snacks
+]);
+const photoUrl=id =>
+  `https://unsplash.com/photos/${id}/download?force=true&w=900&h=250&q=54&fm=webp`;
+const OFFER_PHOTOS=Object.freeze({
+  delivery:photoUrl('FAziP8fKUNg'),
+  basket:photoUrl('ivfp_yxZuYQ'),
+  welcome:photoUrl('3VoUDb-sVt4'),
+  repeat:photoUrl('7H-CWW3rz9U'),
+  tenth:photoUrl('ku-iy4fOVIQ'),
+  pantry:photoUrl('FAziP8fKUNg')
 });
+const LOCALFRESH_PHOTO=photoUrl('wguVC8oG3qw');
 
 export function getEditorialBannerPhoto(slide) {
-  const id=String(slide?.id||'').toLowerCase();
-  const name=String(slide?.title||'').toLowerCase();
-  let photo=HERO_PHOTOS.market;
-  if(slide?.bannerPhoto && /^https:\/\//.test(slide.bannerPhoto)) {
-    return {src:slide.bannerPhoto,backup:HERO_PHOTOS.market,
-      alt:`Representative store imagery for ${slide.store?.name||slide.title}`};
+  if(isLocalFreshStore(slide?.store)) {
+    const verifiedRepresentative=slide?.bannerPhoto;
+    return {
+      src:typeof verifiedRepresentative==='string' && /^https:\/\//.test(verifiedRepresentative)
+        ? verifiedRepresentative : LOCALFRESH_PHOTO,
+      backup:LOCALFRESH_PHOTO,
+      alt:'Representative photograph of LocalFresh fresh vegetable market'
+    };
   }
-  if(id.includes('mandi')||id.includes('fresh')||name.includes('fruit'))
-    photo=HERO_PHOTOS.fresh;
-  else if(slide?.kind==='global')photo=HERO_PHOTOS.grocery;
-  else if(slide?.kind==='automatic')photo=HERO_PHOTOS.pantry;
-  else if(slide?.kind==='coupon') {
-    photo=slide.code==='WELCOME'?HERO_PHOTOS.produce:
-      slide.code==='REPEAT'?HERO_PHOTOS.grocery:HERO_PHOTOS.pantry;
+  // Ignore non-LocalFresh bannerPhoto. Even if an existing store gallery is
+  // accidentally configured with a produce shot, the homepage won't show it.
+  let key='pantry';
+  if(slide?.kind==='global')key='delivery';
+  else if(slide?.kind==='automatic')key='basket';
+  else if(slide?.kind==='coupon'){
+    if(slide.code==='WELCOME')key='welcome';
+    else if(slide.code==='REPEAT')key='repeat';
+    else if(slide.code==='ADDICTED')key='tenth';
   }
-  else if(slide?.kind==='picks')photo=HERO_PHOTOS.produce;
-  else if(name.includes('home')||name.includes('clean'))photo=HERO_PHOTOS.home;
-  return {src:photo,backup:photo===HERO_PHOTOS.market?HERO_PHOTOS.fresh:HERO_PHOTOS.market,
-    alt:`Representative grocery photography for ${slide?.title||'local shopping'}`};
+  return {
+    src:OFFER_PHOTOS[key],
+    backup:OFFER_PHOTOS.pantry,
+    alt:'Representative photograph of packaged groceries or household items'
+  };
 }
