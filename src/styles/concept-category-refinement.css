@@ -1,0 +1,185 @@
+/*
+ * KiranaPRO Version B: compact categories and secondary visual polish.
+ * Category footprint aligns with Version A's ~82px tiles / 72px art,
+ * while retaining Version B's editorial color and spacing.
+ */
+.kp-concept .kp-concept-compact-categories {
+  margin: 0 0 41px;
+}
+.kp-concept .kp-concept-compact-categories .kp-concept-section-heading {
+  margin-bottom: 17px;
+}
+.kp-concept .kp-concept-compact-categories .kp-concept-section-heading h2 {
+  font-size: clamp(21px, 2.4vw, 29px);
+  letter-spacing: -.045em;
+}
+.kp-concept .kp-concept-mini-category-list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 88px;
+  align-items: start;
+  gap: 15px;
+  padding: 2px 2px 13px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #c2d2c0 transparent;
+}
+.kp-concept .kp-concept-mini-category-list:focus-visible {
+  outline: 2px solid #487752;
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+.kp-concept .kp-concept-mini-category-card {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  align-items: stretch;
+  width: 88px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #334637;
+  text-align: center;
+  scroll-snap-align: start;
+  transition: none;
+}
+.kp-concept .kp-concept-mini-category-card:hover {
+  transform: none;
+  box-shadow: none;
+  background: transparent;
+}
+.kp-concept .kp-concept-mini-category-art {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 79px;
+  border: 1px solid #e4e9de;
+  border-radius: 14px;
+  background: #e8eddf;
+  font-size: 31px;
+  line-height: 1;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+.kp-concept .kp-concept-mini-category-card:nth-child(4n+2) .kp-concept-mini-category-art {
+  background: #eee9db;
+}
+.kp-concept .kp-concept-mini-category-card:nth-child(4n+3) .kp-concept-mini-category-art {
+  background: #e7ece9;
+}
+.kp-concept .kp-concept-mini-category-card:nth-child(4n+4) .kp-concept-mini-category-art {
+  background: #eee8e0;
+}
+.kp-concept .kp-concept-mini-category-card:hover .kp-concept-mini-category-art {
+  background: #deead9;
+  border-color: #b4c6ae;
+  transform: translateY(-2px);
+}
+.kp-concept .kp-concept-mini-category-name {
+  display: block;
+  width: 100%;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.28;
+  letter-spacing: -.015em;
+  overflow-wrap: anywhere;
+  color: #49574a;
+}
+/* More information above the fold and a clearer reading flow. */
+.kp-concept .kp-concept-search-line {
+  padding-bottom: 20px;
+}
+.kp-concept .kp-concept-feature {
+  margin-bottom: 35px;
+}
+.kp-concept .kp-concept-feature .kp-concept-section-heading {
+  margin-bottom: 17px;
+}
+.kp-concept .kp-concept-feature .kp-promo-slide {
+  border-radius: 19px;
+}
+.kp-concept .kp-concept-feature .kp-promo-product {
+  box-shadow: 0 8px 22px rgba(35,55,35,.07);
+}
+.kp-concept .kp-concept-filters {
+  gap: 10px;
+  padding-bottom: 20px;
+}
+.kp-concept .kp-concept-filters button {
+  min-height: 39px;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+.kp-concept .kp-concept-filters button:hover:not(.is-active) {
+  border-color: #9ab59d;
+  background: #edf3e9;
+}
+.kp-concept .kp-concept-store-grid {
+  row-gap: 32px;
+}
+.kp-concept .kp-concept-store-grid .kp-gallery-copy {
+  padding-top: 14px;
+}
+.kp-concept .kp-concept-store-grid .kp-gallery-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.kp-concept button:focus-visible, .kp-concept a:focus-visible {
+  outline: 2px solid #3a6b49;
+  outline-offset: 3px;
+}
+@media (max-width: 720px) {
+  .kp-concept .kp-concept-compact-categories {
+    margin-bottom: 32px;
+  }
+  .kp-concept .kp-concept-mini-category-list {
+    grid-auto-columns: 82px;
+    gap: 12px;
+    padding-bottom: 12px;
+  }
+  .kp-concept .kp-concept-mini-category-card {
+    width: 82px;
+    gap: 8px;
+  }
+  .kp-concept .kp-concept-mini-category-art {
+    width: 82px;
+    height: 72px;
+    border-radius: 12px;
+    font-size: 29px;
+  }
+  .kp-concept .kp-concept-mini-category-name {
+    font-size: 11px;
+    line-height: 1.28;
+  }
+  .kp-concept .kp-concept-feature {
+    margin-bottom: 28px;
+  }
+  .kp-concept .kp-concept-feature .kp-promo-slide {
+    height: 205px;
+    border-radius: 15px;
+  }
+  .kp-concept .kp-concept-feature .kp-promo-text {
+    padding: 18px 14px;
+  }
+  .kp-concept .kp-concept-feature .kp-promo-text h3 {
+    font-size: clamp(21px, 5.7vw, 27px);
+  }
+  .kp-concept .kp-concept-store-grid {
+    row-gap: 21px;
+  }
+  .kp-concept .kp-concept-search-line {
+    padding-bottom: 17px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kp-concept .kp-concept-mini-category-art,
+  .kp-concept .kp-concept-filters button { transition: none !important; transform: none !important; }
+}

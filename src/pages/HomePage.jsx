@@ -109,31 +109,27 @@ export default function HomePage({ userLocation }) {
         <HomeOffersCarousel stores={stores} catalog={products} navigate={navigate} />
       </section>
 
-      <section className="kp-concept-categories" aria-labelledby="kp-concept-categories-title">
+      <section className="kp-concept-categories kp-concept-compact-categories" aria-labelledby="kp-concept-categories-title">
         <div className="kp-concept-section-heading">
           <div className="kp-concept-heading-copy">
             <span className="kp-concept-index">02 / EXPLORE</span>
-            <h2 id="kp-concept-categories-title">Shop by category.</h2>
+            <h2 id="kp-concept-categories-title">Shop by category</h2>
           </div>
           <button className="kp-concept-link" type="button" onClick={() => setCategoriesOpen(true)}>
             View all <ArrowUpRight size={16} aria-hidden="true" />
           </button>
         </div>
-        <div className="kp-concept-category-grid">
-          {allCategories.slice(0, 8).map((category, index) => (
+        <div className="kp-concept-mini-category-list" aria-label="Swipe through shopping categories" tabIndex={0}>
+          {allCategories.slice(0, 10).map(category => (
             <button
               key={category.id}
-              className="kp-concept-category-card"
+              className="kp-concept-mini-category-card"
               type="button"
               onClick={() => openCategory(category.name)}
               aria-label={`Shop ${category.name}`}
             >
-              <span className="kp-concept-category-index">{String(index + 1).padStart(2, '0')}</span>
-              <span className="kp-concept-category-emoji" aria-hidden="true">{category.icon}</span>
-              <span className="kp-concept-category-bottom">
-                <strong>{category.name}</strong>
-                <ArrowUpRight size={17} aria-hidden="true" />
-              </span>
+              <span className="kp-concept-mini-category-art" aria-hidden="true">{category.icon}</span>
+              <span className="kp-concept-mini-category-name">{category.name}</span>
             </button>
           ))}
         </div>
