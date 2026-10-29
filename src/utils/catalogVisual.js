@@ -55,6 +55,10 @@ const photoRules = [
   [/\b(spinach dock|palak)\b/i, photo('photo-1576045057995-568f588f82fb')]
 ];
 const iconRules = [
+  [/lady finger|bhindi|okra|barabati|barbati/i, ['🫛','#e8f1e3']],
+  [/^coriander$|betel leaves?|tamalapaku/i, ['🌿','#e8f1e1']],
+  [/coriander \(dhania\) powder|coriander powder/i, ['🌶️','#f6ebdf']],
+  [/beauty bar|body bar|bath soap/i, ['🧼','#eaf0ee']],
   [/lotus|kamalam/i, ['🪷','#f8e9f2']],
   [/hibiscus|mandaram/i, ['🌺','#fae8e7']],
   [/jasmine|malli|mallepoolu/i, ['🌼','#f8f3e5']],
