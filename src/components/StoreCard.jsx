@@ -1,67 +1,76 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowUpRight, Clock3, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useStore } from '../context/StoreContext';
+import { getDisplayProducts, getProductImage } from '../utils/storeMerchandising';
 import { navigateWithStoreTransition, storeImageTransitionName, storeTitleTransitionName } from '../utils/storeTransition';
 
-/**
- * Image-first storefront discovery card.
- * One entire accessible link, keeping existing store navigation intact.
- */
 export default function StoreCard({ store }) {
-  const isDirect = String(store.id).toLowerCase() === 'localfresh' || store.isAdminManaged;
-  const description = store.posterTagline ||
-    (Array.isArray(store.tags) ? store.tags.slice(0, 3).join(' · ') : '') ||
-    'Fresh essentials and local favorites';
   const navigate = useNavigate();
+  const { products } = useStore();
+  const [opening, setOpening] = useState(false);
+  const pending = useRef(null);
+  const display = useMemo(() => getDisplayProducts(store,products,3),[store,products]);
   const rating = Number(store.rating);
+  const delivery = Number(store.deliveryFee) === 0 ? 'Free delivery' : `₹${store.deliveryFee} delivery`;
+  useEffect(() => () => clearTimeout(pending.current),[]);
+
   const openStore = (event) => {
-    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || opening) return;
     event.preventDefault();
-    navigateWithStoreTransition(navigate, `/store/${store.id}`);
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      navigate(`/store/${store.id}`);
+      return;
+    }
+    setOpening(true);
+    // Visible tap feedback before navigation, even in older Android WebViews.
+    pending.current = window.setTimeout(() => {
+      navigateWithStoreTransition(navigate,`/store/${store.id}`);
+    },160);
   };
-  const delivery = Number(store.deliveryFee) === 0
-    ? 'Free delivery'
-    : `₹${store.deliveryFee} delivery`;
 
   return (
-    <Link to={`/store/${store.id}`} className="store-card kp-gallery-card" onClick={openStore}>
+    <Link
+      to={`/store/${store.id}`}
+      className={`store-card kp-gallery-card kp-motion-store ${opening ? 'kp-is-opening' : ''}`}
+      onClick={openStore}
+      aria-label={`Open ${store.name}`}
+    >
       <div className="kp-gallery-media" style={{ viewTransitionName: storeImageTransitionName(store.id) }}>
-        <span className="kp-gallery-fallback" aria-hidden="true">{store.image || '🏪'}</span>
-        {store.posterImage && (
-          <img
-            src={store.posterImage}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            onError={(event) => { event.currentTarget.style.display = 'none'; }}
-          />
-        )}
-        {store.isOpen === false && (
-          <span className="kp-gallery-closed">Currently closed</span>
-        )}
+        <img className="kp-motion-gif" src={store.posterImage} alt="" loading="lazy" decoding="async" />
+        <div className="kp-motion-products" aria-hidden="true">
+          {display.map((product,i)=>(
+            <div className="kp-motion-product" key={product.id} style={{'--product-index':i}}>
+              {getProductImage(product) ? (
+                <img
+                  src={getProductImage(product)}
+                  alt=""
+                  loading="lazy"
+                  onError={event => { event.currentTarget.style.display='none'; }}
+                />
+              ) : <span className="kp-motion-emoji">{product.fallbackEmoji || '🛒'}</span>}
+              <span>{product.name}</span>
+            </div>
+          ))}
+        </div>
+        {store.isOpen === false && <span className="kp-gallery-closed">Currently closed</span>}
         <span className="kp-gallery-open-icon" aria-hidden="true">
-          <ArrowUpRight size={19} strokeWidth={1.7} />
+          <ArrowUpRight size={19} strokeWidth={1.7}/>
         </span>
       </div>
       <div className="kp-gallery-copy">
-        <span className="kp-image-disclosure">Illustrative image</span>
         <div className="kp-gallery-kicker">
-          <span>{isDirect ? 'DIRECT MARKET' : 'LOCAL STORE'}</span>
+          <span>{store.isAdminManaged ? 'DIRECT MARKET' : 'LOCAL STORE'}</span>
           {store.distance && <span className="kp-gallery-distance">{store.distance}</span>}
         </div>
         <div className="kp-gallery-title-row">
           <h3 style={{ viewTransitionName: storeTitleTransitionName(store.id) }}>{store.name}</h3>
-          {rating > 0 && (
-            <span className="kp-gallery-rating">
-              <Star size={13} aria-hidden="true" strokeWidth={1.7} />
-              {rating.toFixed(1)}
-            </span>
-          )}
+          {rating > 0 && <span className="kp-gallery-rating"><Star size={13} aria-hidden="true" />{rating.toFixed(1)}</span>}
         </div>
-        <p className="kp-gallery-description">{description}</p>
+        <p className="kp-gallery-description">{store.posterTagline || store.tags?.slice(0,3).join(' · ') || 'Everyday essentials'}</p>
         <div className="kp-gallery-meta">
-          {store.deliveryTime && (
-            <span><Clock3 size={14} aria-hidden="true" strokeWidth={1.7} /> {store.deliveryTime}</span>
-          )}
+          {store.deliveryTime && <span><Clock3 size={14} aria-hidden="true" /> {store.deliveryTime}</span>}
           <span className="kp-gallery-middot" aria-hidden="true">·</span>
           <span>{delivery}</span>
         </div>

@@ -6,6 +6,7 @@ import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
 import StoreCard from '../components/StoreCard';
+import { HomeOffersCarousel } from '../components/StoreOffersCarousel';
 import CategoriesModal from '../components/CategoriesModal';
 import AuthModal from '../components/AuthModal';
 
@@ -18,7 +19,7 @@ const storeFilters = [
 
 export default function HomePage({ userLocation }) {
   const navigate = useNavigate();
-  const { stores } = useStore();
+  const { stores, products } = useStore();
   const { totalItems } = useCart();
   const { authSession } = useSecurity();
   const [activeFilter, setActiveFilter] = useState('all');
@@ -82,6 +83,8 @@ export default function HomePage({ userLocation }) {
           <ArrowRight size={18} className="kp-search-arrow" />
         </button>
       </section>
+
+      <HomeOffersCarousel stores={stores} catalog={products} navigate={navigate}/>
 
       <section className="kp-section" aria-labelledby="kp-category-title">
         <div className="kp-section-heading">

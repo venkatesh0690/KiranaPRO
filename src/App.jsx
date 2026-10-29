@@ -24,6 +24,7 @@ import './styles/gallery.css';
 import './styles/unified.css';
 import './styles/onboarding.css';
 import './styles/store-transitions.css';
+import './styles/store-experience.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();

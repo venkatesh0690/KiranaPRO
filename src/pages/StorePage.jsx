@@ -23,6 +23,7 @@ import { navigateWithStoreTransition, storeImageTransitionName, storeTitleTransi
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
+import { StoreOffersCarousel } from '../components/StoreOffersCarousel';
 import CartBar from '../components/CartBar';
 import ProductDetailModal from '../components/ProductDetailModal';
 
@@ -30,7 +31,7 @@ export default function StorePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { stores, products: productsByCategory } = useStore();
+  const { stores, products: productsByCategory, orders } = useStore();
   const { totalItems } = useCart();
   const store = stores.find((s) => String(s.id).toLowerCase() === String(id).toLowerCase());
 
@@ -82,7 +83,7 @@ export default function StorePage() {
     if (!store || !productsScrollRef.current) return;
 
     const observerOptions = {
-      root: productsScrollRef.current,
+      root: document.querySelector('.app-content-area.store-view-mode'),
       rootMargin: '-10px 0px -70% 0px',
       threshold: [0, 0.1]
     };
@@ -130,29 +131,12 @@ export default function StorePage() {
     isUserScrollingRef.current = true;
 
     const target = sectionRefs.current[cat];
-    const container = productsScrollRef.current;
-
-    if (target && container) {
-      const containerRect = container.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
-      const targetTop = targetRect.top - containerRect.top + container.scrollTop;
-
-      container.scrollTo({
-        top: Math.max(0, targetTop - 8),
-        behavior: 'smooth'
-      });
-    }
+    if (target) target.scrollIntoView({block:'start',behavior:'smooth'});
 
     // Release manual scroll lock after animation
     setTimeout(() => {
       isUserScrollingRef.current = false;
     }, 600);
-  };
-
-  const handleSplitBodyWheel = (e) => {
-    if (productsScrollRef.current && !productsScrollRef.current.contains(e.target)) {
-      productsScrollRef.current.scrollTop += e.deltaY;
-    }
   };
 
   const visibleCategories = store.categories.filter((cat) => {
@@ -312,7 +296,7 @@ export default function StorePage() {
       </header>
 
       {/* ─── Instamart Fixed 2-Column Body ─── */}
-      <div className="sp-split-body" onWheel={handleSplitBodyWheel}>
+      <div className="sp-split-body">
         {/* Left Column: Fixed Category Sidebar */}
         <aside className="sp-fixed-sidebar" aria-label="Grocery Categories">
           <div className="sp-sidebar-header-hint">Categories</div>
@@ -347,21 +331,14 @@ export default function StorePage() {
 
         {/* Right Column: Independently Scrollable Products List */}
         <main className="sp-scrollable-products" ref={productsScrollRef}>
-          {/* Store AI Hero Banner (e.g. Vegetable Farm for LocalFresh) */}
-          {store.posterImage && !search && (
-            <div className="sp-catalog-hero-poster">
-              <img src={store.posterImage} alt={store.name} className="sp-catalog-hero-img" />
-              <div className="sp-catalog-hero-overlay" />
-              <div className="sp-catalog-hero-content">
-                <span className="sp-catalog-hero-pill">
-                  {store.isAdminManaged ? '🌾 Direct Mandi Farm Harvest' : '⚡ 20–30 Mins Local Delivery'}
-                </span>
-                <h2 className="sp-catalog-hero-title">{store.name}</h2>
-                <p className="sp-catalog-hero-desc">
-                  {store.posterTagline || 'Farm-Fresh Wholesale Harvest Direct to Your Kitchen'}
-                </p>
-              </div>
-            </div>
+          {!search && (
+            <StoreOffersCarousel
+              store={store}
+              catalog={productsByCategory}
+              orders={orders}
+              onOpenCategory={scrollToCategory}
+              onOpenProduct={setSelectedProduct}
+            />
           )}
           {visibleCategories.length === 0 ? (
             <div className="sp-no-results">
