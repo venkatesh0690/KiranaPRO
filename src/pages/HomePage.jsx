@@ -51,11 +51,6 @@ export default function HomePage({ userLocation }) {
 
   return (
     <div className="home-container kp-home kp-concept">
-      <div className="kp-concept-preview-note">
-        <span>DESIGN STUDY</span>
-        <span>Version B · Preview only</span>
-      </div>
-
       <header className="kp-concept-header">
         <div className="kp-concept-header-top">
           <button

@@ -17,20 +17,6 @@
  color:var(--c-ink);
  gap:0;
 }
-.kp-concept-preview-note {
- margin:0 calc(-1 * clamp(19px,4.8vw,76px));
- padding:8px clamp(19px,4.8vw,76px);
- background:#293e30;
- color:#eaf1df;
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:12px;
- font-size:10px;
- letter-spacing:.095em;
- font-weight:600;
-}
-.kp-concept-preview-note span:last-child { color:#b4c8b5;letter-spacing:.015em;text-transform:none; }
 .kp-concept-header { padding:24px 0 0; background:transparent; }
 .kp-concept-header-top { display:flex;align-items:center;justify-content:space-between;gap:20px; }
 .kp-concept-wordmark { display:flex;gap:11px;align-items:center;color:var(--c-ink);font-size:22px;letter-spacing:-.065em;font-weight:790; }
@@ -162,7 +148,6 @@
 }
 @media(max-width:720px) {
  .kp-concept {padding:0 17px 105px;}
- .kp-concept-preview-note {margin:0 -17px;padding:7px 17px;font-size:9px;}
  .kp-concept-header {padding-top:18px;}
  .kp-concept-monogram {width:36px;height:36px;font-size:20px;border-radius:10px;}
  .kp-concept-wordmark {font-size:20px;}
