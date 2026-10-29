@@ -23,6 +23,7 @@ import './styles/minimal.css';
 import './styles/gallery.css';
 import './styles/unified.css';
 import './styles/onboarding.css';
+import './styles/store-transitions.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();

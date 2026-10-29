@@ -18,7 +18,7 @@ export const localFreshStore = {
   offer: "⚡ Mandi Wholesale Direct • +₹4 Quality Surcharge Included",
   tags: ["Admin Managed", "Farm Fresh", "Direct Mandi", "Vegetables & Fruits"],
   image: "🥦",
-  posterImage: "https://cdn.cosmos.so/ae599ae2-8581-4d39-9446-cb9c36b2a5aa?format=webp",
+  posterImage: "/stores/localfresh.svg",
   posterBadge: "🥦 Mandi Direct • Within 2 hrs",
   posterTagline: "Farm-Fresh Wholesale Harvest Direct to Your Kitchen",
   coverFrom: "#16A34A",

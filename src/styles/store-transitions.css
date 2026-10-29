@@ -1,0 +1,31 @@
+/* Shared-element transitions: a tapped store image and title morph into its
+   catalog header. Falls back to straightforward navigation where unsupported. */
+.sp-hdr-store-photo {
+  width: 46px; height: 46px; flex: 0 0 46px;
+  overflow: hidden; border-radius: 10px;
+  background: #e9eee7; contain: paint;
+}
+.sp-hdr-store-photo img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.sp-hdr-name-row { min-width: 0; }
+.sp-hdr-store-name { min-width: 0; }
+.kp-image-disclosure {
+  display: block; font-size: 10px; color: #8c968b;
+  letter-spacing: .01em; font-weight: 450; margin-bottom: 6px;
+}
+.kp-gallery-media { contain: paint; }
+@keyframes kp-store-fade-out { to { opacity: .32; transform: scale(.985); } }
+@keyframes kp-store-fade-in {
+  from { opacity: .32; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+::view-transition-old(root) { animation: 145ms ease-in both kp-store-fade-out; }
+::view-transition-new(root) { animation: 245ms cubic-bezier(.22,.75,.29,1) both kp-store-fade-in; }
+::view-transition-group(*) { animation-duration: 310ms; animation-timing-function: cubic-bezier(.22,.75,.29,1); }
+@media (max-width: 420px) {
+  .sp-hdr-store-photo { width: 36px; height: 36px; flex-basis: 36px; border-radius: 8px; }
+  .sp-hdr-mandi-badge { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root), ::view-transition-group(*) { animation-duration: .01ms !important; }
+  .store-page-wrapper { animation: none !important; }
+}

@@ -1,5 +1,6 @@
 import { ArrowUpRight, Clock3, Star } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { navigateWithStoreTransition, storeImageTransitionName, storeTitleTransitionName } from '../utils/storeTransition';
 
 /**
  * Image-first storefront discovery card.
@@ -10,14 +11,20 @@ export default function StoreCard({ store }) {
   const description = store.posterTagline ||
     (Array.isArray(store.tags) ? store.tags.slice(0, 3).join(' · ') : '') ||
     'Fresh essentials and local favorites';
+  const navigate = useNavigate();
   const rating = Number(store.rating);
+  const openStore = (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    navigateWithStoreTransition(navigate, `/store/${store.id}`);
+  };
   const delivery = Number(store.deliveryFee) === 0
     ? 'Free delivery'
     : `₹${store.deliveryFee} delivery`;
 
   return (
-    <Link to={`/store/${store.id}`} className="store-card kp-gallery-card">
-      <div className="kp-gallery-media">
+    <Link to={`/store/${store.id}`} className="store-card kp-gallery-card" onClick={openStore}>
+      <div className="kp-gallery-media" style={{ viewTransitionName: storeImageTransitionName(store.id) }}>
         <span className="kp-gallery-fallback" aria-hidden="true">{store.image || '🏪'}</span>
         {store.posterImage && (
           <img
@@ -36,12 +43,13 @@ export default function StoreCard({ store }) {
         </span>
       </div>
       <div className="kp-gallery-copy">
+        <span className="kp-image-disclosure">Illustrative image</span>
         <div className="kp-gallery-kicker">
           <span>{isDirect ? 'DIRECT MARKET' : 'LOCAL STORE'}</span>
           {store.distance && <span className="kp-gallery-distance">{store.distance}</span>}
         </div>
         <div className="kp-gallery-title-row">
-          <h3>{store.name}</h3>
+          <h3 style={{ viewTransitionName: storeTitleTransitionName(store.id) }}>{store.name}</h3>
           {rating > 0 && (
             <span className="kp-gallery-rating">
               <Star size={13} aria-hidden="true" strokeWidth={1.7} />

@@ -19,6 +19,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { categoryMeta } from '../data/stores';
+import { navigateWithStoreTransition, storeImageTransitionName, storeTitleTransitionName } from '../utils/storeTransition';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
@@ -114,7 +115,7 @@ export default function StorePage() {
         <h2>Store not found</h2>
         <button
           type="button"
-          onClick={() => navigate('/home')}
+          onClick={() => navigateWithStoreTransition(navigate, '/home')}
           style={{ color: 'var(--brand)', fontWeight: 700 }}
         >
           ← Back to Home
@@ -179,8 +180,10 @@ export default function StorePage() {
 
           <div className="sp-hdr-title-area" onClick={() => setShowStoreInfo(true)} style={{ cursor: 'pointer' }}>
             <div className="sp-hdr-name-row">
-              <span className="sp-hdr-store-icon">{store.image}</span>
-              <h1 className="sp-hdr-store-name">{store.name}</h1>
+              <div className="sp-hdr-store-photo" style={{ viewTransitionName: storeImageTransitionName(store.id) }}>
+                <img src={store.posterImage} alt="" decoding="async" />
+              </div>
+              <h1 className="sp-hdr-store-name" style={{ viewTransitionName: storeTitleTransitionName(store.id) }}>{store.name}</h1>
               {store.isAdminManaged && (
                 <span className="sp-hdr-mandi-badge" title="Direct Mandi Admin Managed">
                   <ShieldCheck size={11} strokeWidth={2.5} /> Mandi Direct
