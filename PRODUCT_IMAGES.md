@@ -11,8 +11,8 @@ seller inventory, admin inventory, and homepage offer products.
 - Branded packaged items, pickles, flowers and uncommon local vegetables use
   clear item-labelled emoji illustrations when an exact, authorized photograph
   has not yet been supplied; no incorrect brand/package substitutes.
-- Photos request **240px** assets, with optional **420px** resolution at higher
-  density or on detail views. Unsplash photos use WebP and quality 52–56;
+- Photos request **160px** thumbnails, with optional **320px** resolution for
+  high-density screens or product details. Unsplash uses WebP quality 42–50;
   Wikimedia's width parameter requests reduced-size thumbnails.
 - Lazy loading, async decoding, responsive widths and graceful fallback are
   applied consistently. Repeated photos are browser-cacheable.
@@ -27,7 +27,7 @@ Real stock photographs for common raw produce come from **Unsplash**
 are representative commodity photos, not actual photos of the store's stock.
 
 Verified Wikimedia Commons file page links (all thumbnails are fetched through
-`Special:FilePath` with `width=240` or `width=420`). Click the corresponding
+`Special:FilePath` with `width=160` or `width=320`). Click the corresponding
 photo source/license link in the full product detail for licensing and attribution:
 
 - [India Ash Gourd.jpg](https://commons.wikimedia.org/wiki/File:India_Ash_Gourd.jpg)
@@ -56,3 +56,33 @@ The current catalog does NOT claim that every emoji fallback is a photograph.
 
 ## Regression testing
 Run `npm run test:catalog`; the production Vite build also runs this test.
+
+## Additional product-specific photographic matches
+The product-image resolver now includes more curated commodity matches for:
+- [Bitter gourd at Hyderabad market.jpg](https://commons.wikimedia.org/wiki/File:Bitter_gourd_at_Hyderabad_market.jpg)
+- [Cluster bean.jpg](https://commons.wikimedia.org/wiki/File:Cluster_bean.jpg)
+- [White Radish.jpg](https://commons.wikimedia.org/wiki/File:White_Radish.jpg)
+- [Munaga kaayalu.JPG](https://commons.wikimedia.org/wiki/File:Munaga_kaayalu.JPG)
+- [Brinjal of Tamilnadu.jpg](https://commons.wikimedia.org/wiki/File:Brinjal_of_Tamilnadu.jpg)
+- [Beerakaayalu.JPG](https://commons.wikimedia.org/wiki/File:Beerakaayalu.JPG)
+- [Local variety of Yam at Anandapuram 02.jpg](https://commons.wikimedia.org/wiki/File:Local_variety_of_Yam_at_Anandapuram_02.jpg)
+- [Fresh curry leaves.jpg](https://commons.wikimedia.org/wiki/File:Fresh_curry_leaves.jpg)
+- [Sesame-Seeds.jpg](https://commons.wikimedia.org/wiki/File:Sesame-Seeds.jpg)
+- [Guava Slices.jpg](https://commons.wikimedia.org/wiki/File:Guava_Slices.jpg)
+- [Avocado fruit.jpg](https://commons.wikimedia.org/wiki/File:Avocado_fruit.jpg)
+- [Pomegranate fruit - whole and piece with arils.jpg](https://commons.wikimedia.org/wiki/File:Pomegranate_fruit_-_whole_and_piece_with_arils.jpg)
+- [Dragon Fruit Sliced.jpg](https://commons.wikimedia.org/wiki/File:Dragon_Fruit_Sliced.jpg)
+
+All are representative real species photographs; Commons authors and individual licenses
+are on the linked file pages. Frontend images are externally hosted: rendering is
+best-effort and photo load failures are replaced by a named, lightweight icon
+rather than a wrong photo. This audit verifies *catalog matching rules* and small
+URL parameters, not real network download success of every photo URL.
+
+Hero-carousel product thumbnails now use the same shared audited visual component
+as product cards, detail modals, and admin/seller inventory. This prevents
+a previous inconsistency where a missing hero photo could create a blank card.
+
+Merchant-supplied exact packaging images can be used only with
+`verifiedImageUrl` and `imageSourceUrl` fields, after authenticity and
+rights are checked. Legacy generic `image` fields are deliberately ignored.

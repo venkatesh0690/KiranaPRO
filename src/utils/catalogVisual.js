@@ -1,59 +1,31 @@
 /*
- * Name-first product imagery.
- * Never reuse a generic stock photograph for an unrelated product name.
- * Only explicit matches below are allowed to show photography; uncommon
- * local varieties and packaged brands receive a clearly labelled illustration
- * rather than a photo of a different SKU or flower.
- *
- * All entries remain editable through the actual product/catalog records;
- * these illustrations do not change prices, stock or store inventory.
+ * Catalog-wide product-image audit.
+ * Product.image contained reused, mismatched generic stock photos; NEVER
+ * display it until a seller supplies an explicit verifiedImageUrl and source.
+ * Genuine produce photography is whitelist-matched to actual commodities.
+ * Packaged brands or unmatched specialty items use distinct labelled
+ * product icons rather than misleading photographs.
+ * Images load as small thumbnails, with a modest larger modal variant.
  */
-// A small first image, with optional modest 2x density. Never fetch original-size files.
-const photo = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=240&q=52&fm=webp`;
-// File names below are taken from verified Commons file pages. Wikimedia's
-// width parameter requests a thumbnail instead of a multi-megabyte original.
-const commons = file => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=240`;
-const exactPhotoRules = [
-  [/^ash gourd$/i, commons('India Ash Gourd.jpg')],
-  [/^(?:potols?|pointed gourd|parval)$/i, commons('Pointed gourd 20220828 165712.jpg')],
-  [/\b(?:lady finger|bhindi|okra)\b/i, commons('Lady fingers at Gara market, Srikakulam.jpg')],
-  [/^bottle gourd$/i, commons('Bottle gourd in andhra farm.jpg')],
-  [/\b(?:beerakaya|ridge gourd)\b/i, commons('Ridge Gourd Southern India.jpg')],
-  [/^ivy gourd$/i, commons('Ivy gourd.jpg')],
-  [/^carrot$|^gaajar carrot$|^crunchy orange ooty carrots$/i, commons('Carrots ooty.JPG')],
-  [/^coriander$/i, commons('Coriander Leaves.jpg')],
-  [/^chana dal$/i, commons('Chana Dal (split Bengal gram).JPG')],
-  [/^rajma beans$/i, commons('Chitra Rajma.jpg')],
-  [/^green chilli$|^spicy andhra green chillies$/i, commons('Green-chillies.jpg')]
-];
-const responsivePhoto = url => {
-  if (!url) return null;
-  if (url.startsWith('https://images.unsplash.com/'))
-    return [url, url.replace('w=240&q=52','w=420&q=56')];
-  if (url.startsWith('https://commons.wikimedia.org/'))
-    return [url, url.replace('width=240','width=420')];
-  return [url,url];
-};
-// Known representative commodity photos (not claims about a particular brand/package).
-const photoRules = [
-  [/\b(tomato|tamatar)\b|tomato\(/i, photo('photo-1546470427-0d4db154ceb7')],
-  [/\b(potato|alugadda)\b/i, photo('photo-1518977676601-b53f82aba655')],
-  [/\b(onion)\b/i, photo('photo-1618512496248-a07fe83aa8cb')],
-  [/\b(corn|makka)\b/i, photo('photo-1551754655-cd27e38d2076')],
-  [/\b(cabbage)\b/i, photo('photo-1598030304671-5aa1d6f21128')],
-  [/\b(garlic|vellulli)\b/i, photo('photo-1540148426945-6cf22a6b2383')],
-  [/\b(lemon|nimmakaya)\b(?!.*pickle)/i, photo('photo-1587496679742-bad502958fbf')],
-  [/\b(green chilli|bajji mirchi|red chilli|chillies)\b/i, photo('photo-1588252303782-cb80119abd6d')],
-  [/\b(orange|mosambi)\b/i, photo('photo-1582979512210-99b6a53386f9')],
-  [/\b(apple|royal gala)\b/i, photo('photo-1560806887-1e4cd0b6cbd6')],
-  [/\b(water\s?melon)\b/i, photo('photo-1587049352846-4a222e784d38')],
-  [/\b(banana)\b(?!.*raw)/i, photo('photo-1571771894821-ce9b6c11b08e')],
-  [/\b(milk)\b/i, photo('photo-1550583724-b2692b85b150')],
-  [/\b(eggs?)\b/i, photo('photo-1506976785307-8732e854ad03')],
-  [/\b(butter)\b/i, photo('photo-1589985270826-4b7bb135bc9d')],
-  [/\b(bread)\b/i, photo('photo-1509440159596-0249088772ff')],
-  [/\b(spinach dock|palak)\b/i, photo('photo-1576045057995-568f588f82fb')]
-];
+const commons = (file,w) => "https://commons.wikimedia.org/wiki/Special:FilePath/"+encodeURIComponent(file)+"?width="+w;
+const unsplash = (id,w,q) => "https://images.unsplash.com/"+id+"?auto=format&fit=crop&w="+w+"&q="+q+"&fm=webp";
+const COMMONS_DATA=[["^ash gourd$","India Ash Gourd.jpg"],["^(potols?|pointed gourd|parval)$","Pointed gourds at a market.jpg"],["^(lady finger(?:\\s*/\\s*bhindi)?|bhindi|okra)$","Lady fingers at Gara market, Srikakulam.jpg"],["^(beerakaya|ridge gourd)$","Beerakaayalu.JPG"],["^bottle gourd$","Bottle gourd in andhra farm.jpg"],["^ivy gourd$","Ivy gourd.jpg"],["^bitter gourd$","Bitter gourd at Hyderabad market.jpg"],["^cluster beans?$","Cluster bean.jpg"],["^white radish(?: 3 piece)?$","White Radish.jpg"],["^drumsticks$","Munaga kaayalu.JPG"],["^yam$","Local variety of Yam at Anandapuram 02.jpg"],["^coriander$","Coriander Leaves.jpg"],["^curry leaves$","Fresh curry leaves.jpg"],["^chana dal$","Chana Dal (split Bengal gram).JPG"],["^rajma beans$","Chitra Rajma.jpg"],["^sesame seeds$","Sesame-Seeds.jpg"],["^guava$","Guava Slices.jpg"],["^avocado$","Avocado fruit.jpg"],
+["^pomegranate$","Pomegranate fruit - whole and piece with arils.jpg"],
+["^red dragon fruit$","Dragon Fruit Sliced.jpg"],["^(carrot|gaajar carrot|crunchy orange ooty carrots)$","Carrots ooty.JPG"],["^(bajji mirchi|green chilli|spicy andhra green chillies)$","Green-chillies.jpg"],["^(black brinjal|black eggplant|brinjal\\(long\\)|brinjal \\(long-white\\)|white brinjal)$","Brinjal of Tamilnadu.jpg"],["^garlic$","Garlic of Chinna Salem.jpg"],["^(french beans|beans\\(pencil\\)|barabati|barbati)$","Beans for sale.JPG"]];
+const UNSPLASH_DATA=[["^(tomato(?:\\(small\\))?|hybrid juicy red tomatoes)$","photo-1546470427-0d4db154ceb7"],["^(potato|jyoti smooth skin potatoes)$","photo-1518977676601-b53f82aba655"],["^(onion|fresh red onions(?: \\(medium size\\))?)$","photo-1618512496248-a07fe83aa8cb"],["^cabbage$","photo-1598030304671-5aa1d6f21128"],["^sweet corn$","photo-1551754655-cd27e38d2076"],["^lemon$","photo-1587496679742-bad502958fbf"],["^(apple|apple royal gala)$","photo-1560806887-1e4cd0b6cbd6"],["^water\\s?melon$","photo-1587049352846-4a222e784d38"],["^(banana|robusta sweet bananas)$","photo-1571771894821-ce9b6c11b08e"],["^(mosambi|baby oranges|pulpy orange)$","photo-1582979512210-99b6a53386f9"],["^spinach dock$","photo-1576045057995-568f588f82fbf"],["^fresh farm eggs(?: \\(golden yolk\\))?$","photo-1506976785307-8732e854ad03"]];
+const commonsRules=COMMONS_DATA.map(([pattern,file])=>[new RegExp(pattern,"i"),{kind:"commons",file}]);
+const unsplashRules=UNSPLASH_DATA.map(([pattern,id])=>[new RegExp(pattern,"i"),{kind:"unsplash",id}]);
+const knownPhotos=[...commonsRules,...unsplashRules];
+const blockedBranded=/\b(amul|heritage|epigamia|britannia|fortune|freedom|saffola|aashirvaad|srilalitha|double horse|tata|catch|everest|24 mantra|priya|bambino|maggi|lay|haldiram|parle|pepsi|coca|sprite|thums|real activ|paper boat|pampers|himalaya|johnson|whisper|dove|colgate|vim|surf excel|idhayam|india gate|cycle pure|raw pressery|ocean pink)\b/i;
+const blockedProcessed=/pickle|pachadi|avakaya|chutney|sauce|powder|masala|flour|dried|dehydrated|juice|drink|garland|pack|pouch|soap|wipes|detergent|biscuit|baby corn|raw banana|mango ginger|coconut mango/i;
+function thumbSource(item,w) {
+  return item.kind==="commons"?commons(item.file,w):unsplash(item.id,w,w<200?42:50);
+}
+function imageCredit(item) {
+  return item.kind==="commons"
+    ? "https://commons.wikimedia.org/wiki/File:"+encodeURIComponent(item.file)
+    : "https://unsplash.com/photos/"+item.id.replace(/^photo-/,"");
+}
 const iconRules = [
   [/lady finger|bhindi|okra|barabati|barbati/i, ['🫛','#e8f1e3']],
   [/^coriander$|betel leaves?|tamalapaku/i, ['🌿','#e8f1e1']],
@@ -127,38 +99,34 @@ const iconRules = [
   [/cleaning|broom|brush/i, ['🧹','#e9f0ed']]
 ];
 function shortLabel(name) {
-  const normalized=String(name||'Product').replace(/\s+/g,' ').trim();
-  return normalized.length>40 ? normalized.slice(0,37).trimEnd()+'…' : normalized;
+  const text=String(name||"Product").replace(/\s+/g," ").trim();
+  return text.length>40 ? text.slice(0,37).trimEnd()+"…" : text;
 }
 export function getCatalogVisual(product) {
-  const name = String(product?.name || '');
-  const category = String(product?.category || '');
-  const key = name.toLowerCase();
-  const icon = iconRules.find(([rx])=>rx.test(key))
-    || (/(flower)/i.test(category) ? [null,['💐','#f6e9ed']] : null)
-    || (/(fruit)/i.test(category) ? [null,['🍎','#f3ebdf']] : null)
-    || (/(vegetable|produce|leafy)/i.test(category) ? [null,['🥬','#e8f1e5']] : null)
-    || [null,['🛒','#edf1e9']];
-  // Restrict photos to single raw commodity names, never substitute packaged
-  // products, pickles or regional specialty variants with unrelated stock photos.
-  const isSpecialty = /pickle|pachadi|avakaya|dried|powder|masala|processed|flavoured|packed|package|baby corn|juice|drink|garland|small|raw banana|mango ginger|flowers|leaves|lotus|chrysanthemum|jasmine|hibiscus|betel|marigold/i.test(key);
-  const photoMatch = !isSpecialty ? [...exactPhotoRules,...photoRules].find(([rx])=>rx.test(name)) : null;
-  const isBrandSpecific = /\b(amul|heritage|epigamia|britannia|fortune|saffola|aashirvaad|srilalitha|double horse|tata|catch|everest|24 mantra|pri?ya|bambino|maggi|lay|haldiram|parle|pepsi|coca|sprite|thums|real activ|paper boat|pampers|himalaya|johnson|whisper|dove|colgate|vim|surf excel)\b/i.test(name);
-  const matchedPhoto = !isBrandSpecific && photoMatch ? photoMatch[1] : null;
-  const commonsName = matchedPhoto?.includes('/Special:FilePath/')
-    ? decodeURIComponent(matchedPhoto.split('/Special:FilePath/')[1].split('?')[0])
-    : null;
-  const variants=responsivePhoto(matchedPhoto);
+  const name=String(product?.name||"").trim();
+  const category=String(product?.category||"");
+  const icon=iconRules.find(([rx])=>rx.test(name.toLowerCase()))
+    || (/(flower)/i.test(category)?[null,["💐","#f6e9ed"]]:null)
+    || (/(fruit)/i.test(category)?[null,["🍎","#f3ebdf"]]:null)
+    || (/(vegetable|produce|leafy)/i.test(category)?[null,["🥬","#e8f1e5"]]:null)
+    || [null,["🛒","#edf1e9"]];
+  // Verified, provenance-backed merchant images can provide exact packaging.
+  const merchant=product?.verifiedImageUrl;
+  const exactPhoto=typeof merchant==="string" && /^https:\/\//.test(merchant)
+    && typeof product.imageSourceUrl==="string" && /^https:\/\//.test(product.imageSourceUrl);
+  const allowed=!blockedBranded.test(name) && !blockedProcessed.test(name);
+  const item=allowed?knownPhotos.find(([pattern])=>pattern.test(name))?.[1]:null;
+  const photo=exactPhoto ? merchant : item ? thumbSource(item,160) : null;
+  const highRes=item && !exactPhoto ? thumbSource(item,320) : null;
   return {
-    photo: matchedPhoto,
-    photoSrcSet: variants ? `${variants[0]} 240w, ${variants[1]} 420w` : null,
-    photoSource: matchedPhoto?.includes('wikimedia.org') ? 'Wikimedia Commons' : matchedPhoto ? 'Unsplash' : null,
-    photoCreditUrl: commonsName
-      ? `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(commonsName)}`
-      : null,
-    emoji: icon[1][0],
-    background: icon[1][1],
-    label: shortLabel(name),
-    isIllustration: !(!isBrandSpecific && photoMatch)
+    photo,
+    photoSrcSet: highRes ? photo+" 160w, "+highRes+" 320w" : null,
+    photoSource:exactPhoto ? "Seller verified image"
+      : item?.kind==="commons" ? "Wikimedia Commons" : item ? "Unsplash" : null,
+    photoCreditUrl:exactPhoto ? product.imageSourceUrl : item ? imageCredit(item) : null,
+    emoji: icon[1][0]==="🛒" && typeof product?.fallbackEmoji==="string" ? product.fallbackEmoji : icon[1][0],
+    background:icon[1][1],
+    label:shortLabel(name),
+    isIllustration:!photo
   };
 }

@@ -19,8 +19,9 @@ test('all grocery SKUs have relevant, name-labelled, low-cost visuals',()=>{
     if(visual.emoji==='🛒')generic.push(product.name);
     if(visual.photo) {
       assert.ok(/^https:\/\/(images\.unsplash\.com|commons\.wikimedia\.org)\//.test(visual.photo));
-      assert.match(visual.photo,/(w=240|width=240)/);
-      assert.ok(visual.photoSrcSet?.includes('420w'));
+      assert.match(visual.photo,/(w=160|width=160)/);
+      assert.ok(visual.photoSrcSet?.includes('320w'));
+      if(visual.photo.includes('images.unsplash.com')) assert.match(visual.photo,/q=42&fm=webp/);
     }
     assert.ok(!product.image || !String(product.image).startsWith('http'),
       `Unreviewed image URL persists for ${product.name}`);
@@ -41,7 +42,7 @@ test('do not show a raw commodity photograph as the product packaging',()=>{
   }
 });
 test('specific fresh produce photographs are not misleading generic product shots',()=>{
-  for (const name of ['Ash Gourd','Potols','Lady Finger / Bhindi','Bottle Gourd','Beerakaya','Ivy gourd','Coriander','Chana dal']) {
+  for (const name of ['Ash Gourd','Potols','Lady Finger / Bhindi','Bottle Gourd','Beerakaya','Ivy gourd','Coriander','Chana dal','Guava','Avocado','Pomegranate','Red Dragon Fruit','Cluster Beans','Drumsticks']) {
     const visual=getCatalogVisual({name,category:'Vegetables'});
     assert.ok(visual.photo,`No verified photo for ${name}`);
     assert.ok(visual.photo.includes('wikimedia.org'));
@@ -64,5 +65,20 @@ test('product surfaces use the central optimized visual component',()=>{
   ]) {
     const text=readFileSync(new URL('../'+file,import.meta.url),'utf8');
     assert.match(text,/CatalogProductVisual/,`Missing shared product visual in ${file}`);
+  }
+});
+
+test('small picture requests and exact branded identity are enforced',()=>{
+  for(const name of ['Tomato','Potato','Apple','Banana','Watermelon','Cabbage']) {
+    const v=getCatalogVisual({name});
+    assert.ok(v.photo,'Expected compact produce photo for '+name);
+    assert.match(v.photo,/(w=160|width=160)/);
+    assert.match(v.photoSrcSet,/320w/);
+  }
+  for(const name of ['Amul Salted Butter','Saffola Gold Pro Healthy Heart Oil',
+   'Surf Excel Easy Wash Detergent Powder','Britannia Good Day Butter Cookies']) {
+    const v=getCatalogVisual({name});
+    assert.equal(v.photo,null,'Wrong package photo for '+name);
+    assert.ok(v.emoji);
   }
 });

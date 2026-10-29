@@ -63,3 +63,12 @@
   text-decoration:none;border:1px solid #e1e8df;
 }
 .kp-product-image-credit:hover{text-decoration:underline;}
+
+/* Keep hero-carousel product thumbnails just as light as catalog cards. */
+.kp-promo-product > .kp-catalog-product-visual {
+  width:100%;height:100%;min-height:0;border-radius:inherit;
+}
+.kp-promo-product .kp-catalog-illustration {padding:3px;gap:2px;}
+.kp-promo-product .kp-catalog-emoji {font-size:clamp(27px,4vw,46px);}
+.kp-promo-product .kp-catalog-visual-caption {font-size:8px;line-height:1.1;}
+.kp-promo-product .kp-catalog-photo {padding:2px;object-fit:contain;}

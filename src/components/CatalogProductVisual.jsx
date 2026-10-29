@@ -11,11 +11,11 @@ export default function CatalogProductVisual({ product, className = '' }) {
       {showPhoto ? (
         <img className="kp-catalog-photo" src={visual.photo}
           srcSet={visual.photoSrcSet || undefined}
-          sizes={className.includes('kp-modal') ? '(max-width: 640px) 90vw, 340px' : '(max-width: 640px) 130px, 200px'}
+          sizes={className.includes('kp-modal') ? '(max-width: 640px) 300px, 320px' : '(max-width: 640px) 96px, 160px'}
           alt={`Representative photo of ${visual.label}`}
           loading={className.includes('kp-modal') ? 'eager' : 'lazy'}
           decoding="async" fetchPriority={className.includes('kp-modal') ? 'auto' : 'low'}
-          width="240" height="240"
+          width="160" height="160"
           onError={() => setFailedUrl(visual.photo)} />
       ) : (
         <div className="kp-catalog-illustration" role="img" aria-label={`Illustration: ${visual.label}`}>

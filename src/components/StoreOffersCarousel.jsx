@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
-import { getDisplayProducts, getOrderHighlights, getProductImage } from '../utils/storeMerchandising';
-import { getCatalogVisual } from '../utils/catalogVisual';
+import { getDisplayProducts, getOrderHighlights } from '../utils/storeMerchandising';
+import CatalogProductVisual from './CatalogProductVisual';
 import { buildHomepageBanners } from '../utils/homepageBanners';
 import { isLocalFreshStore } from '../data/deliveryAreas';
 import { navigateWithStoreTransition } from '../utils/storeTransition';
@@ -11,10 +11,7 @@ function ProductArt({ items }) {
     <div className="kp-promo-art" aria-hidden="true">
       {(items || []).slice(0,3).map((p,i) => (
         <div className="kp-promo-product" key={p.id} style={{ '--item': i }}>
-          {getProductImage(p)
-            ? <img src={getProductImage(p)} alt="" loading="lazy"
-                onError={event => { event.currentTarget.style.display = 'none'; }} />
-            : <span title={p.name}>{getCatalogVisual(p).emoji}</span>}
+          <CatalogProductVisual product={p} className="kp-promo-product-visual" />
         </div>
       ))}
     </div>
