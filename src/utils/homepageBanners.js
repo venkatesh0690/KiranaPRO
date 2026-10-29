@@ -26,7 +26,7 @@ export function buildHomepageBanners(stores, _catalog, area, orderCount=0) {
       ...FEATURED_CHECKOUT_OFFERS[0],kind:'global',
       id:'offer-free-delivery',tag:'FREE DELIVERY · SELECTED STORES',
       title:'Free delivery above ₹300',
-      subtitle:'Free above ₹300 at participating stores. LocalFresh excluded.',
+      subtitle:'Free delivery above ₹300 · participating neighborhood stores only.',
       store:participatingDeliveryStores[0],
       cta:'Explore eligible stores',minCart:MIN_PROMO_SUBTOTAL
     });
