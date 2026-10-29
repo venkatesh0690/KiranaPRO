@@ -88,3 +88,16 @@ Merchant-supplied exact packaging images can be used only with
 rights are checked. Legacy generic `image` fields are deliberately ignored.
 
 Additional directly identified thumbnail examples (photos remain representative and linked to author/license at Wikimedia Commons): [Green zucchini](https://commons.wikimedia.org/wiki/File:Green_zucchini.jpg), [fresh ginger rhizome](https://commons.wikimedia.org/wiki/File:Fresh_ginger_rhizome_01.jpg), [sweet potato](https://commons.wikimedia.org/wiki/File:Sweet_potato_image.jpg), [green cucumbers](https://commons.wikimedia.org/wiki/File:Green_Cucumbers_1.jpg), [whole cauliflower](https://commons.wikimedia.org/wiki/File:Liat_Portal_for_Foodie_Disorder_-_Cauliflower_from_SF_farmers%27_market.jpg), [mushrooms at a grocery store](https://commons.wikimedia.org/wiki/File:Mushrooms_in_a_cardboard_box.jpg), and [beetroots with carrots](https://commons.wikimedia.org/wiki/File:Beetroots_and_carrots.jpg).
+
+
+## October 2026: Photo lookup coverage for the remaining catalog
+
+All currently cataloged SKUs have a product-name-specific real-photo search identity. The catalog item UI does not render emoji icons as its primary product pictures.
+
+When an image is not already curated or seller-verified, the app searches Commons via the /api/catalog-photo serverless endpoint. Only cards near the viewport request images, and Commons results are limited to small photographic thumbnails (240px). Requests are deduplicated, browser-cached and CDN-cached. Filename filters reject logos, flags, illustrations, screenshots, icons and vector images.
+
+Regional names such as dosakaya, beerakaya, gongura, and barabati are mapped to meaningful photographic searches. For branded items, a generic ingredient or product-type photograph may be shown: it is not claimed to be an exact brand-pack photo. Each detail view links to the source/license page.
+
+If no appropriate real photo is found, the app shows an honest 'Photo unavailable' placeholder, never a misleading photo or emoji. Exact photos of all 175 product names cannot be guaranteed without seller-supplied, SKU-confirmed photos, and external Commons availability was not visually verified for every item. No AI images are generated.
+
+Run npm run test:photos to check search coverage, photo-only file filtering and the loading integration.
