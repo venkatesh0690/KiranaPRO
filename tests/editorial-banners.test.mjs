@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { getEditorialBannerStyle,getEditorialBannerHeadline,getEditorialBannerPhoto,POSTER_PALETTES, NEIGHBORHOOD_BANNER_PHOTO_IDS } from '../src/utils/editorialBanners.js';
+import { getEditorialBannerStyle,getEditorialBannerHeadline,getEditorialBannerPhoto,POSTER_PALETTES, NEON_PHOTO_IDS } from '../src/utils/editorialBanners.js';
 import { buildHomepageBanners } from '../src/utils/homepageBanners.js';
 import { stores,productsByCategory } from '../src/data/stores.js';
 import { DELIVERY_AREAS,getStoresForArea } from '../src/data/deliveryAreas.js';
@@ -26,9 +26,10 @@ test('all visible promotional banners are photo-led, not plain color posters',()
       assert.match(photo.src,/w=900/);
       assert.match(photo.src,/fm=webp/);
       assert.match(photo.backup,/^https:/);
-      assert.ok(NEIGHBORHOOD_BANNER_PHOTO_IDS.some(id=>photo.src.includes('/'+id+'/download')),slide.id);
-      assert.doesNotMatch(photo.alt,/fruit|vegetable|leafy|greens|produce/i);
-      assert.match(photo.alt,/Representative/);
+      assert.ok(Object.values(NEON_PHOTO_IDS).some(id=>photo.src.includes('/'+id+'/download')),slide.id);
+      assert.doesNotMatch(photo.alt,/fruit|vegetable|leafy|greens|produce|store|shop/i);
+      assert.match(photo.alt,/neon|bokeh|light trails/i);
+      assert.ok(photo.backup.includes('/'+NEON_PHOTO_IDS.violet+'/download'));
       assert.ok(['coupon','global','automatic'].includes(slide.kind));
       assert.doesNotMatch(getEditorialBannerHeadline(slide),/LocalFresh|Provisions|Mart|Stores|Shop/i);
     }
@@ -71,6 +72,7 @@ test('compact photo-backed offers keep the original slide width and exactly half
   assert.doesNotMatch(bannerCss.split('Compact, half-height offer photography cards')[1],/flex:\s*0\s+0\s+93%/);
   for(const area of DELIVERY_AREAS){
     const slides=buildHomepageBanners(stores,productsByCategory,area,0);
+    assert.equal(new Set(slides.map(s=>getEditorialBannerPhoto(s).src)).size,slides.length,'Every offer should have a distinct neon image');
     assert.ok(slides.every(s=>['global','automatic','coupon'].includes(s.kind)));
     assert.ok(slides.every(s=>!s.isSample && !s.bannerPhoto && s.id.startsWith('offer-')));
     for(const slide of slides){
@@ -95,4 +97,23 @@ test('category tiles appear directly after search, before the offer carousel',()
   assert.match(homepage,/01 \/ EXPLORE/);
   assert.match(homepage,/02 \/ YOUR MARKETPLACE/);
   assert.match(carousel,/editorial \? 'Offers' : 'Offers & rewards'/);
+});
+
+test('neon banner backgrounds match user references, without merchant or produce photography',()=>{
+  assert.ok(Object.keys(NEON_PHOTO_IDS).length>=5);
+  assert.match(stylesheet,/Neon-after-dark edition/);
+  assert.match(stylesheet,/rgba\(6,7,30,\.95\)/);
+  assert.match(stylesheet,/#FF80BD/i);
+  assert.match(stylesheet,/full-bleed photographic/i);
+  for(const area of DELIVERY_AREAS){
+    const slides=buildHomepageBanners(stores,productsByCategory,area,0);
+    assert.ok(slides.length>=4);
+    assert.ok(slides.every(s=>!s.isSample && ['global','coupon','automatic'].includes(s.kind)));
+    for(const slide of slides){
+      const photo=getEditorialBannerPhoto(slide);
+      assert.match(photo.src,/download\?force=true&w=900&h=250&q=56&fm=webp/);
+      assert.doesNotMatch(photo.alt,/store|fruit|vegetables|shop|food/i);
+      assert.match(photo.alt,/Abstract.*neon/i);
+    }
+  }
 });

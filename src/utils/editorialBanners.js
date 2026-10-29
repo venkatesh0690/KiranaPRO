@@ -56,57 +56,42 @@ export function getEditorialBannerMarker(slide,index=0) {
 }
 
 /**
- * Banner photography policy:
- * - Non-LocalFresh store previews and all generic checkout offers show ONLY
- *   packaged groceries, pulses, snacks, bottled drinks or household products.
- * - Fruit, vegetables and leafy produce are exclusive to LocalFresh visuals.
- * No photo is represented as the actual merchant's premises.
+ * Neon offer photography, inspired by the user's pink-light-trail and
+ * rain-on-glass bokeh references. Abstract backgrounds contain no store names,
+ * produce, packaged food or misleading pictures of any participating merchant.
  *
- * All non-LocalFresh source pages were selected as retail-packaging scenes.
- * The server returns a small photo from Unsplash, not an original large image.
+ * These are public Unsplash photographs (not expensive full-resolution images).
+ * Crop/size and WebP are requested at the source. Fallbacks use other neon photos.
  */
-export const NEIGHBORHOOD_BANNER_PHOTO_IDS=Object.freeze([
-  'FAziP8fKUNg', // packaged rice and pulses aisle
-  '3VoUDb-sVt4', // supermarket snack shelves
-  'ku-iy4fOVIQ', // packaged foods and beverages
-  'ivfp_yxZuYQ', // cereal, dairy and grocery aisles
-  '7H-CWW3rz9U'  // Indian packet snacks
-]);
-const photoUrl=id =>
-  `https://unsplash.com/photos/${id}/download?force=true&w=900&h=250&q=54&fm=webp`;
-const OFFER_PHOTOS=Object.freeze({
-  delivery:photoUrl('FAziP8fKUNg'),
-  basket:photoUrl('ivfp_yxZuYQ'),
-  welcome:photoUrl('3VoUDb-sVt4'),
-  repeat:photoUrl('7H-CWW3rz9U'),
-  tenth:photoUrl('ku-iy4fOVIQ'),
-  pantry:photoUrl('FAziP8fKUNg')
+export const NEON_PHOTO_IDS=Object.freeze({
+  rain:'SI2Vki55P7E',        // Dante Candal: pink/blue raindrops on glass
+  ribbons:'6uJbRVYrUMw',    // Zoya Marinova: purple/red light streaks
+  pink:'BYcm0lb-egA',       // Liana S: dark pink-purple light trails
+  city:'0gTY-Qt00a4',       // Aleksey Cherenkevich: rain bokeh at night
+  laser:'Vm0qUzxRyvU',      // Liana S: colorful neon light trails
+  violet:'G17GOEl0_P0'      // Logan Voss: abstract neon wave
 });
-const LOCALFRESH_PHOTO=photoUrl('wguVC8oG3qw');
+const photoUrl=(id)=>`https://unsplash.com/photos/${id}/download?force=true&w=900&h=250&q=56&fm=webp`;
+const BACKGROUNDS=Object.freeze({
+  delivery:NEON_PHOTO_IDS.rain,
+  basket:NEON_PHOTO_IDS.ribbons,
+  welcome:NEON_PHOTO_IDS.pink,
+  repeat:NEON_PHOTO_IDS.city,
+  tenth:NEON_PHOTO_IDS.laser
+});
 
 export function getEditorialBannerPhoto(slide) {
-  if(isLocalFreshStore(slide?.store)) {
-    const verifiedRepresentative=slide?.bannerPhoto;
-    return {
-      src:typeof verifiedRepresentative==='string' && /^https:\/\//.test(verifiedRepresentative)
-        ? verifiedRepresentative : LOCALFRESH_PHOTO,
-      backup:LOCALFRESH_PHOTO,
-      alt:'Representative photograph of LocalFresh fresh vegetable market'
-    };
-  }
-  // Ignore non-LocalFresh bannerPhoto. Even if an existing store gallery is
-  // accidentally configured with a produce shot, the homepage won't show it.
-  let key='pantry';
-  if(slide?.kind==='global')key='delivery';
-  else if(slide?.kind==='automatic')key='basket';
+  let category='basket';
+  if(slide?.kind==='global')category='delivery';
+  else if(slide?.kind==='automatic')category='basket';
   else if(slide?.kind==='coupon'){
-    if(slide.code==='WELCOME')key='welcome';
-    else if(slide.code==='REPEAT')key='repeat';
-    else if(slide.code==='ADDICTED')key='tenth';
+    if(slide.code==='WELCOME')category='welcome';
+    else if(slide.code==='REPEAT')category='repeat';
+    else if(slide.code==='ADDICTED')category='tenth';
   }
   return {
-    src:OFFER_PHOTOS[key],
-    backup:OFFER_PHOTOS.pantry,
-    alt:'Representative photograph of packaged groceries or household items'
+    src:photoUrl(BACKGROUNDS[category]),
+    backup:photoUrl(NEON_PHOTO_IDS.violet),
+    alt:'Abstract blue and pink neon lights, with rain bokeh or light trails'
   };
 }

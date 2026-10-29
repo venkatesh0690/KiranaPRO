@@ -46,3 +46,35 @@ then `npm run build`.
 
 ## Landing-page category-first order
 Category shortcuts now sit immediately under search, with the same photo-backed, half-height offers-only swiper immediately beneath them. The old promotional heading and generic footer tagline are removed. The stores grid follows the offer carousel. Checkout and individual store product-list screens remain unchanged.
+
+
+## Neon photo edition — October 30, 2026
+
+The half-height homepage offers-only carousel now uses blue/pink wet-glass
+bokeh and magenta/violet glowing light-trail photography behind high-contrast
+brutalist white headlines. This replaces the earlier grocery-shelf photographs
+and avoids plain, flat-color banners. The app requests lightweight WebP source
+images (900 × 250, quality 56); their licenses/attribution are available on
+the source pages.
+
+Photographic sources (free Unsplash pages):
+- Rain droplets with neon pink/blue light — Dante Candal:
+  https://unsplash.com/photos/SI2Vki55P7E
+- Abstract magenta/violet light trails — Zoya Marinova:
+  https://unsplash.com/photos/6uJbRVYrUMw
+- Pink light streaks — Liana S:
+  https://unsplash.com/photos/BYcm0lb-egA
+- Rain/bokeh city lights — Aleksey Cherenkevich:
+  https://unsplash.com/photos/0gTY-Qt00a4
+- Neon light streaks — Liana S:
+  https://unsplash.com/photos/Vm0qUzxRyvU
+- Fallback neon wave — Logan Voss:
+  https://unsplash.com/photos/G17GOEl0_P0
+
+Unchanged by this iteration: shop-by-category shortcuts are immediately below
+search and before the carousel; carousel width and 139px phone height are
+unchanged; only actual checkout offers appear, not merchant names or sample
+store banners; non-LocalFresh free delivery applies above ₹300, while LocalFresh
+keeps its separate fee; discounts and milestone codes retain their exact
+eligibility; individual store product lists remain banner-free. All decorative
+neon imagery is background-only and has no product or merchant identity claim.

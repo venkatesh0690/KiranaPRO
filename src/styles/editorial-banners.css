@@ -469,3 +469,101 @@
   .kp-concept .kp-concept-compact-categories .kp-concept-section-heading{margin-bottom:11px;}
   .kp-concept .kp-concept-feature{margin-bottom:24px;}
 }
+
+/* Neon-after-dark edition: full-bleed photographic light trails and wet-glass
+   bokeh, with the brutalist type of the reference. Offers only, no store names. */
+.kp-concept-feature .kp-editorial-rail .kp-promo-slide.kp-editorial-slide{
+  background:#07091e;
+  border:1px solid rgba(91,52,141,.24);
+  box-shadow:0 8px 23px rgba(24,12,50,.18);
+  border-radius:8px;
+}
+.kp-concept-feature .kp-editorial-rail .kp-ed-photographic{
+  background:#090c27;
+}
+.kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-backdrop img{
+  object-position:center 50%;
+  filter:saturate(1.3) contrast(1.16) brightness(.92);
+  transform:scale(1.025);
+}
+.kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-photo-scrim{
+  background:
+    linear-gradient(90deg,rgba(6,7,30,.95) 0%,rgba(8,7,31,.91) 26%,
+      rgba(8,8,35,.73) 48%,rgba(8,8,38,.18) 86%),
+    linear-gradient(0deg,rgba(14,3,35,.38),transparent 65%);
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-label{
+  color:#FF80BD;
+  font-weight:900;
+  letter-spacing:.15em;
+}
+.kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-copy h3,
+.kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-copy h3.kp-ed-title-long{
+  color:#FFF9FE;
+  text-transform:uppercase;
+  font-family:Impact,'Arial Narrow','Arial Black',system-ui,sans-serif;
+  font-stretch:condensed;
+  font-weight:950;
+  text-shadow:1px 2px 12px rgba(4,3,18,.4);
+}
+.kp-ed-photographic .kp-ed-copy p{
+  color:#EAE3FB;
+  font-weight:550;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-coupon{
+  color:#FFDAF1;border-color:rgba(255,157,226,.8);
+  background:rgba(47,12,73,.48);
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-action{
+  color:#FFFFFF;border-bottom-color:#FF7BB9;
+  font-weight:850;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-price-art{
+  color:#FFFFFF;
+  background:rgba(10,8,41,.28);
+  border:1.5px solid rgba(255,231,254,.82);
+  box-shadow:0 0 19px rgba(226,54,171,.17);
+  transform:rotate(-5deg);
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-price-art strong{
+  color:#FFEAF6;
+  text-shadow:0 0 13px rgba(244,81,190,.34);
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-price-decoration,
+.kp-editorial-rail .kp-ed-photographic .kp-ed-price-art>span:last-child{
+  color:#EED9F8;
+}
+.kp-editorial-rail .kp-ed-photographic .kp-ed-accent-square{
+  background:#FF3F94;
+  box-shadow:0 0 11px rgba(255,63,148,.55);
+}
+.kp-concept-feature .kp-editorial-rail .kp-promo-dot.active{
+  background:#C93B91;
+}
+@media(max-width:720px){
+  .kp-concept-feature .kp-editorial-rail .kp-promo-slide.kp-editorial-slide{
+    /* Retain the requested half-height layout and original width. */
+    height:139px;
+  }
+  .kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-photo-scrim{
+    background:linear-gradient(90deg,rgba(5,6,29,.96) 0%,
+      rgba(9,6,29,.9) 35%,rgba(10,7,35,.65) 61%,
+      rgba(10,7,35,.18) 100%);
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-body{
+    grid-template-columns:minmax(0,74%) minmax(0,26%);
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-copy{padding-left:13px;}
+  .kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-copy h3,
+  .kp-concept-feature .kp-editorial-rail .kp-ed-photographic .kp-ed-copy h3.kp-ed-title-long{
+    font-size:clamp(21px,5.9vw,27px);
+    line-height:.94;
+    margin:3px 0 3px;
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-copy p{
+    font-size:9px;line-height:1.12;-webkit-line-clamp:2;
+  }
+  .kp-editorial-rail .kp-ed-photographic .kp-ed-price-art{
+    transform:rotate(-4deg);
+  }
+}
