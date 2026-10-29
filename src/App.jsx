@@ -40,6 +40,7 @@ import './styles/order-rewards.css';
 import './styles/fulfilment-checkout.css';
 import './styles/sample-stores-guest.css';
 import './styles/editorial-banners.css';
+import './styles/home-reference-layout.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();
