@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -19,54 +19,38 @@ import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
 import { useStore } from '../context/StoreContext';
 import { FREE_DELIVERY_THRESHOLD, getDeliveryFee, isStoreAvailableInArea } from '../data/deliveryAreas';
-import { VALID_COUPONS, MIN_PROMO_SUBTOTAL } from '../data/checkoutOffers';
+import { VALID_COUPONS, MIN_PROMO_SUBTOTAL, evaluateCoupon, getOrderSavings, getAutomaticBasketDiscount } from '../data/checkoutOffers';
+import { useCustomerOrders, readCustomerOrders, getCustomerKey } from '../context/OrderHistoryContext';
 
 export default function CartPage({ userLocation }) {
   const { cart, addItem, removeItem, clearCart, totalItems, totalPrice } = useCart();
   const { stores } = useStore();
-  const { authSession, logSecurityEvent, savedAddresses } = useSecurity();
+  const { authSession, logSecurityEvent } = useSecurity();
+  const { orderCount, nextOrderNumber, recordOrder } = useCustomerOrders();
   const navigate = useNavigate();
   const store = stores.find((s) => String(s.id).toLowerCase() === String(cart.storeId).toLowerCase());
   const storeServesArea = store && isStoreAvailableInArea(store,userLocation);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const placingRef = useRef(false);
 
-  // Coupon State (Matching Image 2 Checkout Design)
+  // Coupon selection is tied to the customer's next successfully placed order.
   const [couponCode, setCouponCode] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState(null);
-  const [couponStatus, setCouponStatus] = useState(null); // { type: 'success' | 'error', message: '' }
-
-  // Coupon eligibility is enforced at ₹301+ for all promotional codes.
+  const [appliedCoupon, setAppliedCoupon] = useState(null); // one coupon code
+  const [couponStatus, setCouponStatus] = useState(null);
+  const [orderError, setOrderError] = useState(null);
 
   const handleApplyCoupon = (codeToApply) => {
-    const code = (codeToApply || couponCode).trim().toUpperCase();
-    if (!code) return;
-
-    const coupon = VALID_COUPONS[code];
-    if (!coupon) {
-      setCouponStatus({ type: 'error', message: 'Invalid coupon code. Available: TASTY12, KIRANA50, WELCOME (cart above ₹300).' });
+    const code = String(codeToApply || couponCode).trim().toUpperCase();
+    if(!code)return;
+    const quote = evaluateCoupon(code,totalPrice,nextOrderNumber);
+    if(!quote.eligible){
+      setCouponStatus({type:'error',message:quote.reason});
       return;
     }
-
-    if (totalPrice < MIN_PROMO_SUBTOTAL || totalPrice < coupon.min) {
-      setCouponStatus({
-        type: 'error',
-        message: `Offers unlock only above ₹300. Add ₹${Math.max(0, coupon.min-totalPrice)} more to use ${code}.`
-      });
-      return;
-    }
-
-    let discount = 0;
-    if (coupon.type === 'flat') {
-      discount = coupon.value;
-    } else if (coupon.type === 'percent') {
-      discount = Math.min(coupon.max, Math.round((totalPrice * coupon.percent) / 100));
-    }
-
-    setAppliedCoupon({ code, discount, ...coupon });
-    setCouponStatus({ type: 'success', message: `Coupon ${code} applied successfully!` });
+    setAppliedCoupon(code);
+    setCouponStatus({type:'success',message:`${code} unlocked for order #${nextOrderNumber}.`});
     setCouponCode('');
   };
-
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null);
     setCouponStatus(null);
@@ -89,31 +73,60 @@ export default function CartPage({ userLocation }) {
     );
   }
 
-  // Delivery Calculation: cart subtotal above ₹300 gets free delivery across all stores
+  // Free delivery is independent of coupons: only when subtotal > ₹300.
   const isFreeDelivery = totalPrice > FREE_DELIVERY_THRESHOLD;
   const baseDeliveryFee = store?.deliveryFee ?? 20;
-  const deliveryFee = getDeliveryFee(store, totalPrice, appliedCoupon);
-  const couponQualified = Boolean(appliedCoupon) &&
-    totalPrice >= MIN_PROMO_SUBTOTAL && totalPrice >= appliedCoupon.min;
-  const couponDiscount = couponQualified ? appliedCoupon.discount : 0;
+  const deliveryFee = getDeliveryFee(store,totalPrice);
+  const activePromo = getOrderSavings(totalPrice,nextOrderNumber,appliedCoupon);
+  const couponQualified = Boolean(appliedCoupon) && activePromo.eligible;
+  const autoDiscount = getAutomaticBasketDiscount(totalPrice);
+  const couponDiscount = couponQualified ? activePromo.discount : autoDiscount;
+  const savingLabel = couponQualified ? appliedCoupon : (autoDiscount>0 ? 'Basket discount' : null);
   const handlingFee = 5;
-  const tax = Math.round(Math.max(0, totalPrice - couponDiscount) * 0.05);
-  const grandTotal = Math.max(0, totalPrice - couponDiscount + deliveryFee + handlingFee + tax);
-
-
+  const tax = Math.round(Math.max(0,totalPrice-couponDiscount)*.05);
+  const grandTotal = Math.max(0,totalPrice-couponDiscount+deliveryFee+handlingFee+tax);
 
   const handlePlaceOrder = () => {
-    if (!storeServesArea || store?.isSample) return;
-    logSecurityEvent(
-      'ORDER_PLACED',
-      `Order placed with ${store?.name || 'Local Store'}. Value: ₹${grandTotal} (Subtotal: ₹${totalPrice}, Discount: ₹${couponDiscount})`,
-      'info'
-    );
+    if(placingRef.current || orderPlaced || !storeServesArea || store?.isSample) return;
+    placingRef.current = true;
+    setOrderError(null);
+    const accountKey=getCustomerKey(authSession);
+    if(!accountKey) {
+      setOrderError('Please log in again before placing an order.');
+      placingRef.current=false;
+      return;
+    }
+    // Re-read order history at submission instead of trusting a stale screen.
+    const actualNext=readCustomerOrders(accountKey).length+1;
+    const latest=getOrderSavings(totalPrice,actualNext,appliedCoupon);
+    // An expired coupon never blocks the order; use the eligible automatic
+    // basket discount when applicable and don't redeem the invalid code.
+    const effectiveDiscount=latest.eligible
+      ? latest.discount : getAutomaticBasketDiscount(totalPrice);
+    const effectiveCode=latest.eligible ? latest.code
+      : (effectiveDiscount>0 ? 'BASKET30' : null);
+    const finalTax=Math.round(Math.max(0,totalPrice-effectiveDiscount)*.05);
+    const finalTotal=Math.max(0,totalPrice-effectiveDiscount+deliveryFee+handlingFee+finalTax);
+    const saved=recordOrder({
+      storeId:cart.storeId,storeName:store?.name || 'Local Store',
+      storeArea:userLocation,
+      items:cart.items.map(i=>({id:i.id,name:i.name,qty:i.quantity,price:i.price,unit:i.unit})),
+      subtotal:totalPrice,deliveryFee,discount:effectiveDiscount,
+      discountCode:effectiveCode,total:finalTotal,handlingFee,tax:finalTax,
+      paymentMethod:'Demo checkout — no payment processed'
+    });
+    if(!saved.success) {
+      setOrderError(saved.error);
+      placingRef.current=false;
+      return;
+    }
+    logSecurityEvent('DEMO_ORDER_RECORDED',
+      `Demo order #${saved.order.orderNumber} saved for ${store?.name}; subtotal ₹${totalPrice}, discount ₹${effectiveDiscount}`,'info');
     setOrderPlaced(true);
-    setTimeout(() => {
+    window.setTimeout(()=>{
       clearCart();
       navigate('/orders');
-    }, 1500);
+    },750);
   };
 
   return (
@@ -135,8 +148,8 @@ export default function CartPage({ userLocation }) {
         <div className="order-success-overlay">
           <div className="order-success-box">
             <CheckCircle2 size={42} color="#16a34a" />
-            <h2>Order Placed Successfully!</h2>
-            <p>Arriving from <strong>{store?.name || 'Kirana Store'}</strong> in {store?.deliveryTime || '20–30 mins'}.</p>
+            <h2>Demo Order Saved</h2>
+            <p>Your order was saved locally. No payment or delivery has been scheduled.</p>
             <span>Redirecting to order tracking...</span>
           </div>
         </div>
@@ -271,7 +284,7 @@ export default function CartPage({ userLocation }) {
           <div className="coupon-input-box">
             <input
               type="text"
-              placeholder="Enter Promocode (e.g. TASTY12)"
+              placeholder="Coupon: WELCOME, REPEAT, ADDICTED"
               value={couponCode}
               onChange={(e) => {
                 setCouponCode(e.target.value);
@@ -294,9 +307,9 @@ export default function CartPage({ userLocation }) {
             <div className="cap-left">
               <CheckCircle2 size={16} color="#16A34A" />
               <div>
-                <strong>{appliedCoupon.code} Applied</strong>
+                <strong>{appliedCoupon} {couponQualified ? 'applied' : 'not eligible'}</strong>
                 <span>
-                  {appliedCoupon.type === 'freedel' ? 'Free Delivery Unlocked' : `Saved ₹${couponQualified ? appliedCoupon.discount : 0}`}
+                  {couponQualified ? `Saved ₹${activePromo.discount}` : activePromo.reason}
                 </span>
               </div>
             </div>
@@ -315,7 +328,7 @@ export default function CartPage({ userLocation }) {
         {!appliedCoupon && (
           <div className="coupon-suggestions-row">
             <span className="cs-label">Try:</span>
-            {['TASTY12', 'KIRANA50', 'WELCOME'].map((code) => (
+            {['WELCOME','REPEAT','ADDICTED'].map((code) => (
               <button
                 key={code}
                 type="button"
@@ -338,8 +351,8 @@ export default function CartPage({ userLocation }) {
 
       {appliedCoupon && !couponQualified && (
         <p className="kp-coupon-threshold-note" role="status">
-          {appliedCoupon.code} is paused: offers only apply above ₹300. Add
-          ₹{Math.max(0,MIN_PROMO_SUBTOTAL-totalPrice)} more to unlock.
+          {appliedCoupon} is not applicable to order #{nextOrderNumber}: {activePromo.reason}
+          {autoDiscount>0 && ' The automatic basket discount applies instead when eligible.'}
         </p>
       )}
 
@@ -380,7 +393,7 @@ export default function CartPage({ userLocation }) {
 
           {couponDiscount > 0 && (
             <div className="bill-row discount">
-              <span>Coupon Discount ({appliedCoupon?.code})</span>
+              <span>{savingLabel}</span>
               <span className="bill-discount-txt">-₹{couponDiscount}</span>
             </div>
           )}
@@ -411,6 +424,14 @@ export default function CartPage({ userLocation }) {
             : 'This store is not available in your selected delivery area. Choose another area or store.'}
         </p>
       )}
+      <div className="kp-coupon-eligibility-note">
+        <strong>Order #{nextOrderNumber}</strong> · Free delivery above ₹300.
+        {totalPrice>500
+          ? ' Automatic basket saving up to ₹30 (5%, capped) applies if no eligible coupon is used.'
+          : ' Basket discount up to ₹30 unlocks above ₹500.'}
+        {' '}Only one discount applies per order.
+      </div>
+      {orderError && <p role="alert" className="kp-cart-unavailable">{orderError}</p>}
       {/* Floating Checkout Button */}
       <div className="cart-checkout-bar">
         <div className="ccb-left">
@@ -423,9 +444,9 @@ export default function CartPage({ userLocation }) {
           type="button"
           className="cart-checkout-btn"
           onClick={handlePlaceOrder}
-          disabled={!storeServesArea || Boolean(store?.isSample)}
+          disabled={orderPlaced || !storeServesArea || Boolean(store?.isSample)}
         >
-          <span>{store?.isSample ? 'Sample store — checkout unavailable' : 'Place Order'}</span>
+          <span>{store?.isSample ? 'Sample store — checkout unavailable' : 'Save Demo Order'}</span>
           <ChevronRight size={18} />
         </button>
       </div>

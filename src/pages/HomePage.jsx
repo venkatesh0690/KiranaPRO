@@ -9,6 +9,7 @@ import { getStoresForArea, FREE_DELIVERY_THRESHOLD } from '../data/deliveryAreas
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
+import { useCustomerOrders } from '../context/OrderHistoryContext';
 import StoreCard from '../components/StoreCard';
 import { HomeOffersCarousel } from '../components/StoreOffersCarousel';
 import CategoriesModal from '../components/CategoriesModal';
@@ -24,6 +25,7 @@ export default function HomePage({ userLocation }) {
   const navigate = useNavigate();
   const { stores, products } = useStore();
   const { totalItems } = useCart();
+  const { orderCount } = useCustomerOrders();
   const { authSession } = useSecurity();
   const [activeFilter, setActiveFilter] = useState('all');
   const [authMode, setAuthMode] = useState(null);
@@ -101,7 +103,7 @@ export default function HomePage({ userLocation }) {
           </div>
           <span className="kp-concept-subnote">Offers, store specials & grocery picks</span>
         </div>
-        <HomeOffersCarousel stores={areaStores} catalog={products} navigate={navigate} area={userLocation} totalItems={totalItems} />
+        <HomeOffersCarousel stores={areaStores} catalog={products} navigate={navigate} area={userLocation} totalItems={totalItems} orderCount={orderCount} />
       </section>
 
       <section className="kp-concept-categories kp-concept-compact-categories" aria-labelledby="kp-concept-categories-title">

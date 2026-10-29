@@ -35,6 +35,7 @@ import './styles/store-photos.css';
 import './styles/delivery-areas.css';
 import './styles/neighborhood-highlights.css';
 import './styles/unified-banner.css';
+import './styles/order-rewards.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();

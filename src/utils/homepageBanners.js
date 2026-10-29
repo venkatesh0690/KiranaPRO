@@ -1,11 +1,11 @@
-import { FEATURED_CHECKOUT_OFFERS, VALID_COUPONS, MIN_PROMO_SUBTOTAL } from '../data/checkoutOffers.js';
+import { FEATURED_CHECKOUT_OFFERS, VALID_COUPONS, MIN_PROMO_SUBTOTAL, isCouponForOrder, nextOrderNumber } from '../data/checkoutOffers.js';
 import { getStoresForArea } from '../data/deliveryAreas.js';
 import { getAreaFeaturedPicks } from './areaFeaturedPicks.js';
 import { getDisplayProducts } from './storeMerchandising.js';
 
 // Single first-position banner rail for all valid checkout offers, store
 // promotions and area catalog picks. Never list unonboarded sample merchants.
-export function buildHomepageBanners(stores, catalog, area) {
+export function buildHomepageBanners(stores, catalog, area, orderCount=0) {
   const available = getStoresForArea(stores,area)
     .filter(store => !store.isSample && store.isOpen !== false);
   if (!available.length) return [];
@@ -49,13 +49,26 @@ export function buildHomepageBanners(stores, catalog, area) {
       `${store.name} essentials`,`${store.name.toUpperCase()} · STORE OFFER`));
   }
 
-  // Explicit checkout promotions, all drawn from actual shared coupon rules.
-  for (const offer of FEATURED_CHECKOUT_OFFERS.filter(item=>item.code)) {
-    const rule = VALID_COUPONS[offer.code];
-    if (!rule || rule.min <= 300) continue;
+  // Automatic basket discount is available above ₹500 on all stores.
+  const automatic = FEATURED_CHECKOUT_OFFERS.find(offer=>offer.kind==='automatic');
+  if(automatic) slides.push({
+    ...automatic,
+    items:localFresh ? getDisplayProducts(localFresh,catalog,3):getDisplayProducts(available[0],catalog,3),
+    cta:'Shop & save',minCart:501
+  });
+
+  // Order milestones refer to the customer's NEXT order, never sample order data.
+  for(const offer of FEATURED_CHECKOUT_OFFERS.filter(item=>item.code)) {
+    const rule=VALID_COUPONS[offer.code];
+    if(!rule)continue;
+    const eligible=isCouponForOrder(offer.code,nextOrderNumber(orderCount));
     slides.push({
-      ...offer, kind:'coupon',tag:offer.kicker,
-      cta:'Shop & save', minCart:rule.min,
+      ...offer,kind:'coupon',
+      tag:eligible ? offer.kicker : 'ORDER MILESTONE · UPCOMING',
+      rewardEligible:eligible,
+      subtitle:eligible ? offer.subtitle : `${offer.subtitle} · Not eligible on order #${nextOrderNumber(orderCount)}`,
+      cta:eligible?'Shop & redeem':'View the reward',
+      minCart:rule.min,
       items:localFresh ? getDisplayProducts(localFresh,catalog,3):getDisplayProducts(available[0],catalog,3)
     });
   }

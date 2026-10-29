@@ -1,37 +1,30 @@
-# KiranaPRO consolidated homepage banners
+# KiranaPRO coupon scheme — October 2026
 
-## Placement
-The homepage has **one promotional carousel**, immediately beneath search in
-the original `01 / FEATURED` position. There is no second "Your savings"
-banner block and no extra "Trending" banner block below the categories.
-Shop by Category and Stores follow the first carousel.
+## Delivery and discount rules
 
-The single rail contains, for the selected service area:
-- LocalFresh vegetable and fruit store-special slides.
-- Free delivery for **every** store on item subtotals strictly above ₹300.
-- Three supported checkout promotions: TASTY12 (₹30 off), KIRANA50 (₹50 off),
-  WELCOME (15% off, capped at ₹60). Each now requires a subtotal of at least ₹301.
-- Store-specific banners for any registered merchant serving that delivery
-  area (currently Sri Lakshmi Provisions in MVP Colony).
-- Popular catalog product picks from available, non-sample local stores,
-  explicitly **not** verified live neighborhood sales rankings.
+- Delivery is FREE only when the item subtotal is strictly greater than ₹300; fees apply at ₹300 or less, including LocalFresh.
+- Above ₹500 item subtotal, an **automatic 5% discount capped at ₹30** is available. For example ₹501 -> ₹25 discount; ₹600 -> ₹30 discount.
+- `WELCOME` — ₹30 discount on the customer's **1st** order, cart above ₹300.
+- `REPEAT` — ₹20 discount on exactly the customer's **3rd, 5th or 7th** order, cart above ₹300.
+- `ADDICTED` — ₹50 discount on exactly the customer's **10th** order, cart above ₹300.
+- Only **one** discount applies per order. The auto basket discount and an account coupon are not stackable. A user-selected eligible coupon replaces the automatic discount.
 
-There are no advertised discounts on baskets of ₹300 or less. Legacy
-FREEDEL below-threshold free delivery was removed. All banner offers draw from
-shared checkout rules in `src/data/checkoutOffers.js`.
+Order numbering is **1-based**: a customer with two stored placed orders is placing their 3rd order and can redeem REPEAT.
 
-The store specials highlight that merchant's real catalog and the common
-free delivery policy: they **do not invent merchant-funded discounts**.
+## Account-specific ledger
 
-## Interaction
-Automatically advances every six seconds while visible. Manual swipes,
-arrow keys, arrows and pagination dots work; manual interaction pauses
-autoplay temporarily. Reduced-motion devices do not auto-advance.
+The previous hard-coded demo orders have been replaced in the customer-facing Orders page. Demo orders are now recorded in browser `localStorage` under a key scoped to the signed-in customer's phone number; reward eligibility uses that account's order count, not the fake StoreContext seller/admin dataset.
 
-## Tests
-`npm run build` runs both the five-area delivery suite and the consolidated
-homepage promotions suite before producing the Vite bundle.
+**This is a frontend prototype, not a secure promotion system.** A user can reset or modify local storage, an unverified PIN login isn't real identity verification, and browser data does not synchronize across devices. Before accepting real payments or honoring these promotions financially, implement genuine authenticated accounts, database-backed order history, server-side totals and eligibility checks, atomically redeemed coupons, and fraud prevention. Existing prior real-world orders are not imported into this new ledger.
 
-Financial and customer eligibility must also be enforced on the trusted
-server before real orders or payments are accepted. Current checkout remains
-a client-side prototype.
+## Front page
+
+The single swipeable carousel immediately below search contains general discount rules, LocalFresh and other available shop highlights, and catalog-based grocery picks. Conditional coupon slides explain the correct order number and distinguish upcoming rewards from eligible offers.
+
+The supplied Cosmos reference was inaccessible during development; existing Version B's layout was retained instead of claiming an exact reproduction.
+
+## Checks
+
+- `npm run test:highlights`
+- `npm run test:areas`
+- `npm run build`

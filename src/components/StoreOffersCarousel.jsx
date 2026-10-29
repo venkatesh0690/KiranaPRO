@@ -46,15 +46,15 @@ export function StoreOffersCarousel({ store, catalog, orders, onOpenCategory, on
   }} label={`Featured products at ${store.name}`}/>;
 }
 
-export function HomeOffersCarousel({ stores, catalog, navigate, area, totalItems = 0 }) {
-  const slides = useMemo(() => buildHomepageBanners(stores,catalog,area),[stores,catalog,area]);
+export function HomeOffersCarousel({ stores, catalog, navigate, area, totalItems = 0, orderCount = 0 }) {
+  const slides = useMemo(() => buildHomepageBanners(stores,catalog,area,orderCount),[stores,catalog,area,orderCount]);
   const openSlide = slide => {
     if (slide.kind==='store' && slide.store) {
       navigateWithStoreTransition(navigate,`/store/${slide.store.id}`);
     } else if (slide.kind==='picks' && slide.productTarget) {
       const pick=slide.productTarget;
       navigate(`/store/${pick.storeId}`,{state:{category:pick.category,productId:pick.id}});
-    } else if (slide.kind==='coupon' || slide.kind==='global') {
+    } else if (slide.kind==='coupon' || slide.kind==='global' || slide.kind==='automatic') {
       navigate(totalItems > 0 ? '/cart' : '/store/localfresh');
     }
   };
@@ -152,12 +152,14 @@ function SwipeBanners({ slides, onAction, label, autoAdvance = false }) {
               <span className="kp-promo-eyebrow">{slide.tag || 'FEATURED'}</span>
               <h3>{slide.title}</h3>
               <p>{slide.subtitle}</p>
-              {slide.code && <span className="kp-promo-code">CODE {slide.code}</span>}
+              {slide.code && <span className="kp-promo-code">
+                {slide.rewardEligible===false ? 'NEXT-ORDER MILESTONE' : 'CODE'} {slide.code}
+              </span>}
               <button type="button" className="kp-promo-shop" onClick={()=>onAction(slide)}>
                 {slide.cta || 'Shop now'}<ArrowRight size={15}/>
               </button>
             </div>
-            {slide.kind==='coupon' || slide.kind==='global'
+            {slide.kind==='coupon' || slide.kind==='global' || slide.kind==='automatic'
               ? <div className="kp-promo-offer-art" aria-hidden="true">
                   <div className="kp-promo-offer-symbol">{slide.icon || '🛍️'}</div>
                   <span>{slide.highlight}</span>
