@@ -26,7 +26,7 @@ import {
 import { useSecurity } from '../context/SecurityContext';
 import AuthModal from '../components/AuthModal';
 
-export default function ProfilePage() {
+export default function ProfilePage({ userLocation }) {
   const navigate = useNavigate();
   const {
     authSession,
@@ -131,8 +131,12 @@ export default function ProfilePage() {
                   <span>Edit Name</span>
                 </button>
               </div>
-              <span className="profile-user-phone">{authSession.userPhone || '+91 98480 22334'}</span>
-              <span className="profile-user-location">📍 Maddilapalem, Vizag • Active 2km Radius</span>
+              <span className="profile-user-phone">{authSession.userPhone ||
+                (authSession.isTemporary ? 'Guest preview · no phone linked' : 'Phone number not provided')}</span>
+              <span className="profile-user-location">
+                📍 {userLocation || 'Delivery area not selected'} · Visakhapatnam
+                {authSession.isTemporary ? ' · Temporary preview' : ''}
+              </span>
             </>
           ) : (
             <>
@@ -345,7 +349,7 @@ export default function ProfilePage() {
                 <label>Full Name</label>
                 <input
                   type="text"
-                  placeholder="e.g. Venkatesh Rao"
+                  placeholder="e.g. Laxman"
                   value={newNameInput}
                   onChange={(e) => setNewNameInput(e.target.value)}
                   required

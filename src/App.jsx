@@ -102,7 +102,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
           />
           <Route
             path="/profile"
-            element={canShop ? <ProfilePage /> : <Navigate to="/" replace />}
+            element={canShop ? <ProfilePage userLocation={userLocation} /> : <Navigate to="/" replace />}
           />
 
           {/* Seller Access Routes with RBAC Protection */}

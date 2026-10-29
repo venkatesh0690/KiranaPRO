@@ -173,7 +173,27 @@ function SwipeBanners({ slides, onAction, label, autoAdvance = false }) {
                 {slide.cta || 'Shop now'}<ArrowRight size={15}/>
               </button>
             </div>
-            {slide.kind==='coupon' || slide.kind==='global' || slide.kind==='automatic'
+            {slide.bannerPhoto ? (
+              <div className="kp-promo-store-art">
+                <img src={slide.bannerPhoto}
+                  alt={`Representative shop photo for ${slide.store?.name || slide.title}`}
+                  loading="lazy" decoding="async"
+                  onError={event => {
+                    const image=event.currentTarget;
+                    if (image.dataset.fallback) {
+                      image.style.visibility='hidden';
+                      return;
+                    }
+                    const alternate=getStoreGallery(slide.store).find(photo=>photo.src !== slide.bannerPhoto)?.src;
+                    if (alternate) {
+                      image.dataset.fallback='true';
+                      image.src=alternate;
+                    } else image.style.visibility='hidden';
+                  }}
+                />
+                {slide.isSample && <span>Sample shop · representative photo</span>}
+              </div>
+            ) : slide.kind==='coupon' || slide.kind==='global' || slide.kind==='automatic'
               ? <div className="kp-promo-offer-art" aria-hidden="true">
                   <div className="kp-promo-offer-symbol">{slide.icon || '🛍️'}</div>
                   <span>{slide.highlight}</span>

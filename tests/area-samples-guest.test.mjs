@@ -42,3 +42,19 @@ test('temporary guest session is not a verified customer or an admin',()=>{
   const location=readFileSync(new URL('../src/pages/LocationPage.jsx',import.meta.url),'utf8');
   assert.match(location,/loginTemporaryCustomer\(\)/);
 });
+
+test('first-position homepage banner displays real store photo, not empty product art',()=>{
+  const carousel=readFileSync(new URL('../src/components/StoreOffersCarousel.jsx',import.meta.url),'utf8');
+  assert.match(carousel,/slide\.bannerPhoto\s*\?/);
+  assert.match(carousel,/kp-promo-store-art/);
+  assert.match(carousel,/alt=\{\`Representative shop photo/);
+  const banners=readFileSync(new URL('../src/utils/homepageBanners.js',import.meta.url),'utf8');
+  assert.match(banners,/bannerPhoto:store\.gallery\?\.\[0\]\?\.src \|\| store\.posterImage/);
+});
+test('demo customer profile never shows fabricated phone or unselected neighborhood',()=>{
+  const profile=readFileSync(new URL('../src/pages/ProfilePage.jsx',import.meta.url),'utf8');
+  assert.match(profile,/e\.g\. Laxman/);
+  assert.doesNotMatch(profile,/Venkatesh Rao|98480 22334|Maddilapalem, Vizag • Active 2km Radius/);
+  assert.match(profile,/Guest preview · no phone linked/);
+  assert.match(profile,/userLocation \|\| 'Delivery area not selected'/);
+});
