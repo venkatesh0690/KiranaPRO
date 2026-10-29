@@ -1,22 +1,37 @@
-# Area-aware homepage banners
+# KiranaPRO consolidated homepage banners
 
-KiranaPRO Version B shows additional swipeable banners **after sign-in and the selected delivery area**.
+## Placement
+The homepage has **one promotional carousel**, immediately beneath search in
+the original `01 / FEATURED` position. There is no second "Your savings"
+banner block and no extra "Trending" banner block below the categories.
+Shop by Category and Stores follow the first carousel.
 
-## Checkout offers
-Four offer banners reflect actual coupon rules from `src/data/checkoutOffers.js`. That module is imported by both the homepage and checkout so codes, discounts, and minimum order values don't drift:
-- Free delivery above ₹300 (item subtotal).
-- TASTY12 — ₹30 off above ₹99.
-- KIRANA50 — ₹50 off above ₹199.
-- WELCOME — 15% off up to ₹60 above ₹120.
+The single rail contains, for the selected service area:
+- LocalFresh vegetable and fruit store-special slides.
+- Free delivery for **every** store on item subtotals strictly above ₹300.
+- Three supported checkout promotions: TASTY12 (₹30 off), KIRANA50 (₹50 off),
+  WELCOME (15% off, capped at ₹60). Each now requires a subtotal of at least ₹301.
+- Store-specific banners for any registered merchant serving that delivery
+  area (currently Sri Lakshmi Provisions in MVP Colony).
+- Popular catalog product picks from available, non-sample local stores,
+  explicitly **not** verified live neighborhood sales rankings.
 
-Offers don't invent expiry times, discount percentages, or unimplemented shop promotions.
+There are no advertised discounts on baskets of ₹300 or less. Legacy
+FREEDEL below-threshold free delivery was removed. All banner offers draw from
+shared checkout rules in `src/data/checkoutOffers.js`.
 
-## Grocery picks
-Products in the second swipeable rail are selected from **in-stock products listed by non-sample stores serving the selected delivery area**. Picks are ordered by catalog review metadata and diversified across categories. They are not genuine order-volume trends.
+The store specials highlight that merchant's real catalog and the common
+free delivery policy: they **do not invent merchant-funded discounts**.
 
-Until verified area-level sales data is available, label them as catalog-based suggestions and do not display fabricated order counts, trending percentages or consumer behavior claims. Clicking an item opens its eligible store and the item's detail modal.
+## Interaction
+Automatically advances every six seconds while visible. Manual swipes,
+arrow keys, arrows and pagination dots work; manual interaction pauses
+autoplay temporarily. Reduced-motion devices do not auto-advance.
 
-## UI
-Offer slides move automatically every 5.7 seconds when visible. Hovering, keyboard focus or touching pauses automatic motion; reduced-motion preferences disable auto-advance. Both offer and product rails support touch swipes, next/previous arrows, keyboard arrows, and pagination dots.
+## Tests
+`npm run build` runs both the five-area delivery suite and the consolidated
+homepage promotions suite before producing the Vite bundle.
 
-Test with `npm run test:highlights` and build with `npm run build`.
+Financial and customer eligibility must also be enforced on the trusted
+server before real orders or payments are accepted. Current checkout remains
+a client-side prototype.

@@ -36,7 +36,9 @@ test('every configured store charges for a cart of ₹300 or less', () => {
   assert.equal(FREE_DELIVERY_THRESHOLD,300);
 });
 
-test('FREEDEL coupon continues to waive delivery below threshold', () => {
+test('no coupon can waive the delivery fee at or below ₹300', () => {
  const localFresh=stores.find(s=>s.id==='localfresh');
- assert.equal(getDeliveryFee(localFresh,90,{type:'freedel'}),0);
+ assert.equal(getDeliveryFee(localFresh,90,{type:'freedel'}),localFresh.deliveryFee);
+ assert.equal(getDeliveryFee(localFresh,300,{type:'freedel'}),localFresh.deliveryFee);
+ assert.equal(getDeliveryFee(localFresh,301),0);
 });

@@ -30,6 +30,6 @@ export function getStoresForArea(stores, area) {
 }
 
 export function getDeliveryFee(store, itemSubtotal, coupon) {
-  if (Number(itemSubtotal) > FREE_DELIVERY_THRESHOLD || coupon?.type === 'freedel') return 0;
+  if (Number(itemSubtotal) > FREE_DELIVERY_THRESHOLD) return 0;
   return Math.max(0, Number(store?.deliveryFee) || 0);
 }

@@ -19,7 +19,7 @@ import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
 import { useStore } from '../context/StoreContext';
 import { FREE_DELIVERY_THRESHOLD, getDeliveryFee, isStoreAvailableInArea } from '../data/deliveryAreas';
-import { VALID_COUPONS } from '../data/checkoutOffers';
+import { VALID_COUPONS, MIN_PROMO_SUBTOTAL } from '../data/checkoutOffers';
 
 export default function CartPage({ userLocation }) {
   const { cart, addItem, removeItem, clearCart, totalItems, totalPrice } = useCart();
@@ -35,7 +35,7 @@ export default function CartPage({ userLocation }) {
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponStatus, setCouponStatus] = useState(null); // { type: 'success' | 'error', message: '' }
 
-  // Available Valid Coupons
+  // Coupon eligibility is enforced at ₹301+ for all promotional codes.
 
   const handleApplyCoupon = (codeToApply) => {
     const code = (codeToApply || couponCode).trim().toUpperCase();
@@ -43,14 +43,14 @@ export default function CartPage({ userLocation }) {
 
     const coupon = VALID_COUPONS[code];
     if (!coupon) {
-      setCouponStatus({ type: 'error', message: 'Invalid coupon code. Try TASTY12 or KIRANA50.' });
+      setCouponStatus({ type: 'error', message: 'Invalid coupon code. Available: TASTY12, KIRANA50, WELCOME (cart above ₹300).' });
       return;
     }
 
-    if (totalPrice < coupon.min) {
+    if (totalPrice < MIN_PROMO_SUBTOTAL || totalPrice < coupon.min) {
       setCouponStatus({
         type: 'error',
-        message: `Min cart value of ₹${coupon.min} required for coupon ${code}.`
+        message: `Offers unlock only above ₹300. Add ₹${Math.max(0, coupon.min-totalPrice)} more to use ${code}.`
       });
       return;
     }
@@ -90,10 +90,12 @@ export default function CartPage({ userLocation }) {
   }
 
   // Delivery Calculation: cart subtotal above ₹300 gets free delivery across all stores
-  const isFreeDelivery = totalPrice > FREE_DELIVERY_THRESHOLD || appliedCoupon?.type === 'freedel';
+  const isFreeDelivery = totalPrice > FREE_DELIVERY_THRESHOLD;
   const baseDeliveryFee = store?.deliveryFee ?? 20;
   const deliveryFee = getDeliveryFee(store, totalPrice, appliedCoupon);
-  const couponDiscount = appliedCoupon?.discount || 0;
+  const couponQualified = Boolean(appliedCoupon) &&
+    totalPrice >= MIN_PROMO_SUBTOTAL && totalPrice >= appliedCoupon.min;
+  const couponDiscount = couponQualified ? appliedCoupon.discount : 0;
   const handlingFee = 5;
   const tax = Math.round(Math.max(0, totalPrice - couponDiscount) * 0.05);
   const grandTotal = Math.max(0, totalPrice - couponDiscount + deliveryFee + handlingFee + tax);
@@ -148,9 +150,7 @@ export default function CartPage({ userLocation }) {
             <div className="cdsc-info">
               <span className="cdsc-title">FREE Delivery Unlocked!</span>
               <span className="cdsc-subtitle">
-                {totalPrice > FREE_DELIVERY_THRESHOLD
-                  ? `Cart is above ₹300 (Saved ₹${baseDeliveryFee} delivery fee)`
-                  : 'Free delivery coupon active!'}
+                {`Cart is above ₹300 (Saved ₹${baseDeliveryFee} delivery fee)`}
               </span>
             </div>
             <span className="cdsc-tag">₹0 FEE</span>
@@ -296,7 +296,7 @@ export default function CartPage({ userLocation }) {
               <div>
                 <strong>{appliedCoupon.code} Applied</strong>
                 <span>
-                  {appliedCoupon.type === 'freedel' ? 'Free Delivery Unlocked' : `Saved ₹${appliedCoupon.discount}`}
+                  {appliedCoupon.type === 'freedel' ? 'Free Delivery Unlocked' : `Saved ₹${couponQualified ? appliedCoupon.discount : 0}`}
                 </span>
               </div>
             </div>
@@ -335,6 +335,13 @@ export default function CartPage({ userLocation }) {
           </div>
         )}
       </div>
+
+      {appliedCoupon && !couponQualified && (
+        <p className="kp-coupon-threshold-note" role="status">
+          {appliedCoupon.code} is paused: offers only apply above ₹300. Add
+          ₹{Math.max(0,MIN_PROMO_SUBTOTAL-totalPrice)} more to unlock.
+        </p>
+      )}
 
       {/* Delivery area is selected from five fixed Vizag zones. */}
       <button type="button" className="cart-delivery-address-card" onClick={() => navigate('/')}>
