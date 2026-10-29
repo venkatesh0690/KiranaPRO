@@ -1,4 +1,4 @@
-import { getCatalogVisual } from './catalogVisual';
+import { getCatalogVisual } from './catalogVisual.js';
 /* Store-specific items, selected only from categories this store sells.
    Purchase history is used only if present; no artificial order-count data. */
 export function getDisplayProducts(store, catalog, limit = 5) {
