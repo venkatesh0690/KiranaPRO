@@ -21,6 +21,7 @@ import './styles/tokens.css';
 import './styles/global.css';
 import './styles/minimal.css';
 import './styles/gallery.css';
+import './styles/unified.css';
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();
@@ -29,13 +30,14 @@ function MainAppShell({ userLocation, setUserLocation }) {
   const isPortalRoute =
     location.pathname.startsWith('/seller') || location.pathname.startsWith('/admin');
   const isStoreRoute = location.pathname.startsWith('/store');
+  const isLocationRoute = location.pathname === '/';
 
   return (
     <div className="app-root-wrapper full-screen-mode">
       {/* Dynamic Route Content */}
       <main
         className={`app-content-area ${
-          userLocation && !isPortalRoute ? 'with-bottom-nav' : ''
+          userLocation && !isPortalRoute && !isLocationRoute ? 'with-bottom-nav' : ''
         } ${isStoreRoute ? 'store-view-mode' : ''}`}
       >
         <Routes>
@@ -43,11 +45,10 @@ function MainAppShell({ userLocation, setUserLocation }) {
           <Route
             path="/"
             element={
-              userLocation ? (
-                <HomePage userLocation={userLocation} />
-              ) : (
-                <LocationPage onLocationSet={setUserLocation} />
-              )
+              <LocationPage
+                initialLocation={userLocation || ''}
+                onLocationSet={setUserLocation}
+              />
             }
           />
           <Route
@@ -102,10 +103,10 @@ function MainAppShell({ userLocation, setUserLocation }) {
       </main>
 
       {/* PWA Install App Prompt */}
-      {!isPortalRoute && <InstallAppBanner />}
+      {!isPortalRoute && !isLocationRoute && <InstallAppBanner />}
 
       {/* Bottom Navigation Bar (Customer mode only) */}
-      {userLocation && !isPortalRoute && <BottomNav />}
+      {userLocation && !isPortalRoute && !isLocationRoute && <BottomNav />}
     </div>
   );
 }
