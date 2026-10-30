@@ -7,8 +7,7 @@ import {
   recordFailedAttempt,
   resetFailedAttempts,
   getRemainingLockoutTime,
-  sanitizeInput,
-  SAMPLE_CREDENTIALS
+  sanitizeInput
 } from '../utils/security';
 
 const SecurityContext = createContext(null);
@@ -19,30 +18,18 @@ const SESSION_EXPIRY_MS = 2 * 60 * 60 * 1000; // 2 hours
 
 export const SecurityProvider = ({ children }) => {
   // Session State
-  const [authSession, setAuthSession] = useState(() => {
-    try {
-      const saved = sessionStorage.getItem(SESSION_STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.expiresAt && Date.now() < parsed.expiresAt) {
-          return parsed;
-        }
-      }
-    } catch {
-      // Fallback
-    }
-    // Default logged out state: Do NOT show any user name when not logged in!
-    return {
-      isAuthenticated: false,
-      role: 'guest', // 'guest' | 'customer' | 'seller' | 'admin'
-      storeId: null,
-      userName: null,
-      userPhone: null,
-      token: null,
-      loginTime: null,
-      expiresAt: null
-    };
+  const [authSession, setAuthSession] = useState({
+    isAuthenticated:false,role:'guest',storeId:null,userName:null,
+    userPhone:null,isTemporary:false,expiresAt:null
   });
+  useEffect(()=>{
+    let active=true;
+    fetch('/api/auth?action=me',{credentials:'same-origin',cache:'no-store'})
+      .then(response=>response.ok?response.json():null)
+      .then(data=>{if(active && data?.user) setAuthSession(data.user);})
+      .catch(()=>{/* Fail closed; remain guest when session cannot be verified. */});
+    return ()=>{active=false};
+  },[]);
 
   // Real saved addresses only; remove the two sample addresses previously
   // prepopulated in new accounts. User-created addresses are retained.
@@ -97,20 +84,7 @@ export const SecurityProvider = ({ children }) => {
     }
   }, [securityAuditLogs]);
 
-  // Save session state to sessionStorage
-  useEffect(() => {
-    try {
-      if (authSession.isAuthenticated) {
-        sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(authSession));
-      } else {
-        sessionStorage.removeItem(SESSION_STORAGE_KEY);
-      }
-    } catch {
-      // Ignore
-    }
-  }, [authSession]);
-
-  // Log a security event into audit trail
+  // Browser storage is not an authentication authority.\n\n  // Log a security event into audit trail
   const logSecurityEvent = useCallback((event, details, severity = 'info') => {
     const newLog = {
       id: `SEC-${Date.now().toString().slice(-6)}`,
@@ -154,273 +128,69 @@ export const SecurityProvider = ({ children }) => {
     return {success:true,user:session};
   },[logSecurityEvent]);
 
-  // Customer Login with Rate Limiting & 4-Digit PIN
-  const loginCustomer = useCallback((phone, pin) => {
-    const cleanPhone = String(phone || '').replace(/\D/g, '');
-    const rateLimitKey = `customer_${cleanPhone || 'unknown'}`;
-
-    if (isRateLimited(rateLimitKey)) {
-      const remSeconds = getRemainingLockoutTime(rateLimitKey);
-      logSecurityEvent('CUSTOMER_BRUTE_FORCE_BLOCKED', `Blocked login attempt for phone ${phone}. Rate limited for ${remSeconds}s`, 'critical');
-      return {
-        success: false,
-        error: `Account temporarily locked due to multiple failed attempts. Try again in ${remSeconds} seconds.`
-      };
-    }
-
-    if (cleanPhone.length < 10) {
-      recordFailedAttempt(rateLimitKey);
-      logSecurityEvent('CUSTOMER_LOGIN_FAILED', `Invalid mobile number: ${phone}`, 'warning');
-      return { success: false, error: 'Please enter a valid 10-digit mobile number.' };
-    }
-
-    if (!validatePIN(pin)) {
-      const rec = recordFailedAttempt(rateLimitKey);
-      const remainingAttempts = Math.max(0, 4 - rec.count);
-      logSecurityEvent('CUSTOMER_LOGIN_FAILED', `Invalid PIN for customer ${cleanPhone}. ${remainingAttempts} attempts remaining`, 'warning');
-      return {
-        success: false,
-        error: `Invalid 4-digit PIN. ${remainingAttempts > 0 ? `${remainingAttempts} attempt(s) remaining.` : 'Account locked for 60 seconds.'}`
-      };
-    }
-
-    // Check pre-seeded sample customer or registered customers
-    let customerName = 'Customer';
-    if (cleanPhone === SAMPLE_CREDENTIALS.user.phone) {
-      customerName = SAMPLE_CREDENTIALS.user.name;
-    } else {
-      try {
-        const savedUsers = JSON.parse(localStorage.getItem('kp_registered_users') || '[]');
-        const found = savedUsers.find(u => u.phone === cleanPhone);
-        if (found) customerName = found.name;
-        else customerName = `Customer (${cleanPhone.slice(-4)})`;
-      } catch {
-        customerName = `Customer (${cleanPhone.slice(-4)})`;
-      }
-    }
-
-    resetFailedAttempts(rateLimitKey);
-    const token = generateSecureToken();
-    const session = {
-      isAuthenticated: true,
-      role: 'customer',
-      storeId: null,
-      userName: customerName,
-      userPhone: `+91 ${cleanPhone.slice(-10)}`,
-      token,
-      loginTime: new Date().toLocaleTimeString(),
-      expiresAt: Date.now() + SESSION_EXPIRY_MS
-    };
-
-    setAuthSession(session);
-    logSecurityEvent('CUSTOMER_LOGIN_SUCCESS', `Customer authenticated: ${customerName} (+91 ${cleanPhone.slice(-10)})`, 'info');
-    return { success: true, user: session };
-  }, [logSecurityEvent]);
-
-  // Customer Sign Up
-  const signupCustomer = useCallback((name, phone, pin, address) => {
-    const cleanPhone = String(phone || '').replace(/\D/g, '');
-    const sanitizedName = sanitizeInput(name);
-    const sanitizedAddress = sanitizeInput(address || 'Maddilapalem, Vizag');
-
-    if (!sanitizedName || sanitizedName.length < 2) {
-      return { success: false, error: 'Please enter your full name.' };
-    }
-    if (cleanPhone.length < 10) {
-      return { success: false, error: 'Please enter a valid 10-digit mobile number.' };
-    }
-    if (!validatePIN(pin)) {
-      return { success: false, error: 'Please set a secure 4-digit PIN.' };
-    }
-
-    // Save to registered users list
+  // All non-guest identities are issued and verified by the server.
+  // Browser storage never grants customer, seller or administrator privileges.
+  async function postAuth(action, payload) {
     try {
-      const savedUsers = JSON.parse(localStorage.getItem('kp_registered_users') || '[]');
-      const filtered = savedUsers.filter(u => u.phone !== cleanPhone);
-      filtered.push({
-        name: sanitizedName,
-        phone: cleanPhone,
-        address: sanitizedAddress,
-        createdAt: new Date().toISOString()
+      const response=await fetch(`/api/auth?action=${action}`,{
+        method:'POST',credentials:'same-origin',
+        headers:{'Content-Type':'application/json','X-Kirana-Client':'web'},
+        body:JSON.stringify(payload)
       });
-      localStorage.setItem('kp_registered_users', JSON.stringify(filtered));
-    } catch {
-      // Ignore
+      const result=await response.json();
+      if (!response.ok) return {success:false,error:result.error||'Authentication failed'};
+      return {success:true,...result};
+    }catch{
+      return {success:false,error:'Authentication service unavailable. Please try later.'};
     }
+  }
 
-    const token = generateSecureToken();
-    const session = {
-      isAuthenticated: true,
-      role: 'customer',
-      storeId: null,
-      userName: sanitizedName,
-      userPhone: `+91 ${cleanPhone.slice(-10)}`,
-      userAddress: sanitizedAddress,
-      token,
-      loginTime: new Date().toLocaleTimeString(),
-      expiresAt: Date.now() + SESSION_EXPIRY_MS
-    };
-
-    setAuthSession(session);
-    logSecurityEvent('CUSTOMER_SIGNUP_SUCCESS', `New Customer Account created: ${sanitizedName} (+91 ${cleanPhone.slice(-10)})`, 'info');
-    return { success: true, user: session };
-  }, [logSecurityEvent]);
-
-  // Authenticate Seller with Rate Limiting & 4-Digit PIN check
-  const loginSeller = useCallback((storeId, phone, pin, storeName) => {
-    const rateLimitKey = `seller_${phone || 'unknown'}`;
-
-    if (isRateLimited(rateLimitKey)) {
-      const remSeconds = getRemainingLockoutTime(rateLimitKey);
-      logSecurityEvent('SELLER_BRUTE_FORCE_BLOCKED', `Blocked attempt for phone ${phone}. Rate limited for ${remSeconds}s`, 'critical');
-      return {
-        success: false,
-        error: `Account temporarily locked due to multiple failed attempts. Try again in ${remSeconds} seconds.`
-      };
+  const loginCustomer=useCallback(async (phone,password)=>{
+    const response=await postAuth('login',{role:'customer',phone,password});
+    if(response.success && response.user) {
+      setAuthSession(response.user);
+      logSecurityEvent('CUSTOMER_LOGIN_SUCCESS','Customer session verified by server','info');
     }
+    return response;
+  },[logSecurityEvent]);
 
-    if (!phone || phone.length < 10) {
-      recordFailedAttempt(rateLimitKey);
-      logSecurityEvent('SELLER_LOGIN_FAILED', `Invalid mobile number: ${phone}`, 'warning');
-      return { success: false, error: 'Please enter a valid 10-digit mobile number.' };
+  const signupCustomer=useCallback(async (name,phone,password,address)=>{
+    const response=await postAuth('signup',{role:'customer',name,phone,password,address});
+    if(response.success && response.user){
+      setAuthSession(response.user);
+      logSecurityEvent('CUSTOMER_SIGNUP_SUCCESS','New server-backed customer registered','info');
     }
+    return response;
+  },[logSecurityEvent]);
 
-    if (!validatePIN(pin)) {
-      const rec = recordFailedAttempt(rateLimitKey);
-      const remainingAttempts = Math.max(0, 4 - rec.count);
-      logSecurityEvent('SELLER_LOGIN_FAILED', `Invalid PIN attempt for store #${storeId}. ${remainingAttempts} attempts remaining`, 'warning');
-      return {
-        success: false,
-        error: `Invalid 4-digit PIN. ${remainingAttempts > 0 ? `${remainingAttempts} attempt(s) remaining.` : 'Account locked for 60 seconds.'}`
-      };
+  const loginSeller=useCallback(async (storeId,phone,password)=>{
+    const response=await postAuth('login',{role:'seller',storeId:String(storeId),phone,password});
+    if(response.success && response.user) {
+      setAuthSession(response.user);
+      logSecurityEvent('SELLER_LOGIN_SUCCESS','Seller and store assignment verified by server','info');
     }
+    return response;
+  },[logSecurityEvent]);
 
-    // Success: Reset rate limits & issue cryptographically strong session token
-    resetFailedAttempts(rateLimitKey);
-    const token = generateSecureToken();
-    const session = {
-      isAuthenticated: true,
-      role: 'seller',
-      storeId: Number(storeId) || storeId,
-      userName: `${storeName || 'Shopkeeper'} (Store #${storeId})`,
-      userPhone: phone,
-      token,
-      loginTime: new Date().toLocaleTimeString(),
-      expiresAt: Date.now() + SESSION_EXPIRY_MS
-    };
-
-    setAuthSession(session);
-    logSecurityEvent('SELLER_LOGIN_SUCCESS', `Seller authenticated for Store #${storeId} (${storeName})`, 'info');
-    return { success: true };
-  }, [logSecurityEvent]);
-
-  // Seller Sign Up (Store Partner Registration)
-  const signupSeller = useCallback((storeName, ownerName, phone, pin, address, category) => {
-    const cleanPhone = String(phone || '').replace(/\D/g, '');
-    const safeStoreName = sanitizeInput(storeName);
-    const safeOwnerName = sanitizeInput(ownerName);
-    const safeAddress = sanitizeInput(address || 'Vizag Local Area');
-
-    if (!safeStoreName || safeStoreName.length < 3) {
-      return { success: false, error: 'Please enter a valid Kirana Store Name.' };
+  const signupSeller=useCallback(async (storeName,ownerName,phone,password,address,category)=>{
+    const response=await postAuth('signup',{
+      role:'seller',storeName,name:ownerName,phone,password,address,category
+    });
+    if(response.success) {
+      logSecurityEvent('SELLER_APPLICATION_RECEIVED',
+        'Registration pending administrator verification; no seller role issued','info');
     }
-    if (!safeOwnerName || safeOwnerName.length < 2) {
-      return { success: false, error: 'Please enter the Store Owner Name.' };
+    return response;
+  },[logSecurityEvent]);
+
+  const loginAdmin=useCallback(async (email,password)=>{
+    const response=await postAuth('login',{role:'admin',email,password});
+    if(response.success && response.user){
+      setAuthSession(response.user);
+      logSecurityEvent('ADMIN_LOGIN_SUCCESS','Administrator authenticated by server','info');
     }
-    if (cleanPhone.length < 10) {
-      return { success: false, error: 'Please enter a valid 10-digit mobile number.' };
-    }
-    if (!validatePIN(pin)) {
-      return { success: false, error: 'Please set a 4-digit security PIN for stock management.' };
-    }
-
-    const newStoreId = `partner-${Date.now().toString().slice(-4)}`;
-
-    try {
-      const savedSellers = JSON.parse(localStorage.getItem('kp_registered_sellers') || '[]');
-      savedSellers.push({
-        storeId: newStoreId,
-        storeName: safeStoreName,
-        ownerName: safeOwnerName,
-        phone: cleanPhone,
-        address: safeAddress,
-        category: category || 'Kirana & Provisions',
-        createdAt: new Date().toISOString()
-      });
-      localStorage.setItem('kp_registered_sellers', JSON.stringify(savedSellers));
-    } catch {
-      // Ignore
-    }
-
-    const token = generateSecureToken();
-    const session = {
-      isAuthenticated: true,
-      role: 'seller',
-      storeId: newStoreId,
-      userName: `${safeOwnerName} (${safeStoreName})`,
-      userPhone: `+91 ${cleanPhone.slice(-10)}`,
-      token,
-      loginTime: new Date().toLocaleTimeString(),
-      expiresAt: Date.now() + SESSION_EXPIRY_MS
-    };
-
-    setAuthSession(session);
-    logSecurityEvent('SELLER_SIGNUP_SUCCESS', `New Seller Registered: ${safeStoreName} by ${safeOwnerName} (+91 ${cleanPhone.slice(-10)})`, 'info');
-    return { success: true, storeId: newStoreId };
-  }, [logSecurityEvent]);
-
-  // Authenticate Admin with Rate Limiting & Master Key Verification
-  const loginAdmin = useCallback((email, masterKey) => {
-    const rateLimitKey = `admin_${email || 'unknown'}`;
-
-    if (isRateLimited(rateLimitKey)) {
-      const remSeconds = getRemainingLockoutTime(rateLimitKey);
-      logSecurityEvent('ADMIN_BRUTE_FORCE_BLOCKED', `Admin login locked. Wait ${remSeconds}s`, 'critical');
-      return {
-        success: false,
-        error: `Admin access locked due to failed attempts. Retry in ${remSeconds} seconds.`
-      };
-    }
-
-    if (!validateEmail(email)) {
-      recordFailedAttempt(rateLimitKey);
-      return { success: false, error: 'Please enter a valid administrator email address.' };
-    }
-
-    // Master Key Verification
-    const isMasterKeyValid =
-      masterKey === 'admin123' ||
-      masterKey === 'supersecret' ||
-      masterKey === 'KiranaAdmin@2026';
-
-    if (!isMasterKeyValid || email.toLowerCase() !== 'admin@kiranapro.com') {
-      const rec = recordFailedAttempt(rateLimitKey);
-      const remainingAttempts = Math.max(0, 4 - rec.count);
-      logSecurityEvent('ADMIN_UNAUTHORIZED_KEY', `Unauthorized admin key attempt for ${email}`, 'critical');
-      return {
-        success: false,
-        error: `Invalid credentials or master key. ${remainingAttempts > 0 ? `${remainingAttempts} attempt(s) remaining.` : 'Locked for 60 seconds.'}`
-      };
-    }
-
-    // Success
-    resetFailedAttempts(rateLimitKey);
-    const token = generateSecureToken();
-    const session = {
-      isAuthenticated: true,
-      role: 'admin',
-      storeId: 'localfresh',
-      userName: 'Platform Super Administrator',
-      userPhone: '+91 99999 00000',
-      token,
-      loginTime: new Date().toLocaleTimeString(),
-      expiresAt: Date.now() + SESSION_EXPIRY_MS
-    };
-
-    setAuthSession(session);
-    logSecurityEvent('ADMIN_LOGIN_SUCCESS', `Super Admin console accessed by ${email}`, 'info');
-    return { success: true };
-  }, [logSecurityEvent]);
+    return response;
+  },[logSecurityEvent]);
 
   // Modify User Name (Requirement: Add option to modify user name)
   const updateUserName = useCallback((newName) => {
@@ -431,7 +201,7 @@ export const SecurityProvider = ({ children }) => {
     setAuthSession(prev => ({
       ...prev,
       userName: sanitized,
-      isAuthenticated: true // Ensure active session
+      isAuthenticated: Boolean(prev.isAuthenticated) // Never elevate a guest
     }));
     logSecurityEvent('USER_PROFILE_UPDATED', `User changed name to: ${sanitized}`, 'info');
     return { success: true, name: sanitized };
@@ -482,21 +252,13 @@ export const SecurityProvider = ({ children }) => {
     logSecurityEvent('ADDRESS_DEFAULT_SET', `Default shipping address set to id: ${id}`, 'info');
   }, [logSecurityEvent]);
 
-  // Secure Logout: Completely resets to logged out state (no user name shown)
-  const logout = useCallback(() => {
-    const previousRole = authSession.role;
-    setAuthSession({
-      isAuthenticated: false,
-      role: 'guest',
-      storeId: null,
-      userName: null,
-      userPhone: null,
-      token: null,
-      loginTime: null,
-      expiresAt: null
-    });
-    logSecurityEvent('USER_LOGOUT', `Logged out from ${previousRole} role. Session destroyed.`, 'info');
-  }, [authSession.role, logSecurityEvent]);
+  const logout=useCallback(async ()=>{
+    // Clear UI immediately; revoke the httpOnly cookie on the server as well.
+    setAuthSession({isAuthenticated:false,role:'guest',storeId:null,userName:null,
+      userPhone:null,isTemporary:false,expiresAt:null});
+    await postAuth('logout',{});
+    logSecurityEvent('USER_LOGOUT','Session revocation requested','info');
+  },[logSecurityEvent]);
 
   return (
     <SecurityContext.Provider
@@ -516,8 +278,8 @@ export const SecurityProvider = ({ children }) => {
         setDefaultAddress,
         securityAuditLogs,
         logSecurityEvent,
-        sampleCredentials: SAMPLE_CREDENTIALS,
-        isSessionValid: () => authSession.isAuthenticated && authSession.expiresAt > Date.now()
+        // Demo credentials removed; server authentication is mandatory.
+        isSessionValid: () => authSession.isAuthenticated && !authSession.isTemporary && authSession.expiresAt > Date.now()
       }}
     >
       {children}
