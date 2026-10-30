@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Shield,
@@ -126,42 +126,104 @@ export default function AdminDashboard() {
 
   // Generation is a deliberate admin action. The shopper NEVER calls an
   // image model or incurs charges. Real photos retain priority in product cards.
-  const aiCandidates=useMemo(()=>localFreshItems.filter(p=>
-    aiImageEligible(p.name,p.category) && !getCatalogVisual(p).photo
-  ),[localFreshItems]);
+  const [aiInventory,setAiInventory]=useState({items:[],counts:null});
   const [aiProductId,setAiProductId]=useState('');
   const [aiStatus,setAiStatus]=useState('');
   const [aiPreview,setAiPreview]=useState(null);
   const [aiGenerating,setAiGenerating]=useState(false);
   const [aiConfigured,setAiConfigured]=useState(false);
+  const [aiBatchSize,setAiBatchSize]=useState(12);
+  const [aiBatchProgress,setAiBatchProgress]=useState({done:0,total:0,generated:0,failed:0});
+  const aiStopRef=useRef(false);
+  const aiCandidates=useMemo(()=>aiInventory.items.filter(p=>p.eligible),[aiInventory]);
+
+  const refreshAiInventory=useCallback(async ()=>{
+    const response=await fetch('/api/catalog-ai-batch?storeId=localfresh',{
+      credentials:'same-origin',cache:'no-store'
+    });
+    if(!response.ok)throw Error('Unable to load stored image status.');
+    const data=await response.json();
+    setAiInventory({items:data.items||[],counts:data.counts||null});
+    return data;
+  },[]);
+
   useEffect(()=>{
     let live=true;
-    fetch('/api/catalog-ai?action=capabilities',{credentials:'same-origin',cache:'no-store'})
-      .then(r=>r.ok?r.json():null)
-      .then(data=>{if(live)setAiConfigured(Boolean(data?.configured));})
-      .catch(()=>{});
-    return ()=>{live=false};
+    Promise.all([
+      fetch('/api/catalog-ai?action=capabilities',{credentials:'same-origin',cache:'no-store'})
+        .then(r=>r.ok?r.json():null),
+      fetch('/api/catalog-ai-batch?storeId=localfresh',{credentials:'same-origin',cache:'no-store'})
+        .then(r=>r.ok?r.json():null)
+    ]).then(([abilities,inventory])=>{
+      if(!live)return;
+      setAiConfigured(Boolean(abilities?.configured));
+      if(inventory)setAiInventory({items:inventory.items||[],counts:inventory.counts||null});
+    }).catch(()=>{});
+    return ()=>{live=false;aiStopRef.current=true};
   },[]);
+
+  const requestAiImage=async selected=>{
+    const response=await fetch('/api/catalog-ai',{
+      method:'POST',credentials:'same-origin',
+      headers:{'Content-Type':'application/json','X-Kirana-Client':'web'},
+      body:JSON.stringify({storeId:'localfresh',productId:String(selected.productId)})
+    });
+    const data=await response.json();
+    if(!response.ok)throw Error(data.error||'Generation failed.');
+    return data;
+  };
+
   const generateAiForItem=async()=>{
-    const selected=aiCandidates.find(p=>String(p.id)===String(aiProductId||aiCandidates[0]?.id));
-    if(!selected || aiGenerating)return;
+    const selected=aiCandidates.find(p=>String(p.productId)===String(aiProductId||aiCandidates[0]?.productId));
+    if(!selected||aiGenerating)return;
     setAiGenerating(true);
-    setAiStatus('Generating a representative illustration for '+selected.name+'…');
+    setAiStatus('Preparing illustration for '+selected.name+'…');
     setAiPreview(null);
     try{
-      const response=await fetch('/api/catalog-ai',{
-        method:'POST',credentials:'same-origin',
-        headers:{'Content-Type':'application/json','X-Kirana-Client':'web'},
-        body:JSON.stringify({storeId:'localfresh',productId:String(selected.id)})
-      });
-      const data=await response.json();
-      if(!response.ok)throw new Error(data.error||'Generation failed.');
+      const data=await requestAiImage(selected);
       setAiPreview(data.photo);
       setAiStatus(data.generated
-        ? 'Saved an AI illustration for '+selected.name+'. It will be reused in catalog cards.'
-        : 'An existing saved illustration was found for '+selected.name+'.');
+        ? 'Saved an illustrative image for '+selected.name+'.'
+        : 'A saved image already exists for '+selected.name+'.');
+      await refreshAiInventory();
     }catch(error){setAiStatus(error.message||'Image generation unavailable.');}
     finally{setAiGenerating(false);}
+  };
+
+  const generateMissingImages=async()=>{
+    if(aiGenerating||!aiConfigured)return;
+    const pending=aiCandidates.filter(p=>p.status==='missing' ||
+      (p.status==='failed' && (!p.retryAfter || new Date(p.retryAfter).getTime()<=Date.now())))
+      .slice(0,aiBatchSize);
+    if(!pending.length){
+      setAiStatus('No eligible images available to generate in this batch.');
+      return;
+    }
+    aiStopRef.current=false;
+    setAiGenerating(true);
+    setAiPreview(null);
+    let generated=0,failed=0;
+    setAiBatchProgress({done:0,total:pending.length,generated:0,failed:0});
+    for(let i=0;i<pending.length;i++){
+      if(aiStopRef.current)break;
+      const product=pending[i];
+      setAiStatus('Generating '+(i+1)+' / '+pending.length+': '+product.name);
+      try{
+        const result=await requestAiImage(product);
+        if(result.generated)generated++;
+        if(result.photo)setAiPreview(result.photo);
+      }catch(error){
+        failed++;
+        setAiStatus('Skipped '+product.name+': '+error.message);
+        if(/Daily AI image safety limit|configuration|quota|billing/i.test(error.message))break;
+      }
+      setAiBatchProgress({done:i+1,total:pending.length,generated,failed});
+    }
+    try{await refreshAiInventory();}catch{/* Retain completed tally. */}
+    setAiStatus('Batch finished: '+generated+' images generated, '+failed+
+      ' skipped/failed. You can resume from remaining items.');
+    setAiGenerating(false);
+    aiStopRef.current=false;
   };
 
     const lfTotal = localFreshItems.length;
@@ -285,34 +347,70 @@ export default function AdminDashboard() {
       </section>
 
       <section className="ad-kpi-card" style={{display:'block',margin:'16px',padding:20}}>
-        <h2 style={{fontSize:18}}>AI product illustrations</h2>
-        <p>For generic items with no reliable real photograph. Every generated image is
-          marked “AI illustration,” stored once, and reused. Branded products are excluded.</p>
-        <p>{aiCandidates.length} LocalFresh items eligible for an illustration where no built-in real photo exists.</p>
-        {!aiConfigured && <p role="status">Image generation is not configured yet.
-          The owner must set OPENAI_API_KEY as a server-side Vercel environment secret.</p>}
+        <h2 style={{fontSize:18}}>Catalog images · AI generation</h2>
+        <p>Use verified real photos first. Generic goods without real photos may use AI illustrations.
+          Branded packaging is never fabricated. Every AI image is marked illustrative.</p>
+        {aiInventory.counts && <p role="status">
+          {aiInventory.counts.total} items · {aiInventory.counts.ready} saved AI images ·
+          {' '}{aiInventory.counts.missing} missing eligible illustrations ·
+          {' '}{aiInventory.counts.photoOrPlaceholder} real-photo or non-AI items
+        </p>}
+        {!aiConfigured && <p role="status">To activate generation, configure the server-side
+          OPENAI_API_KEY and BLOB_READ_WRITE_TOKEN. No API key is exposed to browsers.</p>}
         {aiCandidates.length>0 && <>
           <label htmlFor="ai-catalog-select" style={{display:'block',margin:'10px 0'}}>
-            Choose product
+            Generate individual illustration
           </label>
-          <select id="ai-catalog-select" value={aiProductId || aiCandidates[0]?.id || ''}
-            onChange={event=>setAiProductId(event.target.value)}
-            style={{maxWidth:'100%',width:320,padding:10}}>
-            {aiCandidates.map(p=><option key={p.id} value={p.id}>{p.name} — {p.category}</option>)}
+          <select id="ai-catalog-select" value={aiProductId || aiCandidates[0]?.productId || ''}
+            onChange={e=>setAiProductId(e.target.value)}
+            style={{maxWidth:'100%',width:340,padding:10}}>
+            {aiCandidates.map(p=><option key={p.productId} value={p.productId}>
+              {p.name} — {p.status}
+            </option>)}
           </select>
-          <div style={{marginTop:12}}>
+          <div style={{marginTop:12,display:'flex',flexWrap:'wrap',alignItems:'center',gap:12}}>
             <button type="button" className="ad-link-btn"
               disabled={!aiConfigured || aiGenerating}
-              onClick={generateAiForItem}>
-              {aiGenerating?'Generating image…':'Generate and save image'}
-            </button>
+              onClick={generateAiForItem}>Generate and save image</button>
+            <button type="button" className="ad-link-btn" onClick={()=>refreshAiInventory().catch(()=>{})}
+              disabled={aiGenerating}>Refresh status</button>
+          </div>
+          <div style={{marginTop:20,paddingTop:16,borderTop:'1px solid #ddd'}}>
+            <strong>Generate Missing Images</strong>
+            <p>Process eligible unsaved products in sequence. Each image is saved to Vercel Blob,
+              and completed images are not regenerated. API generation incurs usage charges.</p>
+            <label htmlFor="kp-ai-batch-size">Maximum images this batch </label>
+            <select id="kp-ai-batch-size" value={aiBatchSize}
+              onChange={e=>setAiBatchSize(Number(e.target.value))} disabled={aiGenerating}
+              style={{margin:'6px 10px',padding:8}}>
+              <option value={6}>6 images</option>
+              <option value={12}>12 images</option>
+              <option value={24}>24 images</option>
+            </select>
+            <p style={{fontSize:12}}>Daily generation limit: 36 new images. Keep this page
+              open until the batch finishes. Stop prevents starting the next item.</p>
+            <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
+              <button type="button" className="ad-link-btn"
+                onClick={generateMissingImages}
+                disabled={!aiConfigured || aiGenerating || !aiCandidates.some(p=>p.status==='missing'||p.status==='failed')}>
+                {aiGenerating?'Generating…':'Generate Missing Images'}
+              </button>
+              {aiGenerating && <button type="button" className="ad-link-btn"
+                onClick={()=>{aiStopRef.current=true}}>Stop after current image</button>}
+            </div>
+            {aiBatchProgress.total>0 && <div role="status" style={{marginTop:12}}>
+              <progress max={aiBatchProgress.total} value={aiBatchProgress.done}
+                style={{width:'100%',maxWidth:450}}/>
+              <p>{aiBatchProgress.done}/{aiBatchProgress.total} processed ·
+                {' '}{aiBatchProgress.generated} created · {aiBatchProgress.failed} errors</p>
+            </div>}
           </div>
         </>}
-        {aiStatus && <p role="status" style={{marginTop:10}}>{aiStatus}</p>}
+        {aiStatus && <p role="status" style={{marginTop:12}}>{aiStatus}</p>}
         {aiPreview && <figure style={{width:180,margin:'12px 0'}}>
-          <img src={aiPreview} alt="AI-generated representative catalog illustration"
+          <img src={aiPreview} alt="AI-generated representative product illustration"
             width="180" height="180" loading="lazy" style={{maxWidth:'100%',borderRadius:10}}/>
-          <figcaption style={{fontSize:11}}>AI-generated representative image, not an exact product photograph</figcaption>
+          <figcaption style={{fontSize:11}}>AI illustration — not exact product packaging</figcaption>
         </figure>}
       </section>
 
