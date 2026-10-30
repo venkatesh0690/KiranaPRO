@@ -19,8 +19,8 @@ export default function OrdersPage() {
         <h1 className="orders-title">Your orders</h1>
       </div>
       <p className="kp-order-demo-note" role="note">
-        Demo order history saved on this device for your signed-in phone account.
-        No payment, seller acceptance or delivery tracking is connected yet.
+        Demo order requests stored securely for your verified account.
+        No payment, seller acceptance or confirmed delivery tracking is connected yet.
       </p>
       {!sorted.length ? (
         <div className="kp-no-orders">
@@ -34,7 +34,7 @@ export default function OrdersPage() {
           <div className="live-order-card">
             <div className="loc-top-row">
               <div>
-                <span className="loc-order-id">Order #{active.orderNumber} · {active.id}</span>
+                <span className="loc-order-id">Order #{(active.orderNumber || active.id)} · {active.id}</span>
                 <div className="loc-store-line"><Store size={15}/><strong>{active.storeName}</strong></div>
               </div>
               <span className="loc-status-pill active">Demo saved</span>
@@ -53,7 +53,7 @@ export default function OrdersPage() {
             <div className="order-stepper">
               <div className="step-item done">
                 <div className="step-circle-track"><div className="step-circle"><CheckCircle2 size={15}/></div></div>
-                <div className="step-text"><span className="step-title">Order recorded in browser</span><span className="step-time">Demo only — no order sent to a seller</span></div>
+                <div className="step-text"><span className="step-title">Order request recorded</span><span className="step-time">Demo request — no confirmed seller acceptance</span></div>
               </div>
             </div>
             <div className="kp-order-receipt">
@@ -73,7 +73,7 @@ export default function OrdersPage() {
                   onClick={()=>setSelectedOrder(ord.id)}>
                   <div className="osc-top">
                     <div>
-                      <span className="osc-id">#{ord.orderNumber} · {ord.storeName}</span>
+                      <span className="osc-id">#{(ord.orderNumber || ord.id)} · {ord.storeName}</span>
                       <span className="osc-date">{new Date(ord.placedAt).toLocaleString('en-IN')}</span>
                       <span className="osc-date">
                         {ord.fulfilment?.mode==='pickup'?'Store pickup'
