@@ -35,8 +35,14 @@ export default async function handler(req,res) {
     `]);
     const item=products[0];
     if(!item)return res.status(404).json({error:'Product not found'});
-    if(!aiImageEligible(item.name,item.category)||getCatalogVisual(item).photo ||
-       (typeof item.image_url==='string' && /^https:\/\//.test(item.image_url)))
+    const checks={
+      eligible:aiImageEligible(item.name,item.category),
+      curated:Boolean(getCatalogVisual(item).photo),
+      sellerPhoto:typeof item.image_url==='string' && /^https:\/\//.test(item.image_url)
+    };
+    if(String(req.query?.debug||'')==='1')
+      return res.status(200).json({id,name:item.name,category:item.category,...checks});
+    if(!checks.eligible||checks.curated||checks.sellerPhoto)
       return res.status(409).json({error:'Requires a verified real photo or already has a curated photo'});
     const key=imageKey(item.name,item.category);
     const existing=await registeredImage(item.name,item.category);
