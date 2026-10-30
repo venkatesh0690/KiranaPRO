@@ -61,7 +61,7 @@ export default async function handler(req,res) {
   // Unverified Wikimedia photos are not appropriate as exact branded
   // packaging. Such items need a real, merchant-verified SKU photograph.
   if(!aiImageEligible(name,category)){
-    res.setHeader('Cache-Control','public, max-age=60, s-maxage=300');
+    res.setHeader('Cache-Control','no-store');
     return res.status(200).json(NO_IMAGE);
   }
   const real=await resolvePhoto({name,category});
@@ -81,6 +81,6 @@ export default async function handler(req,res) {
     ? result.match==='illustrative'
       ? 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400'
       : 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=604800'
-    : 'public, max-age=30, s-maxage=120');
+    : 'no-store');
   return res.status(200).json(result);
 }
