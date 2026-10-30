@@ -20,7 +20,7 @@ import { useSecurity } from '../context/SecurityContext';
 import { useStore } from '../context/StoreContext';
 import { FREE_DELIVERY_THRESHOLD, getDeliveryFee, isStoreAvailableInArea, isLocalFreshStore } from '../data/deliveryAreas';
 import { VALID_COUPONS, MIN_PROMO_SUBTOTAL, evaluateCoupon, getOrderSavings, getAutomaticBasketDiscount } from '../data/checkoutOffers';
-import { useCustomerOrders, readCustomerOrders, getCustomerKey } from '../context/OrderHistoryContext';
+import { useCustomerOrders } from '../context/OrderHistoryContext';
 import FulfilmentPicker from '../components/FulfilmentPicker';
 import CatalogProductVisual from '../components/CatalogProductVisual';
 import AuthModal from '../components/AuthModal';
@@ -38,6 +38,7 @@ export default function CartPage({ userLocation }) {
   const [guestAuthOpen,setGuestAuthOpen] = useState(false);
   const placingRef = useRef(false);
   const [checkoutStep,setCheckoutStep] = useState('review');
+  const [deliveryAddress,setDeliveryAddress]=useState('');
   const [fulfilment,setFulfilment] = useState({mode:'standard',date:'',slot:''});
 
   // Coupon selection is tied to the customer's next successfully placed order.
@@ -96,7 +97,7 @@ export default function CartPage({ userLocation }) {
   const isFreeDelivery = !isLocalFresh && totalPrice > FREE_DELIVERY_THRESHOLD;
   const fulfilmentValidation = validateFulfilment(fulfilment);
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if(authSession.isTemporary) {
       setOrderError('Sign in with a customer account to save an order. Guest preview is for browsing only.');
       setGuestAuthOpen(true);
@@ -105,14 +106,17 @@ export default function CartPage({ userLocation }) {
     if(placingRef.current || orderPlaced || !storeServesArea || store?.isSample) return;
     placingRef.current = true;
     setOrderError(null);
-    const accountKey=getCustomerKey(authSession);
-    if(!accountKey) {
+    if(!authSession.userId){
       setOrderError('Please log in again before placing an order.');
       placingRef.current=false;
       return;
     }
-    // Re-read order history at submission instead of trusting a stale screen.
-    const actualNext=readCustomerOrders(accountKey).length+1;
+    if(!isPickup && deliveryAddress.trim().length<8){
+      setOrderError('Enter a full delivery address before placing the request.');
+      placingRef.current=false;
+      return;
+    }
+    const actualNext=nextOrderNumber;
     const latest=getOrderSavings(totalPrice,actualNext,appliedCoupon);
     // An expired coupon never blocks the order; use the eligible automatic
     // basket discount when applicable and don't redeem the invalid code.
@@ -129,9 +133,9 @@ export default function CartPage({ userLocation }) {
     const finalQuote=quoteFulfilment({
       store,subtotal:totalPrice,discount:effectiveDiscount,mode:requested.mode,items:cart.items
     });
-    const saved=recordOrder({
+    const saved=await recordOrder({
       storeId:cart.storeId,storeName:store?.name || 'Local Store',
-      storeArea:userLocation,
+      storeArea:userLocation,deliveryAddress:isPickup ? (store?.address || 'Store pickup address') : deliveryAddress.trim(),
       items:cart.items.map(i=>({id:i.id,name:i.name,qty:i.quantity,price:i.price,unit:i.unit})),
       subtotal:totalPrice,deliveryFee:finalQuote.deliveryFee,discount:effectiveDiscount,
       discountCode:effectiveCode,total:finalQuote.total,
@@ -145,7 +149,7 @@ export default function CartPage({ userLocation }) {
       return;
     }
     logSecurityEvent('DEMO_ORDER_RECORDED',
-      `Demo order #${saved.order.orderNumber} recorded for ${store?.name}; mode ${requested.mode}, no booking or payment made`,'info');
+      `Demo order ${saved.order.id} recorded for ${store?.name}; mode ${requested.mode}, no booking or payment made`,'info');
     setOrderPlaced(true);
     window.setTimeout(()=>{
       clearCart();
@@ -506,6 +510,17 @@ export default function CartPage({ userLocation }) {
               Pickup point and packing readiness require the store's confirmation. Do not travel based on this demo request.
             </span>
           )}
+        </div>
+      )}
+      {checkoutStep==='fulfilment' && !isPickup && !authSession.isTemporary && (
+        <div className="auth-field" style={{margin:'16px 18px'}}>
+          <label htmlFor="checkout-delivery-address">Full delivery address</label>
+          <input id="checkout-delivery-address" type="text"
+            autoComplete="street-address" required minLength={8} maxLength={1000}
+            value={deliveryAddress} onChange={event=>setDeliveryAddress(event.target.value)}
+            placeholder="House number, street, landmark, area, Visakhapatnam"
+            style={{width:'100%',padding:12,marginTop:8,border:'1px solid #aaa',borderRadius:8}}/>
+          <small>Saved only to your server-verified order; not shared with other customers.</small>
         </div>
       )}
       {authSession.isTemporary && (
