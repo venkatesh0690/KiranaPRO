@@ -1,58 +1,78 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useSecurity } from './SecurityContext';
 import { stores as initialStores, productsByCategory as initialProducts } from '../data/stores';
 import { sanitizeInput } from '../utils/security';
 
 const StoreContext = createContext(null);
 
 export function StoreProvider({ children }) {
+  const {authSession}=useSecurity();
   const [stores, setStores] = useState(initialStores);
   const [products, setProducts] = useState(initialProducts);
   const [activeRole, setActiveRole] = useState('user'); // 'user' | 'seller' | 'admin'
   const [sellerStoreId, setSellerStoreId] = useState(1); // Sharma General Store by default
 
-  // Live Orders managed across User, Seller and Admin
-  const [orders, setOrders] = useState([
-    {
-      id: 'KP-94821',
-      customerName: 'Laxman',
-      customerPhone: '+91 98480 22334',
-      customerAddress: 'Flat 302, Sai Residency, Maddilapalem, Vizag (0.4 km)',
-      storeId: 1,
-      storeName: 'Sharma General Store',
-      items: [
-        { id: 101, name: 'Amul Taaza Toned Milk', qty: 2, price: 54, unit: '1 Litre' },
-        { id: 201, name: 'Hybrid Juicy Red Tomatoes', qty: 1, price: 36, unit: '1 kg' },
-        { id: 401, name: "Haldiram's Aloo Bhujia", qty: 1, price: 52, unit: '200 g' }
-      ],
-      totalAmount: 196,
-      paymentMethod: 'UPI (Paid)',
-      status: 'Preparing', // 'Received' | 'Preparing' | 'Out for Delivery' | 'Delivered'
-      orderTime: '5:42 PM',
-      eta: '11 mins',
-      riderName: 'Suresh M. (TVS Jupiter - AP39 AB 1234)'
-    },
-    {
-      id: 'KP-94820',
-      customerName: 'Ananya S.',
-      customerPhone: '+91 98765 11223',
-      customerAddress: 'Plot 45, Sector 4, MVP Colony, Vizag (0.3 km)',
-      storeId: 2,
-      storeName: 'Sri Lakshmi Provisions',
-      items: [
-        { id: 102, name: 'Fresh Farm Eggs', qty: 2, price: 75, unit: '6 pcs' },
-        { id: 501, name: 'Tata Sampann Toor Dal', qty: 1, price: 142, unit: '1 kg' }
-      ],
-      totalAmount: 292,
-      paymentMethod: 'Cash on Delivery',
-      status: 'Delivered',
-      orderTime: '4:15 PM',
-      eta: 'Delivered in 12 mins',
-      riderName: 'Kishore K.'
+  // Only records fetched with the server's verified seller/admin session are displayed.
+  const [orders,setOrders]=useState([]);
+  useEffect(()=>{
+    let active=true;
+    if(!authSession.isAuthenticated || !['seller','admin'].includes(authSession.role)){
+      setOrders([]);
+      return ()=>{active=false};
     }
-  ]);
+    fetch('/api/orders',{credentials:'same-origin',cache:'no-store'})
+      .then(r=>r.ok?r.json():Promise.reject(new Error('Order access denied')))
+      .then(data=>{if(active)setOrders(data.orders||[]);})
+      .catch(()=>{if(active)setOrders([]);});
+    return ()=>{active=false};
+  },[authSession.isAuthenticated,authSession.role,authSession.storeId]);
+
+  useEffect(()=>{
+    if(authSession.role==='seller' && authSession.storeId) setSellerStoreId(authSession.storeId);
+  },[authSession.role,authSession.storeId]);
+  // Back-office inventory comes from the authenticated store's catalog.
+  // Never display the global demo product set inside a real seller account.
+  useEffect(()=>{
+    let active=true;
+    if(!authSession.isAuthenticated || authSession.role!=='seller' || !authSession.storeId){
+      setProducts(initialProducts);
+      return ()=>{active=false};
+    }
+    setProducts({});
+    fetch('/api/catalog?storeId='+encodeURIComponent(String(authSession.storeId)),{
+      credentials:'same-origin',cache:'no-store'
+    })
+      .then(r=>r.ok?r.json():Promise.reject(new Error('Catalog unavailable')))
+      .then(data=>{
+        if(!active)return;
+        const byCategory={};
+        for(const item of data.products||[]){
+          const category=item.category||'Other';
+          (byCategory[category] ||= []).push({
+            id:item.id,storeId:item.store_id,name:item.name,price:Number(item.price),
+            mrp:Number(item.original_price),unit:item.unit,category,
+            inStock:Boolean(item.in_stock),image:item.image_url||'',
+            badge:item.discount_badge||'',brand:'Registered Store'
+          });
+        }
+        setProducts(byCategory);
+      }).catch(()=>{if(active)setProducts({});});
+    return ()=>{active=false};
+  },[authSession.isAuthenticated,authSession.role,authSession.storeId]);
+
+
+  async function securedWrite(path,method,payload){
+    const response=await fetch(path,{method,credentials:'same-origin',
+      headers:{'Content-Type':'application/json','X-Kirana-Client':'web'},
+      body:JSON.stringify(payload)});
+    if(!response.ok)throw new Error('The server rejected this change. Please check permissions.');
+    return response.json();
+  }
 
   // Seller/Admin Action: Toggle In/Out of Stock
-  const toggleStock = (productId) => {
+  const toggleStock = async (productId) => {
+    const matched=Object.values(products).flat().find(p=>String(p.id)===String(productId));
+    await securedWrite('/api/catalog','PATCH',{storeId:authSession.role==='seller'?authSession.storeId:'localfresh',productId:String(productId),inStock:!matched?.inStock});
     setProducts((prev) => {
       const next = { ...prev };
       Object.keys(next).forEach((cat) => {
@@ -65,7 +85,8 @@ export function StoreProvider({ children }) {
   };
 
   // Seller/Admin Action: Update Price & MRP with Anti-Tampering Sanity Check
-  const updatePrice = (productId, newPrice, newMrp) => {
+  const updatePrice = async (productId, newPrice, newMrp) => {
+    await securedWrite('/api/catalog','PATCH',{storeId:authSession.role==='seller'?authSession.storeId:'localfresh',productId:String(productId),price:Number(newPrice)});
     const safePrice = Math.max(1, Number(newPrice) || 1);
     const safeMrp = Math.max(safePrice, Number(newMrp || safePrice) || safePrice);
 
@@ -81,8 +102,9 @@ export function StoreProvider({ children }) {
   };
 
   // Seller Action: Add New Product to Store Catalog with Input Sanitization
-  const addProduct = (category, productData) => {
-    const newId = Date.now();
+  const addProduct = async (category, productData) => {
+    const saved=await securedWrite('/api/catalog','POST',{storeId:authSession.role==='seller'?authSession.storeId:'localfresh',category,name:productData.name,price:Number(productData.price),unit:productData.unit||'1 pc'});
+    const newId = saved.product.id;
     const safePrice = Math.max(1, Number(productData.price) || 1);
     const safeMrp = Math.max(safePrice, Number(productData.mrp || safePrice) || safePrice);
 
@@ -117,20 +139,25 @@ export function StoreProvider({ children }) {
   };
 
   // Seller/Admin Action: Update Order Status
-  const updateOrderStatus = (orderId, newStatus) => {
+  const updateOrderStatus = async (orderId, newStatus) => {
+    await securedWrite('/api/orders','PATCH',{orderId,status:newStatus});
     setOrders((prev) =>
       prev.map((ord) => (ord.id === orderId ? { ...ord, status: newStatus } : ord))
     );
   };
 
   // Admin Action: Toggle Store Open/Closed
-  const toggleStoreStatus = (storeId) => {
+  const toggleStoreStatus = async (storeId) => {
+    const match=stores.find(s=>String(s.id)===String(storeId));
+    await securedWrite('/api/catalog','PATCH',{action:'store-status',storeId:String(storeId),isActive:!match?.isOpen});
     setStores((prev) =>
       prev.map((s) => (s.id === storeId ? { ...s, isOpen: !s.isOpen } : s))
     );
   };
 
-  const currentSellerStore = stores.find((s) => s.id === sellerStoreId) || stores[0];
+  const currentSellerStore = stores.find(s=>String(s.id)===String(sellerStoreId)) ||
+    {id:authSession.storeId,name:authSession.userName||'Registered store',owner:'Verified partner',
+     image:'🏬',address:'Registered store',isOpen:true};
 
   return (
     <StoreContext.Provider

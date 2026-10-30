@@ -3,33 +3,6 @@
 // Customer PII Data Masking, Rate Limiting & Anti-Tampering Validation
 
 /**
- * Verified Sample Platform Credentials for Testing & Evaluation
- */
-export const SAMPLE_CREDENTIALS = {
-  user: {
-    role: 'Customer (User)',
-    phone: '9848022334',
-    pin: '1234',
-    name: 'Laxman',
-    address: 'Flat 402, Sai Residency, Maddilapalem, Vizag'
-  },
-  seller: {
-    role: 'Seller (Store Partner)',
-    storeId: '1',
-    storeName: 'Sharma General Store',
-    phone: '9876543210',
-    pin: '1234',
-    location: 'Maddilapalem Main Road, Vizag'
-  },
-  admin: {
-    role: 'Platform Super Administrator',
-    email: 'admin@kiranapro.com',
-    password: 'admin123',
-    accessLevel: 'Super Administrator (LocalFresh Mandi & System Audit Console)'
-  }
-};
-
-/**
  * Delivery Fee Calculation with Free Delivery Threshold Rule
  * Requirement: Remove delivery fee as 0, when the cart value reaches 301.
  * - subtotal >= 301 => Free Delivery (₹0)

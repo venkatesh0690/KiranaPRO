@@ -1,76 +1,63 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { useSecurity } from './SecurityContext';
+import {createContext,useContext,useEffect,useMemo,useState,useCallback} from 'react';
+import {useSecurity} from './SecurityContext';
 
-// Prototype-only client-side order ledger: scoped to the signed-in phone.
-// Requires verified accounts and server-side persistence/transactional checks
-// before enabling real payments and production coupon redemption.
-const KEY_PREFIX='kp_customer_history_v1:';
 const OrderHistoryContext=createContext(null);
+// Server-issued account ID is the only key; browser phone numbers never authorize records.
+export const getCustomerKey=session =>
+  session?.isAuthenticated && session.role==='customer' && !session.isTemporary ? session.userId : null;
+// Legacy read intentionally disabled. Never restore localStorage-based "private" orders.
+export const readCustomerOrders=()=>[];
 
-export function getCustomerKey(session) {
-  if(!session?.isAuthenticated || session.role!=='customer' || session.isTemporary) return null;
-  const phone=String(session.userPhone||'').replace(/\D/g,'');
-  return phone.length>=10 ? phone.slice(-10) : null;
-}
-
-export function readCustomerOrders(key) {
-  if(!key) return [];
-  try {
-    const value=JSON.parse(localStorage.getItem(KEY_PREFIX+key)||'[]');
-    return Array.isArray(value) ? value.filter(entry => entry && entry.id && entry.placedAt) : [];
-  } catch {return [];}
-}
-
-export function OrderHistoryProvider({children}) {
+export function OrderHistoryProvider({children}){
   const {authSession}=useSecurity();
   const accountKey=getCustomerKey(authSession);
-  const [history,setHistory]=useState(() => ({key:accountKey,orders:readCustomerOrders(accountKey)}));
-
-  // Do not leak previous account orders during account switching or logout.
-  const orders=history.key===accountKey ? history.orders : readCustomerOrders(accountKey);
+  const [history,setHistory]=useState({key:null,orders:[]});
+  const orders=history.key===accountKey?history.orders:[];
 
   useEffect(()=>{
-    setHistory({key:accountKey,orders:readCustomerOrders(accountKey)});
+    let live=true;
+    setHistory({key:accountKey,orders:[]});
+    if(!accountKey)return ()=>{live=false};
+    fetch('/api/orders',{credentials:'same-origin',cache:'no-store'})
+      .then(r=>r.ok?r.json():Promise.reject(new Error('Could not load orders')))
+      .then(data=>{if(live)setHistory({key:accountKey,orders:data.orders||[]});})
+      .catch(()=>{if(live)setHistory({key:accountKey,orders:[]});});
+    return ()=>{live=false};
   },[accountKey]);
 
-  useEffect(()=>{
-    const refresh=event=>{
-      if(!accountKey || (event.key!==null && event.key!==KEY_PREFIX+accountKey)) return;
-      setHistory({key:accountKey,orders:readCustomerOrders(accountKey)});
-    };
-    window.addEventListener('storage',refresh);
-    return ()=>window.removeEventListener('storage',refresh);
-  },[accountKey]);
-
-  const recordOrder=(data)=>{
-    if(!accountKey) return {success:false,error:'Log in as a customer before placing an order.'};
+  const recordOrder=useCallback(async data=>{
+    if(!accountKey)return {success:false,error:'Please sign in before ordering.'};
     if(!data?.storeId || !Array.isArray(data.items) || !data.items.length) {
       return {success:false,error:'Cannot place an empty order.'};
     }
-    const previous=readCustomerOrders(accountKey);
-    const number=previous.length+1;
-    const order={
-      ...data,
-      id:typeof crypto!=='undefined' && crypto.randomUUID ? `KP-${crypto.randomUUID()}` : `KP-${Date.now()}-${Math.random().toString(36).slice(2,9)}`,
-      orderNumber:number,placedAt:new Date().toISOString(),status:'Placed (demo)'
-    };
-    try {
-      localStorage.setItem(KEY_PREFIX+accountKey,JSON.stringify([...previous,order]));
-      setHistory({key:accountKey,orders:[...previous,order]});
+    try{
+      const response=await fetch('/api/orders',{
+        method:'POST',credentials:'same-origin',
+        headers:{'Content-Type':'application/json','X-Kirana-Client':'web'},
+        body:JSON.stringify({
+          storeId:String(data.storeId),
+          items:data.items.map(i=>({id:String(i.id),qty:i.qty||i.quantity})),
+          deliveryAddress:data.deliveryAddress,
+          discountCode:data.discountCode,
+          fulfilment:data.fulfilment
+        })
+      });
+      const result=await response.json();
+      if(!response.ok)return {success:false,error:result.error||'Unable to record order'};
+      const order=result.order;
+      setHistory(previous=>({key:accountKey,orders:
+        [...(previous.key===accountKey?previous.orders:[]),order]}));
       return {success:true,order};
-    } catch {
-      return {success:false,error:'Unable to save your order history on this device. Order not placed.'};
-    }
-  };
+    }catch{return {success:false,error:'Order service is unavailable. No order was saved.'};}
+  },[accountKey]);
 
   const count=orders.length;
   const value=useMemo(()=>({orders,orderCount:count,nextOrderNumber:count+1,recordOrder}),
     [orders,count,recordOrder]);
   return <OrderHistoryContext.Provider value={value}>{children}</OrderHistoryContext.Provider>;
 }
-
-export function useCustomerOrders() {
-  const context=useContext(OrderHistoryContext);
-  if(!context)throw new Error('useCustomerOrders requires OrderHistoryProvider');
-  return context;
+export function useCustomerOrders(){
+  const ctx=useContext(OrderHistoryContext);
+  if(!ctx)throw new Error('useCustomerOrders requires OrderHistoryProvider');
+  return ctx;
 }
