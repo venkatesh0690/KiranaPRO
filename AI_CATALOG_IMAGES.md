@@ -26,3 +26,31 @@ The Neon migration `security/catalog_ai_images.sql` was applied to both preview 
 - Failed generation cannot overwrite published images; one-hour retry cooldown is recorded in SQL.
 - No automatic batch/background generation is enabled to prevent unpredictable charges.
 - The storefront will still show a neutral product fallback while there is no verified real photo and no saved AI illustration.
+
+## Administrator first-run setup
+The platform uses a single-use, time-limited setup code stored as a SHA-256 hash in
+Vercel production environment variables (`ADMIN_BOOTSTRAP_TOKEN_HASH`,
+`ADMIN_BOOTSTRAP_EXPIRES_AT`). Go to `/admin/login`, choose **Set up administrator
+account**, and enter a unique email and strong 16+ character password. This creates
+a scrypt-hashed admin account in Neon and permanently consumes the setup code.
+After the first admin is created the setup option disappears. Never use a shared
+demo password.
+
+## Batch generation
+The admin dashboard lists missing images based on the actual Neon catalog.
+**Generate Missing Images** processes up to 6, 12, or 24 items in the browser
+one at a time and shows current progress. The browser tab must remain open.
+The server enforces a daily maximum of 36 new image claims and a one-hour
+retry cooldown on failed attempts. Generated images are stored once in
+Vercel Blob and reused by storefront visitors.
+Items with a known curated real photo or seller image are skipped.
+Branded/restricted items receive neutral line-art and a clearly worded
+**Verified product photo pending** label, never fake packaging.
+
+## Initial production provider result (30 October 2026)
+The initial two controlled image-generation attempts failed; the confirmed
+OpenAI response was **HTTP 429** (rate limit or insufficient quota).
+No image was successfully published. Check the OpenAI Platform project's
+usage limits, billing status, and model access before retrying through
+the admin dashboard. Do not keep repeating paid requests against a 429.
+The temporary signed seeding endpoint has been removed.
