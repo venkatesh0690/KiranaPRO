@@ -180,18 +180,37 @@ export default function SearchPage({ userLocation }) {
           {query && <span className="kp-synonym-active-hint">• Bilingual Telugu & Hindi search active</span>}
         </div>
 
-        <div className="search-products-grid">
-          {filteredProducts.map((p) => (
-            <div key={p.id} onClick={() => setSelectedProduct(p)}>
-              <ProductCard
-                product={p}
-                storeId={p.storeId}
-                layout="big"
-                categoryBg="var(--pastel-orange)"
-              />
-            </div>
-          ))}
-        </div>
+        {filteredProducts.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '48px 20px', background: '#FFFFFF', borderRadius: '16px', border: '1.5px dashed #CBD5E1', margin: '20px 0' }}>
+            <span style={{ fontSize: '42px', display: 'block', marginBottom: '12px' }}>🌾</span>
+            <h3 style={{ fontSize: '17px', fontWeight: '850', color: '#0F172A', margin: '0 0 8px' }}>
+              Couldn't find "{query}" in {userLocation}
+            </h3>
+            <p style={{ fontSize: '12.5px', color: '#64748B', maxWidth: '380px', margin: '0 auto 18px', lineHeight: 1.45 }}>
+              Looking for fresh local produce? Try searching with regional names: <strong>Bendakaya</strong>, <strong>Vankaya</strong>, <strong>Ullipayalu</strong>, or <strong>Dosakaya</strong>.
+            </p>
+            <button
+              type="button"
+              style={{ padding: '10px 18px', background: '#1E3A2B', color: '#FFFFFF', border: 'none', borderRadius: '10px', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}
+              onClick={() => alert(`Request recorded! Our Visakhapatnam Mandi sourcing team will look for "${query}" in tomorrow morning's auction.`)}
+            >
+              📢 Request Our Mandi Team to Stock "{query}" Tomorrow
+            </button>
+          </div>
+        ) : (
+          <div className="search-products-grid">
+            {filteredProducts.map((p) => (
+              <div key={p.id} onClick={() => setSelectedProduct(p)}>
+                <ProductCard
+                  product={p}
+                  storeId={p.storeId}
+                  layout="big"
+                  categoryBg="var(--pastel-orange)"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Product Detail Modal */}

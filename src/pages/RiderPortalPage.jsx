@@ -11,6 +11,17 @@ export default function RiderPortalPage() {
   const location = useLocation();
   const { authSession, logout } = useSecurity();
   const [isOnDuty, setIsOnDuty] = useState(true);
+  const [sunlightMode, setSunlightMode] = useState(() => {
+    return typeof localStorage !== 'undefined' && localStorage.getItem('kp_sunlight_mode') === 'true';
+  });
+
+  const toggleSunlightMode = () => {
+    setSunlightMode(prev => {
+      const next = !prev;
+      if (typeof localStorage !== 'undefined') localStorage.setItem('kp_sunlight_mode', String(next));
+      return next;
+    });
+  };
   const [activeTab, setActiveTab] = useState('deliveries'); // 'deliveries' | 'mandi' | 'ledger'
   const [unsettledCash, setUnsettledCash] = useState(1480);
   const [selectedZone, setSelectedZone] = useState('Siripuram');
@@ -176,7 +187,8 @@ export default function RiderPortalPage() {
   };
 
   return (
-    <div className="kp-rider-portal">
+    <div className={`kp-rider-portal ${sunlightMode ? "kp-sunlight-mode" : ""}`}>
+
       {/* Top Shift Status Bar */}
       <header className="kp-rider-header">
         <div className="kp-rider-top-row">
@@ -187,13 +199,23 @@ export default function RiderPortalPage() {
               <span className="kp-rider-zone"><MapPin size={12} /> Zone: {selectedZone} (Vizag)</span>
             </div>
           </div>
-          <button 
-            type="button" 
-            className={`kp-duty-toggle ${isOnDuty ? 'on' : 'off'}`}
-            onClick={() => setIsOnDuty(d => !d)}
-          >
-            {isOnDuty ? '🟢 On Duty' : '⚪ Off Duty'}
-          </button>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button 
+              type="button" 
+              className={`kp-duty-toggle ${sunlightMode ? 'on' : 'off'}`}
+              onClick={toggleSunlightMode}
+              title="Ultra-high contrast daylight visibility for wholesale mandis"
+            >
+              {sunlightMode ? '☀️ Sunlight: ON' : '🌤️ Sunlight: OFF'}
+            </button>
+            <button 
+              type="button" 
+              className={`kp-duty-toggle ${isOnDuty ? 'on' : 'off'}`}
+              onClick={() => setIsOnDuty(d => !d)}
+            >
+              {isOnDuty ? '🟢 On Duty' : '⚪ Off Duty'}
+            </button>
+          </div>
         </div>
 
         {/* Live Cash In Hand Pill */}

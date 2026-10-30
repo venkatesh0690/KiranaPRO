@@ -11,6 +11,7 @@ import BottomNav from './components/BottomNav';
 import CartBar from './components/CartBar';
 import InstallAppBanner from './components/InstallAppBanner';
 import LocationPage from './pages/LocationPage';
+import CommandSpotlight from './components/CommandSpotlight';
 const HomePage = lazy(() => import('./pages/HomePage'));
 const StorePage = lazy(() => import('./pages/StorePage'));
 const CartPage = lazy(() => import('./pages/CartPage'));
@@ -88,7 +89,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
     }
   }, [authSession.isAuthenticated, loginTemporaryCustomer]);
   const { cart, clearCart } = useCart();
-  const { stores } = useStore();
+  const { stores, products } = useStore();
   const canShop = authSession.isAuthenticated && authSession.role === 'customer' && isDeliveryArea(userLocation);
 
   const chooseDeliveryArea = nextArea => {
@@ -107,6 +108,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
 
   return (
     <div className="app-root-wrapper full-screen-mode">
+      <CommandSpotlight catalog={products} />
       {/* Dynamic Route Content */}
       <main
         className={`app-content-area ${

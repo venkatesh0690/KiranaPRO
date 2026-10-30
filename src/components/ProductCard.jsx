@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Plus, Minus, AlertTriangle, Sparkles } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import CatalogProductVisual from './CatalogProductVisual';
+import { triggerHaptic } from '../utils/nativePlatform';
 
 export default function ProductCard({ product, storeId, layout = 'big', categoryBg = '#FFF3E0' }) {
   const { cart, addItem, removeItem } = useCart();
@@ -24,27 +25,35 @@ export default function ProductCard({ product, storeId, layout = 'big', category
 
   const handleIncrement = () => {
     if (qty >= stockCount) return;
+    triggerHaptic(10);
     addItem(storeId, product);
+  };
+
+  const handleDecrement = () => {
+    triggerHaptic(10);
+    removeItem(product.id);
   };
 
   const isMandi = String(storeId).toLowerCase() === 'localfresh' || product.isMandiDirect;
 
   return (
     <div className={`pc ${layout} ${isOutOfStock ? 'oos' : ''}`}>
-      {/* Product Image Box */}
-      <div className="pc-img-wrap" style={{ background: categoryBg }}>
+      {/* ── Zone 1: Product Image Box with Savings Ribbon & Source Tag ── */}
+      <div className="pc-img-wrap aspect-square" style={{ background: categoryBg, position: 'relative' }}>
         <CatalogProductVisual product={product} />
         {discount > 0 && (
-          <div className="pc-disc">{discount}% OFF</div>
+          <div className="pc-disc" style={{ background: '#15803D', fontWeight: 850 }}>
+            {product.mrp - product.price >= 5 ? `SAVE ₹${product.mrp - product.price}` : `${discount}% OFF`}
+          </div>
         )}
         {isOutOfStock && (
           <div className="pc-oos-layer">Out of Stock</div>
         )}
       </div>
 
-      {/* Body details */}
+      {/* ── Zone 2: Title, Telugu Line-Height Guard & Unit Details ── */}
       <div className="pc-body">
-        {/* Source Chip */}
+        {/* Source Micro-Chip */}
         <div className="pc-source-chip">
           {isMandi ? (
             <span className="source-mandi">🌾 Mandi Direct</span>
@@ -54,7 +63,9 @@ export default function ProductCard({ product, storeId, layout = 'big', category
         </div>
 
         <span className="pc-unit">{product.unit}</span>
-        <h4 className="pc-name">{product.name}</h4>
+        <h4 className="pc-name kp-bilingual-title" style={{ minHeight: '2.9em', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          {product.name}
+        </h4>
 
         {/* Live Scarcity Indicator */}
         {isScarcity && (
@@ -63,11 +74,11 @@ export default function ProductCard({ product, storeId, layout = 'big', category
           </div>
         )}
 
-        {/* Price Row */}
+        {/* ── Zone 3: Price Stack (Tabular Numerics) ── */}
         <div className="pc-price-row">
-          <span className="pc-price">₹{product.price}</span>
+          <span className="pc-price tabular-nums">₹{product.price}</span>
           {product.mrp > product.price && (
-            <span className="pc-mrp">₹{product.mrp}</span>
+            <span className="pc-mrp tabular-nums">₹{product.mrp}</span>
           )}
         </div>
 
@@ -79,7 +90,7 @@ export default function ProductCard({ product, storeId, layout = 'big', category
         )}
       </div>
 
-      {/* Action / Add button */}
+      {/* ── Zone 4: Action Zone with Generous Thumb Target & Haptics ── */}
       <div className="pc-action">
         {!isOutOfStock ? (
           qty === 0 ? (
@@ -87,19 +98,20 @@ export default function ProductCard({ product, storeId, layout = 'big', category
               type="button"
               className="pc-add-btn"
               onClick={handleIncrement}
+              style={{ minHeight: '36px', minWidth: '44px' }}
             >
               ADD
             </button>
           ) : (
-            <div className="pc-qty">
+            <div className="pc-qty" style={{ minHeight: '36px' }}>
               <button
                 type="button"
-                onClick={() => removeItem(product.id)}
+                onClick={handleDecrement}
                 aria-label="Decrease quantity"
               >
                 <Minus size={13} strokeWidth={3} />
               </button>
-              <span>{qty}</span>
+              <span className="tabular-nums" style={{ minWidth: '20px', textAlign: 'center' }}>{qty}</span>
               <button
                 type="button"
                 onClick={handleIncrement}

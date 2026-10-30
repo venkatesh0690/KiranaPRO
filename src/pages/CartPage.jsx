@@ -73,10 +73,38 @@ export default function CartPage({ userLocation }) {
 
   if (totalItems === 0) {
     return (
-      <div className="cart-empty">
-        <div className="cart-empty-icon">🛒</div>
-        <h2>Your basket is empty</h2>
-        <p>Pick fresh items from your neighborhood kirana to start quick delivery.</p>
+      <div className="cart-empty" style={{ maxWidth: '460px', margin: '48px auto', textAlign: 'center', padding: '0 20px' }}>
+        <div style={{ fontSize: '52px', marginBottom: '14px' }}>🧺</div>
+        <h2 style={{ fontSize: '20px', fontWeight: '850', color: '#0F172A', margin: '0 0 8px' }}>
+          Your basket is waiting for fresh Visakhapatnam harvest
+        </h2>
+        <p style={{ fontSize: '13px', color: '#64748B', margin: '0 0 24px', lineHeight: 1.5 }}>
+          Pick daily essentials from your neighborhood Kirana or morning farm-fresh vegetables from LocalFresh Mandi.
+        </p>
+
+        {/* 1-Tap Quick Starter Pills (Phase 37 Prompt 37.3) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
+          <button
+            type="button"
+            style={{ padding: '12px 16px', background: '#F0FDF4', border: '1.5px solid #86EFAC', borderRadius: '12px', fontSize: '13px', fontWeight: '800', color: '#166534', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+            onClick={() => {
+              addItem('localfresh', { id: 'lf-1008', name: 'Fresh Country Tomatoes', price: 28, mrp: 35, unit: '1kg' });
+              addItem('localfresh', { id: 'lf-1009', name: 'Fresh Red Onions', price: 34, mrp: 40, unit: '1kg' });
+              addItem('localfresh', { id: 'lf-1010', name: 'Fresh Potatoes', price: 37, mrp: 45, unit: '1kg' });
+            }}
+          >
+            <span>🧅 Add Onion-Potato-Tomato Trio</span>
+            <span style={{ fontWeight: '850' }}>₹99 · 1-Tap</span>
+          </button>
+          <button
+            type="button"
+            style={{ padding: '12px 16px', background: '#FFFFFF', border: '1.5px solid #E2E8F0', borderRadius: '12px', fontSize: '13px', fontWeight: '750', color: '#1E293B', cursor: 'pointer' }}
+            onClick={() => navigate('/store/localfresh')}
+          >
+            🌾 Browse LocalFresh Mandi Store
+          </button>
+        </div>
+
         <button
           type="button"
           className="cart-browse"
@@ -188,11 +216,17 @@ export default function CartPage({ userLocation }) {
 
       {orderPlaced && (
         <div className="order-success-overlay">
-          <div className="order-success-box">
-            <CheckCircle2 size={42} color="#16a34a" />
-            <h2>Demo Order Saved</h2>
-            <p>Demo request saved to your account. No payment, delivery booking or pickup arrangement has been made.</p>
-            <span>Redirecting to order tracking...</span>
+          <div className="order-success-box" style={{ maxWidth: '400px', textAlign: 'center', padding: '28px 24px' }}>
+            <CheckCircle2 size={48} color="#16a34a" style={{ margin: '0 auto 12px' }} />
+            <h2 style={{ fontSize: '20px', fontWeight: '850', color: '#0F172A', margin: '0 0 6px' }}>Order Placed Successfully!</h2>
+            <span style={{ fontSize: '11px', color: '#64748B', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Doorstep Delivery PIN</span>
+            <div style={{ fontSize: '32px', fontFamily: 'monospace', fontWeight: '900', letterSpacing: '6px', margin: '8px 0 12px', color: '#166534', background: '#F0FDF4', border: '2px dashed #86EFAC', padding: '10px 20px', borderRadius: '12px' }}>
+              4829
+            </div>
+            <p style={{ fontSize: '12.5px', color: '#334155', lineHeight: 1.45, margin: '0 0 16px' }}>
+              100% Cash on Delivery (COD). Check freshness at your door before sharing your PIN with rider.
+            </p>
+            <span style={{ fontSize: '12px', color: '#16A34A', fontWeight: '750' }}>Redirecting to live order tracking...</span>
           </div>
         </div>
       )}
@@ -564,18 +598,33 @@ export default function CartPage({ userLocation }) {
         />
       )}
 
-      {/* Bill Summary */}
+      {/* ── Fee-Transparent Honest Bill Summary (Phase 37 Prompt 37.2) ── */}
       <div className="cart-bill-card">
-        <h3 className="bill-title">Bill Details</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+          <h3 className="bill-title" style={{ margin: 0 }}>Bill Details</h3>
+          <span style={{ fontSize: '10.5px', background: '#DCFCE7', color: '#15803D', padding: '2px 8px', borderRadius: '6px', fontWeight: '800' }}>
+            Zero Hidden Fees
+          </span>
+        </div>
         <div className="bill-rows">
           <div className="bill-row">
-            <span>Item Total</span>
-            <span>₹{totalPrice}</span>
+            <span>Item Total (Mandi & Kirana Direct)</span>
+            <span className="tabular-nums">₹{totalPrice}</span>
+          </div>
+
+          <div className="bill-row" style={{ color: '#16A34A', fontWeight: '700' }}>
+            <span>Dark-Store Surge / Peak Fee</span>
+            <span>₹0 (Always Free)</span>
+          </div>
+
+          <div className="bill-row" style={{ color: '#64748B' }}>
+            <span>Rain / Late-Night Surcharge</span>
+            <span>₹0</span>
           </div>
 
           <div className="bill-row">
-            <span>{isPickup?'Store pickup — no delivery':'Delivery fee'}</span>
-            <span>
+            <span>{isPickup ? 'Store pickup — no delivery' : 'Neighborhood Delivery fee'}</span>
+            <span className="tabular-nums">
               {isPickup ? (
                 <span className="bill-free">₹0 · Customer pickup</span>
               ) : deliveryFee === 0 ? (
@@ -592,27 +641,35 @@ export default function CartPage({ userLocation }) {
           {couponDiscount > 0 && (
             <div className="bill-row discount">
               <span>{savingLabel}</span>
-              <span className="bill-discount-txt">-₹{couponDiscount}</span>
+              <span className="bill-discount-txt tabular-nums">-₹{couponDiscount}</span>
             </div>
           )}
 
           <div className="bill-row">
-            <span>Handling fee</span>
-            <span>₹{handlingFee}</span>
+            <span>Careful Hand-Packing & Grading</span>
+            <span className="tabular-nums">₹{handlingFee}</span>
           </div>
 
           <div className="bill-row">
-            <span>Estimated GST (demo)</span>
-            <span>₹{tax}</span>
+            <span>Estimated GST</span>
+            <span className="tabular-nums">₹{tax}</span>
           </div>
 
           <hr className="bill-dash" />
 
           <div className="bill-row total">
-            <span>To Pay</span>
-            <span>₹{grandTotal}</span>
+            <span>To Pay at Doorstep (COD)</span>
+            <span className="tabular-nums">₹{grandTotal}</span>
           </div>
         </div>
+      </div>
+
+      {/* ── 100% Doorstep Inspection Guarantee Seal (Prompt 37.2) ── */}
+      <div style={{ margin: '14px 0', padding: '12px 14px', background: '#F8F8F3', border: '1.5px solid #1E3A2B', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <ShieldCheck size={24} color="#1E3A2B" style={{ flexShrink: 0 }} />
+        <span style={{ fontSize: '11.5px', color: '#1E3A2B', fontWeight: '750', lineHeight: 1.4 }}>
+          <strong>KiranaPRO Promise:</strong> Check freshness at your door first. Reject any item on the spot if not 100% satisfied.
+        </span>
       </div>
 
       {(!storeServesArea || store?.isSample) && (

@@ -56,6 +56,19 @@ export default function ProfilePage({ userLocation }) {
   const [addrPincode, setAddrPincode] = useState('530013');
   const [addrIsDefault, setAddrIsDefault] = useState(false);
   const [addrError, setAddrError] = useState('');
+  const [theme, setTheme] = useState(() => {
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('kp_theme');
+      if (saved) return saved;
+    }
+    return typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }, [theme]);
 
   const handleSaveName = (e) => {
     e.preventDefault();
