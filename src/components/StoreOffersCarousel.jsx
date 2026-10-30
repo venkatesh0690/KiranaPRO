@@ -78,7 +78,7 @@ export function HomeOffersCarousel({ stores, catalog, navigate, area, totalItems
     autoAdvance editorial />;
 }
 
-function EditorialPoster({ slide, index, total, onAction }) {
+function EditorialPoster({ slide, index, total, onAction, shouldLoadPhoto }) {
   const theme=getEditorialBannerStyle(slide,index);
   const headline=getEditorialBannerHeadline(slide);
   const photo=getEditorialBannerPhoto(slide);
@@ -95,8 +95,10 @@ function EditorialPoster({ slide, index, total, onAction }) {
         '--kp-ed-panel':theme.panel
       }}>
       <div className="kp-ed-backdrop" aria-hidden="true">
-        <img src={photo.src} alt="" loading={index===0?'eager':'lazy'}
-          decoding="async" width="900" height="500"
+        <img src={shouldLoadPhoto ? photo.src.replace('w=900', 'w=700') : undefined}
+          alt="" loading={index===0?'eager':'lazy'}
+          fetchPriority={index===0?'high':'low'}
+          decoding="async" width="700" height="250"
           onError={event=>{
             const img=event.currentTarget;
             if(img.dataset.fallback) {
@@ -236,7 +238,9 @@ function SwipeBanners({ slides, onAction, label, autoAdvance = false, editorial 
             role="group" aria-roledescription="slide"
             aria-label={`${i+1} of ${slides.length}: ${slide.title}`}>
             {editorial ? (
-              <EditorialPoster slide={slide} index={i} total={slides.length} onAction={onAction}/>
+              <EditorialPoster slide={slide} index={i} total={slides.length}
+                shouldLoadPhoto={i===current || i===(current+1)%slides.length}
+                onAction={onAction}/>
             ) : (
               <>
             <div className="kp-promo-text">

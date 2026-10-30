@@ -1,15 +1,30 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getStoreGallery, getStoreImageFallback } from '../data/storeGallery';
 
+// Unsplash storefront thumbnails are intentionally small; full 960px photos
+// are wasted in 300–600px cards on mobile connections.
+function cardPhotoUrl(src) {
+  if (typeof src !== 'string' || !src.startsWith('https://unsplash.com/photos/')) return src;
+  const resized = src.replace(/([?&])w=960(?=&|$)/, '$1w=600');
+  return resized.includes('fm=webp') ? resized : resized + '&h=370&q=58&fm=webp';
+}
+
 export default function StorePhotoCarousel({ store, className = '', onSwipe }) {
   const gallery = useMemo(() => getStoreGallery(store), [store?.id]);
   const [active, setActive] = useState(0);
+  const [loaded, setLoaded] = useState(() => new Set([0]));
   const root = useRef(null);
   const touchStart = useRef(null);
   const visible = useRef(false);
   const [canAutoplay, setCanAutoplay] = useState(false);
 
-  useEffect(() => setActive(0), [store?.id]);
+  useEffect(() => {
+    setActive(0);
+    setLoaded(new Set([0]));
+  }, [store?.id]);
+  useEffect(() => {
+    setLoaded(prev => prev.has(active) ? prev : new Set([...prev, active]));
+  }, [active]);
 
   useEffect(() => {
     const node = root.current;
@@ -74,11 +89,13 @@ export default function StorePhotoCarousel({ store, className = '', onSwipe }) {
         <img
           className={`kp-store-slide ${index === active ? 'is-active' : ''}`}
           key={photo.src}
-          src={photo.src}
+          src={index === active || loaded.has(index) ? cardPhotoUrl(photo.src) : undefined}
           alt={index === active ? photo.alt : ''}
           aria-hidden={index !== active}
           draggable={false}
-          loading={index === 0 ? 'eager' : 'lazy'}
+          width="600" height="375"
+          loading="lazy"
+          fetchPriority="low"
           decoding="async"
           onError={(event) => {
             const image = event.currentTarget;

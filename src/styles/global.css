@@ -9012,3 +9012,28 @@ input { font-family: inherit; }
     padding: 20px 32px 360px 24px !important;
   }
 }
+
+
+/* Lightweight accessible fallback while route-specific JavaScript arrives. */
+.kp-route-loading {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:12px;
+  min-height:45vh;
+  color:#4b574d;
+  font-size:13px;
+  letter-spacing:.01em;
+}
+.kp-route-loading-mark {
+  display:grid;
+  place-items:center;
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  background:#233328;
+  color:#fff;
+  font-size:22px;
+  font-weight:750;
+}
