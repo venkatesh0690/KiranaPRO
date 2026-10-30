@@ -63,7 +63,7 @@ test('manual image refresh clears only photo entries and signals visible cards',
 
 test('new PWA version invalidates stale app caches but never caches private APIs',()=>{
   const sw=read('public/sw.js');
-  assert.match(sw,/const VERSION='kiranapro-fast-v3'/);
+  assert.match(sw,/const VERSION='kiranapro-fast-v4'/);
   assert.match(sw,/name.startsWith\('kiranapro-'\) && !name.startsWith\(VERSION\)/);
   assert.match(sw,/url.pathname.startsWith\('\/api\/'\)\)return/);
   const html=read('index.html');
