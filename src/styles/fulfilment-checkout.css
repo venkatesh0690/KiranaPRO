@@ -1438,3 +1438,275 @@
     height: 160px;
   }
 }
+
+/* ── Phase 13-18: Parivaar Pass, Free Dhaniya Gift, Impulse Shelf & DoubleDash ── */
+.kp-parivaar-pass-card {
+  margin: 14px 0;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #FEF9C3 0%, #FEF08A 100%);
+  border: 1.5px solid #F59E0B;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.kp-pp-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.kp-pp-title {
+  font-size: 13px;
+  font-weight: 850;
+  color: #78350F;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.kp-pp-sub {
+  font-size: 11px;
+  color: #92400E;
+}
+.kp-pp-checkbox {
+  padding: 8px 14px;
+  background: #78350F;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.kp-pp-checkbox.active {
+  background: #15803D;
+}
+
+/* Free Dhaniya & Mirchi Gift Trigger */
+.kp-free-dhaniya-gift {
+  margin: 12px 0;
+  padding: 11px 14px;
+  background: #ECFDF5;
+  border: 1.5px dashed #10B981;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.kp-fdg-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 750;
+  color: #065F46;
+}
+.kp-fdg-tag {
+  font-size: 10px;
+  font-weight: 850;
+  background: #10B981;
+  color: #FFFFFF;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+/* Under-₹25 Kitchen Impulse Shelf */
+.kp-impulse-shelf {
+  margin: 16px 0;
+  padding: 14px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+}
+.kp-impulse-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.kp-impulse-title {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #0F172A;
+}
+.kp-impulse-badge {
+  font-size: 10px;
+  background: #E2E8F0;
+  color: #475569;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+.kp-impulse-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.kp-impulse-card {
+  flex-shrink: 0;
+  width: 118px;
+  padding: 10px;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+.kp-impulse-icon {
+  font-size: 20px;
+}
+.kp-impulse-name {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #1E293B;
+  line-height: 1.25;
+}
+.kp-impulse-price {
+  font-size: 11px;
+  font-weight: 850;
+  color: #16A34A;
+}
+.kp-impulse-add-btn {
+  width: 100%;
+  padding: 4px;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 750;
+  color: #334155;
+  cursor: pointer;
+  margin-top: 2px;
+}
+.kp-impulse-add-btn:hover {
+  background: #E2E8F0;
+}
+
+/* Instacart Replacement Policy Bar */
+.kp-replacement-policy-bar {
+  margin: 14px 0;
+  padding: 12px;
+  background: #F1F5F9;
+  border-radius: 12px;
+}
+.kp-rpb-title {
+  font-size: 11.5px;
+  font-weight: 750;
+  color: #334155;
+  margin-bottom: 8px;
+  display: block;
+}
+.kp-rpb-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.kp-rpb-btn {
+  padding: 5px 10px;
+  font-size: 11px;
+  border-radius: 6px;
+  border: 1px solid #CBD5E1;
+  background: #FFFFFF;
+  color: #475569;
+  cursor: pointer;
+}
+.kp-rpb-btn.selected {
+  border-color: #16A34A;
+  background: #DCFCE7;
+  color: #15803D;
+  font-weight: 750;
+}
+
+/* DoorDash DoubleDash Post-Checkout Countdown Banner */
+.kp-doubledash-banner {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+  border: 1.5px solid #3B82F6;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.kp-dd-left strong {
+  display: block;
+  font-size: 13px;
+  color: #1E40AF;
+}
+.kp-dd-left span {
+  font-size: 11px;
+  color: #3B82F6;
+}
+.kp-dd-timer {
+  font-size: 14px;
+  font-weight: 850;
+  color: #1D4ED8;
+  background: #FFFFFF;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #BFDBFE;
+}
+
+/* Recipe Baskets Showcase on /home */
+.kp-recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+.kp-recipe-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+.kp-rc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+.kp-rc-icon {
+  font-size: 26px;
+}
+.kp-rc-tag {
+  font-size: 9.5px;
+  font-weight: 850;
+  background: #F1F5F9;
+  color: #475569;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.kp-rc-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 4px;
+}
+.kp-rc-meta {
+  font-size: 11px;
+  color: #64748B;
+  margin-bottom: 12px;
+}
+.kp-rc-btn {
+  width: 100%;
+  padding: 8px;
+  background: #166534;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 800;
+  cursor: pointer;
+}

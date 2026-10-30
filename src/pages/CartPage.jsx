@@ -25,6 +25,7 @@ import FulfilmentPicker from '../components/FulfilmentPicker';
 import CatalogProductVisual from '../components/CatalogProductVisual';
 import AuthModal from '../components/AuthModal';
 import { quoteFulfilment, validateFulfilment } from '../utils/fulfilment';
+import { UNDER_25_IMPULSE_ITEMS } from '../data/recipeBaskets';
 
 export default function CartPage({ userLocation }) {
   const { cart, addItem, removeItem, switchStoreItems, clearCart, totalItems, totalPrice } = useCart();
@@ -43,6 +44,9 @@ export default function CartPage({ userLocation }) {
   const [deliveryAddress,setDeliveryAddress]=useState('');
   const [fulfilment,setFulfilment] = useState({mode:'standard',date:'',slot:''});
   const [codChangeAmount, setCodChangeAmount] = useState('Exact Cash Ready');
+  const [parivaarPassActive, setParivaarPassActive] = useState(false);
+  const [replacementPolicy, setReplacementPolicy] = useState('Best Match (Capped at Same Price)');
+  const [isParentOrder, setIsParentOrder] = useState(false);
 
   // Coupon selection is tied to the customer's next successfully placed order.
   const [couponCode, setCouponCode] = useState('');
@@ -94,7 +98,12 @@ export default function CartPage({ userLocation }) {
   const currentQuote = quoteFulfilment({
     store,subtotal:totalPrice,discount:couponDiscount,mode:fulfilment.mode,items:cart.items
   });
-  const {deliveryFee,handlingFee,tax,total:grandTotal} = currentQuote;
+  const parivaarDiscount = parivaarPassActive ? (currentQuote.deliveryFee + currentQuote.handlingFee) : 0;
+  const deliveryFee = parivaarPassActive ? 0 : currentQuote.deliveryFee;
+  const handlingFee = parivaarPassActive ? 0 : currentQuote.handlingFee;
+  const tax = currentQuote.tax;
+  const passFee = parivaarPassActive ? 29 : 0;
+  const grandTotal = Math.max(0, currentQuote.total - parivaarDiscount + passFee);
   const isLocalFresh = isLocalFreshStore(store);
   const isPickup = fulfilment.mode==='pickup';
   const isFreeDelivery = !isLocalFresh && totalPrice > FREE_DELIVERY_THRESHOLD;
@@ -285,6 +294,32 @@ export default function CartPage({ userLocation }) {
         </div>
       )}
 
+      {/* ── KiranaPRO Parivaar Pass Card (Phase 17 Prompt 17.2) ── */}
+      <div className="kp-parivaar-pass-card">
+        <div className="kp-pp-left">
+          <span className="kp-pp-title">👑 KiranaPRO Parivaar Pass · ₹29/Month</span>
+          <span className="kp-pp-sub">Save ₹7 on this order right now + ₹0 Delivery Fee all month (Pay via COD)</span>
+        </div>
+        <button
+          type="button"
+          className={`kp-pp-checkbox ${parivaarPassActive ? 'active' : ''}`}
+          onClick={() => setParivaarPassActive(p => !p)}
+        >
+          {parivaarPassActive ? '✓ Added (₹29)' : '+ Add Pass (₹29)'}
+        </button>
+      </div>
+
+      {/* ── Traditional Mandi Complimentary Free Dhaniya & Karivepaku Gift (Phase 16 Prompt 16.2) ── */}
+      {totalPrice >= 199 && (
+        <div className="kp-free-dhaniya-gift">
+          <div className="kp-fdg-info">
+            <span>🎁</span>
+            <span>Complimentary Fresh Dhaniya & Karivepaku (Coriander & Curry Leaves)</span>
+          </div>
+          <span className="kp-fdg-tag">₹0 MANDI GIFT</span>
+        </div>
+      )}
+
       {/* Store Banner */}
       <div className="cart-store-card">
         <div className="csc-img">
@@ -441,12 +476,71 @@ export default function CartPage({ userLocation }) {
         )}
       </div>
 
+      {/* ── Instacart-Style Replacement Policy Selector (Phase 13 Prompt 13.2) ── */}
+      <div className="kp-replacement-policy-bar">
+        <span className="kp-rpb-title">🛒 If an item is unavailable at pickup:</span>
+        <div className="kp-rpb-options">
+          {['Best Match (Capped at Same Price)', 'Call Me Before Replacing', 'Do Not Replace (Deduct from COD)'].map(pol => (
+            <button
+              key={pol}
+              type="button"
+              className={`kp-rpb-btn ${replacementPolicy === pol ? 'selected' : ''}`}
+              onClick={() => setReplacementPolicy(pol)}
+            >
+              {pol}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Under-₹25 Kitchen Impulse Shelf (Phase 14 Prompt 14.3) ── */}
+      <div className="kp-impulse-shelf">
+        <div className="kp-impulse-header">
+          <span className="kp-impulse-title">⚡ Under-₹25 Daily Kitchen Add-Ons</span>
+          <span className="kp-impulse-badge">Zero Extra Delivery Fee</span>
+        </div>
+        <div className="kp-impulse-scroll">
+          {UNDER_25_IMPULSE_ITEMS.map(imp => (
+            <div key={imp.id} className="kp-impulse-card">
+              <span className="kp-impulse-icon">{imp.icon}</span>
+              <span className="kp-impulse-name">{imp.name}</span>
+              <span className="kp-impulse-price">₹{imp.price}</span>
+              <button
+                type="button"
+                className="kp-impulse-add-btn"
+                onClick={() => addItem(cart.storeId, { id: imp.id, name: imp.name, price: imp.price, mrp: imp.price + 5, unit: imp.unit })}
+              >
+                + Add
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {appliedCoupon && !couponQualified && (
         <p className="kp-coupon-threshold-note" role="status">
           {appliedCoupon} is not applicable to order #{nextOrderNumber}: {activePromo.reason}
           {autoDiscount>0 && ' The automatic basket discount applies instead when eligible.'}
         </p>
       )}
+
+      {/* ── Parent / Elder Care Package Toggle (Phase 17 Prompt 17.3) ── */}
+      <div style={{ margin: '12px 0', padding: '12px', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '12px' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '12.5px', fontWeight: '750', color: '#1E293B' }}>
+          <input
+            type="checkbox"
+            checked={isParentOrder}
+            onChange={(e) => setIsParentOrder(e.target.checked)}
+            style={{ width: '16px', height: '16px', accentColor: '#166534' }}
+          />
+          <span>👵 Order for Parents / Senior Citizens at this address</span>
+        </label>
+        {isParentOrder && (
+          <p style={{ margin: '6px 0 0 24px', fontSize: '11px', color: '#64748B', lineHeight: 1.4 }}>
+            Rider will carry heavy bags inside, assist with doorstep inspection, and provide exact change.
+          </p>
+        )}
+      </div>
 
       {/* Delivery area is selected from five fixed Vizag zones. */}
       <button type="button" className="cart-delivery-address-card" onClick={() => navigate('/')}>

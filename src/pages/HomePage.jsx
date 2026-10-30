@@ -5,6 +5,7 @@ import {
   SlidersHorizontal
 } from 'lucide-react';
 import { allCategories } from '../data/stores';
+import { ANDHRA_RECIPE_BASKETS } from '../data/recipeBaskets';
 import { getStoresForArea, FREE_DELIVERY_THRESHOLD } from '../data/deliveryAreas';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
@@ -201,6 +202,49 @@ export default function HomePage({ userLocation }) {
               <p className="kp-has-desc">Doorstep Cash on Delivery (COD) with PIN verification and instant item inspection before paying.</p>
             </div>
           </div>
+        </div>
+      </section>
+
+{/* ── 05 / 1-Tap Andhra Recipe Baskets (Phase 18 Prompt 18.1) ── */}
+      <section className="kp-home-app-showcase" style={{ marginTop: '20px' }} aria-labelledby="kp-recipes-title">
+        <div className="kp-has-heading">
+          <div>
+            <span className="kp-concept-index">05 / WHAT TO COOK TODAY</span>
+            <h2 id="kp-recipes-title">1-Tap Andhra Recipe Baskets</h2>
+          </div>
+          <span className="kp-has-sub">Direct Mandi Meal Kits</span>
+        </div>
+        <div className="kp-recipe-grid">
+          {ANDHRA_RECIPE_BASKETS.map(recipe => (
+            <div key={recipe.id} className="kp-recipe-card">
+              <div>
+                <div className="kp-rc-head">
+                  <span className="kp-rc-icon">{recipe.image}</span>
+                  <span className="kp-rc-tag">{recipe.tag}</span>
+                </div>
+                <h3 className="kp-rc-title">{recipe.title}</h3>
+                <div className="kp-rc-meta">⏱️ {recipe.time} · 👥 {recipe.servings}</div>
+                <p style={{ fontSize: '11.5px', color: '#475569', lineHeight: 1.45, margin: '0 0 10px' }}>
+                  {recipe.desc}
+                </p>
+                <div style={{ fontSize: '11px', color: '#64748B', marginBottom: '12px' }}>
+                  Includes: {recipe.ingredients.map(i => i.name.split('(')[0].trim()).join(' · ')}
+                </div>
+              </div>
+              <button
+                type="button"
+                className="kp-rc-btn"
+                onClick={() => {
+                  recipe.ingredients.forEach(it => {
+                    addItem('localfresh', { id: it.id, name: it.name, price: it.price, mrp: it.price + 5, unit: it.unit });
+                  });
+                  navigate('/cart');
+                }}
+              >
+                ⚡ Add Meal Kit to Basket (₹{recipe.ingredients.reduce((s, i) => s + i.price, 0)})
+              </button>
+            </div>
+          ))}
         </div>
       </section>
 

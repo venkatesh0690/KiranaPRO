@@ -40,6 +40,22 @@ export default function OrdersPage() {
               <span className="loc-status-pill active">Demo saved</span>
             </div>
 
+            {/* ── DoorDash DoubleDash 10-Minute Add-On Window (Phase 14 Prompt 14.1) ── */}
+            <div className="kp-doubledash-banner">
+              <div className="kp-dd-left">
+                <strong>⚡ DoubleDash: Forgot Milk, Curd or Dhaniya?</strong>
+                <span>Add essentials in the next 10 minutes with ₹0 extra delivery fee!</span>
+              </div>
+              <button
+                type="button"
+                className="kp-dd-timer"
+                style={{ cursor: 'pointer', border: '1px solid #93C5FD' }}
+                onClick={() => navigate('/home')}
+              >
+                + Add Items (08:35)
+              </button>
+            </div>
+
             {/* Doorstep Delivery PIN & Live Security */}
             <div className="kp-order-pin-card">
               <div className="kp-order-pin-header">
