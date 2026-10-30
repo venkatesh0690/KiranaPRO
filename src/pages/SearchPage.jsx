@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import { ArrowLeft, Search, SlidersHorizontal, X, ShoppingBag, TrendingUp, History } from 'lucide-react';
+import { ArrowLeft, Search, SlidersHorizontal, X, ShoppingBag, TrendingUp, History, Mic, FileText } from 'lucide-react';
+import ParchiScannerModal from '../components/ParchiScannerModal';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { getStoresForArea } from '../data/deliveryAreas';
@@ -17,6 +18,27 @@ export default function SearchPage({ userLocation }) {
   const [selectedTag, setSelectedTag] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
+  const [isParchiOpen, setIsParchiOpen] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+
+  const startVoiceSearch = () => {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) {
+      alert('Voice recognition not supported in this browser. Please type your search.');
+      return;
+    }
+    const recognition = new SpeechRec();
+    recognition.lang = 'te-IN'; // Default to Indian English / Telugu
+    setIsListening(true);
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setQuery(transcript);
+      setIsListening(false);
+    };
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+    recognition.start();
+  };
 
   const [recentSearches, setRecentSearches] = useState(() => {
     try {
@@ -115,6 +137,22 @@ export default function SearchPage({ userLocation }) {
               <X size={15} />
             </button>
           )}
+          <button
+            type="button"
+            onClick={startVoiceSearch}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: isListening ? '#DC2626' : 'var(--brand-primary, #1E3A2B)',
+              cursor: 'pointer',
+              padding: '6px',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+            title="Telugu & Indian English Voice Search"
+          >
+            <Mic size={18} />
+          </button>
         </div>
 
         <button

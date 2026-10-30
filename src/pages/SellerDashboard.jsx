@@ -18,7 +18,11 @@ import {
   Layers,
   Sparkles,
   LogOut,
-  Bike
+  Bike,
+  Camera,
+  Copy,
+  FileText,
+  Share2
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { useSecurity } from '../context/SecurityContext';
@@ -43,6 +47,11 @@ export default function SellerDashboard() {
   const [activeTab, setActiveTab] = useState('inventory'); // 'inventory' | 'orders' | 'analytics'
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isClonerOpen, setIsClonerOpen] = useState(false);
+  const [isMorningCheckOpen, setIsMorningCheckOpen] = useState(false);
+  const [isRestockSheetOpen, setIsRestockSheetOpen] = useState(false);
+  const [clonedCats, setClonedCats] = useState({ 'Groceries': true, 'Vegetables': true, 'Milk & Dairy': true });
+  const [clonedSuccess, setClonedSuccess] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingPriceId, setEditingPriceId] = useState(null);
   const [tempPrice, setTempPrice] = useState('');
@@ -269,7 +278,42 @@ export default function SellerDashboard() {
               onClick={() => setIsAddModalOpen(true)}
             >
               <Plus size={18} />
-              <span>Add New Stock Item</span>
+              <span>Add Stock Item</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                const code = prompt('Simulated Barcode Scan: Enter Barcode / SKU (e.g. 8901030):', '8901030');
+                if (code) alert('📷 Barcode matched: Sona Masoori Rice (Stock: 40 units). Highlighted row in inventory!');
+              }}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 14px', background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '10px', fontSize: '13px', fontWeight: '750', cursor: 'pointer', color: '#334155' }}
+            >
+              <Camera size={16} /> Scan Barcode
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsMorningCheckOpen(true)}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 14px', background: '#F0FDF4', border: '1.5px solid #16A34A', borderRadius: '10px', fontSize: '13px', fontWeight: '800', cursor: 'pointer', color: '#15803D' }}
+            >
+              ⚡ 1-Min Morning Check
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsClonerOpen(true)}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 14px', background: 'var(--brand-primary, #1E3A2B)', border: 'none', borderRadius: '10px', fontSize: '13px', fontWeight: '800', cursor: 'pointer', color: '#FFFFFF' }}
+            >
+              🚀 1-Click Catalog Cloner
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsRestockSheetOpen(true)}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 14px', background: '#FFFBEB', border: '1.5px solid #D97706', borderRadius: '10px', fontSize: '13px', fontWeight: '800', cursor: 'pointer', color: '#B45309' }}
+            >
+              📋 Restock List
             </button>
           </div>
 
@@ -633,6 +677,162 @@ export default function SellerDashboard() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Prompt 30.1: 1-Click Master Catalog Cloner Modal */}
+      {isClonerOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '24px', width: '100%', maxWidth: '480px', boxShadow: '0 20px 40px rgba(0,0,0,0.25)' }}>
+            <h3 style={{ margin: '0 0 6px', fontSize: '18px', fontWeight: '900', color: 'var(--brand-primary, #1E3A2B)' }}>
+              1-Click Master Catalog Cloner
+            </h3>
+            <p style={{ margin: '0 0 16px', fontSize: '12px', color: '#64748B' }}>
+              Select categories to bulk-import 200+ canonical Indian grocery items with high-res photos, Telugu names, and MRPs into {currentSellerStore?.name} in 3 seconds:
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
+              {['Milk & Dairy', 'Dal, Rice & Atta', 'Cooking Oils & Ghee', 'Snacks & Biscuits', 'Spices & Masalas'].map(cat => (
+                <label key={cat} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', fontWeight: '700', color: '#1E293B', cursor: 'pointer', background: '#F8FAFC', padding: '10px 14px', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
+                  <input
+                    type="checkbox"
+                    checked={clonedCats[cat] !== false}
+                    onChange={(e) => setClonedCats(prev => ({ ...prev, [cat]: e.target.checked }))}
+                    style={{ width: '18px', height: '18px', accentColor: 'var(--brand-primary, #1E3A2B)' }}
+                  />
+                  <span>{cat} (~25 fast-moving items)</span>
+                </label>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                type="button"
+                onClick={() => setIsClonerOpen(false)}
+                style={{ flex: 1, padding: '12px', background: '#F1F5F9', border: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '13px', cursor: 'pointer' }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setClonedSuccess(true);
+                  setTimeout(() => {
+                    setClonedSuccess(false);
+                    setIsClonerOpen(false);
+                    alert('🎉 120 items imported into ' + currentSellerStore?.name + '! Adjust stock numbers & prices to go live.');
+                  }, 800);
+                }}
+                style={{ flex: 1.5, padding: '12px', background: 'var(--brand-primary, #1E3A2B)', color: '#FFF', border: 'none', borderRadius: '10px', fontWeight: '800', fontSize: '13px', cursor: 'pointer' }}
+              >
+                {clonedSuccess ? 'Importing SKUs…' : 'Import Selected to My Store'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Prompt 20.2: 1-Minute Morning Stock Check Wizard */}
+      {isMorningCheckOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '24px', width: '100%', maxWidth: '520px', maxHeight: '85vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <h3 style={{ margin: 0, fontSize: '17px', fontWeight: '900', color: 'var(--brand-primary, #1E3A2B)' }}>
+                ⚡ 1-Minute Morning Stock Check
+              </h3>
+              <button type="button" onClick={() => setIsMorningCheckOpen(false)} style={{ border: 'none', background: 'none', cursor: 'pointer' }}>
+                <X size={18} />
+              </button>
+            </div>
+            <p style={{ margin: '0 0 16px', fontSize: '12px', color: '#64748B' }}>
+              Confirm stock for today's top 20 fast-moving items with 1-tap buttons:
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '18px' }}>
+              {allProductsFlat.slice(0, 8).map(p => (
+                <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#F8FAFC', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div>
+                    <strong style={{ fontSize: '13px', color: '#1E293B', display: 'block' }}>{p.name}</strong>
+                    <span style={{ fontSize: '11px', color: '#64748B' }}>Current stock: {stockCounts[p.id] !== undefined ? stockCounts[p.id] : 25} units</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button
+                      type="button"
+                      onClick={() => adjustProductStock(p.id, 20)}
+                      style={{ padding: '6px 10px', background: '#ECFDF5', color: '#047857', border: '1px solid #A7F3D0', borderRadius: '6px', fontSize: '11px', fontWeight: '750', cursor: 'pointer' }}
+                    >
+                      +20
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => zeroOutStock(p.id)}
+                      style={{ padding: '6px 10px', background: '#FEF2F2', color: '#DC2626', border: '1px solid #FECACA', borderRadius: '6px', fontSize: '11px', fontWeight: '750', cursor: 'pointer' }}
+                    >
+                      Zero (0)
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setIsMorningCheckOpen(false);
+                alert('✅ Morning Stock Confirmed! Your storefront is live for 30-minute delivery orders.');
+              }}
+              style={{ width: '100%', padding: '12px', background: '#16A34A', color: '#FFF', border: 'none', borderRadius: '10px', fontWeight: '800', fontSize: '14px', cursor: 'pointer' }}
+            >
+              Done & Ready for Morning Rush
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Prompt 30.3: Evening Wholesale Restock Sheet */}
+      {isRestockSheetOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '24px', width: '100%', maxWidth: '480px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+              <h3 style={{ margin: 0, fontSize: '17px', fontWeight: '900', color: 'var(--brand-primary, #1E3A2B)' }}>
+                📋 Evening Wholesale Restock Sheet
+              </h3>
+              <button type="button" onClick={() => setIsRestockSheetOpen(false)} style={{ border: 'none', background: 'none', cursor: 'pointer' }}>
+                <X size={18} />
+              </button>
+            </div>
+            <p style={{ margin: '0 0 14px', fontSize: '12px', color: '#64748B' }}>
+              Items with stock &lt;= 5 units in {currentSellerStore?.name}:
+            </p>
+
+            <div style={{ background: '#F8FAFC', border: '1px solid #CBD5E1', borderRadius: '10px', padding: '12px', fontSize: '12px', color: '#334155', fontFamily: 'monospace', whiteSpace: 'pre-line', maxHeight: '180px', overflowY: 'auto', marginBottom: '16px' }}>
+              {"1. Sona Masoori Rice 5kg (Only 2 bags left)\n2. Sunflower Oil 1L (Only 3 packets left)\n3. Heritage Buffalo Milk 500ml (Out of stock)\n4. Toor Dal 1kg (Only 4 pkts left)\n5. Tata Salt 1kg (Only 5 pkts left)"}
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={() => {
+                  const text = encodeURIComponent('Wholesale Restock Order for ' + currentSellerStore?.name + ':\n1. Sona Masoori Rice 5kg - 25 bags\n2. Sunflower Oil 1L - 30 pkts\n3. Buffalo Milk 500ml - 40 pkts\n4. Toor Dal 1kg - 20 pkts');
+                  window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
+                }}
+                style={{ flex: 1, padding: '12px', background: '#25D366', color: '#FFF', border: 'none', borderRadius: '10px', fontWeight: '800', fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+              >
+                <Share2 size={16} /> Send to Distributor on WhatsApp
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  allProductsFlat.forEach(p => adjustProductStock(p.id, 25));
+                  setIsRestockSheetOpen(false);
+                  alert('✅ All low-stock items marked restocked (+25 units)!');
+                }}
+                style={{ padding: '12px', background: 'var(--brand-primary, #1E3A2B)', color: '#FFF', border: 'none', borderRadius: '10px', fontWeight: '800', fontSize: '12px', cursor: 'pointer' }}
+              >
+                +25 to All
+              </button>
+            </div>
           </div>
         </div>
       )}

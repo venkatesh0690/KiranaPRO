@@ -23,6 +23,9 @@ const SellerDashboard = lazy(() => import('./pages/SellerDashboard'));
 const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const RiderPortalPage = lazy(() => import('./pages/RiderPortalPage'));
+const CommunityDropPage = lazy(() => import('./pages/CommunityDropPage'));
+const B2BWholesalePage = lazy(() => import('./pages/B2BWholesalePage'));
+const SubscriptionsPage = lazy(() => import('./pages/SubscriptionsPage'));
 import './styles/tokens.css';
 import './styles/global.css';
 import './styles/minimal.css';
@@ -152,6 +155,18 @@ function MainAppShell({ userLocation, setUserLocation }) {
           <Route
             path="/profile"
             element={canShop ? <ProfilePage userLocation={userLocation} /> : <Navigate to="/" replace />}
+          />
+          <Route
+            path="/community-drop"
+            element={<CommunityDropPage userLocation={userLocation} />}
+          />
+          <Route
+            path="/b2b"
+            element={<B2BWholesalePage userLocation={userLocation} />}
+          />
+          <Route
+            path="/subscriptions"
+            element={<SubscriptionsPage userLocation={userLocation} />}
           />
 
           {/* Seller Access Routes with RBAC Protection */}

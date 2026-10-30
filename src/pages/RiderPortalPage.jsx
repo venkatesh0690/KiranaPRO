@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Bike, CheckCircle2, MapPin, Phone, ExternalLink, AlertTriangle, 
-  DollarSign, ClipboardList, Shield, ArrowLeft, RefreshCw, Sparkles, Navigation 
+  DollarSign, ClipboardList, Shield, ArrowLeft, RefreshCw, Sparkles, Navigation,
+  QrCode, Award, Truck, AlertOctagon, Check, Bell
 } from 'lucide-react';
 import { useSecurity } from '../context/SecurityContext';
+import { getBatchBagTag, sortItemsByPackingLayer, categorizeItemPackingLayer } from '../utils/addressAndGate';
+import { generateDoorstepUpiUri, addChillarBalance } from '../utils/chillarKhata';
+import { getRiderEarningsScorecard } from '../utils/rainModeAndFleet';
 
 export default function RiderPortalPage() {
   const navigate = useNavigate();
@@ -255,6 +259,13 @@ export default function RiderPortalPage() {
         >
           🌅 Morning Bulk Sheet
         </button>
+        <button 
+          type="button" 
+          className={`kp-rider-tab ${activeTab === 'earnings' ? 'active' : ''}`}
+          onClick={() => setActiveTab('earnings')}
+        >
+          <Award size={16} /> Earnings & Scorecard
+        </button>
       </div>
 
       {/* Tab 1: Active Deliveries */}
@@ -273,9 +284,22 @@ export default function RiderPortalPage() {
                 </span>
               </div>
 
-              {/* Source Badge */}
-              <div className="kdc-source-pill">
-                {ord.isMandi ? '🌾 Mandi Hub Pickup (LocalFresh)' : `🏪 Kirana Pickup (${ord.pickupSource})`}
+              {/* Source Badge & Batch Color Tag (Prompts 20.3 & 20.1) */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', margin: '6px 0 10px' }}>
+                <div className="kdc-source-pill" style={{ margin: 0 }}>
+                  {ord.isMandi ? '🌾 Mandi Hub Pickup (LocalFresh)' : `🏪 Kirana Pickup (${ord.pickupSource})`}
+                </div>
+                <div style={{
+                  background: getBatchBagTag(deliveries.indexOf(ord)).bg,
+                  border: `1.5px solid ${getBatchBagTag(deliveries.indexOf(ord)).border}`,
+                  color: getBatchBagTag(deliveries.indexOf(ord)).hex,
+                  padding: '4px 10px',
+                  borderRadius: '12px',
+                  fontSize: '11px',
+                  fontWeight: '800'
+                }}>
+                  {getBatchBagTag(deliveries.indexOf(ord)).name}
+                </div>
               </div>
 
               {/* Address with Google Maps Link */}
@@ -297,22 +321,101 @@ export default function RiderPortalPage() {
                 </a>
               </div>
 
-              {/* Pickup Checklist */}
+              {/* Emergency Vehicle Issue & Reached Gate Row */}
+              {ord.status !== 'Delivered' && (
+                <div style={{ display: 'flex', gap: '8px', margin: '10px 0' }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDeliveries(prev => prev.map(d => d.id === ord.id ? { ...d, arrivedAt: true } : d));
+                      alert(`🚨 "Reached Customer Gate" alert sent to customer! 5-Minute Handover Timer started.`);
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '8px 10px',
+                      background: ord.arrivedAt ? '#ECFDF5' : '#FFFBEB',
+                      border: ord.arrivedAt ? '1.5px solid #10B981' : '1.5px solid #D97706',
+                      borderRadius: '8px',
+                      color: ord.arrivedAt ? '#047857' : '#B45309',
+                      fontWeight: '800',
+                      fontSize: '11.5px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <Bell size={13} />
+                    {ord.arrivedAt ? 'At Customer Gate (Timer: 04:32)' : '🚨 Reached Customer Gate'}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      alert(`🚨 Emergency Relief Request sent to Visakhapatnam Dispatch for Order #${ord.orderNumber}. Backup rider being assigned!`);
+                    }}
+                    style={{
+                      padding: '8px 10px',
+                      background: '#FEF2F2',
+                      border: '1.5px solid #DC2626',
+                      borderRadius: '8px',
+                      color: '#DC2626',
+                      fontWeight: '700',
+                      fontSize: '11px',
+                      cursor: 'pointer'
+                    }}
+                    title="Vehicle Issue / Need Relief Rider"
+                  >
+                    Vehicle Issue?
+                  </button>
+                </div>
+              )}
+
+              {/* Instacart 3-Layer Bag-Smart Packing Checklist (Prompt 20.1) */}
               {ord.status !== 'Delivered' && (
                 <div className="kdc-checklist">
-                  <h5 className="kdc-checklist-title">Verify Items Before Leaving Pickup:</h5>
-                  {ord.items.map((item, idx) => (
-                    <label key={idx} className="kdc-item-row">
-                      <input 
-                        type="checkbox" 
-                        checked={item.checked} 
-                        onChange={() => toggleItemCheck(ord.id, idx)} 
-                      />
-                      <span className={item.checked ? 'item-checked' : ''}>
-                        {item.name} ({item.qty} {item.unit})
-                      </span>
-                    </label>
-                  ))}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <h5 className="kdc-checklist-title" style={{ margin: 0 }}>
+                      Bag-Smart Packing Order (Instacart 3-Layer):
+                    </h5>
+                    <span style={{ fontSize: '10px', color: '#64748B' }}>Heavy bottom, fragile top</span>
+                  </div>
+
+                  {/* Layer 3 Warning if fragile items exist */}
+                  <div style={{
+                    padding: '6px 10px',
+                    background: '#FEF2F2',
+                    border: '1px solid #FECACA',
+                    borderRadius: '8px',
+                    fontSize: '10.5px',
+                    color: '#DC2626',
+                    fontWeight: '700',
+                    marginBottom: '8px'
+                  }}>
+                    ⚠️ Pack Tomatoes & Greens on VERY TOP so items are never bruised during transit!
+                  </div>
+
+                  {sortItemsByPackingLayer(ord.items).map((item, idx) => {
+                    const layerInfo = categorizeItemPackingLayer(item);
+                    return (
+                      <label key={idx} className="kdc-item-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={item.checked} 
+                            onChange={() => toggleItemCheck(ord.id, idx)} 
+                          />
+                          <span className={item.checked ? 'item-checked' : ''}>
+                            {item.name} ({item.qty} {item.unit})
+                          </span>
+                        </div>
+                        <span style={{ fontSize: '9.5px', color: layerInfo.color, fontWeight: '800', background: '#F8FAFC', padding: '2px 6px', borderRadius: '4px' }}>
+                          {layerInfo.tag}
+                        </span>
+                      </label>
+                    );
+                  })}
                 </div>
               )}
 
@@ -327,20 +430,107 @@ export default function RiderPortalPage() {
                 )}
               </div>
 
-              {/* Doorstep Delivery Verification */}
+              {/* Doorstep Delivery Verification (Prompts 20.3, 29.1, 29.2) */}
               {ord.status !== 'Delivered' ? (
                 <div className="kdc-completion-box">
-                  <label className="kdc-cash-collected-check">
-                    <input 
-                      type="checkbox" 
-                      checked={ord.collectedCash} 
+                  {/* Verified Bag Tag Check */}
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontWeight: '800', color: getBatchBagTag(deliveries.indexOf(ord)).hex, marginBottom: '10px' }}>
+                    <input
+                      type="checkbox"
+                      checked={ord.verifiedBagTag || false}
                       onChange={(e) => {
                         const checked = e.target.checked;
-                        setDeliveries(prev => prev.map(d => d.id === ord.id ? { ...d, collectedCash: checked } : d));
-                      }} 
+                        setDeliveries(prev => prev.map(d => d.id === ord.id ? { ...d, verifiedBagTag: checked } : d));
+                      }}
+                      style={{ width: '16px', height: '16px' }}
                     />
-                    <span>Collected ₹{ord.totalToPay} cash from customer at doorstep</span>
+                    <span>Verified {getBatchBagTag(deliveries.indexOf(ord)).name} before knocking</span>
                   </label>
+
+                  {/* Payment Collection: Cash vs UPI QR */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setDeliveries(prev => prev.map(d => d.id === ord.id ? { ...d, payMode: 'CASH', collectedCash: true } : d))}
+                      style={{
+                        padding: '8px',
+                        background: ord.payMode !== 'UPI' ? '#1E3A2B' : '#F1F5F9',
+                        color: ord.payMode !== 'UPI' ? '#FFF' : '#334155',
+                        border: 'none',
+                        borderRadius: '8px',
+                        fontSize: '11px',
+                        fontWeight: '800',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      💵 Collected Cash
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeliveries(prev => prev.map(d => d.id === ord.id ? { ...d, payMode: 'UPI', collectedCash: true } : d))}
+                      style={{
+                        padding: '8px',
+                        background: ord.payMode === 'UPI' ? '#1E3A2B' : '#F1F5F9',
+                        color: ord.payMode === 'UPI' ? '#FFF' : '#334155',
+                        border: 'none',
+                        borderRadius: '8px',
+                        fontSize: '11px',
+                        fontWeight: '800',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      📱 Doorstep UPI QR
+                    </button>
+                  </div>
+
+                  {ord.payMode === 'UPI' && (
+                    <div style={{ padding: '12px', background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '10px', textAlign: 'center', marginBottom: '10px' }}>
+                      <div style={{ fontSize: '11px', fontWeight: '800', color: '#1E3A2B', marginBottom: '4px' }}>
+                        Customer Doorstep UPI QR (₹{ord.totalToPay})
+                      </div>
+                      <div style={{ width: '110px', height: '110px', background: '#F8FAFC', border: '1px solid #E2E8F0', margin: '0 auto 6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <QrCode size={90} color="#1E3A2B" />
+                      </div>
+                      <span style={{ fontSize: '10px', color: '#64748B' }}>
+                        Scan via PhonePe, GPay, Paytm or BHIM
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Chillar Khata Loose Change Deposit (Prompt 29.2) */}
+                  <div style={{ padding: '8px 10px', background: '#FFFBEB', border: '1px dashed #D97706', borderRadius: '8px', marginBottom: '10px', fontSize: '11px' }}>
+                    <div style={{ fontWeight: '800', color: '#B45309', marginBottom: '4px' }}>
+                      💡 No loose coins? Save change to Customer's Chillar Khata:
+                    </div>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      {[200, 500].map(note => {
+                        const change = note - ord.totalToPay;
+                        if (change <= 0 || change > 50) return null;
+                        return (
+                          <button
+                            key={note}
+                            type="button"
+                            onClick={() => {
+                              addChillarBalance(change);
+                              alert(`💡 ₹${change} credited to Customer's Chillar Khata wallet!`);
+                            }}
+                            style={{
+                              padding: '4px 8px',
+                              background: '#FFFFFF',
+                              border: '1px solid #D97706',
+                              borderRadius: '6px',
+                              fontSize: '10.5px',
+                              fontWeight: '700',
+                              color: '#B45309',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            ₹{note} note → Save ₹{change} change
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
 
                   <div className="kdc-pin-input-row">
                     <label>Enter 4-Digit Customer PIN:</label>
@@ -534,6 +724,53 @@ export default function RiderPortalPage() {
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Tab 5: Rider Earnings & Quality Scorecard (Prompt 27.2) */}
+      {activeTab === 'earnings' && (
+        <div className="kp-rider-content">
+          <h3 className="kp-section-heading">My Fleet Earnings & Performance Scorecard</h3>
+          
+          {/* Daily Scorecard Summary Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', marginBottom: '14px' }}>
+            <div style={{ background: '#FFFFFF', padding: '14px', borderRadius: '12px', border: '1.5px solid #CBD5E1' }}>
+              <div style={{ fontSize: '11px', color: '#64748B', fontWeight: '700' }}>TODAY'S PAYOUT</div>
+              <div style={{ fontSize: '20px', fontWeight: '900', color: '#16A34A', marginTop: '2px' }}>₹770</div>
+              <div style={{ fontSize: '10px', color: '#047857', marginTop: '2px' }}>₹560 base + ₹140 rain + ₹70 tips</div>
+            </div>
+
+            <div style={{ background: '#FFFFFF', padding: '14px', borderRadius: '12px', border: '1.5px solid #CBD5E1' }}>
+              <div style={{ fontSize: '11px', color: '#64748B', fontWeight: '700' }}>CUSTOMER RATING</div>
+              <div style={{ fontSize: '20px', fontWeight: '900', color: '#D97706', marginTop: '2px' }}>4.9 ⭐</div>
+              <div style={{ fontSize: '10px', color: '#64748B', marginTop: '2px' }}>14 delivered · 98% on-time</div>
+            </div>
+          </div>
+
+          {/* Quality Streak Banner */}
+          <div style={{ background: '#F0FDF4', border: '1.5px solid #86EFAC', borderRadius: '14px', padding: '14px', marginBottom: '14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#166534', fontWeight: '800', fontSize: '13px' }}>
+              <Award size={18} />
+              <span>Zero Damaged Produce Streak: 18 Days!</span>
+            </div>
+            <p style={{ margin: '4px 0 0', fontSize: '11px', color: '#14532D', lineHeight: 1.45 }}>
+              Thanks to your Instacart 3-Layer packing care, zero produce crushing claims were reported in Siripuram zone this month. Keep it up!
+            </p>
+          </div>
+
+          {/* COD Settlement Threshold Card */}
+          <div style={{ background: '#FFFFFF', border: '1.5px solid #E2E8F0', borderRadius: '14px', padding: '14px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <span style={{ fontSize: '12px', fontWeight: '800', color: '#1E293B' }}>COD Cash in Hand vs Limit</span>
+              <span style={{ fontSize: '12px', fontWeight: '800', color: '#16A34A' }}>₹{unsettledCash} / ₹5,000</span>
+            </div>
+            <div style={{ width: '100%', height: '8px', background: '#E2E8F0', borderRadius: '4px', overflow: 'hidden' }}>
+              <div style={{ width: `${(unsettledCash / 5000) * 100}%`, height: '100%', background: '#16A34A' }} />
+            </div>
+            <span style={{ fontSize: '10.5px', color: '#64748B', display: 'block', marginTop: '6px' }}>
+              Hand over cash to Admin at Siripuram Hub before 9:00 PM tonight.
+            </span>
           </div>
         </div>
       )}

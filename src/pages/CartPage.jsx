@@ -26,10 +26,15 @@ import CatalogProductVisual from '../components/CatalogProductVisual';
 import AuthModal from '../components/AuthModal';
 import { quoteFulfilment, validateFulfilment } from '../utils/fulfilment';
 import { UNDER_25_IMPULSE_ITEMS } from '../data/recipeBaskets';
+import StructuredAddressForm from '../components/StructuredAddressForm';
+import ParchiScannerModal from '../components/ParchiScannerModal';
+import { formatAddressForDisplay } from '../utils/addressAndGate';
+import { getChillarBalance, deductChillarBalance, getCustomerTrustScore, isGoldNeighbor } from '../utils/chillarKhata';
+import { isRainModeActive } from '../utils/rainModeAndFleet';
 
 export default function CartPage({ userLocation }) {
   const { cart, addItem, removeItem, switchStoreItems, clearCart, totalItems, totalPrice } = useCart();
-  const { stores } = useStore();
+  const { stores, products } = useStore();
   const { authSession, logSecurityEvent } = useSecurity();
   const { orderCount, nextOrderNumber, recordOrder } = useCustomerOrders();
   const navigate = useNavigate();
@@ -47,6 +52,16 @@ export default function CartPage({ userLocation }) {
   const [parivaarPassActive, setParivaarPassActive] = useState(false);
   const [replacementPolicy, setReplacementPolicy] = useState('Best Match (Capped at Same Price)');
   const [isParentOrder, setIsParentOrder] = useState(false);
+
+  // Phases 19, 23, 27, 29 Playbook Upgrades
+  const [isParchiOpen, setIsParchiOpen] = useState(false);
+  const [structuredAddr, setStructuredAddr] = useState(null);
+  const [useChillar, setUseChillar] = useState(true);
+  const chillarBalance = getChillarBalance();
+  const trustScore = getCustomerTrustScore();
+  const isGold = isGoldNeighbor(trustScore);
+  const rainActive = isRainModeActive(userLocation);
+  const [rainTip, setRainTip] = useState(rainActive ? 10 : 0);
 
   // Coupon selection is tied to the customer's next successfully placed order.
   const [couponCode, setCouponCode] = useState('');
@@ -173,17 +188,27 @@ export default function CartPage({ userLocation }) {
     const finalQuote=quoteFulfilment({
       store,subtotal:totalPrice,discount:effectiveDiscount,mode:requested.mode,items:cart.items
     });
+    const chillarDeducted = (useChillar && chillarBalance > 0) ? Math.min(chillarBalance, finalQuote.total) : 0;
+    if (chillarDeducted > 0) {
+      deductChillarBalance(chillarDeducted);
+    }
+    const idempotencyKey = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : `idemp_${Date.now()}`;
     const saved=await recordOrder({
       storeId:cart.storeId,storeName:store?.name || 'Local Store',
       storeArea:userLocation,deliveryAddress:isPickup ? (store?.address || 'Store pickup address') : deliveryAddress.trim(),
       items:cart.items.map(i=>({id:i.id,name:i.name,qty:i.quantity,price:i.price,unit:i.unit})),
-      subtotal:totalPrice,deliveryFee:finalQuote.deliveryFee,discount:effectiveDiscount,
-      discountCode:effectiveCode,total:finalQuote.total,
+      subtotal:totalPrice,deliveryFee:finalQuote.deliveryFee + (rainActive ? rainTip : 0),discount:effectiveDiscount,
+      discountCode:effectiveCode,total:Math.max(0, finalQuote.total + (rainActive ? rainTip : 0) - chillarDeducted),
       handlingFee:finalQuote.handlingFee,tax:finalQuote.tax,
       fulfilment:requested,
       paymentMethod:'Cash on Delivery (Pay at Doorstep)',
       codChangeRequestedFor:codChangeAmount,
-      deliveryPin:String(Math.floor(1000 + Math.random() * 9000))
+      deliveryPin:String(Math.floor(1000 + Math.random() * 9000)),
+      gateInstruction: structuredAddr?.gate_instruction || 'HAND_TO_ME',
+      structuredAddress: structuredAddr,
+      idempotencyKey,
+      chillarDeducted,
+      rainTip: rainActive ? rainTip : 0
     });
     if(!saved.success) {
       setOrderError(saved.error);
@@ -367,6 +392,80 @@ export default function CartPage({ userLocation }) {
           <h2 className="csc-name">{store?.name || 'Neighborhood Store'}</h2>
           <p className="csc-address">📍 {store?.address || 'Local Kirana Partner, Vizag'}</p>
         </div>
+      </div>
+
+      {/* ── Prompt 23.3 & Prompt 24.1: WhatsApp List Importer & Community Group Drop Banner ── */}
+      <div style={{ margin: '10px 18px 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <button
+          type="button"
+          onClick={() => setIsParchiOpen(true)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            padding: '10px 14px',
+            background: '#F0FDF4',
+            border: '1.5px dashed #16A34A',
+            borderRadius: '12px',
+            color: '#15803D',
+            fontWeight: '800',
+            fontSize: '13px',
+            cursor: 'pointer'
+          }}
+        >
+          <span>📲</span> Paste List from WhatsApp / Scan Paper Parchi
+        </button>
+
+        <div style={{
+          background: 'var(--bg-subtle, #EEF2EB)',
+          borderRadius: '12px',
+          padding: '10px 14px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          fontSize: '11px',
+          color: 'var(--brand-primary, #1E3A2B)'
+        }}>
+          <div>
+            <strong>👥 {userLocation} Evening Mandi Drop:</strong> 8 of 10 neighbors joined.
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate('/community-drop')}
+            style={{
+              background: 'var(--brand-primary, #1E3A2B)',
+              color: '#FFF',
+              border: 'none',
+              borderRadius: '6px',
+              padding: '4px 8px',
+              fontSize: '10px',
+              fontWeight: '700',
+              cursor: 'pointer'
+            }}
+          >
+            View Drop
+          </button>
+        </div>
+
+        {rainActive && (
+          <div style={{
+            background: '#EFF6FF',
+            border: '1px solid #BFDBFE',
+            borderRadius: '12px',
+            padding: '10px 14px',
+            fontSize: '11.5px',
+            color: '#1E40AF',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}>
+            <span>🌧️</span>
+            <div>
+              <strong>Coastal Rain Mode in {userLocation}:</strong> Crates are waterproof-sealed. Allow 15–20 mins extra for rider safety.
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Cart Items List: Redesigned with small icons and item names (matching Image 2) */}
@@ -717,14 +816,21 @@ export default function CartPage({ userLocation }) {
         </div>
       )}
       {checkoutStep==='fulfilment' && !isPickup && !authSession.isTemporary && (
-        <div className="auth-field" style={{margin:'16px 18px'}}>
-          <label htmlFor="checkout-delivery-address">Full delivery address</label>
-          <input id="checkout-delivery-address" type="text"
-            autoComplete="street-address" required minLength={8} maxLength={1000}
-            value={deliveryAddress} onChange={event=>setDeliveryAddress(event.target.value)}
-            placeholder="House number, street, landmark, area, Visakhapatnam"
-            style={{width:'100%',padding:12,marginTop:8,border:'1px solid #aaa',borderRadius:8}}/>
-          <small>Saved only to your server-verified order; not shared with other customers.</small>
+        <div style={{margin:'16px 18px'}}>
+          <StructuredAddressForm
+            initialAddress={structuredAddr || deliveryAddress}
+            currentArea={userLocation}
+            onAddressChange={(addr) => {
+              setStructuredAddr(addr);
+              setDeliveryAddress(formatAddressForDisplay(addr));
+            }}
+          />
+          <input
+            id="checkout-delivery-address"
+            type="hidden"
+            value={deliveryAddress}
+            readOnly
+          />
         </div>
       )}
 
@@ -804,6 +910,13 @@ export default function CartPage({ userLocation }) {
           <ChevronRight size={18} />
         </button>
       </div>
+
+      {isParchiOpen && (
+        <ParchiScannerModal
+          catalog={Object.values(products || {}).flat()}
+          onClose={() => setIsParchiOpen(false)}
+        />
+      )}
     </div>
   );
 }

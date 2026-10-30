@@ -14,6 +14,9 @@ import { useCustomerOrders } from '../context/OrderHistoryContext';
 import StoreCard from '../components/StoreCard';
 import { HomeOffersCarousel } from '../components/StoreOffersCarousel';
 import CategoriesModal from '../components/CategoriesModal';
+import ParchiScannerModal from '../components/ParchiScannerModal';
+import VizagZoneMapModal from '../components/VizagZoneMapModal';
+import { MANDI_SAVER_COMBOS, isEveningClearanceActive } from '../utils/mandiClearanceAndGrades';
 import AuthModal from '../components/AuthModal';
 
 const storeFilters = [
@@ -92,7 +95,7 @@ export default function HomePage({ userLocation }) {
           </div>
         </div>
 
-        <button type="button" className="kp-concept-location" onClick={() => navigate('/')}>
+        <button type="button" className="kp-concept-location" onClick={() => setIsMapOpen(true)}>
           <span className="kp-concept-pin"><MapPin size={17} strokeWidth={2} /></span>
           <span className="kp-concept-location-label">Delivering to <strong>{userLocation || 'Choose your delivery area'}</strong></span>
           <ChevronDown size={16} aria-hidden="true" />
@@ -104,6 +107,28 @@ export default function HomePage({ userLocation }) {
           <Search size={19} aria-hidden="true" />
           <span>What are you looking for?</span>
           <span className="kp-concept-search-arrow"><ArrowRight size={18} aria-hidden="true" /></span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setIsParchiOpen(true)}
+          style={{
+            marginLeft: '8px',
+            padding: '10px 14px',
+            background: 'var(--brand-primary, #1E3A2B)',
+            color: '#FFFFFF',
+            border: 'none',
+            borderRadius: '12px',
+            fontSize: '12px',
+            fontWeight: '800',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}
+          title="Snap or Paste Paper Grocery List"
+        >
+          <span>📝</span> Scan Parchi
         </button>
       </div>
 

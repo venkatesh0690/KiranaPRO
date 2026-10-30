@@ -21,10 +21,16 @@ import {
   CheckCircle2,
   Home,
   Briefcase,
-  X
+  X,
+  Share2,
+  Sparkles,
+  Coins,
+  Award,
+  Building2
 } from 'lucide-react';
 import { useSecurity } from '../context/SecurityContext';
 import AuthModal from '../components/AuthModal';
+import { getChillarBalance, getCustomerTrustScore, isGoldNeighbor } from '../utils/chillarKhata';
 
 export default function ProfilePage({ userLocation }) {
   const navigate = useNavigate();
@@ -189,6 +195,151 @@ export default function ProfilePage({ userLocation }) {
               </div>
             </>
           )}
+        </div>
+      </div>
+
+      {/* ── Hyperlocal Trust & Rewards Dashboard (Phases 24, 26, 29) ── */}
+      <div style={{ padding: '0 16px', margin: '14px 0', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        
+        {/* COD Trust Score & Gold Status */}
+        <div style={{
+          background: 'linear-gradient(135deg, #1E3A2B 0%, #14532D 100%)',
+          borderRadius: '16px',
+          padding: '16px',
+          color: '#FFFFFF',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+            <span style={{ fontSize: '11px', fontWeight: '800', background: 'rgba(255,255,255,0.2)', padding: '3px 8px', borderRadius: '12px' }}>
+              🌟 {isGoldNeighbor() ? 'VERIFIED GOLD NEIGHBOR' : 'TRUST SCORE: 85/100'}
+            </span>
+            <span style={{ fontSize: '12px', color: '#86EFAC', fontWeight: '750' }}>
+              COD Cap: ₹5,000 Unlocked
+            </span>
+          </div>
+          <h3 style={{ margin: '0 0 4px', fontSize: '16px', fontWeight: '800' }}>
+            Doorstep Cash on Delivery Trust Status
+          </h3>
+          <p style={{ margin: 0, fontSize: '11.5px', color: '#D1FAE5', lineHeight: '1.45' }}>
+            100% on-time verified PIN handovers. Priority dispatch across Visakhapatnam and zero confirmation calls.
+          </p>
+        </div>
+
+        {/* Chillar Khata & Monthly Savings Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+          {/* Chillar Khata (Loose Change Wallet) */}
+          <div style={{
+            background: '#FFFFFF',
+            border: '1.5px solid #E2E8F0',
+            borderRadius: '14px',
+            padding: '12px',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#D97706', marginBottom: '4px' }}>
+              <Coins size={16} />
+              <span style={{ fontSize: '11px', fontWeight: '800' }}>CHILLAR KHATA</span>
+            </div>
+            <div style={{ fontSize: '18px', fontWeight: '900', color: 'var(--brand-primary, #1E3A2B)' }}>
+              ₹{getChillarBalance()}
+            </div>
+            <div style={{ fontSize: '10px', color: '#64748B', marginTop: '2px' }}>
+              Loose coins auto-saved. Deducts from next COD order.
+            </div>
+          </div>
+
+          {/* Monthly Grocery Savings */}
+          <div style={{
+            background: '#FFFFFF',
+            border: '1.5px solid #E2E8F0',
+            borderRadius: '14px',
+            padding: '12px',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#16A34A', marginBottom: '4px' }}>
+              <Award size={16} />
+              <span style={{ fontSize: '11px', fontWeight: '800' }}>MONTHLY SAVED</span>
+            </div>
+            <div style={{ fontSize: '18px', fontWeight: '900', color: '#15803D' }}>
+              ₹420
+            </div>
+            <div style={{ fontSize: '10px', color: '#64748B', marginTop: '2px' }}>
+              Saved vs. MRP & dark-store surge fees this month.
+            </div>
+          </div>
+        </div>
+
+        {/* Neighbor Referral: Give ₹25, Get ₹25 */}
+        <div style={{
+          background: 'var(--bg-subtle, #EEF2EB)',
+          borderRadius: '14px',
+          padding: '14px',
+          border: '1px solid rgba(0,0,0,0.06)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+            <span style={{ fontSize: '12px', fontWeight: '800', color: 'var(--brand-primary, #1E3A2B)' }}>
+              🎁 Give ₹25, Get ₹25 Neighbor Referral
+            </span>
+            <span style={{ fontSize: '11px', fontWeight: '800', background: '#FFFFFF', padding: '2px 8px', borderRadius: '6px', border: '1px solid #CBD5E1' }}>
+              VIZAG-RAJU25
+            </span>
+          </div>
+          <p style={{ margin: '0 0 10px', fontSize: '11px', color: '#475569', lineHeight: 1.4 }}>
+            Invite an apartment neighbor. When they receive their first PIN-verified COD order, ₹25 is credited to your Chillar Khata!
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              const text = encodeURIComponent(
+                'Order fresh Visakhapatnam Mandi veggies & Kirana groceries on KiranaPRO! Use my code VIZAG-RAJU25 for ₹25 OFF your first COD order above ₹250.\n\nhttps://kiranapro-two.vercel.app'
+              );
+              window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+            }}
+            style={{
+              width: '100%',
+              padding: '8px',
+              background: '#25D366',
+              color: '#FFFFFF',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '11px',
+              fontWeight: '800',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px'
+            }}
+          >
+            <Share2 size={13} /> Share Code on WhatsApp
+          </button>
+        </div>
+
+        {/* Switch to B2B Wholesale Banner */}
+        <div
+          onClick={() => navigate('/b2b')}
+          style={{
+            background: '#FFFFFF',
+            border: '1.5px solid #CBD5E1',
+            borderRadius: '14px',
+            padding: '12px 14px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            cursor: 'pointer'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Building2 size={18} color="var(--brand-primary, #1E3A2B)" />
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: '800', color: '#1E293B' }}>
+                Buying for a Tiffin Center, Mess or Hostel?
+              </div>
+              <div style={{ fontSize: '11px', color: '#64748B' }}>
+                Switch to commercial bulk sack & crate pricing (5:30 AM drop)
+              </div>
+            </div>
+          </div>
+          <ChevronRight size={16} color="#64748B" />
         </div>
       </div>
 
