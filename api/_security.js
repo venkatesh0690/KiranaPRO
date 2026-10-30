@@ -28,7 +28,10 @@ export async function scopedQuery(identity, build) {
     sql`SELECT set_config('app.role', ${role}, true), set_config('app.user_id', ${uid}, true), set_config('app.store_id', ${store}, true)`,
     queries[0]
   ], { readOnly: false });
-  return result[1];
+  // Transaction has 3 statements: role switch, scoped settings, then the
+  // actual SQL command. Returning [1] leaked settings rows into business
+  // logic and caused false admin-already-exists / missing catalog results.
+  return result[2];
 }
 export const serviceQuery = build => scopedQuery({ role: 'service' }, build);
 export const currentQuery = (identity, build) => scopedQuery(identity, build);
