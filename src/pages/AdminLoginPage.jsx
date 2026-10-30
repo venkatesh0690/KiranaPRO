@@ -20,13 +20,13 @@ export default function AdminLoginPage() {
   const { setActiveRole } = useStore();
 
   const [email, setEmail] = useState('admin@kiranapro.com');
-  const [adminPass, setAdminPass] = useState('admin123');
+  const [adminPass, setAdminPass] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [authError, setAuthError] = useState('');
 
-  const handleAdminLogin = (e) => {
+  const handleAdminLogin = async (e) => {
     e.preventDefault();
-    const res = loginAdmin(email, adminPass);
+    const res = await loginAdmin(email, adminPass);
 
     if (res.success) {
       setActiveRole('admin');
@@ -125,7 +125,7 @@ export default function AdminLoginPage() {
 
         <div className="quick-access-test-note">
           <ShieldCheck size={14} color="#9333EA" />
-          <span>Privileged access protected with end-to-end cryptographic session audit logs.</span>
+          <span>Admin authentication is verified by the server. No demo master password is accepted.</span>
         </div>
       </div>
     </div>
