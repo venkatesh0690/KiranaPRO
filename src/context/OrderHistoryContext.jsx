@@ -37,7 +37,9 @@ export function OrderHistoryProvider({children}){
         body:JSON.stringify({
           storeId:String(data.storeId),
           items:data.items.map(i=>({id:String(i.id),qty:i.qty||i.quantity})),
-          deliveryAddress:data.deliveryAddress
+          deliveryAddress:data.deliveryAddress,
+          discountCode:data.discountCode,
+          fulfilment:data.fulfilment
         })
       });
       const result=await response.json();
