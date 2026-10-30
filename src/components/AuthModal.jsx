@@ -38,10 +38,10 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup', onS
     }
   };
 
-  const handleUserSignupSubmit = (e) => {
+  const handleUserSignupSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    const res = signupCustomer(userName, userPhone, userPin, userAddress);
+    const res = await signupCustomer(userName, userPhone, userPin, userAddress);
     if (res.success) {
       setSuccessMsg(`Account created! Welcome, ${userName}`);
       setTimeout(() => {
@@ -53,25 +53,25 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup', onS
     }
   };
 
-  const handleSellerSignupSubmit = (e) => {
+  const handleSellerSignupSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    const res = signupSeller(storeName, ownerName, sellerPhone, sellerPin, sellerAddress, storeCategory);
+    const res = await signupSeller(storeName, ownerName, sellerPhone, sellerPin, sellerAddress, storeCategory);
     if (res.success) {
-      setSuccessMsg(`Store registered! Store ID: #${res.storeId}`);
+      setSuccessMsg('Store application submitted. Administrator approval is required before seller access.');
       setTimeout(() => {
         onClose();
-        if (onSuccess) onSuccess('seller');
+        if (onSuccess) onSuccess('user');
       }, 1200);
     } else {
       setError(res.error);
     }
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    const res = loginCustomer(loginPhone, loginPin);
+    const res = await loginCustomer(loginPhone, loginPin);
     if (res.success) {
       setSuccessMsg(`Welcome back, ${res.user.userName}!`);
       setTimeout(() => {
@@ -188,15 +188,16 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup', onS
                 </div>
 
                 <div className="auth-field">
-                  <label>Set 4-Digit Security PIN</label>
+                  <label>Set Account Password (10+ characters)</label>
                   <div className="auth-input-icon-wrap">
                     <KeyRound size={16} className="auth-icon" />
                     <input
                       type="password"
-                      placeholder="4 digits"
-                      maxLength={4}
+                      placeholder="At least 10 characters"
+                      minLength={10}
+                      maxLength={128}
                       value={userPin}
-                      onChange={e => setUserPin(e.target.value.replace(/\D/g, ''))}
+                      onChange={e => setUserPin(e.target.value)}
                       required
                     />
                   </div>
@@ -265,22 +266,23 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup', onS
                       placeholder="10-digit mobile number"
                       maxLength={10}
                       value={sellerPhone}
-                      onChange={e => setUserPhone ? setSellerPhone(e.target.value.replace(/\D/g, '')) : null}
+                      onChange={e => setSellerPhone(e.target.value.replace(/\D/g, ''))}
                       required
                     />
                   </div>
                 </div>
 
                 <div className="auth-field">
-                  <label>Set 4-Digit Store PIN</label>
+                  <label>Set Store Password (10+ characters)</label>
                   <div className="auth-input-icon-wrap">
                     <KeyRound size={16} className="auth-icon" />
                     <input
                       type="password"
-                      placeholder="4 digits"
-                      maxLength={4}
+                      placeholder="At least 10 characters"
+                      minLength={10}
+                      maxLength={128}
                       value={sellerPin}
-                      onChange={e => setSellerPin(e.target.value.replace(/\D/g, ''))}
+                      onChange={e => setSellerPin(e.target.value)}
                       required
                     />
                   </div>
@@ -313,7 +315,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup', onS
           <form onSubmit={handleLoginSubmit} className="auth-body-form">
             <div className="auth-form-title-wrap">
               <h3>Sign In to KiranaPRO</h3>
-              <p>Enter your 10-digit registered mobile and 4-digit PIN</p>
+              <p>Enter your 10-digit registered mobile and password</p>
             </div>
 
             <div className="auth-field">
@@ -332,15 +334,16 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup', onS
             </div>
 
             <div className="auth-field">
-              <label>4-Digit PIN</label>
+              <label>Password</label>
               <div className="auth-input-icon-wrap">
                 <KeyRound size={16} className="auth-icon" />
                 <input
                   type="password"
-                  placeholder="••••"
-                  maxLength={4}
+                  placeholder="Your account password"
+                  minLength={10}
+                      maxLength={128}
                   value={loginPin}
-                  onChange={e => setLoginPin(e.target.value.replace(/\D/g, ''))}
+                  onChange={e => setLoginPin(e.target.value)}
                   required
                 />
               </div>
