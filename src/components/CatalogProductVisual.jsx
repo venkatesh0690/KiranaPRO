@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { getCatalogVisual } from '../utils/catalogVisual';
 import { discoverProductPhoto } from '../utils/catalogPhotoClient';
 
-export default function CatalogProductVisual({ product, className = '' }) {
-  const visual=getCatalogVisual(product);
+function CatalogProductVisual({ product, className = '' }) {
+  const visual=useMemo(() => getCatalogVisual(product), [product]);
   const name=String(product?.name||'Product');
   const key=String(product?.id||'')+':'+name;
   const ref=useRef(null);
@@ -80,3 +80,7 @@ export default function CatalogProductVisual({ product, className = '' }) {
     </div>
   );
 }
+
+// Prevent photo discovery and expensive visual lookup from rerunning when an
+// unrelated basket quantity or search filter causes surrounding cards to rerender.
+export default memo(CatalogProductVisual);
