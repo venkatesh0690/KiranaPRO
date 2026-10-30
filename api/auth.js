@@ -81,21 +81,25 @@ export default async function handler(req,res) {
 
     let account;
     if(role==='admin'){
-      // No default admin password, no browser-side master keys.
-      const adminEmail=String(process.env.ADMIN_EMAIL||'').toLowerCase();
-      const adminHash=process.env.ADMIN_PASSWORD_HASH;
-      if(adminEmail && adminHash && identity===adminEmail && await checkPassword(password,adminHash)) {
-        const known=await serviceQuery(sql=>[sql`SELECT id,role,phone,display_name,store_id,approved FROM kiranapro.accounts WHERE email=${identity} LIMIT 1`]);
-        if (known.length && (known[0].role!=='admin' || !known[0].approved)) return res.status(403).json({error:'Admin account conflict'});
-        if(known.length) account=known[0];
-        else {
-          const created=await serviceQuery(sql=>[sql`
-            INSERT INTO kiranapro.accounts(email,display_name,password_hash,role,approved)
-            VALUES(${identity},'KiranaPRO Administrator',${adminHash},'admin',true)
-            ON CONFLICT DO NOTHING RETURNING id,role,phone,display_name,store_id,approved
-          `]);
-          account=created[0];
-        }
+      // Administrator password is chosen by the owner via the single-use setup
+      // flow. No default administrator secret exists in the frontend or source.
+      const found=await serviceQuery(sql=>[sql`
+        SELECT id,role,phone,display_name,password_hash,store_id,approved
+        FROM kiranapro.accounts WHERE email=${identity} AND role='admin' LIMIT 1
+      `]);
+      if(found.length && found[0].approved &&
+         await checkPassword(password,found[0].password_hash)) account=found[0];
+      // Retain compatibility with older server-side-only provisioning.
+      if(!account && !found.length && process.env.ADMIN_EMAIL &&
+         process.env.ADMIN_PASSWORD_HASH &&
+         identity===String(process.env.ADMIN_EMAIL).toLowerCase() &&
+         await checkPassword(password,process.env.ADMIN_PASSWORD_HASH)) {
+        const created=await serviceQuery(sql=>[sql`
+          INSERT INTO kiranapro.accounts(email,display_name,password_hash,role,approved)
+          VALUES(${identity},'KiranaPRO Administrator',${process.env.ADMIN_PASSWORD_HASH},'admin',true)
+          ON CONFLICT DO NOTHING RETURNING id,role,phone,display_name,store_id,approved
+        `]);
+        account=created[0];
       }
     }else{
       const found=await serviceQuery(sql=>[sql`
