@@ -105,3 +105,20 @@
   border-radius:4px;padding:3px 5px;
   pointer-events:none;
 }
+
+/* Neutral line art for unverified packs, never a counterfeit product photo. */
+.kp-catalog-placeholder-drawing {
+  width:clamp(30px,35%,66px);
+  height:auto;
+  max-height:62px;
+  flex-shrink:0;
+  color:#89988b;
+  margin-bottom:3px;
+  opacity:.85;
+}
+.kp-catalog-image-pending:not(.is-loading) .kp-catalog-photo-note {
+  max-width:90%;
+  text-align:center;
+  font-size:9px;
+  line-height:1.25;
+}

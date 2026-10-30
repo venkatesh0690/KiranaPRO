@@ -1,5 +1,6 @@
 import { digest, currentQuery, serviceQuery, requireUser, safeMethod, bodyOf, failClosed } from './_security.js';
 import { normalizeItem, aiImageEligible, aiImagePrompt, AI_IMAGE_PROMPT_VERSION } from '../src/utils/aiImagePolicy.js';
+import {getCatalogVisual} from '../src/utils/catalogVisual.js';
 
 export function imageKey(name,category) {
   return digest('ai-v1:'+normalizeItem(name)+':'+normalizeItem(category));
@@ -96,12 +97,25 @@ export default async function handler(req,res) {
        !/^[a-zA-Z0-9-]{1,64}$/.test(productId))
       return res.status(400).json({error:'Invalid product identity'});
     const products=await currentQuery(admin,sql=>[sql`
-      SELECT name,category FROM kiranapro.products WHERE store_id=${storeId} AND id=${productId} LIMIT 1
+      SELECT name,category,image_url FROM kiranapro.products WHERE store_id=${storeId} AND id=${productId} LIMIT 1
     `]);
     const item=products[0];
     if(!item)return res.status(404).json({error:'Catalog product not found'});
     if(!aiImageEligible(item.name,item.category))
       return res.status(422).json({error:'This item needs a verified real product photo instead.'});
+    // A curated or seller-owned image outranks AI. Do not charge for it.
+    if(getCatalogVisual(item).photo || (typeof item.image_url==='string' &&
+        /^https:\/\//.test(item.image_url))){
+      return res.status(409).json({error:'This product already has a real photo.'});
+    }
+    // Hard daily image budget; retain unmodified ready images and avoid
+    // unexpected model charges from repeated admin clicks.
+    const spent=await serviceQuery(sql=>[sql`
+      SELECT count(*)::int AS used FROM kiranapro.catalog_ai_images
+      WHERE created_at >= DATE_TRUNC('day',NOW()) AND status IN ('pending','ready','failed')
+    `]);
+    if(Number(spent[0]?.used||0)>=36)
+      return res.status(429).json({error:'Daily AI image safety limit reached. Resume tomorrow.'});
     const key=imageKey(item.name,item.category);
     const registered=await registeredImage(item.name,item.category);
     if(registered?.status==='ready' && isPublicBlobUrl(registered.image_url))

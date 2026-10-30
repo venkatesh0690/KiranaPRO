@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run test:areas && npm run test:highlights && npm run test:app && npm run test:fulfilment && npm run test:catalog && npm run test:photos && npm run test:sample-stores && npm run test:editorial && npm run test:security && npm run test:performance && npm run test:ai-images && vite build",
+    "build": "npm run test:areas && npm run test:highlights && npm run test:app && npm run test:fulfilment && npm run test:catalog && npm run test:photos && npm run test:sample-stores && npm run test:editorial && npm run test:security && npm run test:performance && npm run test:ai-images && npm run test:batch-admin && vite build",
     "mobile:build": "vite build && npx cap sync android",
     "mobile:sync": "npx cap sync android",
     "mobile:open": "npx cap open android",
@@ -24,7 +24,8 @@
     "security:hash-admin": "node scripts/hash_admin_password.mjs",
     "test:security": "node --test tests/security-hardening.test.mjs",
     "test:performance": "node --test tests/performance-fast.test.mjs",
-    "test:ai-images": "node --test tests/ai-catalog-images.test.mjs"
+    "test:ai-images": "node --test tests/ai-catalog-images.test.mjs",
+    "test:batch-admin": "node --test tests/batch-admin-images.test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",
