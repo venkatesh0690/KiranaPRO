@@ -1,4 +1,5 @@
 import { Suspense, lazy, useState } from 'react';
+import { Component, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { CartProvider, useCart } from './context/CartContext';
 import { getStoresForArea, isDeliveryArea } from './data/deliveryAreas';
@@ -44,10 +45,36 @@ import './styles/editorial-banners.css';
 // Load nonessential screens on demand: initial location selection no longer
 // downloads cart, search, profile, seller and administrator dashboards.
 function RouteLoading() {
+  const [delayed,setDelayed]=useState(false);
+  useEffect(()=>{
+    const timer=window.setTimeout(()=>setDelayed(true),8000);
+    return ()=>window.clearTimeout(timer);
+  },[]);
   return <div className="kp-route-loading" role="status" aria-live="polite">
     <span className="kp-route-loading-mark" aria-hidden="true">K.</span>
-    <span>Opening KiranaPRO…</span>
+    <span>{delayed?'Storefront is taking longer to open.':'Opening KiranaPRO…'}</span>
+    {delayed && <button type="button"
+      onClick={()=>window.location.reload()}>Retry loading</button>}
   </div>;
+}
+
+// In case a previous PWA shell references an unavailable lazy-loaded chunk,
+// show a recovery action instead of trapping users behind a blank screen.
+class RouteRecoveryBoundary extends Component {
+  constructor(props){super(props);this.state={failed:false};}
+  static getDerivedStateFromError(){return {failed:true};}
+  componentDidCatch(error){
+    console.error('KiranaPRO route failed to render:',error?.message||'Unknown error');
+  }
+  render(){
+    if(this.state.failed)return <div className="kp-route-loading" role="alert">
+      <span className="kp-route-loading-mark" aria-hidden="true">K.</span>
+      <span>Could not open this page. Your shopping data was not cleared.</span>
+      <button type="button" onClick={()=>window.location.reload()}>Reload KiranaPRO</button>
+      <a href="/">Choose location again</a>
+    </div>;
+    return this.props.children;
+  }
 }
 
 function MainAppShell({ userLocation, setUserLocation }) {
@@ -79,6 +106,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
           canShop && !isPortalRoute && !isLocationRoute ? 'with-bottom-nav' : ''
         } ${isStoreRoute ? 'store-view-mode' : ''}`}
       >
+        <RouteRecoveryBoundary key={location.pathname}>
         <Suspense fallback={<RouteLoading />}>
         <Routes>
           {/* Always asks location on startup / root */}
@@ -141,6 +169,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
         </Suspense>
+        </RouteRecoveryBoundary>
       </main>
 
       {/* PWA Install App Prompt */}

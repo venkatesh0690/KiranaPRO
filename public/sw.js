@@ -1,6 +1,6 @@
 // KiranaPRO PWA: cache only public app-shell files and hashed build assets.
 // Authenticated API responses, orders and account data are NEVER cached.
-const VERSION='kiranapro-fast-v3';
+const VERSION='kiranapro-fast-v4';
 const SHELL_CACHE=VERSION+'-shell';
 const ASSET_CACHE=VERSION+'-assets';
 const APP_SHELL='/';
