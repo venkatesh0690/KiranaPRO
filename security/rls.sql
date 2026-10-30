@@ -127,3 +127,14 @@ CREATE POLICY kp_attempts_service ON kiranapro.login_attempts FOR ALL USING (
 -- sensitive data, even when another database role is added later.
 REVOKE ALL ON SCHEMA kiranapro FROM PUBLIC;
 REVOKE ALL ON ALL TABLES IN SCHEMA kiranapro FROM PUBLIC;
+
+-- Neon-managed login roles may carry BYPASSRLS. Every API transaction must
+-- explicitly SET LOCAL ROLE to a non-login, NOBYPASSRLS principal before
+-- running any application queries, including authentication queries.
+CREATE ROLE kiranapro_rls_api NOLOGIN NOINHERIT NOBYPASSRLS;
+GRANT kiranapro_rls_api TO neondb_owner;
+GRANT USAGE ON SCHEMA kiranapro TO kiranapro_rls_api;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA kiranapro TO kiranapro_rls_api;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA kiranapro TO kiranapro_rls_api;
+ALTER DEFAULT PRIVILEGES IN SCHEMA kiranapro GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO kiranapro_rls_api;
+ALTER DEFAULT PRIVILEGES IN SCHEMA kiranapro GRANT USAGE, SELECT ON SEQUENCES TO kiranapro_rls_api;
