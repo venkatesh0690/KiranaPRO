@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { CartProvider, useCart } from './context/CartContext';
 import { getStoresForArea, isDeliveryArea } from './data/deliveryAreas';
@@ -9,16 +9,16 @@ import { SellerProtectedRoute, AdminProtectedRoute } from './components/Protecte
 import BottomNav from './components/BottomNav';
 import InstallAppBanner from './components/InstallAppBanner';
 import LocationPage from './pages/LocationPage';
-import HomePage from './pages/HomePage';
-import StorePage from './pages/StorePage';
-import CartPage from './pages/CartPage';
-import SearchPage from './pages/SearchPage';
-import OrdersPage from './pages/OrdersPage';
-import ProfilePage from './pages/ProfilePage';
-import SellerLoginPage from './pages/SellerLoginPage';
-import SellerDashboard from './pages/SellerDashboard';
-import AdminLoginPage from './pages/AdminLoginPage';
-import AdminDashboard from './pages/AdminDashboard';
+const HomePage = lazy(() => import('./pages/HomePage'));
+const StorePage = lazy(() => import('./pages/StorePage'));
+const CartPage = lazy(() => import('./pages/CartPage'));
+const SearchPage = lazy(() => import('./pages/SearchPage'));
+const OrdersPage = lazy(() => import('./pages/OrdersPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const SellerLoginPage = lazy(() => import('./pages/SellerLoginPage'));
+const SellerDashboard = lazy(() => import('./pages/SellerDashboard'));
+const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 import './styles/tokens.css';
 import './styles/global.css';
 import './styles/minimal.css';
@@ -40,6 +40,15 @@ import './styles/order-rewards.css';
 import './styles/fulfilment-checkout.css';
 import './styles/sample-stores-guest.css';
 import './styles/editorial-banners.css';
+
+// Load nonessential screens on demand: initial location selection no longer
+// downloads cart, search, profile, seller and administrator dashboards.
+function RouteLoading() {
+  return <div className="kp-route-loading" role="status" aria-live="polite">
+    <span className="kp-route-loading-mark" aria-hidden="true">K.</span>
+    <span>Opening KiranaPRO…</span>
+  </div>;
+}
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();
@@ -70,6 +79,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
           canShop && !isPortalRoute && !isLocationRoute ? 'with-bottom-nav' : ''
         } ${isStoreRoute ? 'store-view-mode' : ''}`}
       >
+        <Suspense fallback={<RouteLoading />}>
         <Routes>
           {/* Always asks location on startup / root */}
           <Route
@@ -130,6 +140,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
 
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
+        </Suspense>
       </main>
 
       {/* PWA Install App Prompt */}
