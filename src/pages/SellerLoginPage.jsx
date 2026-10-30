@@ -17,10 +17,9 @@ import { useSecurity } from '../context/SecurityContext';
 
 export default function SellerLoginPage() {
   const navigate = useNavigate();
-  const { stores, setSellerStoreId, setActiveRole } = useStore();
+  const { setSellerStoreId, setActiveRole } = useStore();
   const { loginSeller } = useSecurity();
 
-  const [selectedStoreId, setSelectedStoreId] = useState(stores[1]?.id || 1); // Defaults to Sharma General Store
   const [phone, setPhone] = useState('');
   const [pin, setPin] = useState('');
   const [showPin, setShowPin] = useState(false);
@@ -28,10 +27,10 @@ export default function SellerLoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await loginSeller(selectedStoreId, phone, pin);
+    const res = await loginSeller('', phone, pin);
 
     if (res.success) {
-      setSellerStoreId(res.user?.storeId || selectedStoreId);
+      setSellerStoreId(res.user.storeId);
       setActiveRole('seller');
       navigate('/seller/dashboard');
     } else {
@@ -69,31 +68,10 @@ export default function SellerLoginPage() {
           </p>
         </div>
 
-        {/* Quick Store Selector */}
-        <div className="quick-seller-select">
-          <label className="auth-field-label">Select Your Registered Kirana Shop:</label>
-          <div className="seller-stores-grid">
-            {stores.slice(0, 4).map((store) => (
-              <div
-                key={store.id}
-                className={`seller-store-card ${selectedStoreId === store.id ? 'active' : ''}`}
-                onClick={() => {
-                  setSelectedStoreId(store.id);
-                  setAuthError('');
-                }}
-              >
-                <span className="ssc-emoji">{store.image}</span>
-                <div className="ssc-info">
-                  <strong>{store.name}</strong>
-                  <span>Owner: {store.owner} • {store.distance}</span>
-                </div>
-                {selectedStoreId === store.id && (
-                  <CheckCircle2 size={18} color="var(--accent-green)" />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+        <p className="auth-field-label" style={{marginBottom:16}}>
+          Sign in with your registered store partner account.
+          The server automatically opens only the store assigned to your account.
+        </p>
 
         {/* Security Alert / Error Banner */}
         {authError && (
