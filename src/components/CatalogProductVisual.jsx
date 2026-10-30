@@ -68,7 +68,7 @@ function CatalogProductVisual({ product, className = '' }) {
         <div className={'kp-catalog-image-pending'+(loading?' is-loading':'')}
           role="img" aria-label={loading?'Loading photograph of '+name:'Photograph unavailable for '+name}>
           <span className="kp-catalog-photo-label">{visual.label}</span>
-          <span className="kp-catalog-photo-note">{loading?'Finding image…':'Product illustration pending'}</span>
+          <span className="kp-catalog-photo-note">{loading?'Finding image…':'Image coming soon'}</span>
         </div>
       )}
       {aiIllustration && <span className="kp-ai-image-disclosure" aria-label="AI-generated representative image">AI illustration</span>}
