@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext';
 export default function ProductDetailModal({ product, storeId, storeName, onClose }) {
   const { cart, addItem, removeItem } = useCart();
   const [activeTab, setActiveTab] = useState('description');
+  const [pickingPref, setPickingPref] = useState('Standard');
   const [isLiked, setIsLiked] = useState(false);
 
   if (!product) return null;
@@ -98,6 +99,43 @@ export default function ProductDetailModal({ product, storeId, storeName, onClos
               </div>
             )}
 
+            {/* ── Instacart Ripeness / Cut Preference (Phase 13 Prompt 13.1) ── */}
+            <div style={{ margin: '12px 0', padding: '10px 12px', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px' }}>
+              <span style={{ fontSize: '11px', fontWeight: '750', color: '#334155', display: 'block', marginBottom: '6px' }}>
+                👨‍🌾 Mandi Shopper Note / Ripeness Preference:
+              </span>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {['Tender & Small (For Fry)', 'Medium Standard', 'Ripe for Today', 'Raw for 2-3 Days'].map(pref => (
+                  <button
+                    key={pref}
+                    type="button"
+                    style={{
+                      padding: '4px 8px', fontSize: '10.5px', borderRadius: '6px',
+                      border: pickingPref === pref ? '1.5px solid #16A34A' : '1px solid #CBD5E1',
+                      background: pickingPref === pref ? '#DCFCE7' : '#FFFFFF',
+                      color: pickingPref === pref ? '#15803D' : '#475569',
+                      fontWeight: pickingPref === pref ? '800' : '600',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => setPickingPref(pref)}
+                  >
+                    {pref}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Mandi Harvest Timestamp Card (Phase 21 Prompt 21.2) ── */}
+            <div style={{ margin: '0 0 12px', padding: '8px 12px', background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#166534', fontWeight: '700' }}>
+                <span>🌾</span>
+                <span>Harvested Today at 4:30 AM · Anakapalle Rythu Belt</span>
+              </div>
+              <span style={{ fontSize: '9.5px', background: '#DCFCE7', color: '#15803D', padding: '2px 6px', borderRadius: '4px', fontWeight: '800' }}>
+                Zero Cold-Storage
+              </span>
+            </div>
+
             {/* Delivery Assurance */}
             <div className="pdm-assurance-box">
               <div className="pdm-assurance-item">
@@ -114,7 +152,7 @@ export default function ProductDetailModal({ product, storeId, storeName, onClos
 
             {/* Tabbed Info (Inspired by Screenshot 3: Description, Reviews, Policy) */}
             <div className="pdm-tabs-header">
-              {['description', 'reviews', 'policy'].map((tab) => (
+              {['description', 'storage', 'reviews', 'policy'].map((tab) => (
                 <button
                   key={tab}
                   type="button"
@@ -132,6 +170,14 @@ export default function ProductDetailModal({ product, storeId, storeName, onClos
                   {product.description ||
                     'Freshly sourced and packed from local retail Kiranas. Handpicked by store owners and immediately dispatched via quick commerce riders within 2km.'}
                 </p>
+              )}
+              {activeTab === 'storage' && (
+                <div style={{ fontSize: '12px', color: '#334155', lineHeight: 1.5 }}>
+                  <strong style={{ color: '#0F172A', display: 'block', marginBottom: '4px' }}>🌊 Visakhapatnam Coastal Humidity Storage Guide:</strong>
+                  <p style={{ margin: 0 }}>
+                    Store in ventilated paper bags. Do not wash leafy greens or vegetables before refrigerating to prevent moisture spoilage in coastal weather.
+                  </p>
+                </div>
               )}
               {activeTab === 'reviews' && (
                 <div className="pdm-reviews-list">

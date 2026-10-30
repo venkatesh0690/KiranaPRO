@@ -1710,3 +1710,20 @@
   font-weight: 800;
   cursor: pointer;
 }
+
+/* ── Phase 22 Prompt 22.2: Senior Citizen / Amma-Nanna Easy Read Mode (A+) ── */
+.kp-senior-mode {
+  font-size: 112% !important;
+}
+.kp-senior-mode .kp-concept-wordmark span,
+.kp-senior-mode .kp-concept-location-label,
+.kp-senior-mode .kp-concept-search span,
+.kp-senior-mode .kp-has-title,
+.kp-senior-mode .kp-rc-title {
+  font-size: 1.1em !important;
+  font-weight: 800 !important;
+}
+.kp-concept-header-icon.is-senior {
+  background: #DCFCE7 !important;
+  border-color: #166534 !important;
+}

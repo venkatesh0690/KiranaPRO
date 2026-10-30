@@ -31,6 +31,7 @@ export default function HomePage({ userLocation }) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [authMode, setAuthMode] = useState(null);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [seniorMode, setSeniorMode] = useState(false);
 
   const areaStores = getStoresForArea(stores,userLocation);
   const filteredStores = areaStores.filter(store => {
@@ -53,7 +54,7 @@ export default function HomePage({ userLocation }) {
   };
 
   return (
-    <div className="home-container kp-home kp-concept">
+    <div className={`home-container kp-home kp-concept ${seniorMode ? "kp-senior-mode" : ""}`}>
       <header className="kp-concept-header">
         <div className="kp-concept-header-top">
           <button
@@ -66,6 +67,16 @@ export default function HomePage({ userLocation }) {
             <span>Kirana<span>PRO</span></span>
           </button>
           <div className="kp-concept-header-actions">
+            <button
+              type="button"
+              className={`kp-concept-header-icon ${seniorMode ? 'is-senior' : ''}`}
+              onClick={() => setSeniorMode(s => !s)}
+              title="Senior Citizen / Amma-Nanna Easy Read Mode (A+)"
+              aria-label="Toggle Senior Citizen Easy Read Mode"
+              style={{ fontWeight: 850, fontSize: '13px', color: seniorMode ? '#166534' : undefined }}
+            >
+              A+
+            </button>
             <button
               type="button"
               className="kp-concept-header-icon"
