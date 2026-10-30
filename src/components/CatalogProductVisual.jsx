@@ -45,6 +45,7 @@ function CatalogProductVisual({ product, className = '' }) {
 
   const sourceUrl=staticUsable?visual.photoCreditUrl:remoteUsable?resolvedRemote.sourceUrl:null;
   const photoSource=staticUsable?visual.photoSource:remoteUsable?resolvedRemote.photoSource:null;
+  const aiIllustration=Boolean(currentPhoto && !staticUsable && remoteUsable && resolvedRemote.match==='illustrative');
   const loading=visible && !currentPhoto &&
     (requested!==key || remote.key!==key);
   return (
@@ -57,7 +58,7 @@ function CatalogProductVisual({ product, className = '' }) {
           srcSet={staticUsable?visual.photoSrcSet||undefined:undefined}
           sizes={className.includes('kp-modal')?'(max-width: 640px) 280px, 320px':'(max-width: 640px) 95px, 160px'}
           width="160" height="160"
-          alt={'Real representative product photo: '+name}
+          alt={(aiIllustration?'AI-generated illustrative image of ':'Representative product photo of ')+name}
           loading={className.includes('kp-modal')?'eager':'lazy'}
           decoding="async"
           fetchPriority={className.includes('kp-modal')?'auto':'low'}
@@ -67,9 +68,10 @@ function CatalogProductVisual({ product, className = '' }) {
         <div className={'kp-catalog-image-pending'+(loading?' is-loading':'')}
           role="img" aria-label={loading?'Loading photograph of '+name:'Photograph unavailable for '+name}>
           <span className="kp-catalog-photo-label">{visual.label}</span>
-          <span className="kp-catalog-photo-note">{loading?'Loading photo…':'Photo unavailable'}</span>
+          <span className="kp-catalog-photo-note">{loading?'Finding image…':'Product illustration pending'}</span>
         </div>
       )}
+      {aiIllustration && <span className="kp-ai-image-disclosure" aria-label="AI-generated representative image">AI illustration</span>}
       {Boolean(sourceUrl) && className.includes('kp-modal') && (
         <a className="kp-product-image-credit" href={sourceUrl}
           target="_blank" rel="noopener noreferrer"
