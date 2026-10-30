@@ -1,9 +1,9 @@
 /* Browser-side request queue and cache for Commons photo discovery.
  * Visible product tiles trigger requests only as they enter the viewport.
  */
-const CACHE_PREFIX='kp_photo_v3:';
+const CACHE_PREFIX='kp_photo_v4:';
 const CACHE_TTL=1000*60*60*24*21;
-const MISSING_TTL=1000*60*60*4;
+const MISSING_TTL=1000*60*3;
 const inflight=new Map();
 const queue=[];
 let active=0;
@@ -55,10 +55,22 @@ export async function discoverProductPhoto(product) {
     });
     if(!response.ok)throw new Error('Photo service unavailable');
     const result=await response.json();
-    const value=typeof result?.photo==='string' &&
-      /^https:\/\/(upload\.wikimedia\.org|commons\.wikimedia\.org)\//.test(result.photo)
-      ? {photo:result.photo,sourceUrl:result.sourceUrl||null,
-         photoSource:'Wikimedia Commons · representative',match:'representative'}
+    const photo=result?.photo;
+    let valid=false;
+    try{
+      const url=new URL(photo);
+      valid=url.protocol==='https:' && (
+        ['upload.wikimedia.org','commons.wikimedia.org'].includes(url.hostname) ||
+        (result.match==='illustrative' &&
+          url.hostname.endsWith('.public.blob.vercel-storage.com'))
+      );
+    }catch{/* unavailable image */}
+    const value=valid
+      ? {photo,sourceUrl:result.sourceUrl||null,
+         photoSource:result.match==='illustrative'
+           ? 'AI-generated representative image'
+           : 'Wikimedia Commons · representative',
+         match:result.match==='illustrative'?'illustrative':'representative'}
       : {photo:null,sourceUrl:null};
     cacheWrite(key,value);
     return value;
