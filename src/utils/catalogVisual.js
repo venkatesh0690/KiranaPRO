@@ -1,3 +1,4 @@
+import { getLocalFreshIllustration } from './localFreshIllustrations.js';
 /*
  * Catalog-wide product-image audit.
  * Product.image contained reused, mismatched generic stock photos; NEVER
@@ -124,9 +125,13 @@ export function getCatalogVisual(product) {
     (!blockedProcessed.test(name) || /^mushrooms 200 gms pack$/i.test(name));
   const item=allowed?knownPhotos.find(([pattern])=>pattern.test(name))?.[1]:null;
   const photo=exactPhoto ? merchant : item ? thumbSource(item,160) : null;
+  // Seller-verified and known real photos always take priority; bundled
+  // Google-generated illustrations are a clearly labeled fallback.
+  const illustrativePhoto=exactPhoto ? null : getLocalFreshIllustration(product);
   const highRes=item && !exactPhoto ? thumbSource(item,320) : null;
   return {
     photo,
+    illustrativePhoto,
     photoSrcSet: highRes ? photo+" 160w, "+highRes+" 320w" : null,
     photoSource:exactPhoto ? "Seller verified image"
       : item?.kind==="commons" ? "Wikimedia Commons" : item ? "Unsplash" : null,
