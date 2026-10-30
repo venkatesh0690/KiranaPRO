@@ -1,6 +1,6 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { getCatalogVisual } from '../utils/catalogVisual';
-import { discoverProductPhoto } from '../utils/catalogPhotoClient';
+import { discoverProductPhoto, CATALOG_PHOTO_REFRESH_EVENT } from '../utils/catalogPhotoClient';
 import {aiImageEligible} from '../utils/aiImagePolicy';
 
 function CatalogProductVisual({ product, className = '' }) {
@@ -13,6 +13,7 @@ function CatalogProductVisual({ product, className = '' }) {
   const [remote,setRemote]=useState({key:null,value:null});
   const [failedUrl,setFailedUrl]=useState(null);
   const [requested,setRequested]=useState(null);
+  const [refreshTick,setRefreshTick]=useState(0);
 
   useEffect(()=>{
     const root=ref.current;
@@ -24,6 +25,19 @@ function CatalogProductVisual({ product, className = '' }) {
     observer.observe(root);
     return ()=>observer.disconnect();
   },[key]);
+
+  // When an administrator saves images or a new app version invalidates the
+  // photo cache, mounted product tiles should refetch without a page reload.
+  useEffect(()=>{
+    const refresh=()=>{
+      setRequested(null);
+      setRemote({key:null,value:null});
+      setFailedUrl(null);
+      setRefreshTick(t=>t+1);
+    };
+    window.addEventListener(CATALOG_PHOTO_REFRESH_EVENT,refresh);
+    return ()=>window.removeEventListener(CATALOG_PHOTO_REFRESH_EVENT,refresh);
+  },[]);
 
   const resolvedRemote=remote.key===key ? remote.value : null;
   const initial=visual.photo;
@@ -43,7 +57,7 @@ function CatalogProductVisual({ product, className = '' }) {
     return ()=>{mounted=false};
   // Do not depend on needSearch here: setting requested would otherwise
   // clean up this effect before the network result can populate the card.
-  },[key,visible,initial,failedUrl]);
+  },[key,visible,initial,failedUrl,refreshTick]);
 
   const sourceUrl=staticUsable?visual.photoCreditUrl:remoteUsable?resolvedRemote.sourceUrl:null;
   const photoSource=staticUsable?visual.photoSource:remoteUsable?resolvedRemote.photoSource:null;
