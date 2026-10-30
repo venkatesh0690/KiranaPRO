@@ -26,7 +26,7 @@ export function buildHomepageBanners(stores, _catalog, area, orderCount=0) {
       ...FEATURED_CHECKOUT_OFFERS[0],kind:'global',
       id:'offer-free-delivery',tag:'FREE DELIVERY · SELECTED STORES',
       title:'Free delivery above ₹300',
-      subtitle:'Free delivery above ₹300 · participating neighborhood stores only.',
+      subtitle:'20-30 min express delivery · Free above ₹300. Championing your neighborhood family kiranas!',
       store:participatingDeliveryStores[0],
       cta:'Explore eligible stores',minCart:MIN_PROMO_SUBTOTAL
     });
@@ -36,7 +36,7 @@ export function buildHomepageBanners(stores, _catalog, area, orderCount=0) {
   if(basket)slides.push({
     ...basket,id:'offer-basket-savings',
     title:'Save up to ₹30',tag:'AUTOMATIC BASKET REWARD',
-    subtitle:'Automatic 5% off, up to ₹30, on carts above ₹500.',
+    subtitle:'Direct from local mandis & kiranas · Automatic 5% savings up to ₹30 on orders above ₹500.',
     cta:'Shop & save',minCart:501
   });
 
@@ -45,9 +45,9 @@ export function buildHomepageBanners(stores, _catalog, area, orderCount=0) {
     if(!rule)continue;
     const eligible=isCouponForOrder(offer.code,nextOrderNumber(orderCount));
     const shortTerms={
-      WELCOME:'First order only · ₹30 off · Cart above ₹300',
-      REPEAT:'3rd, 5th or 7th order · ₹20 off · Cart above ₹300',
-      ADDICTED:'10th order only · ₹50 off · Cart above ₹300'
+      WELCOME:'First order ₹30 off on ₹300+ · Supporting local neighborhood kiranas in 20-30 mins.',
+      REPEAT:'3rd/5th/7th order ₹20 off on ₹300+ · Empowering neighborhood family-run kirana shops.',
+      ADDICTED:'10th order milestone ₹50 off on ₹300+ · Celebrating fresh local mandis & kirana stores.'
     };
     const description=shortTerms[offer.code] || rule.desc;
     slides.push({

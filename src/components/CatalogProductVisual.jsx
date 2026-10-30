@@ -3,6 +3,7 @@ import { getCatalogVisual } from '../utils/catalogVisual';
 import { discoverProductPhoto, CATALOG_PHOTO_REFRESH_EVENT } from '../utils/catalogPhotoClient';
 import {aiImageEligible} from '../utils/aiImagePolicy';
 import {selectCatalogPhoto} from '../utils/catalogPhotoPriority';
+import { getCatalogProductPicture } from '../data/catalogProductPictures';
 
 function CatalogProductVisual({ product, className = '' }) {
   const visual=useMemo(() => getCatalogVisual(product), [product]);

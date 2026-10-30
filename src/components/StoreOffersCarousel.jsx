@@ -111,8 +111,8 @@ function EditorialPoster({ slide, index, total, onAction, shouldLoadPhoto }) {
       </div>
       <div className="kp-ed-photo-scrim" aria-hidden="true"/>
       <div className="kp-ed-head">
-        <span className="kp-ed-brand">KIRANA<span>PRO</span> / GOODS NEAR YOU</span>
-        <span className="kp-ed-edition">VIZAG LOCAL EDITION <strong>{String(index+1).padStart(2,'0')}</strong></span>
+        <span className="kp-ed-brand">KIRANA<span>PRO</span> · 20-30 MIN DELIVERY</span>
+        <span className="kp-ed-edition">EMPOWERING LOCAL KIRANAS & MANDIS <strong>{String(index+1).padStart(2,'0')}</strong></span>
       </div>
       <div className="kp-ed-body">
         <div className="kp-ed-copy">
@@ -145,7 +145,7 @@ function EditorialPoster({ slide, index, total, onAction, shouldLoadPhoto }) {
         </div>
       </div>
       <div className="kp-ed-footer">
-        <span>{slide.isSample?'REPRESENTATIVE PHOTO · NO ORDERS':'REAL GROCERY & MARKET PHOTOGRAPHY'}</span>
+        <span>{slide.isSample?'REPRESENTATIVE PHOTO · NO ORDERS':'FAST 20-30 MIN DELIVERY · SUPPORTING LOCAL KIRANAS & MANDIS'}</span>
         <span>{String(index+1).padStart(2,'0')} / {String(total).padStart(2,'0')}</span>
       </div>
     </div>

@@ -126,7 +126,7 @@ const galleries = {
   ]
 };
 const fallback = {
-  localfresh: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=960&q=75',
+  localfresh: 'https://cdn.cosmos.so/ae599ae2-8581-4d39-9446-cb9c36b2a5aa?format=webp',
   '1': 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=960&q=75',
   '2': 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=960&q=75',
   '3': 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=960&q=75',

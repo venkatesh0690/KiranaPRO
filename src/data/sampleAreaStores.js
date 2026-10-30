@@ -206,9 +206,10 @@ const demoGroups={
 };
 export const sampleAreaStores=Object.entries(demoGroups).flatMap(([area,group],areaIndex)=>
   group.shops.map(([name,photoType,categories],index)=>{
-    const gallery=getSampleStoreImages(photoType,(areaIndex+index)%4,name);
+    const storeId = 'sample-' + group.slug + '-' + (index + 1);
+    const gallery = getSampleStoreImages(photoType, (areaIndex + index) % 4, name, storeId);
     return {
-      id:`sample-${group.slug}-${index+1}`,
+      id: storeId,
       name,
       owner:'Demo listing — merchant registration pending',
       isSample:true,
