@@ -73,13 +73,16 @@ export default async function handler(req,res) {
         updated_at=NOW(),retry_after=NULL WHERE image_key=${key}
       `]);
       return res.status(201).json({generated:true,id,name:item.name,photo});
-    }catch{
+    }catch(error){
+      const issue=/^(OPENAI_HTTP_\d{3}|OPENAI_MISSING_IMAGE|BLOB_UPLOAD_FAILED)$/.test(String(error?.message||''))
+        ? error.message : 'UNKNOWN_PROVIDER_ERROR';
+      console.warn('[KiranaPRO image task]',issue);
       await serviceQuery(sql=>[sql`
         UPDATE kiranapro.catalog_ai_images SET status='failed',
           updated_at=NOW(),retry_after=NOW()+INTERVAL '1 hour'
         WHERE image_key=${key} AND status='pending'
       `]);
-      return res.status(502).json({error:'Image generation or upload failed'});
+      return res.status(502).json({error:'Image generation or upload failed',reason:issue});
     }
   }catch{
     return res.status(503).json({error:'Image operator currently unavailable'});

@@ -48,18 +48,23 @@ export async function generateCatalogImage(name,category,key) {
       background:'opaque'
     })
   });
-  if(!response.ok)throw Error('Image model rejected the request');
+  if(!response.ok)throw Error('OPENAI_HTTP_'+response.status);
   const result=await response.json();
   const encoded=result?.data?.[0]?.b64_json;
-  if(typeof encoded!=='string'||encoded.length<1000)throw Error('Image generation returned no photo');
+  if(typeof encoded!=='string'||encoded.length<1000)throw Error('OPENAI_MISSING_IMAGE');
   const bytes=Buffer.from(encoded,'base64');
   if(bytes.length<1024||bytes.length>7_000_000)throw Error('Generated image outside allowed bounds');
   // Static import is deliberately server-only; no image SDK or credentials enter Vite.
   const {put}=await import('@vercel/blob');
-  const uploaded=await put('catalog/ai-v1/'+key+'.webp',bytes,{
-    access:'public',contentType:'image/webp',
-    addRandomSuffix:true,cacheControlMaxAge:31536000
-  });
+  let uploaded;
+  try{
+    uploaded=await put('catalog/ai-v1/'+key+'.webp',bytes,{
+      access:'public',contentType:'image/webp',
+      addRandomSuffix:true,cacheControlMaxAge:31536000
+    });
+  }catch{
+    throw Error('BLOB_UPLOAD_FAILED');
+  }
   if(!isPublicBlobUrl(uploaded?.url))throw Error('Invalid image storage location');
   return uploaded.url;
 }
