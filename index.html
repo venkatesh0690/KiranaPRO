@@ -29,7 +29,10 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(err => {
+          navigator.serviceWorker.register('/sw.js', {updateViaCache:'none'}).then(registration=>{
+            // Do not interrupt checkout with an automatic page reload.
+            registration.update().catch(()=>{});
+          }).catch(err => {
             console.log('SW registration failed:', err);
           });
         });
