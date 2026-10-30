@@ -11,7 +11,7 @@ function CatalogProductVisual({ product, className = '' }) {
   const ref=useRef(null);
   const [visible,setVisible]=useState(false);
   const [remote,setRemote]=useState({key:null,value:null});
-  const [failedUrl,setFailedUrl]=useState(null);
+  const [failedUrls,setFailedUrls]=useState([]);
   const [requested,setRequested]=useState(null);
   const [refreshTick,setRefreshTick]=useState(0);
 
@@ -32,7 +32,7 @@ function CatalogProductVisual({ product, className = '' }) {
     const refresh=()=>{
       setRequested(null);
       setRemote({key:null,value:null});
-      setFailedUrl(null);
+      setFailedUrls([]);
       setRefreshTick(t=>t+1);
     };
     window.addEventListener(CATALOG_PHOTO_REFRESH_EVENT,refresh);
@@ -41,10 +41,12 @@ function CatalogProductVisual({ product, className = '' }) {
 
   const resolvedRemote=remote.key===key ? remote.value : null;
   const initial=visual.photo;
-  const staticUsable=initial && initial!==failedUrl;
-  const remoteUsable=resolvedRemote?.photo && resolvedRemote.photo!==failedUrl;
-  const currentPhoto=staticUsable?initial:remoteUsable?resolvedRemote.photo:null;
-  const needSearch=visible && !staticUsable && !remoteUsable &&
+  const localIllustration=visual.illustrativePhoto;
+  const staticUsable=initial && !failedUrls.includes(initial);
+  const localUsable=localIllustration && !failedUrls.includes(localIllustration);
+  const remoteUsable=resolvedRemote?.photo && !failedUrls.includes(resolvedRemote.photo);
+  const currentPhoto=staticUsable?initial:localUsable?localIllustration:remoteUsable?resolvedRemote.photo:null;
+  const needSearch=visible && !staticUsable && !localUsable && !remoteUsable &&
     requested!==key;
 
   useEffect(()=>{
@@ -57,11 +59,11 @@ function CatalogProductVisual({ product, className = '' }) {
     return ()=>{mounted=false};
   // Do not depend on needSearch here: setting requested would otherwise
   // clean up this effect before the network result can populate the card.
-  },[key,visible,initial,failedUrl,refreshTick]);
+  },[key,visible,initial,localIllustration,failedUrls,refreshTick]);
 
   const sourceUrl=staticUsable?visual.photoCreditUrl:remoteUsable?resolvedRemote.sourceUrl:null;
-  const photoSource=staticUsable?visual.photoSource:remoteUsable?resolvedRemote.photoSource:null;
-  const aiIllustration=Boolean(currentPhoto && !staticUsable && remoteUsable && resolvedRemote.match==='illustrative');
+  const photoSource=staticUsable?visual.photoSource:localUsable?'AI-generated representative image':remoteUsable?resolvedRemote.photoSource:null;
+  const aiIllustration=Boolean(currentPhoto && !staticUsable && (localUsable || (remoteUsable && resolvedRemote.match==='illustrative')));
   const loading=visible && !currentPhoto &&
     (requested!==key || remote.key!==key);
   return (
@@ -78,7 +80,7 @@ function CatalogProductVisual({ product, className = '' }) {
           loading={className.includes('kp-modal')?'eager':'lazy'}
           decoding="async"
           fetchPriority={className.includes('kp-modal')?'auto':'low'}
-          onError={()=>setFailedUrl(currentPhoto)}
+          onError={()=>setFailedUrls(prev=>prev.includes(currentPhoto)?prev:[...prev,currentPhoto])}
         />
       ) : (
         <div className={'kp-catalog-image-pending'+(loading?' is-loading':'')}
