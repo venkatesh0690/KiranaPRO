@@ -1,4 +1,5 @@
 import { getPhotoQueries, scoreCommonsPhoto } from '../src/utils/productPhotoSearch.js';
+import { publishedAiImage } from './catalog-ai.js';
 
 /**
  * Vercel serverless photo discovery. Only public Commons image search is used;
@@ -56,9 +57,23 @@ export default async function handler(req,res) {
   const name=clamp(req.query?.name);
   const category=clamp(req.query?.category,60);
   if(name.length<2)return res.status(400).json({error:'Product name required'});
-  const result=await resolvePhoto({name,category});
+  const real=await resolvePhoto({name,category});
+  // Exact verified seller and curated real photos are handled by the client.
+  // This endpoint prefers matching Wikimedia images before stored AI illustrations.
+  let result=real;
+  if(!real.photo){
+    try{
+      const ai=await publishedAiImage(name,category);
+      if(ai)result={photo:ai,sourceUrl:null,source:'AI-generated representative image',
+        match:'illustrative'};
+    }catch{
+      // AI registry is optional; photo search stays available during migrations.
+    }
+  }
   res.setHeader('Cache-Control',result.photo
-    ? 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=604800'
-    : 'public, max-age=300, s-maxage=3600');
+    ? result.match==='illustrative'
+      ? 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400'
+      : 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=604800'
+    : 'public, max-age=30, s-maxage=120');
   return res.status(200).json(result);
 }
