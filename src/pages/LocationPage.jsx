@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Check, MapPin, ShoppingBasket } from 'lucide-react';
-import AuthModal from '../components/AuthModal';
+const AuthModal = lazy(() => import('../components/AuthModal'));
 import { useSecurity } from '../context/SecurityContext';
 import { useStore } from '../context/StoreContext';
 import { DELIVERY_AREAS, getStoresForArea, isDeliveryArea } from '../data/deliveryAreas';
@@ -56,8 +56,10 @@ export default function LocationPage({ onLocationSet, initialLocation = '' }) {
             <span className="kp-welcome-note">Guest preview expires in 30 minutes. Browsing only; sign in to place an order.</span>
           </div>
         </main>
-        <AuthModal isOpen={showLogin} initialMode="login"
-          onClose={() => setShowLogin(false)} onSuccess={onLoginSuccess} />
+        {showLogin && <Suspense fallback={<p role="status">Opening secure login…</p>}>
+          <AuthModal isOpen initialMode="login"
+            onClose={() => setShowLogin(false)} onSuccess={onLoginSuccess} />
+        </Suspense>}
       </div>
     );
   }
