@@ -13,7 +13,15 @@ export default async function handler(req,res){
   try{
     const admins=await serviceQuery(sql=>[sql`SELECT id FROM kiranapro.accounts WHERE role='admin' AND approved=true LIMIT 1`]);
     if(req.method==='GET'){
-      return res.status(200).json({setupAvailable:validSetup() && admins.length===0});
+      return res.status(200).json({
+        setupAvailable:validSetup() && admins.length===0,
+        configuration:{
+          hashFormatValid:/^[a-f0-9]{64}$/.test(process.env[keyName]||''),
+          expiryValid:Number.isFinite(Date.parse(process.env.ADMIN_BOOTSTRAP_EXPIRES_AT||'')) &&
+            Date.parse(process.env.ADMIN_BOOTSTRAP_EXPIRES_AT||'')>Date.now(),
+          adminAccountExists:admins.length>0
+        }
+      });
     }
     // Fail closed when an administrator already exists or the setup link expires.
     if(!validSetup()||admins.length) return res.status(403).json({error:'Administrator setup is unavailable.'});
