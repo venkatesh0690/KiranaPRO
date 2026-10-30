@@ -100,6 +100,24 @@ export default function OrdersPage() {
                 <div className="step-text"><span className="step-title">Order request recorded</span><span className="step-time">Demo request — no confirmed seller acceptance</span></div>
               </div>
             </div>
+            {/* ── 2-Hour Post-Delivery Freshness Guarantee (Phase 9 Prompt 9.2) ── */}
+            <div className="kp-freshness-guarantee-card" style={{ margin: '14px 0', padding: '14px', background: '#F0FDF4', border: '1.5px solid #86EFAC', borderRadius: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: '800', color: '#166534' }}>🛡️ 2-Hour Freshness Guarantee</span>
+                <span style={{ fontSize: '10px', background: '#DCFCE7', color: '#15803D', padding: '2px 8px', borderRadius: '6px', fontWeight: '750' }}>Active Guarantee Window</span>
+              </div>
+              <p style={{ fontSize: '11.5px', color: '#14532D', margin: '0 0 10px', lineHeight: 1.45 }}>
+                Not 100% satisfied with vegetable quality or weight? Report within 2 hours of delivery for an instant free replacement or COD credit.
+              </p>
+              <button
+                type="button"
+                style={{ width: '100%', padding: '9px', background: '#16A34A', color: '#FFFFFF', border: 'none', borderRadius: '8px', fontSize: '12px', fontWeight: '750', cursor: 'pointer' }}
+                onClick={() => alert('Freshness Claim Recorded! Free replacement dispatched with next rider run (within 2 hours) or ₹50 Credit Note added to next COD basket.')}
+              >
+                Report Freshness / Weight Issue
+              </button>
+            </div>
+
             <div className="kp-order-receipt">
               <strong>Items: ₹{active.subtotal}</strong>
               <span>{active.fulfilment?.mode==='pickup'?'Pickup delivery fee':'Delivery'}: ₹{active.deliveryFee}</span>

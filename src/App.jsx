@@ -21,6 +21,7 @@ const SellerLoginPage = lazy(() => import('./pages/SellerLoginPage'));
 const SellerDashboard = lazy(() => import('./pages/SellerDashboard'));
 const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const RiderPortalPage = lazy(() => import('./pages/RiderPortalPage'));
 import './styles/tokens.css';
 import './styles/global.css';
 import './styles/minimal.css';
@@ -100,7 +101,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
 
   // Portal routes use their own navigation
   const isPortalRoute =
-    location.pathname.startsWith('/seller') || location.pathname.startsWith('/admin');
+    location.pathname.startsWith('/seller') || location.pathname.startsWith('/admin') || location.pathname.startsWith('/rider');
   const isStoreRoute = location.pathname.startsWith('/store');
   const isLocationRoute = location.pathname === '/location';
 
@@ -172,6 +173,13 @@ function MainAppShell({ userLocation, setUserLocation }) {
               </AdminProtectedRoute>
             }
           />
+
+          
+          {/* Dedicated In-House Fleet Delivery Partner Portal */}
+          <Route path="/rider" element={<RiderPortalPage />} />
+          <Route path="/rider/deliveries" element={<RiderPortalPage />} />
+          <Route path="/rider/mandi-check" element={<RiderPortalPage />} />
+          <Route path="/rider/cash-ledger" element={<RiderPortalPage />} />
 
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

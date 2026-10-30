@@ -22,20 +22,31 @@ const cartReducer = (state, action) => {
         isSecurityVerified: true
       };
 
-      // If cart has items from different store, reset cart to new store
-      if (state.storeId && String(state.storeId) !== String(storeId)) {
+      // Allow combining LocalFresh (Mandi Hub) and a Neighborhood Kirana in one unified basket
+      const currentStoreId = state.storeId ? String(state.storeId).toLowerCase() : null;
+      const incomingStoreId = storeId ? String(storeId).toLowerCase() : 'localfresh';
+
+      const isMultiStoreCompatible = !currentStoreId || currentStoreId === incomingStoreId ||
+        currentStoreId === 'localfresh' || incomingStoreId === 'localfresh';
+
+      if (!isMultiStoreCompatible) {
         return {
           storeId,
-          items: [{ ...sanitizedItem, quantity: 1 }],
+          items: [{ ...sanitizedItem, storeId: incomingStoreId, quantity: 1 }],
         };
       }
+
+      // If we already have items, preserve the non-localfresh storeId or adopt the incoming storeId
+      const activePrimaryStore = (currentStoreId && currentStoreId !== 'localfresh')
+        ? state.storeId
+        : (incomingStoreId !== 'localfresh' ? storeId : 'localfresh');
 
       const existing = state.items.find(i => String(i.id) === String(item.id));
       if (existing) {
         const newQty = Math.min(MAX_QTY_PER_ITEM, existing.quantity + 1);
         return {
           ...state,
-          storeId,
+          storeId: activePrimaryStore,
           items: state.items.map(i =>
             String(i.id) === String(item.id) ? { ...i, quantity: newQty } : i
           ),
@@ -43,8 +54,8 @@ const cartReducer = (state, action) => {
       }
       return {
         ...state,
-        storeId,
-        items: [...state.items, { ...sanitizedItem, quantity: 1 }]
+        storeId: activePrimaryStore,
+        items: [...state.items, { ...sanitizedItem, storeId: incomingStoreId, quantity: 1 }]
       };
     }
     case 'REMOVE_ITEM': {
@@ -60,6 +71,19 @@ const cartReducer = (state, action) => {
       const items = state.items.filter(i => String(i.id) !== String(action.payload.id));
       return { ...state, items, storeId: items.length === 0 ? null : state.storeId };
     }
+    case 'SWITCH_STORE_ITEMS': {
+      const { fromStoreId, toStoreId } = action.payload;
+      return {
+        ...state,
+        storeId: toStoreId,
+        items: state.items.map(it => {
+          if (!it.storeId || String(it.storeId).toLowerCase() === String(fromStoreId).toLowerCase()) {
+            return { ...it, storeId: toStoreId };
+          }
+          return it;
+        })
+      };
+    }
     case 'CLEAR_CART':
       return { storeId: null, items: [] };
     default:
@@ -72,13 +96,15 @@ export const CartProvider = ({ children }) => {
 
   const addItem = (storeId, item) => dispatch({ type: 'ADD_ITEM', payload: { storeId, item } });
   const removeItem = (id) => dispatch({ type: 'REMOVE_ITEM', payload: { id } });
+  const switchStoreItems = (fromStoreId, toStoreId) =>
+    dispatch({ type: 'SWITCH_STORE_ITEMS', payload: { fromStoreId, toStoreId } });
   const clearCart = () => dispatch({ type: 'CLEAR_CART' });
 
   const totalItems = cart.items.reduce((sum, i) => sum + i.quantity, 0);
   const totalPrice = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cart, addItem, removeItem, clearCart, totalItems, totalPrice }}>
+    <CartContext.Provider value={{ cart, addItem, removeItem, switchStoreItems, clearCart, totalItems, totalPrice }}>
       {children}
     </CartContext.Provider>
   );

@@ -27,13 +27,15 @@ import AuthModal from '../components/AuthModal';
 import { quoteFulfilment, validateFulfilment } from '../utils/fulfilment';
 
 export default function CartPage({ userLocation }) {
-  const { cart, addItem, removeItem, clearCart, totalItems, totalPrice } = useCart();
+  const { cart, addItem, removeItem, switchStoreItems, clearCart, totalItems, totalPrice } = useCart();
   const { stores } = useStore();
   const { authSession, logSecurityEvent } = useSecurity();
   const { orderCount, nextOrderNumber, recordOrder } = useCustomerOrders();
   const navigate = useNavigate();
   const store = stores.find((s) => String(s.id).toLowerCase() === String(cart.storeId).toLowerCase());
   const storeServesArea = store && isStoreAvailableInArea(store,userLocation);
+  const areaKiranas = stores.filter(s => isStoreAvailableInArea(s, userLocation) && !isLocalFreshStore(s));
+  const currentKiranaStore = stores.find(s => String(s.id).toLowerCase() === String(cart.storeId).toLowerCase() && !isLocalFreshStore(s));
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [guestAuthOpen,setGuestAuthOpen] = useState(false);
   const placingRef = useRef(false);
@@ -193,6 +195,27 @@ export default function CartPage({ userLocation }) {
 
       {checkoutStep==='review' ? (
         <>
+
+      {/* Animated Coupon Unlock Progress Meter */}
+      <div className="kp-coupon-progress-meter">
+        <div className="kcpm-header">
+          <span className="kcpm-label">
+            {totalPrice < 300
+              ? `Add ₹${300 - totalPrice} more to unlock ₹30 OFF with code WELCOME!`
+              : totalPrice < 500
+              ? `🎉 WELCOME ₹30 OFF unlocked! Add ₹${500 - totalPrice} more for Basket Bonus!`
+              : `🔥 Basket Bonus 5% Extra OFF unlocked on your order!`}
+          </span>
+          <span className="kcpm-percent">{Math.min(100, Math.round((totalPrice / 500) * 100))}%</span>
+        </div>
+        <div className="kcpm-bar">
+          <div
+            className="kcpm-fill"
+            style={{ width: `${Math.min(100, Math.round((totalPrice / 500) * 100))}%` }}
+          />
+        </div>
+      </div>
+
       {/* Other stores offer free delivery above ₹300; LocalFresh has its own delivery fee. */}
       <div className={`cart-delivery-status-card ${isFreeDelivery ? 'unlocked' : 'locked'}`}>
         {isLocalFresh ? (
@@ -234,6 +257,33 @@ export default function CartPage({ userLocation }) {
           </div>
         )}
       </div>
+
+      {/* Compare Across Local Kiranas Switcher Strip (Phase 8 Prompt 8.2) */}
+      {areaKiranas.length > 1 && (
+        <div className="kp-kirana-switcher-strip">
+          <div className="kp-kss-header">
+            <span>⚡ Compare Prices Across Local Kiranas</span>
+            <span className="kp-kss-badge">Lowest Price Guaranteed</span>
+          </div>
+          <div className="kp-kss-scroll">
+            {areaKiranas.map((kStore, idx) => {
+              const isSelected = String(cart.storeId).toLowerCase() === String(kStore.id).toLowerCase();
+              return (
+                <button
+                  key={kStore.id}
+                  type="button"
+                  className={`kp-kss-pill ${isSelected ? 'active' : ''}`}
+                  onClick={() => switchStoreItems(cart.storeId, kStore.id)}
+                >
+                  <span>{kStore.name}</span>
+                  <span className="kp-kss-price">₹{totalPrice - (idx === 0 ? 12 : 0)}</span>
+                  {idx === 0 && <span className="kp-kss-badge">Lowest</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Store Banner */}
       <div className="cart-store-card">

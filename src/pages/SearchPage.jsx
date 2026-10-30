@@ -1,28 +1,58 @@
-import { useState, useMemo } from 'react';
-import { ArrowLeft, Search, SlidersHorizontal, Star, Clock, X, ShoppingBag } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { ArrowLeft, Search, SlidersHorizontal, X, ShoppingBag, TrendingUp, History } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { getStoresForArea } from '../data/deliveryAreas';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import ProductDetailModal from '../components/ProductDetailModal';
+import { expandSynonyms } from '../utils/regionalSynonyms';
 
 export default function SearchPage({ userLocation }) {
   const { stores, products: productsByCategory } = useStore();
-  const availableStores = useMemo(() => getStoresForArea(stores, userLocation), [stores,userLocation]);
+  const availableStores = useMemo(() => getStoresForArea(stores, userLocation), [stores, userLocation]);
   const navigate = useNavigate();
   const { totalItems } = useCart();
   const [query, setQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const [recentSearches, setRecentSearches] = useState(() => {
+    try {
+      const stored = localStorage.getItem('kp_recent_searches');
+      return stored ? JSON.parse(stored) : ['Bendakaya', 'Tomato', 'Onion', 'Milk', 'Toor Dal'];
+    } catch {
+      return ['Bendakaya', 'Tomato', 'Onion', 'Milk', 'Toor Dal'];
+    }
+  });
+
+  const trendingPills = [
+    { label: 'Bendakaya (Bhindi)', q: 'Bendakaya' },
+    { label: 'Dosakaya', q: 'Dosakaya' },
+    { label: 'Vankaya (Brinjal)', q: 'Vankaya' },
+    { label: 'Ullipayalu (Onion)', q: 'Onion' },
+    { label: 'Dondakaya (Ivy Gourd)', q: 'Dondakaya' },
+    { label: 'Fresh Milk', q: 'Milk' },
+    { label: 'Toor Dal', q: 'Toor Dal' }
+  ];
 
   const tags = ['All', 'Fresh Veggies', 'Fruits', 'Milk & Dairy', 'Snacks', 'Beverages', 'Dal & Rice'];
+
+  const saveRecentSearch = (term) => {
+    if (!term || term.trim().length < 2) return;
+    const clean = term.trim();
+    setRecentSearches(prev => {
+      const next = [clean, ...prev.filter(t => t.toLowerCase() !== clean.toLowerCase())].slice(0, 8);
+      try { localStorage.setItem('kp_recent_searches', JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
 
   // Flatten all products across categories with category metadata
   const allProductsList = useMemo(() => {
     const list = [];
     Object.entries(productsByCategory).forEach(([cat, prods]) => {
-      // Search only products sold by a shop serving the chosen area.
       const seller = availableStores.find(s => s.categories?.includes(cat) && !s.isSample)
         || availableStores.find(s => s.categories?.includes(cat));
       if (!seller) return;
@@ -34,12 +64,19 @@ export default function SearchPage({ userLocation }) {
   }, [productsByCategory, availableStores]);
 
   const filteredProducts = useMemo(() => {
+    const expandedTerms = expandSynonyms(query);
+
     return allProductsList.filter((p) => {
-      const matchQuery =
-        !query ||
-        p.name.toLowerCase().includes(query.toLowerCase()) ||
-        p.category.toLowerCase().includes(query.toLowerCase()) ||
-        (p.brand && p.brand.toLowerCase().includes(query.toLowerCase()));
+      const pName = p.name.toLowerCase();
+      const pCat = p.category.toLowerCase();
+      const pBrand = (p.brand || '').toLowerCase();
+
+      let matchQuery = !query;
+      if (query) {
+        matchQuery = expandedTerms.some(term => 
+          pName.includes(term) || pCat.includes(term) || pBrand.includes(term)
+        );
+      }
 
       const matchTag =
         selectedTag === 'All' ||
@@ -67,8 +104,11 @@ export default function SearchPage({ userLocation }) {
           <input
             autoFocus
             value={query}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setTimeout(() => setIsFocused(false), 200)}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder='Search "milk, bread, kurkure, onion..."'
+            onKeyDown={(e) => { if (e.key === 'Enter') saveRecentSearch(query); }}
+            placeholder='Search "bendakaya, milk, bread, tomato, vankaya..."'
           />
           {query && (
             <button type="button" className="search-clear-btn" onClick={() => setQuery('')}>
@@ -102,7 +142,24 @@ export default function SearchPage({ userLocation }) {
         </button>
       </div>
 
-      {/* Filter Tag Chips (Image 1 Trending Products Style) */}
+      {/* Trending Telugu & English Search Suggestions Bar */}
+      <div className="kp-trending-searches-bar">
+        <div className="kp-trending-title"><TrendingUp size={13} /> Trending in Visakhapatnam:</div>
+        <div className="kp-trending-scroll">
+          {trendingPills.map(item => (
+            <button
+              key={item.label}
+              type="button"
+              className="kp-trending-chip"
+              onClick={() => { setQuery(item.q); saveRecentSearch(item.q); }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Filter Tag Chips */}
       <div className="search-tags-row">
         {tags.map((t) => (
           <button
@@ -120,6 +177,7 @@ export default function SearchPage({ userLocation }) {
       <div className="search-results-container">
         <div className="search-results-meta">
           <span>Found <strong>{filteredProducts.length}</strong> items in stores serving {userLocation}</span>
+          {query && <span className="kp-synonym-active-hint">• Bilingual Telugu & Hindi search active</span>}
         </div>
 
         <div className="search-products-grid">

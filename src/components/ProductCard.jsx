@@ -1,4 +1,5 @@
-import { Plus, Minus } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Minus, AlertTriangle, Sparkles } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import CatalogProductVisual from './CatalogProductVisual';
 
@@ -6,44 +7,86 @@ export default function ProductCard({ product, storeId, layout = 'big', category
   const { cart, addItem, removeItem } = useCart();
   const cartItem = cart.items.find((i) => i.id === product.id);
   const qty = cartItem ? cartItem.quantity : 0;
+  
+  // Stock count logic
+  const isOutOfStock = product.inStock === false || product.stock_count === 0;
+  const stockCount = typeof product.stock_count === 'number' ? product.stock_count : (isOutOfStock ? 0 : 12);
+  const isScarcity = stockCount > 0 && stockCount <= 5;
+  
+  // Tiered bulk pricing calculation for staples
+  const isProduce = product.category === 'Vegetables' || product.category === 'Produce' || product.category === 'Fruits';
+  const hasTieredDiscount = isProduce && product.price >= 20;
+  const bulkPricePerUnit = hasTieredDiscount ? Math.max(product.price - 5, 10) : product.price;
+
   const discount = product.mrp > product.price
     ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
     : 0;
 
+  const handleIncrement = () => {
+    if (qty >= stockCount) return;
+    addItem(storeId, product);
+  };
+
+  const isMandi = String(storeId).toLowerCase() === 'localfresh' || product.isMandiDirect;
+
   return (
-    <div className={`pc ${layout} ${!product.inStock ? 'oos' : ''}`}>
+    <div className={`pc ${layout} ${isOutOfStock ? 'oos' : ''}`}>
       {/* Product Image Box */}
       <div className="pc-img-wrap" style={{ background: categoryBg }}>
         <CatalogProductVisual product={product} />
         {discount > 0 && (
           <div className="pc-disc">{discount}% OFF</div>
         )}
-        {!product.inStock && (
+        {isOutOfStock && (
           <div className="pc-oos-layer">Out of Stock</div>
         )}
       </div>
 
       {/* Body details */}
       <div className="pc-body">
+        {/* Source Chip */}
+        <div className="pc-source-chip">
+          {isMandi ? (
+            <span className="source-mandi">🌾 Mandi Direct</span>
+          ) : (
+            <span className="source-kirana">🏪 Local Kirana</span>
+          )}
+        </div>
+
         <span className="pc-unit">{product.unit}</span>
         <h4 className="pc-name">{product.name}</h4>
 
+        {/* Live Scarcity Indicator */}
+        {isScarcity && (
+          <div className="pc-scarcity-pill">
+            <AlertTriangle size={11} /> Only {stockCount} left in stock!
+          </div>
+        )}
+
+        {/* Price Row */}
         <div className="pc-price-row">
           <span className="pc-price">₹{product.price}</span>
           {product.mrp > product.price && (
             <span className="pc-mrp">₹{product.mrp}</span>
           )}
         </div>
+
+        {/* Tiered Bulk Price Badge */}
+        {hasTieredDiscount && (
+          <div className="pc-tiered-badge">
+            ₹{product.price}/{product.unit || 'unit'} (₹{bulkPricePerUnit}/unit for 2+)
+          </div>
+        )}
       </div>
 
       {/* Action / Add button */}
       <div className="pc-action">
-        {product.inStock ? (
+        {!isOutOfStock ? (
           qty === 0 ? (
             <button
               type="button"
               className="pc-add-btn"
-              onClick={() => addItem(storeId, product)}
+              onClick={handleIncrement}
             >
               ADD
             </button>
@@ -59,8 +102,10 @@ export default function ProductCard({ product, storeId, layout = 'big', category
               <span>{qty}</span>
               <button
                 type="button"
-                onClick={() => addItem(storeId, product)}
+                onClick={handleIncrement}
+                disabled={qty >= stockCount}
                 aria-label="Increase quantity"
+                style={{ opacity: qty >= stockCount ? 0.4 : 1 }}
               >
                 <Plus size={13} strokeWidth={3} />
               </button>

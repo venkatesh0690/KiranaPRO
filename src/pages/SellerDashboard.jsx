@@ -66,6 +66,27 @@ export default function SellerDashboard() {
   const [newProdCat, setNewProdCat] = useState('Dairy & Breakfast');
   const [newProdPrice, setNewProdPrice] = useState('');
   const [newProdMrp, setNewProdMrp] = useState('');
+
+  const [stockCounts, setStockCounts] = useState({});
+  const adjustProductStock = (id, delta) => {
+    setStockCounts(prev => {
+      const current = prev[id] !== undefined ? prev[id] : 25;
+      const next = Math.max(0, current + delta);
+      if (next === 0 && current > 0) toggleStock(id);
+      if (next > 0 && current === 0) toggleStock(id);
+      return { ...prev, [id]: next };
+    });
+  };
+  const setDirectStock = (id, val) => {
+    const next = Math.max(0, isNaN(val) ? 0 : val);
+    setStockCounts(prev => ({ ...prev, [id]: next }));
+  };
+  const zeroOutStock = (id) => {
+    setStockCounts(prev => ({ ...prev, [id]: 0 }));
+    const p = allStoreProducts.find(item => item.id === id);
+    if (p && p.inStock) toggleStock(id);
+  };
+
   const [newProdUnit, setNewProdUnit] = useState('1 kg');
   const [newProdEmoji, setNewProdEmoji] = useState('📦');
   const [newProdBrand, setNewProdBrand] = useState(currentSellerStore?.name || 'Local Store');
@@ -347,6 +368,23 @@ export default function SellerDashboard() {
 
                   {/* Stock Availability Toggle */}
                   <div className="ssi-right-actions">
+
+                    {/* Quick Stock Controls (Prompt 5.1) */}
+                    <div className="ssi-stock-stepper-row" style={{display:'flex',alignItems:'center',gap:4,marginTop:6}}>
+                      <button type="button" className="ssi-step-btn" onClick={() => adjustProductStock(p.id, -10)} style={{padding:'3px 6px',fontSize:10,fontWeight:700,background:'#F1F5F9',border:'1px solid #CBD5E1',borderRadius:4,cursor:'pointer'}}>-10</button>
+                      <button type="button" className="ssi-step-btn" onClick={() => adjustProductStock(p.id, -1)} style={{padding:'3px 6px',fontSize:10,fontWeight:700,background:'#F1F5F9',border:'1px solid #CBD5E1',borderRadius:4,cursor:'pointer'}}>-1</button>
+                      <input
+                        type="number"
+                        className="ssi-stock-input"
+                        value={stockCounts[p.id] !== undefined ? stockCounts[p.id] : (p.inStock ? 25 : 0)}
+                        onChange={(e) => setDirectStock(p.id, Number(e.target.value))}
+                        style={{width:44,padding:'3px 4px',fontSize:11,fontWeight:750,textAlign:'center',border:'1px solid #CBD5E1',borderRadius:4}}
+                      />
+                      <button type="button" className="ssi-step-btn" onClick={() => adjustProductStock(p.id, +1)} style={{padding:'3px 6px',fontSize:10,fontWeight:700,background:'#F1F5F9',border:'1px solid #CBD5E1',borderRadius:4,cursor:'pointer'}}>+1</button>
+                      <button type="button" className="ssi-step-btn" onClick={() => adjustProductStock(p.id, +10)} style={{padding:'3px 6px',fontSize:10,fontWeight:700,background:'#F1F5F9',border:'1px solid #CBD5E1',borderRadius:4,cursor:'pointer'}}>+10</button>
+                      <button type="button" className="ssi-zero-btn" onClick={() => zeroOutStock(p.id)} style={{padding:'3px 6px',fontSize:10,fontWeight:750,background:'#FEE2E2',color:'#991B1B',border:'1px solid #FCA5A5',borderRadius:4,cursor:'pointer'}}>Zero Out</button>
+                    </div>
+
                     <button
                       type="button"
                       className={`ssi-stock-toggle-btn ${p.inStock ? 'in' : 'out'}`}

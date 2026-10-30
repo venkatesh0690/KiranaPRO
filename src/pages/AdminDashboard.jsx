@@ -75,6 +75,21 @@ export default function AdminDashboard() {
     finally{setApprovalBusy(null);}
   };
 
+  
+  // In-House Fleet & Mandi Reports State (Phase 5, 6, 7)
+  const [fleetRiders, setFleetRiders] = useState([
+    { id: 'r1', name: 'Rider Rajesh', zone: 'Siripuram', status: 'On Duty', cashHeld: 1480, ordersToday: 8 },
+    { id: 'r2', name: 'Rider Suresh', zone: 'NAD Kotha Road', status: 'On Duty', cashHeld: 2150, ordersToday: 11 },
+    { id: 'r3', name: 'Rider Ravi', zone: 'MVP Colony', status: 'On Duty', cashHeld: 960, ordersToday: 5 },
+    { id: 'r4', name: 'Rider Prasad', zone: 'Dabagardens', status: 'On Duty', cashHeld: 1820, ordersToday: 9 }
+  ]);
+
+  const [pendingMandiReports, setPendingMandiReports] = useState([
+    { id: 'pmr-1', riderName: 'Rider Rajesh', itemName: 'Country Tomatoes (Naatu Tamata)', wholesaleRate: 22, retailPrice: 26, stockQty: '50+ kg', grade: 'Grade A Fresh', status: 'Pending Review' },
+    { id: 'pmr-2', riderName: 'Rider Rajesh', itemName: 'Lady Finger (Bendakaya)', wholesaleRate: 26, retailPrice: 30, stockQty: '50+ kg', grade: 'Grade A Fresh', status: 'Pending Review' },
+    { id: 'pmr-3', riderName: 'Rider Suresh', itemName: 'Yellow Cucumber (Dosakaya)', wholesaleRate: 18, retailPrice: 22, stockQty: '20 kg', grade: 'Standard', status: 'Pending Review' }
+  ]);
+
   const [activeAdminTab, setActiveAdminTab] = useState('localfresh'); // 'localfresh' default to showcase LocalFresh!
   const [geoRadius, setGeoRadius] = useState(2.0); // 2 km quick-commerce limit
   const [minOrderFreeDel, setMinOrderFreeDel] = useState(199);
@@ -465,6 +480,27 @@ export default function AdminDashboard() {
 
       {/* ── Navigation Tabs ── */}
       <div className="ad-tabs-bar">
+        <button
+          type="button"
+          className={`ad-tab-btn ${activeAdminTab === 'overview' ? 'active' : ''}`}
+          onClick={() => setActiveAdminTab('overview')}
+          style={{
+            color: activeAdminTab === 'overview' ? '#1E3A2B' : undefined,
+            borderBottomColor: activeAdminTab === 'overview' ? '#1E3A2B' : undefined,
+            fontWeight: 800
+          }}
+        >
+          <span style={{ fontSize: '1.05rem' }}>🌐</span>
+          <span>5-Zone Command Center</span>
+        </button>
+        <button
+          type="button"
+          className={`ad-tab-btn ${activeAdminTab === 'payouts' ? 'active' : ''}`}
+          onClick={() => setActiveAdminTab('payouts')}
+        >
+          <DollarSign size={16} />
+          <span>Kirana Payouts & Settlement</span>
+        </button>
         <button
           type="button"
           className={`ad-tab-btn ${activeAdminTab === 'localfresh' ? 'active' : ''}`}
@@ -1021,6 +1057,97 @@ export default function AdminDashboard() {
       {/* ══════════════════════════════════════════════════════════════
          TAB: ENTERPRISE SECURITY & AUDIT TRAIL
          ══════════════════════════════════════════════════════════════ */}
+      
+      {/* ── Tab: Fleet Dispatch Board ── */}
+      {activeAdminTab === 'dispatch' && (
+        <section className="ad-card" style={{margin:'16px',padding:20}}>
+          <h2 style={{fontSize:18,marginBottom:8}}>Visakhapatnam In-House Fleet Dispatch Board</h2>
+          <p style={{color:'#64748B',fontSize:13,marginBottom:16}}>Monitor active orders, assign riders by zone, and track fulfillment SLA across Visakhapatnam hubs.</p>
+          
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(240px, 1fr))',gap:14,marginBottom:20}}>
+            {fleetRiders.map(rider => (
+              <div key={rider.id} style={{background:'#F8FAFC',border:'1px solid #E2E8F0',borderRadius:10,padding:14}}>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}}>
+                  <strong>{rider.name}</strong>
+                  <span style={{fontSize:11,background:'#DCFCE7',color:'#166534',padding:'2px 8px',borderRadius:999,fontWeight:750}}>{rider.status}</span>
+                </div>
+                <div style={{fontSize:12,color:'#475569',marginBottom:4}}>Zone: <strong>{rider.zone}</strong></div>
+                <div style={{fontSize:12,color:'#475569',marginBottom:8}}>Orders Completed: {rider.ordersToday}</div>
+                <div style={{fontSize:12,fontWeight:750,color:'#1E3A2B',background:'#FFFFFF',padding:'6px 10px',borderRadius:6,border:'1px solid #CBD5E1'}}>
+                  Cash in Hand: ₹{rider.cashHeld}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Tab: Mandi Reports Approval Queue ── */}
+      {activeAdminTab === 'mandi-reports' && (
+        <section className="ad-card" style={{margin:'16px',padding:20}}>
+          <h2 style={{fontSize:18,marginBottom:8}}>Rider Mandi Field Reports (Pending Admin Publishing)</h2>
+          <p style={{color:'#64748B',fontSize:13,marginBottom:16}}>Review ground wholesale prices observed by riders at wholesale mandis. Approve to instantly publish live retail prices on LocalFresh.</p>
+
+          {pendingMandiReports.length === 0 ? (
+            <p>No pending mandi reports at this time.</p>
+          ) : (
+            <div style={{display:'flex',flexDirection:'column',gap:12}}>
+              {pendingMandiReports.map(rep => (
+                <div key={rep.id} style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,flexWrap:'wrap',padding:14,border:'1px solid #E2E8F0',borderRadius:10,background:'#FFFFFF'}}>
+                  <div>
+                    <span style={{fontSize:11,fontWeight:750,color:'#15803D',background:'#DCFCE7',padding:'2px 6px',borderRadius:4}}>{rep.riderName}</span>
+                    <h4 style={{margin:'4px 0 2px',fontSize:14}}>{rep.itemName}</h4>
+                    <span style={{fontSize:12,color:'#475569'}}>Wholesale: <strong>₹{rep.wholesaleRate}</strong> → Proposed Selling Price: <strong>₹{rep.retailPrice}</strong> ({rep.stockQty})</span>
+                  </div>
+                  <button 
+                    type="button" 
+                    className="ad-link-btn" 
+                    style={{background:'#1E3A2B',color:'#FFFFFF',border:'none',padding:'8px 14px',borderRadius:6,fontWeight:750,cursor:'pointer'}}
+                    onClick={() => {
+                      alert(`Approved ${rep.itemName}! Published retail price ₹${rep.retailPrice} to LocalFresh.`);
+                      setPendingMandiReports(prev => prev.filter(p => p.id !== rep.id));
+                    }}
+                  >
+                    Approve & Publish to LocalFresh
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* ── Tab: COD Cash Settlement Ledger ── */}
+      {activeAdminTab === 'cod-settlement' && (
+        <section className="ad-card" style={{margin:'16px',padding:20}}>
+          <h2 style={{fontSize:18,marginBottom:8}}>Rider-to-Admin Cash Handover Ledger</h2>
+          <p style={{color:'#64748B',fontSize:13,marginBottom:16}}>Verify and settle physical cash collected by in-house delivery fleet at the hub office.</p>
+
+          <div style={{display:'flex',flexDirection:'column',gap:12}}>
+            {fleetRiders.map(rider => (
+              <div key={rider.id} style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,padding:14,border:'1px solid #E2E8F0',borderRadius:10,background:'#FFFFFF'}}>
+                <div>
+                  <h4 style={{margin:'0 0 4px',fontSize:14}}>{rider.name} ({rider.zone})</h4>
+                  <span style={{fontSize:12,color:'#64748B'}}>Unsettled COD Cash: <strong style={{color:'#1E3A2B',fontSize:14}}>₹{rider.cashHeld}</strong></span>
+                </div>
+                <button
+                  type="button"
+                  className="ad-link-btn"
+                  style={{background:'#16A34A',color:'#FFFFFF',border:'none',padding:'8px 14px',borderRadius:6,fontWeight:750,cursor:'pointer'}}
+                  onClick={() => {
+                    alert(`Verified & Settled ₹${rider.cashHeld} from ${rider.name}. Status marked HANDED_OVER_TO_ADMIN.`);
+                    setFleetRiders(prev => prev.map(r => r.id === rider.id ? { ...r, cashHeld: 0 } : r));
+                  }}
+                  disabled={rider.cashHeld === 0}
+                >
+                  {rider.cashHeld === 0 ? '✓ Settled' : `Verify & Settle ₹${rider.cashHeld}`}
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {activeAdminTab === 'security' && (
         <div className="ad-section">
           {/* Security Status Card */}

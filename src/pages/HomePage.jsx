@@ -161,6 +161,73 @@ export default function HomePage({ userLocation }) {
         )}
       </section>
 
+      {/* ── 03 / App Features & Visual Banner Showcase (User Uploaded Graphics) ── */}
+      <section className="kp-home-app-showcase" aria-labelledby="kp-has-title">
+        <div className="kp-has-heading">
+          <div>
+            <span className="kp-concept-index">03 / WHY KIRANAPRO</span>
+            <h2 id="kp-has-title">Fast. Fresh. Direct from Mandis & Local Kiranas</h2>
+          </div>
+          <span className="kp-has-sub">Visakhapatnam Hyperlocal Network</span>
+        </div>
+        <div className="kp-has-grid">
+          <div className="kp-has-card">
+            <div className="kp-has-img-wrap">
+              <img src="/banners/fast-fresh-delivered.png" alt="Fast Fresh Delivered - KiranaPRO local delivery bag" loading="lazy" />
+            </div>
+            <div className="kp-has-content">
+              <span className="kp-has-tag">⚡ 20–30 MIN DELIVERY</span>
+              <h3 className="kp-has-title">Fast. Fresh. Delivered.</h3>
+              <p className="kp-has-desc">Your daily groceries and vegetables delivered hot and fresh directly to your door, right on time.</p>
+            </div>
+          </div>
+          <div className="kp-has-card">
+            <div className="kp-has-img-wrap">
+              <img src="/banners/fresh-grocery-bag.png" alt="Fresh Mandi Harvest Vegetables in Grocery Bag" loading="lazy" />
+            </div>
+            <div className="kp-has-content">
+              <span className="kp-has-tag">🌾 DIRECT MANDI HARVEST</span>
+              <h3 className="kp-has-title">100% Hand-Inspected Quality</h3>
+              <p className="kp-has-desc">Freshly harvested daily produce sourced directly from farmers and mandis. Zero dark-store surge pricing.</p>
+            </div>
+          </div>
+          <div className="kp-has-card">
+            <div className="kp-has-img-wrap">
+              <img src="/banners/express-delivery-30min.png" alt="30-Minute Grocery Delivery partner emerging from mobile phone" loading="lazy" />
+            </div>
+            <div className="kp-has-content">
+              <span className="kp-has-tag">🛵 IN-HOUSE FLEET</span>
+              <h3 className="kp-has-title">30-Minute Express Delivery</h3>
+              <p className="kp-has-desc">Doorstep Cash on Delivery (COD) with PIN verification and instant item inspection before paying.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 04 / My Monthly Kirana List (Phase 10 Prompt 10.2) ── */}
+      <section className="kp-home-app-showcase" style={{ marginTop: '16px' }} aria-labelledby="kp-monthly-title">
+        <div className="kp-has-heading">
+          <div>
+            <span className="kp-concept-index">04 / MONTHLY RATIONS</span>
+            <h2 id="kp-monthly-title">My Household Kirana List</h2>
+          </div>
+          <span className="kp-has-sub">1-Tap Repeat Order</span>
+        </div>
+        <div style={{ background: '#FFFFFF', border: '1.5px solid #E2E8F0', borderRadius: '14px', padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <strong style={{ fontSize: '13.5px', color: '#0F172A', display: 'block' }}>Monthly Staples Pack (Dal, Rice, Oil, Spices)</strong>
+            <span style={{ fontSize: '11.5px', color: '#64748B' }}>Save ₹140 vs Quick-Commerce dark stores · Fulfilled by neighborhood Kiranas</span>
+          </div>
+          <button
+            type="button"
+            style={{ padding: '8px 16px', background: '#166534', color: '#FFFFFF', border: 'none', borderRadius: '8px', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}
+            onClick={() => navigate('/store/localfresh')}
+          >
+            ⚡ Re-Order Basket (₹640)
+          </button>
+        </div>
+      </section>
+
       <div className="kp-concept-footer">
         <span>KiranaPRO</span>
       </div>
