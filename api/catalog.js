@@ -34,6 +34,14 @@ export default async function handler(req,res) {
        (session.role==='seller' && data.storeId && data.storeId!==ownedStore)) {
       return res.status(403).json({error:'Store access denied'});
     }
+    if(req.method==='PATCH' && data.action==='store-status'){
+      if(typeof data.isActive!=='boolean') return res.status(400).json({error:'Invalid store status'});
+      const rows=await currentQuery(session,sql=>[sql`
+        UPDATE kiranapro.stores SET is_active=${data.isActive},updated_at=NOW()
+        WHERE id=${ownedStore} RETURNING id,is_active
+      `]);
+      return rows.length?res.status(200).json({store:rows[0]}):res.status(404).json({error:'Store not found'});
+    }
     if(req.method==='PATCH'){
       const productId=String(data.productId||'');
       if(!/^[a-zA-Z0-9-]{1,64}$/.test(productId)) return res.status(400).json({error:'Invalid product'});
