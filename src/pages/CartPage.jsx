@@ -177,7 +177,7 @@ export default function CartPage({ userLocation }) {
           <div className="order-success-box">
             <CheckCircle2 size={42} color="#16a34a" />
             <h2>Demo Order Saved</h2>
-            <p>Order request saved on this device. No payment, delivery booking or pickup arrangement has been made.</p>
+            <p>Demo request saved to your account. No payment, delivery booking or pickup arrangement has been made.</p>
             <span>Redirecting to order tracking...</span>
           </div>
         </div>
