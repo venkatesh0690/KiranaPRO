@@ -30,6 +30,36 @@ export function StoreProvider({ children }) {
   useEffect(()=>{
     if(authSession.role==='seller' && authSession.storeId) setSellerStoreId(authSession.storeId);
   },[authSession.role,authSession.storeId]);
+  // Back-office inventory comes from the authenticated store's catalog.
+  // Never display the global demo product set inside a real seller account.
+  useEffect(()=>{
+    let active=true;
+    if(!authSession.isAuthenticated || authSession.role!=='seller' || !authSession.storeId){
+      setProducts(initialProducts);
+      return ()=>{active=false};
+    }
+    setProducts({});
+    fetch('/api/catalog?storeId='+encodeURIComponent(String(authSession.storeId)),{
+      credentials:'same-origin',cache:'no-store'
+    })
+      .then(r=>r.ok?r.json():Promise.reject(new Error('Catalog unavailable')))
+      .then(data=>{
+        if(!active)return;
+        const byCategory={};
+        for(const item of data.products||[]){
+          const category=item.category||'Other';
+          (byCategory[category] ||= []).push({
+            id:item.id,storeId:item.store_id,name:item.name,price:Number(item.price),
+            mrp:Number(item.original_price),unit:item.unit,category,
+            inStock:Boolean(item.in_stock),image:item.image_url||'',
+            badge:item.discount_badge||'',brand:'Registered Store'
+          });
+        }
+        setProducts(byCategory);
+      }).catch(()=>{if(active)setProducts({});});
+    return ()=>{active=false};
+  },[authSession.isAuthenticated,authSession.role,authSession.storeId]);
+
 
   async function securedWrite(path,method,payload){
     const response=await fetch(path,{method,credentials:'same-origin',
