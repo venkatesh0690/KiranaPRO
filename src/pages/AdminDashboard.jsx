@@ -31,6 +31,8 @@ import { useStore } from '../context/StoreContext';
 import { useSecurity } from '../context/SecurityContext';
 import { categoryMeta } from '../data/stores';
 import CatalogProductVisual from '../components/CatalogProductVisual';
+import { getCatalogVisual } from '../utils/catalogVisual';
+import { aiImageEligible } from '../utils/aiImagePolicy';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -122,7 +124,47 @@ export default function AdminDashboard() {
     });
   }, [localFreshItems, lfCat, lfStock, lfSearch]);
 
-  const lfTotal = localFreshItems.length;
+  // Generation is a deliberate admin action. The shopper NEVER calls an
+  // image model or incurs charges. Real photos retain priority in product cards.
+  const aiCandidates=useMemo(()=>localFreshItems.filter(p=>
+    aiImageEligible(p.name,p.category) && !getCatalogVisual(p).photo
+  ),[localFreshItems]);
+  const [aiProductId,setAiProductId]=useState('');
+  const [aiStatus,setAiStatus]=useState('');
+  const [aiPreview,setAiPreview]=useState(null);
+  const [aiGenerating,setAiGenerating]=useState(false);
+  const [aiConfigured,setAiConfigured]=useState(false);
+  useEffect(()=>{
+    let live=true;
+    fetch('/api/catalog-ai?action=capabilities',{credentials:'same-origin',cache:'no-store'})
+      .then(r=>r.ok?r.json():null)
+      .then(data=>{if(live)setAiConfigured(Boolean(data?.configured));})
+      .catch(()=>{});
+    return ()=>{live=false};
+  },[]);
+  const generateAiForItem=async()=>{
+    const selected=aiCandidates.find(p=>String(p.id)===String(aiProductId||aiCandidates[0]?.id));
+    if(!selected || aiGenerating)return;
+    setAiGenerating(true);
+    setAiStatus('Generating a representative illustration for '+selected.name+'…');
+    setAiPreview(null);
+    try{
+      const response=await fetch('/api/catalog-ai',{
+        method:'POST',credentials:'same-origin',
+        headers:{'Content-Type':'application/json','X-Kirana-Client':'web'},
+        body:JSON.stringify({storeId:'localfresh',productId:String(selected.id)})
+      });
+      const data=await response.json();
+      if(!response.ok)throw new Error(data.error||'Generation failed.');
+      setAiPreview(data.photo);
+      setAiStatus(data.generated
+        ? 'Saved an AI illustration for '+selected.name+'. It will be reused in catalog cards.'
+        : 'An existing saved illustration was found for '+selected.name+'.');
+    }catch(error){setAiStatus(error.message||'Image generation unavailable.');}
+    finally{setAiGenerating(false);}
+  };
+
+    const lfTotal = localFreshItems.length;
   const lfInStock = localFreshItems.filter((p) => p.inStock).length;
   const lfOOS = localFreshItems.filter((p) => !p.inStock).length;
 
@@ -240,6 +282,38 @@ export default function AdminDashboard() {
               onClick={()=>approveSeller(seller.id)}>{approvalBusy===seller.id?'Verifying…':'Approve store'}</button>
           </div>
         ))}
+      </section>
+
+      <section className="ad-kpi-card" style={{display:'block',margin:'16px',padding:20}}>
+        <h2 style={{fontSize:18}}>AI product illustrations</h2>
+        <p>For generic items with no reliable real photograph. Every generated image is
+          marked “AI illustration,” stored once, and reused. Branded products are excluded.</p>
+        <p>{aiCandidates.length} LocalFresh items eligible for an illustration where no built-in real photo exists.</p>
+        {!aiConfigured && <p role="status">Image generation is not configured yet.
+          The owner must set OPENAI_API_KEY as a server-side Vercel environment secret.</p>}
+        {aiCandidates.length>0 && <>
+          <label htmlFor="ai-catalog-select" style={{display:'block',margin:'10px 0'}}>
+            Choose product
+          </label>
+          <select id="ai-catalog-select" value={aiProductId || aiCandidates[0]?.id || ''}
+            onChange={event=>setAiProductId(event.target.value)}
+            style={{maxWidth:'100%',width:320,padding:10}}>
+            {aiCandidates.map(p=><option key={p.id} value={p.id}>{p.name} — {p.category}</option>)}
+          </select>
+          <div style={{marginTop:12}}>
+            <button type="button" className="ad-link-btn"
+              disabled={!aiConfigured || aiGenerating}
+              onClick={generateAiForItem}>
+              {aiGenerating?'Generating image…':'Generate and save image'}
+            </button>
+          </div>
+        </>}
+        {aiStatus && <p role="status" style={{marginTop:10}}>{aiStatus}</p>}
+        {aiPreview && <figure style={{width:180,margin:'12px 0'}}>
+          <img src={aiPreview} alt="AI-generated representative catalog illustration"
+            width="180" height="180" loading="lazy" style={{maxWidth:'100%',borderRadius:10}}/>
+          <figcaption style={{fontSize:11}}>AI-generated representative image, not an exact product photograph</figcaption>
+        </figure>}
       </section>
 
       {/* ── Platform High-Level KPIs ── */}

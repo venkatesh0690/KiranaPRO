@@ -7,7 +7,7 @@ import {neon} from '@neondatabase/serverless';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 if(!process.env.DATABASE_URL) throw new Error('DATABASE_URL is required');
 const sql=neon(process.env.DATABASE_URL);
-for(const file of ['neon_schema.sql','security/rls.sql']){
+for(const file of ['neon_schema.sql','security/rls.sql','security/catalog_ai_images.sql']){
   const source=fs.readFileSync(path.join(root,file),'utf8');
   const commands=source
     .replace(/^\s*--.*$/gm,'')

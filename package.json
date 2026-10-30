@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run test:areas && npm run test:highlights && npm run test:app && npm run test:fulfilment && npm run test:catalog && npm run test:photos && npm run test:sample-stores && npm run test:editorial && npm run test:security && npm run test:performance && vite build",
+    "build": "npm run test:areas && npm run test:highlights && npm run test:app && npm run test:fulfilment && npm run test:catalog && npm run test:photos && npm run test:sample-stores && npm run test:editorial && npm run test:security && npm run test:performance && npm run test:ai-images && vite build",
     "mobile:build": "vite build && npx cap sync android",
     "mobile:sync": "npx cap sync android",
     "mobile:open": "npx cap open android",
@@ -23,7 +23,8 @@
     "db:secure": "node scripts/apply_security_schema.mjs",
     "security:hash-admin": "node scripts/hash_admin_password.mjs",
     "test:security": "node --test tests/security-hardening.test.mjs",
-    "test:performance": "node --test tests/performance-fast.test.mjs"
+    "test:performance": "node --test tests/performance-fast.test.mjs",
+    "test:ai-images": "node --test tests/ai-catalog-images.test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",
@@ -33,7 +34,8 @@
     "lucide-react": "^1.63.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "react-router-dom": "^7.18.5"
+    "react-router-dom": "^7.18.5",
+    "@vercel/blob": "^2.3.0"
   },
   "devDependencies": {
     "@types/react": "^19.3.0",
