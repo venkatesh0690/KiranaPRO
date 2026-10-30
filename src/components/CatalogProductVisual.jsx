@@ -2,6 +2,7 @@ import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { getCatalogVisual } from '../utils/catalogVisual';
 import { discoverProductPhoto, CATALOG_PHOTO_REFRESH_EVENT } from '../utils/catalogPhotoClient';
 import {aiImageEligible} from '../utils/aiImagePolicy';
+import {selectCatalogPhoto} from '../utils/catalogPhotoPriority';
 
 function CatalogProductVisual({ product, className = '' }) {
   const visual=useMemo(() => getCatalogVisual(product), [product]);
@@ -40,14 +41,11 @@ function CatalogProductVisual({ product, className = '' }) {
   },[]);
 
   const resolvedRemote=remote.key===key ? remote.value : null;
+  const selected=selectCatalogPhoto(visual,resolvedRemote,failedUrls);
   const initial=visual.photo;
   const localIllustration=visual.illustrativePhoto;
-  const staticUsable=initial && !failedUrls.includes(initial);
-  const localUsable=localIllustration && !failedUrls.includes(localIllustration);
-  const remoteUsable=resolvedRemote?.photo && !failedUrls.includes(resolvedRemote.photo);
-  const currentPhoto=staticUsable?initial:localUsable?localIllustration:remoteUsable?resolvedRemote.photo:null;
-  const needSearch=visible && !staticUsable && !localUsable && !remoteUsable &&
-    requested!==key;
+  const currentPhoto=selected.photo;
+  const needSearch=visible && !currentPhoto && requested!==key;
 
   useEffect(()=>{
     if(!needSearch)return;
@@ -61,9 +59,7 @@ function CatalogProductVisual({ product, className = '' }) {
   // clean up this effect before the network result can populate the card.
   },[key,visible,initial,localIllustration,failedUrls,refreshTick]);
 
-  const sourceUrl=staticUsable?visual.photoCreditUrl:remoteUsable?resolvedRemote.sourceUrl:null;
-  const photoSource=staticUsable?visual.photoSource:localUsable?'AI-generated representative image':remoteUsable?resolvedRemote.photoSource:null;
-  const aiIllustration=Boolean(currentPhoto && !staticUsable && (localUsable || (remoteUsable && resolvedRemote.match==='illustrative')));
+  const {sourceUrl,photoSource,aiIllustration}=selected;
   const loading=visible && !currentPhoto &&
     (requested!==key || remote.key!==key);
   return (
@@ -73,7 +69,7 @@ function CatalogProductVisual({ product, className = '' }) {
       {currentPhoto ? (
         <img className="kp-catalog-photo"
           src={currentPhoto}
-          srcSet={staticUsable?visual.photoSrcSet||undefined:undefined}
+          srcSet={selected.srcSet}
           sizes={className.includes('kp-modal')?'(max-width: 640px) 280px, 320px':'(max-width: 640px) 95px, 160px'}
           width="160" height="160"
           alt={(aiIllustration?'AI-generated illustrative image of ':'Representative product photo of ')+name}
