@@ -160,6 +160,10 @@ export default async function handler(req,res) {
         SET status='failed',retry_after=NOW()+INTERVAL '1 hour',updated_at=NOW()
         WHERE image_key=${key} AND status='pending'
       `]);
+      if(error?.message==='OPENAI_HTTP_429')
+        return res.status(429).json({error:'OpenAI image generation rate/quota limit reached. Check API usage or billing before resuming.'});
+      if(error?.message==='OPENAI_HTTP_401' || error?.message==='OPENAI_HTTP_403')
+        return res.status(503).json({error:'OpenAI image-generation credentials need verification by the project owner.'});
       return res.status(502).json({error:'Image generation unavailable. You can retry later.'});
     }
   }catch(error){return failClosed(res,error);}
