@@ -1,45 +1,60 @@
-// KiranaPRO Service Worker
-const CACHE_NAME = 'kiranapro-v1';
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/favicon.svg',
-  '/manifest.webmanifest'
-];
+// KiranaPRO PWA: cache only public app-shell files and hashed build assets.
+// Authenticated API responses, orders and account data are NEVER cached.
+const VERSION='kiranapro-fast-v2';
+const SHELL_CACHE=VERSION+'-shell';
+const ASSET_CACHE=VERSION+'-assets';
+const APP_SHELL='/';
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event=>{
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS);
-    })
+    caches.open(SHELL_CACHE).then(cache=>cache.add(APP_SHELL)).catch(()=>undefined)
   );
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', event=>{
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
-      );
-    })
+    caches.keys().then(keys=>Promise.all(
+      keys.filter(name=>name.startsWith('kiranapro-') && !name.startsWith(VERSION))
+        .map(name=>caches.delete(name))
+    )).then(()=>self.clients.claim())
   );
-  self.clients.claim();
 });
 
-// Network-first strategy with cache fallback
-self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
-  
-  event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        return networkResponse;
-      })
-      .catch(() => {
-        return caches.match(event.request).then((cachedResponse) => {
-          return cachedResponse || (event.request.mode === 'navigate' ? caches.match('/index.html') : null);
-        });
-      })
-  );
+self.addEventListener('fetch', event=>{
+  const request=event.request;
+  if(request.method!=='GET')return;
+  const url=new URL(request.url);
+  if(url.origin!==self.location.origin)return;
+  // Fail closed for account-specific data, session state and commerce operations.
+  if(url.pathname.startsWith('/api/'))return;
+
+  // Hashed JS/CSS assets are immutable. Serving from CacheStorage removes
+  // repeated network latency on navigations and slower Android connections.
+  if(url.pathname.startsWith('/assets/')){
+    event.respondWith(caches.open(ASSET_CACHE).then(async cache=>{
+      const cached=await cache.match(request);
+      if(cached)return cached;
+      const response=await fetch(request);
+      if(response.ok && response.type==='basic') {
+        event.waitUntil(cache.put(request,response.clone()));
+      }
+      return response;
+    }));
+    return;
+  }
+
+  // Always prefer up-to-date HTML; only use the shell when offline.
+  if(request.mode==='navigate'){
+    event.respondWith(fetch(request).then(response=>{
+      if(response.ok && response.type==='basic'){
+        event.waitUntil(caches.open(SHELL_CACHE)
+          .then(cache=>cache.put(APP_SHELL,response.clone())));
+      }
+      return response;
+    }).catch(async()=>{
+      return (await caches.match(APP_SHELL)) ||
+        Response.error();
+    }));
+  }
 });
