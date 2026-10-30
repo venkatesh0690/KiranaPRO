@@ -33,6 +33,7 @@ import { categoryMeta } from '../data/stores';
 import CatalogProductVisual from '../components/CatalogProductVisual';
 import { getCatalogVisual } from '../utils/catalogVisual';
 import { aiImageEligible } from '../utils/aiImagePolicy';
+import { clearCatalogPhotoCache } from '../utils/catalogPhotoClient';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -185,6 +186,7 @@ export default function AdminDashboard() {
       setAiStatus(data.generated
         ? 'Saved an illustrative image for '+selected.name+'.'
         : 'A saved image already exists for '+selected.name+'.');
+      clearCatalogPhotoCache();
       await refreshAiInventory();
     }catch(error){setAiStatus(error.message||'Image generation unavailable.');}
     finally{setAiGenerating(false);}
@@ -219,6 +221,7 @@ export default function AdminDashboard() {
       }
       setAiBatchProgress({done:i+1,total:pending.length,generated,failed});
     }
+    if(generated>0)clearCatalogPhotoCache();
     try{await refreshAiInventory();}catch{/* Retain completed tally. */}
     setAiStatus('Batch finished: '+generated+' images generated, '+failed+
       ' skipped/failed. You can resume from remaining items.');
@@ -374,6 +377,13 @@ export default function AdminDashboard() {
               onClick={generateAiForItem}>Generate and save image</button>
             <button type="button" className="ad-link-btn" onClick={()=>refreshAiInventory().catch(()=>{})}
               disabled={aiGenerating}>Refresh status</button>
+            <button type="button" className="ad-link-btn" disabled={aiGenerating}
+              onClick={()=>{
+                const cleared=clearCatalogPhotoCache();
+                setAiStatus('Product photos refreshed on this device ('+cleared+
+                  ' cached entries removed). No catalog images were deleted or generated.');
+                refreshAiInventory().catch(()=>{});
+              }}>Clear image cache & refresh photos</button>
           </div>
           <div style={{marginTop:20,paddingTop:16,borderTop:'1px solid #ddd'}}>
             <strong>Generate Missing Images</strong>
