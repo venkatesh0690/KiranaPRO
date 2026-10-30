@@ -91,7 +91,7 @@ function CatalogProductVisual({ product, className = '' }) {
           </svg>}
           <span className="kp-catalog-photo-label">{visual.label}</span>
           <span className="kp-catalog-photo-note">
-            {loading?'Finding image…':needsVerifiedPackaging
+            {loading ? '' : needsVerifiedPackaging
               ? 'Verified product photo pending'
               : 'Representative image coming soon'}
           </span>

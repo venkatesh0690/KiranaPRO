@@ -116,8 +116,9 @@ function MainAppShell({ userLocation, setUserLocation }) {
         <Suspense fallback={<RouteLoading />}>
         <Routes>
           {/* Always asks location on startup / root */}
+          <Route path="/" element={<Navigate to="/home" replace />} />
           <Route
-            path="/"
+            path="/location"
             element={
               <LocationPage
                 initialLocation={userLocation || ''}
@@ -127,7 +128,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
           />
           <Route
             path="/home"
-            element={canShop ? <HomePage userLocation={userLocation} /> : <Navigate to="/" replace />}
+            element={<HomePage userLocation={userLocation || 'Siripuram'} />}
           />
           <Route
             path="/store/:id"
