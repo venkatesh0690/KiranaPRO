@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Shield,
@@ -44,7 +44,33 @@ export default function AdminDashboard() {
     addProduct,
     setActiveRole
   } = useStore();
-  const { authSession, securityAuditLogs, logSecurityEvent } = useSecurity();
+  const { authSession, securityAuditLogs, logSecurityEvent, logout } = useSecurity();
+
+  const [pendingSellers,setPendingSellers]=useState([]);
+  const [approvalError,setApprovalError]=useState('');
+  const [approvalBusy,setApprovalBusy]=useState(null);
+
+  const refreshPending=useCallback(async ()=>{
+    try{
+      const response=await fetch('/api/admin',{credentials:'same-origin',cache:'no-store'});
+      if(!response.ok) throw new Error('Unable to retrieve registrations');
+      const data=await response.json();
+      setPendingSellers(data.pending||[]);
+      setApprovalError('');
+    }catch{setApprovalError('Seller approvals are unavailable. Try again later.');}
+  },[]);
+  useEffect(()=>{refreshPending();},[refreshPending]);
+  const approveSeller=async accountId=>{
+    setApprovalBusy(accountId);
+    try{
+      const response=await fetch('/api/admin',{method:'POST',credentials:'same-origin',
+        headers:{'Content-Type':'application/json','X-Kirana-Client':'web'},
+        body:JSON.stringify({action:'approve-seller',accountId})});
+      if(!response.ok)throw new Error('Approval denied');
+      await refreshPending();
+    }catch{setApprovalError('Unable to approve this seller. No access has been granted.');}
+    finally{setApprovalBusy(null);}
+  };
 
   const [activeAdminTab, setActiveAdminTab] = useState('localfresh'); // 'localfresh' default to showcase LocalFresh!
   const [geoRadius, setGeoRadius] = useState(2.0); // 2 km quick-commerce limit
@@ -184,7 +210,8 @@ export default function AdminDashboard() {
           <button
             type="button"
             className="ad-logout-btn"
-            onClick={() => {
+            onClick={async () => {
+              await logout();
               setActiveRole('user');
               navigate('/');
             }}
@@ -194,6 +221,26 @@ export default function AdminDashboard() {
           </button>
         </div>
       </header>
+
+      <section className="ad-kpi-card" style={{margin:'16px',padding:20,display:'block'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,flexWrap:'wrap'}}>
+          <h2 style={{fontSize:18}}>Pending store verification ({pendingSellers.length})</h2>
+          <button type="button" className="ad-link-btn" onClick={refreshPending}>Refresh applications</button>
+        </div>
+        <p style={{margin:'8px 0'}}>Review registered shop details before granting seller access. Approval is verified by the server.</p>
+        {approvalError && <p role="alert">{approvalError}</p>}
+        {pendingSellers.length===0 && <p>No store applications awaiting approval.</p>}
+        {pendingSellers.map(seller=>(
+          <div key={seller.id} style={{display:'flex',justifyContent:'space-between',gap:12,alignItems:'center',padding:'12px 0',borderTop:'1px solid #ddd'}}>
+            <div>
+              <strong>{seller.store_name}</strong>
+              <p>{seller.display_name} · {seller.phone} · {seller.address}</p>
+            </div>
+            <button className="ad-link-btn" type="button" disabled={Boolean(approvalBusy)}
+              onClick={()=>approveSeller(seller.id)}>{approvalBusy===seller.id?'Verifying…':'Approve store'}</button>
+          </div>
+        ))}
+      </section>
 
       {/* ── Platform High-Level KPIs ── */}
       <section className="ad-kpi-grid">
