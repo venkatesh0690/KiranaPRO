@@ -39,7 +39,7 @@ test('authentication uses server-only sessions and rejects self-assigned admin a
 test('customer, seller and admin order access is scoped at SQL level',()=>{
   assert.match(orders,/o.customer_id=\$\{session.id\}/);
   assert.match(orders,/o.store_id=\$\{session.storeId\}/);
-  assert.match(orders,/session.role==='admin'/);
+  assert.match(orders,/\$\{session.role\}='admin'/);
   assert.match(orders,/customer_id,customer_name/);
   assert.doesNotMatch(get('src/context/OrderHistoryContext.jsx'),/localStorage\.getItem/);
   assert.match(get('src/context/StoreContext.jsx'),/fetch\('\/api\/orders'/);
