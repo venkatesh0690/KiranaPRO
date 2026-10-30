@@ -45,8 +45,12 @@ jobs:
           bash ./scripts/apply-feature-complete-product-images.sh ./kiranapro-update
       - name: Verify app build and tests
         run: |
-          npm ci
+          npm install --no-audit --no-fund
           npm run build
+          git add package-lock.json
+          if ! git diff --cached --quiet -- package-lock.json; then
+            git commit -m "chore: sync npm lockfile after image feature import"
+          fi
       - name: Push generated asset commit
         shell: bash
         run: git push origin HEAD:feature/complete-product-images
