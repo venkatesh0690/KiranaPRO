@@ -130,7 +130,7 @@ export const allCategories = [
   { id: "flowers", name: "Flowers", icon: "🌼", bg: "var(--pastel-pink)", tag: "Pooja Fresh" },
   { id: "pickles", name: "Pickles", icon: "🫙", bg: "var(--pastel-coral)", tag: "Andhra Special" },
   { id: "dairy", name: "Dairy & Breakfast", icon: "🥛", bg: "var(--pastel-blue)", tag: "Daily Needs" },
-  { id: "produce", name: "Fresh Produce", icon: "🥦", bg: "var(--pastel-green)", tag: "Farm Fresh" },
+  { id: "produce", name: "Exotic & Seasonal", icon: "🥑", bg: "var(--pastel-teal)", tag: "Specialty" },
   { id: "snacks", name: "Snacks & Munchies", icon: "🍿", bg: "var(--pastel-orange)", tag: "Instant" },
   { id: "drinks", name: "Cold Drinks & Juices", icon: "🧃", bg: "var(--pastel-pink)", tag: "Chilled" },
   { id: "staples", name: "Household Staples", icon: "🌾", bg: "var(--pastel-yellow)", tag: "Kitchen" },

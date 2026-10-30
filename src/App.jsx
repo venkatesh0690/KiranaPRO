@@ -8,6 +8,7 @@ import { SecurityProvider, useSecurity } from './context/SecurityContext';
 import { OrderHistoryProvider } from './context/OrderHistoryContext';
 import { SellerProtectedRoute, AdminProtectedRoute } from './components/ProtectedRoutes';
 import BottomNav from './components/BottomNav';
+import CartBar from './components/CartBar';
 import InstallAppBanner from './components/InstallAppBanner';
 import LocationPage from './pages/LocationPage';
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -79,7 +80,12 @@ class RouteRecoveryBoundary extends Component {
 
 function MainAppShell({ userLocation, setUserLocation }) {
   const location = useLocation();
-  const { authSession } = useSecurity();
+  const { authSession, loginTemporaryCustomer } = useSecurity();
+  useEffect(() => {
+    if (!authSession.isAuthenticated && typeof loginTemporaryCustomer === 'function') {
+      loginTemporaryCustomer();
+    }
+  }, [authSession.isAuthenticated, loginTemporaryCustomer]);
   const { cart, clearCart } = useCart();
   const { stores } = useStore();
   const canShop = authSession.isAuthenticated && authSession.role === 'customer' && isDeliveryArea(userLocation);
@@ -96,7 +102,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
   const isPortalRoute =
     location.pathname.startsWith('/seller') || location.pathname.startsWith('/admin');
   const isStoreRoute = location.pathname.startsWith('/store');
-  const isLocationRoute = location.pathname === '/';
+  const isLocationRoute = location.pathname === '/location';
 
   return (
     <div className="app-root-wrapper full-screen-mode">
@@ -175,6 +181,9 @@ function MainAppShell({ userLocation, setUserLocation }) {
       {/* PWA Install App Prompt */}
       {!isPortalRoute && !isLocationRoute && <InstallAppBanner />}
 
+      {/* Global Floating Basket Bar */}
+      {!isPortalRoute && !isLocationRoute && <CartBar />}
+
       {/* Bottom Navigation Bar (Customer mode only) */}
       {canShop && !isPortalRoute && !isLocationRoute && <BottomNav />}
     </div>
@@ -183,7 +192,19 @@ function MainAppShell({ userLocation, setUserLocation }) {
 
 export default function App() {
   // Requirement: Ask location of user whenever the app is opened (initially null)
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState(() => {
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('kp_user_location');
+      if (isDeliveryArea(saved)) return saved;
+    }
+    return 'Siripuram';
+  });
+
+  useEffect(() => {
+    if (userLocation && typeof localStorage !== 'undefined') {
+      try { localStorage.setItem('kp_user_location', userLocation); } catch {}
+    }
+  }, [userLocation]);
 
   return (
     <SecurityProvider>

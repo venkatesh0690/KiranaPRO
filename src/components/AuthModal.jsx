@@ -359,8 +359,8 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup', onS
             </button>
             <p className="kp-auth-guest-note">Temporary 30-minute preview. No customer account or order history is created.</p>
             <div className="auth-portal-links-sub">
-              <span>Looking for store portals? </span>
-              <a href="/seller/login">Seller Hub</a> • <a href="/admin/login">Admin Console</a>
+              <span>Need order assistance? </span>
+              <a href="#support" onClick={(e) => { e.preventDefault(); alert('KiranaPRO Customer Care: 1800-KIRANA (Mon–Sun 6 AM – 10 PM IST)'); }}>Help & Support</a>
             </div>
           </form>
         )}

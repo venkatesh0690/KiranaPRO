@@ -5,6 +5,38 @@
  */
 
 export const CATALOG_PRODUCT_PICTURES = Object.freeze({
+  // --- Studio Fresh Produce ---
+  "lf-1003": {
+    photo: "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=400&q=80",
+    name: "Ash Gourd",
+    source: "Unsplash"
+  },
+  "lf-1004": {
+    photo: "https://images.unsplash.com/photo-1589927986089-35812388d1f4?auto=format&fit=crop&w=400&q=80",
+    name: "Potols",
+    source: "Unsplash"
+  },
+  "lf-1011": {
+    photo: "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=400&q=80",
+    name: "Garlic",
+    source: "Unsplash"
+  },
+  "lf-1049": {
+    photo: "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=400&q=80",
+    name: "Garlic",
+    source: "Unsplash"
+  },
+  "lf-1014": {
+    photo: "https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?auto=format&fit=crop&w=400&q=80",
+    name: "Mushrooms 200 gms Pack",
+    source: "Unsplash"
+  },
+  "lf-1017": {
+    photo: "https://images.unsplash.com/photo-1425543103986-22abb7d7e8d2?auto=format&fit=crop&w=400&q=80",
+    name: "Lady Finger / Bhindi",
+    source: "Unsplash"
+  },
+
   // --- LocalFresh Packaged Groceries ---
   "lf-1093": {
     photo: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80",

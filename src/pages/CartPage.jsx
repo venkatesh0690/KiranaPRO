@@ -40,6 +40,7 @@ export default function CartPage({ userLocation }) {
   const [checkoutStep,setCheckoutStep] = useState('review');
   const [deliveryAddress,setDeliveryAddress]=useState('');
   const [fulfilment,setFulfilment] = useState({mode:'standard',date:'',slot:''});
+  const [codChangeAmount, setCodChangeAmount] = useState('Exact Cash Ready');
 
   // Coupon selection is tied to the customer's next successfully placed order.
   const [couponCode, setCouponCode] = useState('');
@@ -141,7 +142,9 @@ export default function CartPage({ userLocation }) {
       discountCode:effectiveCode,total:finalQuote.total,
       handlingFee:finalQuote.handlingFee,tax:finalQuote.tax,
       fulfilment:requested,
-      paymentMethod:'Demo checkout — no payment processed'
+      paymentMethod:'Cash on Delivery (Pay at Doorstep)',
+      codChangeRequestedFor:codChangeAmount,
+      deliveryPin:String(Math.floor(1000 + Math.random() * 9000))
     });
     if(!saved.success) {
       setOrderError(saved.error);
@@ -523,6 +526,40 @@ export default function CartPage({ userLocation }) {
           <small>Saved only to your server-verified order; not shared with other customers.</small>
         </div>
       )}
+
+      {checkoutStep==='fulfilment' && (
+        <div className="kp-checkout-cod-card" style={{margin:'14px 18px'}}>
+          <div className="kp-cod-header">
+            <span className="kp-cod-title">💵 Cash on Delivery (Pay at Doorstep)</span>
+            <span className="kp-cod-badge">100% COD</span>
+          </div>
+          <p className="kp-cod-trust">
+            Inspect your fresh Mandi & Kirana items at your door before paying cash.
+          </p>
+          <div className="kp-cod-change-section">
+            <label className="kp-cod-change-label">Need Change? Tell your rider:</label>
+            <div className="kp-cod-change-pills">
+              {['Exact Cash Ready', 100, 200, 500]
+                .filter(opt => opt === 'Exact Cash Ready' || opt > finalQuote.total)
+                .map((opt) => (
+                  <button
+                    key={String(opt)}
+                    type="button"
+                    className={`kp-cod-pill ${codChangeAmount === opt ? 'active' : ''}`}
+                    onClick={() => setCodChangeAmount(opt)}
+                  >
+                    {typeof opt === 'number' ? `Need change for ₹${opt}` : opt}
+                  </button>
+                ))}
+            </div>
+            {typeof codChangeAmount === 'number' && (
+              <span className="kp-cod-change-hint">
+                Rider will bring ₹{codChangeAmount - finalQuote.total} change.
+              </span>
+            )}
+          </div>
+        </div>
+      )}
       {authSession.isTemporary && (
         <div className="kp-guest-cart-message" role="status">
           Guest preview — browse and build your basket. Log in to save a demo order.
@@ -533,9 +570,13 @@ export default function CartPage({ userLocation }) {
       {/* Floating Checkout Button */}
       <div className="cart-checkout-bar">
         <div className="ccb-left">
-          <span className="ccb-amount">₹{grandTotal}</span>
+          <div className="ccb-price-row">
+            <span className="ccb-amount">₹{grandTotal}</span>
+            <span className="ccb-divider" aria-hidden="true">•</span>
+            <span className="ccb-items-badge">{totalItems} {totalItems === 1 ? 'item' : 'items'} in basket</span>
+          </div>
           <span className="ccb-savings">
-            {isPickup ? 'Pickup · ₹0 delivery' : isFreeDelivery ? `Saved ₹${baseDeliveryFee} delivery` : `${totalItems} items in basket`}
+            {isPickup ? 'Pickup · ₹0 delivery' : isFreeDelivery ? `Saved ₹${baseDeliveryFee} delivery` : 'Direct Mandi & Kirana guarantee'}
           </span>
         </div>
         <button

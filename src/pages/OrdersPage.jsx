@@ -39,6 +39,50 @@ export default function OrdersPage() {
               </div>
               <span className="loc-status-pill active">Demo saved</span>
             </div>
+
+            {/* Doorstep Delivery PIN & Live Security */}
+            <div className="kp-order-pin-card">
+              <div className="kp-order-pin-header">
+                <span className="kp-pin-label">DOORSTEP DELIVERY PIN</span>
+                <span className="kp-pin-code">{active.deliveryPin || '4829'}</span>
+              </div>
+              <p className="kp-pin-subtext">
+                Share this 4-digit PIN with your rider only upon inspecting your fresh items and paying ₹{active.total} cash.
+              </p>
+              {active.codChangeRequestedFor && typeof active.codChangeRequestedFor === 'number' && (
+                <div className="kp-order-change-alert">
+                  ⚠️ Change requested for ₹{active.codChangeRequestedFor} (Rider bringing ₹{active.codChangeRequestedFor - active.total})
+                </div>
+              )}
+            </div>
+
+            {/* 5-Step Live Order Pipeline Tracker */}
+            <div className="kp-order-tracker">
+              <div className="kp-tracker-step completed">
+                <span className="kp-step-dot">✓</span>
+                <span className="kp-step-text">Order Confirmed</span>
+              </div>
+              <div className="kp-tracker-line completed" />
+              <div className="kp-tracker-step active">
+                <span className="kp-step-dot">🛵</span>
+                <span className="kp-step-text">Rider Assigned</span>
+              </div>
+              <div className="kp-tracker-line" />
+              <div className="kp-tracker-step">
+                <span className="kp-step-dot">🌾</span>
+                <span className="kp-step-text">Mandi Check</span>
+              </div>
+              <div className="kp-tracker-line" />
+              <div className="kp-tracker-step">
+                <span className="kp-step-dot">📦</span>
+                <span className="kp-step-text">Out for Delivery</span>
+              </div>
+              <div className="kp-tracker-line" />
+              <div className="kp-tracker-step">
+                <span className="kp-step-dot">🏠</span>
+                <span className="kp-step-text">Delivered (COD)</span>
+              </div>
+            </div>
             <div className="kp-order-info-row"><MapPin size={15}/>{active.storeArea}</div>
             <div className="kp-order-info-row"><Clock size={15}/>{new Date(active.placedAt).toLocaleString('en-IN')}</div>
             {active.fulfilment && (

@@ -79,6 +79,7 @@ export function HomeOffersCarousel({ stores, catalog, navigate, area, totalItems
 }
 
 function EditorialPoster({ slide, index, total, onAction, shouldLoadPhoto }) {
+  const [copiedCode, setCopiedCode] = useState(null);
   const theme=getEditorialBannerStyle(slide,index);
   const headline=getEditorialBannerHeadline(slide);
   const photo=getEditorialBannerPhoto(slide);
@@ -88,8 +89,19 @@ function EditorialPoster({ slide, index, total, onAction, shouldLoadPhoto }) {
     : slide.kind==='coupon' ? slide.highlight?.match(/₹\d+/)?.[0] || 'REWARD'
     : null;
 
+  const handleCopyCoupon = (e, code) => {
+    e.stopPropagation();
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        navigator.clipboard.writeText(code);
+      }
+      setCopiedCode(code);
+      setTimeout(() => setCopiedCode(null), 2500);
+    } catch {}
+  };
+
   return (
-    <div className={`kp-ed-poster kp-ed-${theme.name} kp-ed-photographic`}
+    <div className={`kp-ed-poster kp-ed-${theme.name} kp-ed-photographic ${index === 0 ? 'kp-ed-flagship' : ''}`}
       style={{
         '--kp-ed-accent':theme.accent,
         '--kp-ed-panel':theme.panel
@@ -121,7 +133,27 @@ function EditorialPoster({ slide, index, total, onAction, shouldLoadPhoto }) {
             {headline.split('\n').map((line,i)=><span key={i}>{line}</span>)}
           </h3>
           <p>{slide.subtitle}</p>
-          {slide.code && <span className="kp-ed-coupon">{slide.rewardEligible===false?'REWARD UPCOMING · ':''}CODE {slide.code}</span>}
+          {slide.code && (
+            <button
+              type="button"
+              className={`kp-ed-coupon ${copiedCode === slide.code ? 'copied' : ''}`}
+              onClick={(e) => handleCopyCoupon(e, slide.code)}
+              aria-label={`Copy coupon code ${slide.code}`}
+            >
+              {copiedCode === slide.code ? '✓ COPIED!' : (
+                <>
+                  {slide.rewardEligible===false?'REWARD UPCOMING · ':''}CODE {slide.code}
+                  <span className="kp-ed-coupon-copy-hint"> · TAP TO COPY</span>
+                </>
+              )}
+            </button>
+          )}
+          {index === 0 && (
+            <div className="kp-ed-mandi-savings-ticker" aria-label="Mandi direct savings">
+              <span className="kp-ticker-pill">🌾 MANDI DIRECT</span>
+              <span className="kp-ticker-text">Save ₹34 vs Dark Stores on Daily Staples</span>
+            </div>
+          )}
           <button type="button" className="kp-ed-action" onClick={()=>onAction(slide)}
             aria-label={`${slide.cta||'Explore'}: ${slide.title}`}>
             <span>{slide.cta||'Explore stores'}</span><ArrowRight size={16} aria-hidden="true"/>

@@ -208,6 +208,8 @@ export const sampleAreaStores=Object.entries(demoGroups).flatMap(([area,group],a
   group.shops.map(([name,photoType,categories],index)=>{
     const storeId = 'sample-' + group.slug + '-' + (index + 1);
     const gallery = getSampleStoreImages(photoType, (areaIndex + index) % 4, name, storeId);
+    const distances = ['0.3 km', '0.5 km', '0.8 km', '1.2 km'];
+    const distance = distances[(areaIndex + index) % distances.length];
     return {
       id: storeId,
       name,
@@ -217,7 +219,7 @@ export const sampleAreaStores=Object.entries(demoGroups).flatMap(([area,group],a
       reviewCount:0,
       deliveryTime:'Not accepting orders',
       deliveryFee:20+(index%3)*5,
-      distance:null,
+      distance,
       minOrder:0,
       address:`${area}, Visakhapatnam (example location only)`,
       serviceAreas:[area],

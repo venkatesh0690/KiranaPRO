@@ -41,7 +41,7 @@ export default function HomePage({ userLocation }) {
   const openCategory = (categoryName) => {
     setCategoriesOpen(false);
     const preferred = areaStores.find(store =>
-      String(store.id).toLowerCase() === 'localfresh' && store.categories?.includes(categoryName)
+      String(store.id).toLowerCase() === 'localfresh' && (store.categories?.includes(categoryName) || (categoryName === 'Exotic & Seasonal' && store.categories?.includes('Fresh Produce')))
     );
     const match = preferred || areaStores.find(store => store.categories?.includes(categoryName));
     if (match) {
