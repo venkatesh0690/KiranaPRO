@@ -4,7 +4,7 @@
 const BRANDS=/\b(amul|maggi|nestle|britannia|parle|fortune|saffola|tata|aashirvaad|surf excel|vim|colgate|dove|lifebuoy|pepsi|coca[ -]?cola|sprite|thums[ -]?up|lays|kurkure|haldiram|pampers|johnson|himalaya|cadbury|oreo|kissan|dabur|hdfc|pat[ae]njali|bambino|pri[y]+a|everest|catch|24 mantra|freedom|heritage|epigamia|real activ|paper boat|double horse|india gate|cycle pure|whisper|detto[l]?|clinic plus|santoor|tide|ariel|rin|comfort|fogg|nivea|closeup|pears)\b/i;
 const RESTRICTED=/\b(medicine|tablet|capsule|syrup|injection|prescription|supplement|infant formula|baby formula|sanitary pad|diaper|drug|vitamin|protein powder|antibiotic)\b/i;
 const BRAND_CATEGORIES=/\b(branded|baby care|medicine|health supplements|pharmaceutical|cosmetic|personal care)\b/i;
-const GENERIC=/\b(fruit|vegetable|leafy|produce|dal|pulse|lentil|bean|rice|sugar|flour|atta|rava|ravva|spice|masala|grocery|groceries|flower|pickles|grain|seed|millet|dry fruit|nuts|oil|household|staple|fresh|egg|milk|curd|yogurt|paneer|soap|detergent|cleaning)\b/i;
+const GENERIC=/\b(fruits?|vegetables?|leafy|produce|dal|pulses?|lentils?|beans?|rice|sugar|flour|atta|rava|ravva|spices?|masala|grocery|groceries|flowers?|pickles?|grains?|seeds?|millets?|dry fruits?|nuts?|oil|household|staples?|fresh|eggs?|milk|curd|yogurt|paneer|soap|detergent|cleaning)\b/i;
 export const AI_IMAGE_PROMPT_VERSION='grocery-studio-v1';
 export function normalizeItem(value){
   return String(value||'').normalize('NFKC').toLowerCase()
