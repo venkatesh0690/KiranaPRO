@@ -29,7 +29,7 @@ export default function StoreCard({ store }) {
     // Visible tap feedback before navigation, even in older Android WebViews.
     pending.current = window.setTimeout(() => {
       navigateWithStoreTransition(navigate,`/store/${store.id}`);
-    },160);
+    },65);
   };
 
   return (
