@@ -1,5 +1,6 @@
 import { getPhotoQueries, scoreCommonsPhoto } from '../src/utils/productPhotoSearch.js';
 import { publishedAiImage } from './catalog-ai.js';
+import { aiImageEligible } from '../src/utils/aiImagePolicy.js';
 
 /**
  * Vercel serverless photo discovery. Only public Commons image search is used;
@@ -57,6 +58,12 @@ export default async function handler(req,res) {
   const name=clamp(req.query?.name);
   const category=clamp(req.query?.category,60);
   if(name.length<2)return res.status(400).json({error:'Product name required'});
+  // Unverified Wikimedia photos are not appropriate as exact branded
+  // packaging. Such items need a real, merchant-verified SKU photograph.
+  if(!aiImageEligible(name,category)){
+    res.setHeader('Cache-Control','public, max-age=60, s-maxage=300');
+    return res.status(200).json(NO_IMAGE);
+  }
   const real=await resolvePhoto({name,category});
   // Exact verified seller and curated real photos are handled by the client.
   // This endpoint prefers matching Wikimedia images before stored AI illustrations.
