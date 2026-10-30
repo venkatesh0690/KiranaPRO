@@ -111,7 +111,7 @@ export default async function handler(req,res) {
     if(account.role==='seller' && !account.approved) {
       return res.status(403).json({error:'Seller account is pending administrator approval'});
     }
-    if(role==='seller' && String(body.storeId||'')!==String(account.store_id)) {
+    if(role==='seller' && body.storeId && String(body.storeId)!==String(account.store_id)) {
       return res.status(403).json({error:'Store access denied'});
     }
     await clearAttempts(throttleKey);
