@@ -44,3 +44,11 @@ test('customer, seller and admin order access is scoped at SQL level',()=>{
   assert.doesNotMatch(get('src/context/OrderHistoryContext.jsx'),/localStorage\.getItem/);
   assert.match(get('src/context/StoreContext.jsx'),/fetch\('\/api\/orders'/);
 });
+
+test('scoped SQL returns query statement, never role/GUC setup rows',()=>{
+  const server=readFileSync(new URL('../api/_security.js',import.meta.url),'utf8');
+  assert.match(server,/sql`SET LOCAL ROLE kiranapro_rls_api`/);
+  assert.match(server,/sql`SELECT set_config\('app.role'/);
+  assert.match(server,/return result\[2\];/);
+  assert.doesNotMatch(server,/return result\[1\];/);
+});
