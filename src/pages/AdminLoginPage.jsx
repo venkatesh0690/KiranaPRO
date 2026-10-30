@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ShieldAlert,
@@ -23,6 +23,43 @@ export default function AdminLoginPage() {
   const [adminPass, setAdminPass] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [setupAvailable,setSetupAvailable]=useState(false);
+  const [setupMode,setSetupMode]=useState(false);
+  const [setupToken,setSetupToken]=useState('');
+  const [adminName,setAdminName]=useState('KiranaPRO Administrator');
+  const [confirmPassword,setConfirmPassword]=useState('');
+  const [setupBusy,setSetupBusy]=useState(false);
+  const [setupDone,setSetupDone]=useState('');
+  useEffect(()=>{
+    let active=true;
+    fetch('/api/admin-setup',{credentials:'same-origin',cache:'no-store'})
+      .then(r=>r.ok?r.json():null)
+      .then(data=>{if(active)setSetupAvailable(Boolean(data?.setupAvailable));})
+      .catch(()=>{});
+    return ()=>{active=false};
+  },[]);
+  const handleAdminSetup=async event=>{
+    event.preventDefault();
+    setAuthError('');
+    if(adminPass!==confirmPassword){setAuthError('Passwords do not match.');return;}
+    setSetupBusy(true);
+    try{
+      const response=await fetch('/api/admin-setup',{
+        method:'POST',credentials:'same-origin',
+        headers:{'Content-Type':'application/json','X-Kirana-Client':'web'},
+        body:JSON.stringify({email,name:adminName,password:adminPass,setupToken})
+      });
+      const data=await response.json();
+      if(!response.ok)throw Error(data.error||'Setup failed');
+      setSetupAvailable(false);
+      setSetupMode(false);
+      setSetupToken('');
+      setConfirmPassword('');
+      setSetupDone('Your administrator password was saved securely. Sign in below.');
+    }catch(error){setAuthError(error.message||'Could not activate administrator account.');}
+    finally{setSetupBusy(false);}
+  };
+
 
   const handleAdminLogin = async (e) => {
     e.preventDefault();
@@ -75,7 +112,46 @@ export default function AdminLoginPage() {
         )}
 
         {/* Credentials Form */}
-        <form onSubmit={handleAdminLogin} className="auth-form-block">
+        {setupAvailable && (
+          <div style={{margin:'0 0 18px'}}>
+            <button type="button" className="auth-primary-btn admin"
+              onClick={()=>{setSetupMode(v=>!v);setAuthError('');}}
+              style={{background:'#495453'}}>
+              {setupMode?'Back to administrator login':'Set up administrator account'}
+            </button>
+          </div>
+        )}
+        {setupDone && <p role="status">{setupDone}</p>}
+        {setupMode && setupAvailable ? (
+          <form onSubmit={handleAdminSetup} className="auth-form-block">
+            <p>Use your one-time setup code to choose an administrator email and a strong password.
+              The code expires and can be used only once.</p>
+            <label className="auth-field-label" htmlFor="kp-admin-setup-email">Admin email</label>
+            <input id="kp-admin-setup-email" type="email" value={email}
+              onChange={e=>setEmail(e.target.value)} required autoComplete="email"
+              style={{width:'100%',padding:12,marginBottom:12}}/>
+            <label className="auth-field-label" htmlFor="kp-admin-setup-name">Display name</label>
+            <input id="kp-admin-setup-name" value={adminName}
+              onChange={e=>setAdminName(e.target.value)} required minLength={2}
+              style={{width:'100%',padding:12,marginBottom:12}}/>
+            <label className="auth-field-label" htmlFor="kp-admin-setup-code">Single-use setup code</label>
+            <input id="kp-admin-setup-code" type="password" value={setupToken}
+              onChange={e=>setSetupToken(e.target.value.trim().toLowerCase())}
+              autoComplete="off" required minLength={48} maxLength={48}
+              style={{width:'100%',padding:12,marginBottom:12}}/>
+            <label className="auth-field-label" htmlFor="kp-admin-setup-pass">New password (16+ characters)</label>
+            <input id="kp-admin-setup-pass" type="password" value={adminPass}
+              onChange={e=>setAdminPass(e.target.value)} autoComplete="new-password"
+              minLength={16} required style={{width:'100%',padding:12,marginBottom:12}}/>
+            <label className="auth-field-label" htmlFor="kp-admin-setup-confirm">Confirm password</label>
+            <input id="kp-admin-setup-confirm" type="password" value={confirmPassword}
+              onChange={e=>setConfirmPassword(e.target.value)} autoComplete="new-password"
+              minLength={16} required style={{width:'100%',padding:12,marginBottom:12}}/>
+            <button type="submit" className="auth-primary-btn admin" disabled={setupBusy}>
+              {setupBusy?'Securing account…':'Create administrator account'}
+            </button>
+          </form>
+        ) : <form onSubmit={handleAdminLogin} className="auth-form-block">
           <div className="auth-input-group">
             <label className="auth-field-label">Administrator Email / ID:</label>
             <div className="auth-input-box">
@@ -121,7 +197,7 @@ export default function AdminLoginPage() {
             <span>Authenticate Platform Command Center</span>
             <ChevronRight size={18} />
           </button>
-        </form>
+        </form>}
 
         <div className="quick-access-test-note">
           <ShieldCheck size={14} color="#9333EA" />
