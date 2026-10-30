@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Check, MapPin, ShoppingBasket } from 'lucide-react';
 const AuthModal = lazy(() => import('../components/AuthModal'));
@@ -14,6 +14,16 @@ export default function LocationPage({ onLocationSet, initialLocation = '' }) {
   const [showLogin,setShowLogin] = useState(false);
   const [selectedArea,setSelectedArea] = useState(isDeliveryArea(initialLocation) ? initialLocation : '');
   const [error,setError] = useState('');
+  const [pendingArea,setPendingArea] = useState('');
+
+  // Finish navigation only after MainAppShell has accepted the new area.
+  // Routing in the same click as setUserLocation can briefly evaluate the
+  // /home guard against the previous (empty) location on slower devices.
+  useEffect(()=>{
+    if(pendingArea && isCustomer && initialLocation===pendingArea){
+      navigate('/home',{replace:true});
+    }
+  },[pendingArea,initialLocation,isCustomer,navigate]);
 
   const selectArea = event => {
     event.preventDefault();
@@ -22,8 +32,8 @@ export default function LocationPage({ onLocationSet, initialLocation = '' }) {
       return;
     }
     setError('');
+    setPendingArea(selectedArea);
     onLocationSet(selectedArea);
-    navigate('/home');
   };
 
   const onLoginSuccess = (role) => {
@@ -102,8 +112,8 @@ export default function LocationPage({ onLocationSet, initialLocation = '' }) {
             })}
           </div>
           {error && <p role="alert" className="kp-zone-error">{error}</p>}
-          <button type="submit" className="kp-zone-continue" disabled={!selectedArea}>
-            <span>Continue to stores</span><ArrowRight size={18} />
+          <button type="submit" className="kp-zone-continue" disabled={!selectedArea || Boolean(pendingArea)}>
+            <span>{pendingArea ? 'Opening stores…' : 'Continue to stores'}</span><ArrowRight size={18} />
           </button>
         </form>
         <p className="kp-zone-footnote">Choose only from these five locations. Sample shop listings are labeled until merchants register.</p>
