@@ -17,22 +17,21 @@ import { useSecurity } from '../context/SecurityContext';
 
 export default function SellerLoginPage() {
   const navigate = useNavigate();
-  const { stores, setCurrentSellerStore, setActiveRole } = useStore();
+  const { stores, setSellerStoreId, setActiveRole } = useStore();
   const { loginSeller } = useSecurity();
 
   const [selectedStoreId, setSelectedStoreId] = useState(stores[1]?.id || 1); // Defaults to Sharma General Store
-  const [phone, setPhone] = useState('9876543210');
-  const [pin, setPin] = useState('1234');
+  const [phone, setPhone] = useState('');
+  const [pin, setPin] = useState('');
   const [showPin, setShowPin] = useState(false);
   const [authError, setAuthError] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const targetStore = stores.find((s) => s.id === selectedStoreId) || stores[1];
-    const res = loginSeller(targetStore.id, phone, pin, targetStore.name);
+    const res = await loginSeller(selectedStoreId, phone, pin);
 
     if (res.success) {
-      setCurrentSellerStore(targetStore);
+      setSellerStoreId(res.user?.storeId || selectedStoreId);
       setActiveRole('seller');
       navigate('/seller/dashboard');
     } else {
@@ -124,18 +123,19 @@ export default function SellerLoginPage() {
           </div>
 
           <div className="auth-input-group">
-            <label className="auth-field-label">4-Digit Security PIN:</label>
+            <label className="auth-field-label">Account Password:</label>
             <div className="auth-input-box">
               <Lock size={16} color="var(--n500)" />
               <input
                 type={showPin ? 'text' : 'password'}
-                maxLength={4}
+                minLength={10}
+                maxLength={128}
                 value={pin}
                 onChange={(e) => {
                   setPin(e.target.value);
                   setAuthError('');
                 }}
-                placeholder="Enter 4-digit PIN"
+                placeholder="At least 10 characters"
               />
               <button
                 type="button"
