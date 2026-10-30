@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run test:areas && npm run test:highlights && npm run test:app && npm run test:fulfilment && npm run test:catalog && npm run test:photos && npm run test:sample-stores && npm run test:editorial && npm run test:security && npm run test:performance && npm run test:ai-images && npm run test:batch-admin && npm run test:cache && vite build",
+    "build": "npm run test:areas && npm run test:highlights && npm run test:app && npm run test:fulfilment && npm run test:catalog && npm run test:photos && npm run test:sample-stores && npm run test:editorial && npm run test:security && npm run test:performance && npm run test:ai-images && npm run test:batch-admin && npm run test:cache && npm run test:image-assets && vite build",
     "mobile:build": "vite build && npx cap sync android",
     "mobile:sync": "npx cap sync android",
     "mobile:open": "npx cap open android",
@@ -26,7 +26,8 @@
     "test:performance": "node --test tests/performance-fast.test.mjs",
     "test:ai-images": "node --test tests/ai-catalog-images.test.mjs",
     "test:batch-admin": "node --test tests/batch-admin-images.test.mjs",
-    "test:cache": "node --test tests/cache-refresh.test.mjs"
+    "test:cache": "node --test tests/cache-refresh.test.mjs",
+    "test:image-assets": "node --test tests/localfresh-image-assets.test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",
