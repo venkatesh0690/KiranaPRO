@@ -1,10 +1,12 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { getCatalogVisual } from '../utils/catalogVisual';
 import { discoverProductPhoto } from '../utils/catalogPhotoClient';
+import {aiImageEligible} from '../utils/aiImagePolicy';
 
 function CatalogProductVisual({ product, className = '' }) {
   const visual=useMemo(() => getCatalogVisual(product), [product]);
   const name=String(product?.name||'Product');
+  const needsVerifiedPackaging=!aiImageEligible(name,product?.category);
   const key=String(product?.id||'')+':'+name;
   const ref=useRef(null);
   const [visible,setVisible]=useState(false);
@@ -67,8 +69,19 @@ function CatalogProductVisual({ product, className = '' }) {
       ) : (
         <div className={'kp-catalog-image-pending'+(loading?' is-loading':'')}
           role="img" aria-label={loading?'Loading photograph of '+name:'Photograph unavailable for '+name}>
+          {!loading && <svg className="kp-catalog-placeholder-drawing"
+            viewBox="0 0 72 72" aria-hidden="true" fill="none">
+            <rect x="16" y="16" width="40" height="44" rx="5" stroke="currentColor" strokeWidth="2.4"/>
+            <path d="M16 29h40M29 16v13M28 42h16M28 48h11"
+              stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"/>
+            <circle cx="49" cy="52" r="2" fill="currentColor"/>
+          </svg>}
           <span className="kp-catalog-photo-label">{visual.label}</span>
-          <span className="kp-catalog-photo-note">{loading?'Finding image…':'Image coming soon'}</span>
+          <span className="kp-catalog-photo-note">
+            {loading?'Finding image…':needsVerifiedPackaging
+              ? 'Verified product photo pending'
+              : 'Representative image coming soon'}
+          </span>
         </div>
       )}
       {aiIllustration && <span className="kp-ai-image-disclosure" aria-label="AI-generated representative image">AI illustration</span>}
