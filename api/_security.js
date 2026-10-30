@@ -22,6 +22,9 @@ export async function scopedQuery(identity, build) {
   const queries = build(sql);
   if (!Array.isArray(queries) || queries.length !== 1) throw new Error('Scoped query must be a single statement.');
   const result = await sql.transaction([
+    // RLS is ineffective with Neon owner credentials unless we switch to a
+    // non-BYPASSRLS role within every request-local transaction.
+    sql`SET LOCAL ROLE kiranapro_rls_api`,
     sql`SELECT set_config('app.role', ${role}, true), set_config('app.user_id', ${uid}, true), set_config('app.store_id', ${store}, true)`,
     queries[0]
   ], { readOnly: false });
