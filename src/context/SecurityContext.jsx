@@ -24,7 +24,9 @@ export const SecurityProvider = ({ children }) => {
     let active=true;
     fetch('/api/auth?action=me',{credentials:'same-origin',cache:'no-store'})
       .then(response=>response.ok?response.json():null)
-      .then(data=>{if(active && data?.user) setAuthSession(data.user);})
+      .then(data=>{if(active && data?.user) setAuthSession(previous=>
+        // A late session hydration must never replace a deliberate guest/login action.
+        previous.isAuthenticated ? previous : data.user);})
       .catch(()=>{/* Fail closed; remain guest when session cannot be verified. */});
     return ()=>{active=false};
   },[]);
