@@ -1,4 +1,7 @@
 import { randomUUID } from 'node:crypto';
+import { calculateLocalFreshDeliveryFee } from '../src/utils/localfreshDelivery.js';
+import { getOrderSavings, getAutomaticBasketDiscount } from '../src/data/checkoutOffers.js';
+import { validateFulfilment } from '../src/utils/fulfilment.js';
 import {safeMethod,bodyOf,requireUser,currentQuery,failClosed} from './_security.js';
 
 function formatOrder(r) {
@@ -54,7 +57,7 @@ export default async function handler(req,res) {
     const storeId=String(data.storeId||'');
     const address=String(data.deliveryAddress||'').trim();
     const raw=Array.isArray(data.items)?data.items:[];
-    if(!/^[a-zA-Z0-9-]{1,64}$/.test(storeId) || address.length<8 || address.length>1000 ||
+    if(!/^[a-zA-Z0-9-]{1,64}$/.test(storeId) || address.length>1000 ||
        raw.length<1 || raw.length>50) return res.status(400).json({error:'Invalid checkout details'});
     const requestItems=new Map();
     for(const entry of raw){
@@ -64,10 +67,13 @@ export default async function handler(req,res) {
          requestItems.has(id)) return res.status(400).json({error:'Invalid item/quantity'});
       requestItems.set(id,qty);
     }
+    const requested=validateFulfilment(data.fulfilment || {mode:'standard'});
+    if(!requested.valid) return res.status(400).json({error:requested.reason||'Invalid fulfilment request'});
     const stores=await currentQuery(session,sql=>[sql`
-      SELECT id,name FROM kiranapro.stores WHERE id=${storeId} AND is_active=true
+      SELECT id,name,address FROM kiranapro.stores WHERE id=${storeId} AND is_active=true
     `]);
     if(!stores.length) return res.status(400).json({error:'Store is unavailable'});
+    if(requested.mode!=='pickup' && address.length<8)return res.status(400).json({error:'Full delivery address required'});
     const products=await currentQuery(session,sql=>[sql`
       SELECT id,name,price,unit,in_stock FROM kiranapro.products WHERE store_id=${storeId}
     `]);
@@ -81,21 +87,33 @@ export default async function handler(req,res) {
       subtotal+=price*qty;
       items.push({id,name:p.name,price,qty,unit:p.unit});
     }
-    // Never trust browser-submitted amounts, discounts, status or customer_id.
-    const deliveryFee=storeId==='localfresh'?20:(subtotal>300?0:20);
-    const total=Math.round((subtotal+deliveryFee+5)*100)/100;
+    // Calculate prices and promotional eligibility from the real catalog and
+    // verified customer's DB order count; do not trust client supplied totals.
+    const prior=await currentQuery(session,sql=>[sql`
+      SELECT count(*)::int AS total FROM kiranapro.orders WHERE customer_id=${session.id}
+    `]);
+    const orderNumber=Number(prior[0].total)+1;
+    const savings=getOrderSavings(subtotal,orderNumber,data.discountCode||null);
+    const discount=savings.eligible?savings.discount:getAutomaticBasketDiscount(subtotal);
+    const deliveryFee=requested.mode==='pickup' ? 0 :
+      storeId==='localfresh' ? calculateLocalFreshDeliveryFee(items.map(i=>({...i,quantity:i.qty}))) :
+      subtotal>300 ? 0 : 20;
+    const handlingFee=5;
+    const tax=Math.round((subtotal-discount)*0.05); // Estimated tax; demo only.
+    const total=Math.round((subtotal-discount+deliveryFee+handlingFee+tax)*100)/100;
+    const customerAddress=requested.mode==='pickup' ? (stores[0].address||'Store pickup') : address;
     const orderId='KP-'+randomUUID();
     const rows=await currentQuery(session,sql=>[sql`
       INSERT INTO kiranapro.orders(id,store_id,customer_id,customer_name,customer_phone,
         delivery_address,items,subtotal,delivery_fee,discount,total,payment_method,status)
       VALUES(${orderId},${storeId},${session.id},${session.account.display_name},${session.account.phone||''},
-        ${address},${JSON.stringify(items)}::jsonb,${subtotal},${deliveryFee},0,${total},'Demo — no payment collected','Placed')
+        ${customerAddress},${JSON.stringify(items)}::jsonb,${subtotal},${deliveryFee},${discount},${total},'Demo — no payment collected','Placed')
       RETURNING id,created_at,status
     `]);
     return res.status(201).json({order:{
       id:rows[0].id,storeId,storeName:stores[0].name,items,subtotal,deliveryFee,
-      discount:0,total,placedAt:rows[0].created_at,status:'Placed',
-      fulfilment:{mode:'standard'},handlingFee:5,tax:0,
+      discount,total,placedAt:rows[0].created_at,status:'Placed',orderNumber,
+      fulfilment:requested,handlingFee,tax,discountCode:savings.eligible?savings.code:null,
       paymentMethod:'Demo — no payment collected'
     }});
   }catch(error){return failClosed(res,error)}
