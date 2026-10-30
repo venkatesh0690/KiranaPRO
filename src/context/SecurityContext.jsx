@@ -12,9 +12,7 @@ import {
 
 const SecurityContext = createContext(null);
 
-const SESSION_STORAGE_KEY = 'kp_sec_auth_session';
 const AUDIT_STORAGE_KEY = 'kp_sec_audit_trail';
-const SESSION_EXPIRY_MS = 2 * 60 * 60 * 1000; // 2 hours
 
 export const SecurityProvider = ({ children }) => {
   // Session State
@@ -31,29 +29,10 @@ export const SecurityProvider = ({ children }) => {
     return ()=>{active=false};
   },[]);
 
-  // Real saved addresses only; remove the two sample addresses previously
-  // prepopulated in new accounts. User-created addresses are retained.
-  const [savedAddresses, setSavedAddresses] = useState(() => {
-    try {
-      const stored = localStorage.getItem('kp_shipping_addresses');
-      const parsed = stored ? JSON.parse(stored) : [];
-      if (!Array.isArray(parsed)) return [];
-      return parsed.filter((address) => !(
-        (address?.id === 'addr-1' && address?.title === 'Flat 402, Sai Residency') ||
-        (address?.id === 'addr-2' && address?.title === 'Tech Hub Office, Floor 3')
-      ));
-    } catch {
-      return [];
-    }
-  });
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('kp_shipping_addresses', JSON.stringify(savedAddresses));
-    } catch {
-      // Ignore
-    }
-  }, [savedAddresses]);
+  // Keep address drafts ephemeral until a server-side owner-scoped address API is
+  // implemented. Never expose one account's address via a shared browser key.
+  const [savedAddresses,setSavedAddresses]=useState([]);
+  useEffect(()=>{setSavedAddresses([]);},[authSession.userId,authSession.isTemporary]);
 
   // Security Audit Trail
   const [securityAuditLogs, setSecurityAuditLogs] = useState(() => {
