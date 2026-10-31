@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, ShoppingBag, ArrowRight, CornerDownLeft, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -51,14 +51,22 @@ export default function CommandSpotlight({ catalog = [] }) {
     }
   }, [isOpen]);
 
-  const filteredItems = query.trim()
+  // StoreContext supplies products grouped by category, not a flat array.
+  // Normalize before ANY render path (including the closed state), otherwise
+  // catalog.slice() crashes the entire app while the search panel is hidden.
+  const catalogItems = useMemo(() => Array.isArray(catalog)
     ? catalog
+    : Object.values(catalog && typeof catalog === 'object' ? catalog : {})
+      .flatMap(items => Array.isArray(items) ? items : []), [catalog]);
+
+  const filteredItems = query.trim()
+    ? catalogItems
         .filter((item) =>
           (item.name || '').toLowerCase().includes(query.toLowerCase()) ||
           (item.category || '').toLowerCase().includes(query.toLowerCase())
         )
         .slice(0, 7)
-    : catalog.slice(0, 5);
+    : catalogItems.slice(0, 5);
 
   const handleListKeyDown = (e) => {
     if (e.key === 'ArrowDown') {
