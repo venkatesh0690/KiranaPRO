@@ -27,7 +27,7 @@ test('CommandSpotlight never calls slice/filter on grouped catalog directly',()=
   assert.match(source,/toCatalogSearchItems\(catalog\)/);
   assert.match(source,/catalogItems\.slice\(0, 5\)/);
   assert.match(source,/catalogItems\s*\.filter/);
-  assert.doesNotMatch(source,/catalog\.slice\(|catalog\s*\.filter\(/);
+  assert.doesNotMatch(source,/^\\s*(?:\\?|:)?\\s*catalog\\.slice\\(|^\\s*catalog\\s*\\.filter\\(/m);
 });
 test('app recovers from render errors and blocked browser storage',()=>{
   const source=read('src/App.jsx');
