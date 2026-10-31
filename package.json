@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run test:areas && npm run test:highlights && npm run test:app && npm run test:fulfilment && npm run test:catalog && npm run test:photos && npm run test:sample-stores && npm run test:editorial && npm run test:security && npm run test:performance && npm run test:ai-images && npm run test:batch-admin && npm run test:cache && npm run test:image-assets && npm run test:uploaded-images && npm run test:location-navigation && vite build",
+    "build": "npm run test:areas && npm run test:highlights && npm run test:app && npm run test:fulfilment && npm run test:catalog && npm run test:photos && npm run test:sample-stores && npm run test:editorial && npm run test:security && npm run test:performance && npm run test:ai-images && npm run test:batch-admin && npm run test:cache && npm run test:image-assets && npm run test:uploaded-images && npm run test:location-navigation && npm run test:accessibility-startup && vite build",
     "mobile:build": "vite build && npx cap sync android",
     "mobile:sync": "npx cap sync android",
     "mobile:open": "npx cap open android",
@@ -29,7 +29,8 @@
     "test:cache": "node --test tests/cache-refresh.test.mjs",
     "test:image-assets": "node --test tests/localfresh-image-assets.test.mjs",
     "test:uploaded-images": "node --test tests/uploaded-product-mapping.test.mjs",
-    "test:location-navigation": "node --test tests/location-navigation-recovery.test.mjs"
+    "test:location-navigation": "node --test tests/location-navigation-recovery.test.mjs",
+    "test:accessibility-startup": "node --test tests/accessibility-startup.test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",
