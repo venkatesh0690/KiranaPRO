@@ -134,7 +134,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
           />
           <Route
             path="/home"
-            element={<HomePage userLocation={userLocation || 'Siripuram'} />}
+            element={<HomePage userLocation={userLocation || 'Siripuram'} onLocationChange={chooseDeliveryArea} />}
           />
           <Route
             path="/store/:id"
