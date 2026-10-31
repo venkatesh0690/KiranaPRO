@@ -219,10 +219,11 @@ function MainAppShell({ userLocation, setUserLocation }) {
 export default function App() {
   // Requirement: Ask location of user whenever the app is opened (initially null)
   const [userLocation, setUserLocation] = useState(() => {
-    if (typeof localStorage !== 'undefined') {
+    // Android private browsing and restrictive WebViews can throw on read.
+    try {
       const saved = localStorage.getItem('kp_user_location');
       if (isDeliveryArea(saved)) return saved;
-    }
+    } catch { /* Continue without browser storage. */ }
     return 'Siripuram';
   });
 
@@ -238,10 +239,12 @@ export default function App() {
       <StoreProvider>
         <CartProvider>
           <BrowserRouter>
-            <MainAppShell
-              userLocation={userLocation}
-              setUserLocation={setUserLocation}
-            />
+            <RouteRecoveryBoundary>
+              <MainAppShell
+                userLocation={userLocation}
+                setUserLocation={setUserLocation}
+              />
+            </RouteRecoveryBoundary>
           </BrowserRouter>
         </CartProvider>
       </StoreProvider>
