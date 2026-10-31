@@ -34,3 +34,20 @@ test('app recovers from render errors and blocked browser storage',()=>{
   assert.match(source,/const saved = localStorage\.getItem\('kp_user_location'\)/);
   assert.match(source,/catch \{ \/\* Continue without browser storage\. \*\/ \}/);
 });
+
+test('homepage location, grocery-list scan and recipe handlers are defined',()=>{
+  const home=read('src/pages/HomePage.jsx');
+  const app=read('src/App.jsx');
+  const scanner=read('src/components/ParchiScannerModal.jsx');
+  assert.match(home,/const \[isMapOpen, setIsMapOpen\] = useState\(false\)/);
+  assert.match(home,/const \[isParchiOpen, setIsParchiOpen\] = useState\(false\)/);
+  assert.match(home,/const \{ totalItems, addItem \} = useCart\(\)/);
+  assert.match(home,/<VizagZoneMapModal/);
+  assert.match(home,/<ParchiScannerModal/);
+  assert.match(app,/onLocationChange=\{chooseDeliveryArea\}/);
+  assert.match(scanner,/const \{ addItem \} = useCart\(\)/);
+  assert.doesNotMatch(scanner,/addToCart\(/);
+});
+test('allowed image hosts include product and offer image CDN',()=>{
+  assert.match(read('index.html'),/https:\/\/cdn\.cosmos\.so/);
+});
