@@ -40,11 +40,17 @@ try {
         const area=page.getByRole('button',{name:/MVP Colony/});
         if(await area.count()){
           await area.click({timeout:8000});
-          await page.getByRole('button',{name:/Continue to stores/}).click({timeout:8000});
-          await page.waitForTimeout(1800);
+          const cont=page.getByRole('button',{name:/Continue to stores/});
+          if(await cont.count())await cont.click({timeout:8000});
+          await page.waitForTimeout(1000);
           await snapshot('after area selection');
         }
       }
+      // The global command bar previously crashed when given grouped catalog data.
+      await page.keyboard.press('Control+k');
+      await page.waitForTimeout(300);
+      await snapshot('quick-search open');
+      await page.keyboard.press('Escape');
       await page.goto(origin+'/home',{waitUntil:'domcontentloaded',timeout:25000});
       await page.waitForTimeout(1800);
       await snapshot('direct home');
