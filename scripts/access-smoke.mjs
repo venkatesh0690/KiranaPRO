@@ -37,7 +37,7 @@ try {
         await loc.click({timeout:8000});
         await page.waitForTimeout(500);
         await snapshot('location page');
-        const area=page.getByRole('button',{name:/MVP Colony/});
+        const area=page.getByRole('button',{name:/MVP Colony/}).first();
         if(await area.count()){
           await area.click({timeout:8000});
           const cont=page.getByRole('button',{name:/Continue to stores/});
