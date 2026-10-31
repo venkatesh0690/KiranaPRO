@@ -4,7 +4,7 @@ import { cleanWhatsAppText, parseGroceryLines, fuzzyMatchProduct } from '../util
 import { useCart } from '../context/CartContext';
 
 export default function ParchiScannerModal({ catalog, onClose }) {
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
   const [activeTab, setActiveTab] = useState('paste'); // 'paste' | 'photo'
   const [inputText, setInputText] = useState(
     '1. 2 kg Tomatoes\n2. 500g Bendakaya\n3. 1 kg Toor Dal\n4. 1 bunch Kothimeera\n5. 1 kg Onions'
@@ -57,7 +57,7 @@ export default function ParchiScannerModal({ catalog, onClose }) {
     matchedItems.forEach((item) => {
       if (item.selected && item.matchedProduct) {
         for (let q = 0; q < item.selectedQty; q++) {
-          addToCart(item.matchedProduct, 'localfresh');
+          addItem('localfresh', item.matchedProduct);
         }
         count++;
       }
