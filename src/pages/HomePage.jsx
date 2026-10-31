@@ -25,16 +25,18 @@ const storeFilters = [
   { id: 'rated', label: 'Top rated' },
 ];
 
-export default function HomePage({ userLocation }) {
+export default function HomePage({ userLocation, onLocationChange }) {
   const navigate = useNavigate();
   const { stores, products } = useStore();
-  const { totalItems } = useCart();
+  const { totalItems, addItem } = useCart();
   const { orderCount } = useCustomerOrders();
   const { authSession } = useSecurity();
   const [activeFilter, setActiveFilter] = useState('all');
   const [authMode, setAuthMode] = useState(null);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [seniorMode, setSeniorMode] = useState(false);
+  const [isMapOpen, setIsMapOpen] = useState(false);
+  const [isParchiOpen, setIsParchiOpen] = useState(false);
 
   const areaStores = getStoresForArea(stores,userLocation);
   const filteredStores = areaStores.filter(store => {
@@ -314,6 +316,16 @@ export default function HomePage({ userLocation }) {
 
       <CategoriesModal isOpen={categoriesOpen} onClose={() => setCategoriesOpen(false)} onSelectCategory={openCategory} />
       <AuthModal isOpen={Boolean(authMode)} initialMode={authMode || 'login'} onClose={() => setAuthMode(null)} />
+      {isMapOpen && <VizagZoneMapModal
+        currentArea={userLocation}
+        onSelectArea={area => { onLocationChange?.(area); setIsMapOpen(false); }}
+        onClose={() => setIsMapOpen(false)}
+      />}
+      {isParchiOpen && <ParchiScannerModal
+        catalog={Object.values(products || {}).flatMap(list =>
+          Array.isArray(list) ? list.filter(item => String(item?.id || '').startsWith('lf-')) : [])}
+        onClose={() => setIsParchiOpen(false)}
+      />}
     </div>
   );
 }

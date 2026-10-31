@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, ShoppingBag, ArrowRight, CornerDownLeft, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { triggerHaptic } from '../utils/nativePlatform';
+import { toCatalogSearchItems } from '../utils/catalogSearchIndex';
 
 /**
  * Desktop Spotlight Command Bar (⌘K / Ctrl+K / /) (Phase 36 Prompt 36.1)
@@ -51,14 +52,19 @@ export default function CommandSpotlight({ catalog = [] }) {
     }
   }, [isOpen]);
 
+  // StoreContext supplies products grouped by category, not a flat array.
+  // Normalize before ANY render path (including the closed state), otherwise
+  // catalog.slice() crashes the entire app while the search panel is hidden.
+  const catalogItems = useMemo(() => toCatalogSearchItems(catalog), [catalog]);
+
   const filteredItems = query.trim()
-    ? catalog
+    ? catalogItems
         .filter((item) =>
           (item.name || '').toLowerCase().includes(query.toLowerCase()) ||
           (item.category || '').toLowerCase().includes(query.toLowerCase())
         )
         .slice(0, 7)
-    : catalog.slice(0, 5);
+    : catalogItems.slice(0, 5);
 
   const handleListKeyDown = (e) => {
     if (e.key === 'ArrowDown') {
