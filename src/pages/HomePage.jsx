@@ -36,7 +36,22 @@ export default function HomePage({ userLocation, onLocationChange }) {
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [seniorMode, setSeniorMode] = useState(false);
   const [isMapOpen, setIsMapOpen] = useState(false);
-  const [isParchiOpen, setIsParchiOpen] = useState(false);
+    const [isParchiOpen, setIsParchiOpen] = useState(false);
+  const [passActive, setPassActive] = useState(() => {
+    try {
+      return localStorage.getItem('kiranapro_pass') !== 'inactive';
+    } catch {
+      return true;
+    }
+  });
+
+  const togglePass = () => {
+    setPassActive(prev => {
+      const next = !prev;
+      try { localStorage.setItem('kiranapro_pass', next ? 'active' : 'inactive'); } catch {}
+      return next;
+    });
+  };
 
   const areaStores = getStoresForArea(stores,userLocation);
   const filteredStores = areaStores.filter(store => {
@@ -107,34 +122,65 @@ export default function HomePage({ userLocation, onLocationChange }) {
       <div className="kp-concept-search-line">
         <button type="button" className="kp-concept-search" onClick={() => navigate('/search')} aria-label="Search all groceries, vegetables and stores">
           <Search size={19} aria-hidden="true" />
-          <span>What are you looking for?</span>
+          <span>Search 189+ groceries, direct mandi vegetables & stores...</span>
           <span className="kp-concept-search-arrow"><ArrowRight size={18} aria-hidden="true" /></span>
         </button>
         <button
           type="button"
+          className="kp-scan-parchi-neu-btn"
           onClick={() => setIsParchiOpen(true)}
-          style={{
-            marginLeft: '8px',
-            padding: '10px 14px',
-            background: 'var(--brand-primary, #1E3A2B)',
-            color: '#FFFFFF',
-            border: 'none',
-            borderRadius: '12px',
-            fontSize: '12px',
-            fontWeight: '800',
-            cursor: 'pointer',
-            whiteSpace: 'nowrap',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px'
-          }}
           title="Snap or Paste Paper Grocery List"
         >
           <span>📝</span> Scan Parchi
         </button>
       </div>
 
-      <section className="kp-concept-categories kp-concept-compact-categories" aria-labelledby="kp-concept-categories-title">
+      {/* ── ⭐ KiranaPRO PASS HERO CARD (Tata Neu NeuPass-Inspired) ── */}
+      <section className="kp-pass-hero-card" aria-label="KiranaPRO Pass Loyalty & Member Benefits">
+        <div className="kp-pass-badge-row">
+          <span className="kp-pass-title-badge">
+            <span>⭐</span> KiranaPRO Pass
+          </span>
+          <button
+            type="button"
+            className={`kp-pass-toggle-pill ${passActive ? 'is-active' : ''}`}
+            onClick={togglePass}
+            aria-pressed={passActive}
+            title="Toggle KiranaPRO Pass benefits"
+          >
+            <span>{passActive ? '✓ VIP ACTIVE' : '+ ACTIVATE PASS'}</span>
+          </button>
+        </div>
+
+        <div className="kp-pass-hero-body">
+          <div className="kp-pass-coins-block">
+            <h3>140 KiranaCoins</h3>
+            <p>Earn 5% Neu-style Coins on every local mandi & store order</p>
+          </div>
+          <span className="kp-pass-value-tag">Worth ₹140</span>
+        </div>
+
+        <div className="kp-pass-perks-grid">
+          <div className="kp-pass-perk-item">
+            <span>🛵</span>
+            <span>₹0 Free Delivery (Always)</span>
+          </div>
+          <div className="kp-pass-perk-item">
+            <span>💰</span>
+            <span>5% KiranaCoins Cashback</span>
+          </div>
+          <div className="kp-pass-perk-item">
+            <span>⚡</span>
+            <span>Priority Mandi Harvest</span>
+          </div>
+          <div className="kp-pass-perk-item">
+            <span>🎁</span>
+            <span>Free Dhaniya on ₹199+</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="kp-concept-categories kp-concept-compact-categories kp-neu-categories-section" aria-labelledby="kp-concept-categories-title">
         <div className="kp-concept-section-heading">
           <div className="kp-concept-heading-copy">
             <span className="kp-concept-index">01 / EXPLORE</span>
@@ -144,17 +190,19 @@ export default function HomePage({ userLocation, onLocationChange }) {
             View all <ArrowUpRight size={16} aria-hidden="true" />
           </button>
         </div>
-        <div className="kp-concept-mini-category-list" aria-label="Swipe through shopping categories" tabIndex={0}>
+        <div className="kp-neu-circular-grid" aria-label="Swipe through shopping categories" tabIndex={0} role="list">
           {allCategories.slice(0, 10).map(category => (
             <button
               key={category.id}
-              className="kp-concept-mini-category-card"
+              className="kp-neu-circle-card"
               type="button"
               onClick={() => openCategory(category.name)}
               aria-label={`Shop ${category.name}`}
             >
-              <span className="kp-concept-mini-category-art" aria-hidden="true">{category.icon}</span>
-              <span className="kp-concept-mini-category-name">{category.name}</span>
+              <div className="kp-neu-circle-bubble" aria-hidden="true">
+                {category.icon}
+              </div>
+              <span className="kp-neu-circle-label">{category.name}</span>
             </button>
           ))}
         </div>

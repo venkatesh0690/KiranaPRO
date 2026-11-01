@@ -11,9 +11,9 @@ export const ANDHRA_RECIPE_BASKETS = Object.freeze([
     image: '🍆',
     desc: 'Rich stuffed baby brinjal curry cooked with roasted peanuts, sesame seeds, and tamarind.',
     ingredients: [
-      { id: 'lf-1002', name: 'Brinjal / Vankaya (Small tender)', qty: 1, unit: '500g', price: 28 },
-      { id: 'lf-1009', name: 'Onions (Medium uniform)', qty: 1, unit: '1kg', price: 34 },
-      { id: 'lf-1022', name: 'Fresh Coriander / Dhaniya', qty: 1, unit: 'bunch', price: 10 },
+      { id: 'rb-vankaya', name: 'Brinjal / Vankaya (Small tender)', qty: 1, unit: '500g', price: 28 },
+      { id: 'rb-onion', name: 'Onions (Medium uniform)', qty: 1, unit: '1kg', price: 34 },
+      { id: 'rb-coriander', name: 'Fresh Coriander / Dhaniya', qty: 1, unit: 'bunch', price: 10 },
       { id: 'staple-peanut', name: 'Roasted Peanuts Pack', qty: 1, unit: '200g', price: 32 }
     ]
   },
@@ -26,10 +26,10 @@ export const ANDHRA_RECIPE_BASKETS = Object.freeze([
     image: '🥣',
     desc: 'Traditional comforting Andhra tamarind rasam with crispy sliced lady finger fry.',
     ingredients: [
-      { id: 'lf-1001', name: 'Lady Finger / Bendakaya (Tender fry cut)', qty: 1, unit: '500g', price: 26 },
-      { id: 'lf-1008', name: 'Country Tomatoes (Naatu Tamata)', qty: 1, unit: '1kg', price: 28 },
+      { id: 'rb-bendakaya', name: 'Lady Finger / Bendakaya (Tender fry cut)', qty: 1, unit: '500g', price: 26 },
+      { id: 'rb-tomato', name: 'Country Tomatoes (Naatu Tamata)', qty: 1, unit: '1kg', price: 28 },
       { id: 'staple-toor-dal', name: 'Tata Sampann Toor Dal', qty: 1, unit: '500g', price: 78 },
-      { id: 'lf-1056', name: 'Curry Leaves & Green Chillies', qty: 1, unit: 'pack', price: 12 }
+      { id: 'rb-curry-chillies', name: 'Curry Leaves & Green Chillies', qty: 1, unit: 'pack', price: 12 }
     ]
   },
   {
@@ -41,9 +41,9 @@ export const ANDHRA_RECIPE_BASKETS = Object.freeze([
     image: '🍚',
     desc: 'Fragrant aromatic pulav loaded with fresh carrots, beans, peas, and mint.',
     ingredients: [
-      { id: 'lf-1013', name: 'Carrots & Green Beans Fresh Cut', qty: 1, unit: '500g', price: 36 },
-      { id: 'lf-1009', name: 'Onions (Slicing size)', qty: 1, unit: '1kg', price: 34 },
-      { id: 'lf-1024', name: 'Fresh Mint & Green Chillies', qty: 1, unit: 'pack', price: 15 },
+      { id: 'rb-carrots-beans', name: 'Carrots & Green Beans Fresh Cut', qty: 1, unit: '500g', price: 36 },
+      { id: 'rb-onion', name: 'Onions (Slicing size)', qty: 1, unit: '1kg', price: 34 },
+      { id: 'rb-mint-chillies', name: 'Fresh Mint & Green Chillies', qty: 1, unit: 'pack', price: 15 },
       { id: 'staple-rice', name: 'Basmati Rice Aged 1kg', qty: 1, unit: '1kg', price: 95 }
     ]
   },
@@ -57,9 +57,9 @@ export const ANDHRA_RECIPE_BASKETS = Object.freeze([
     desc: 'Protein-packed green gram crepes paired with spicy tangy ginger chutney.',
     ingredients: [
       { id: 'staple-moong', name: 'Whole Green Moong Dal', qty: 1, unit: '500g', price: 65 },
-      { id: 'lf-1018', name: 'Fresh Ginger Root', qty: 1, unit: '100g', price: 14 },
-      { id: 'lf-1026', name: 'Green Chillies & Cumin Pack', qty: 1, unit: 'pack', price: 12 },
-      { id: 'lf-1009', name: 'Onions (Fine chopped topping)', qty: 1, unit: '500g', price: 18 }
+      { id: 'rb-ginger', name: 'Fresh Ginger Root', qty: 1, unit: '100g', price: 14 },
+      { id: 'rb-chillies-cumin', name: 'Green Chillies & Cumin Pack', qty: 1, unit: 'pack', price: 12 },
+      { id: 'rb-onion', name: 'Onions (Fine chopped topping)', qty: 1, unit: '500g', price: 18 }
     ]
   },
   {
@@ -71,10 +71,10 @@ export const ANDHRA_RECIPE_BASKETS = Object.freeze([
     image: '🍲',
     desc: 'Tangy yellow cucumber cooked with creamy toor dal and fragrant ghee tadka.',
     ingredients: [
-      { id: 'lf-1005', name: 'Yellow Cucumber (Dosakaya)', qty: 1, unit: '500g', price: 18 },
+      { id: 'rb-dosakaya', name: 'Yellow Cucumber (Dosakaya)', qty: 1, unit: '500g', price: 18 },
       { id: 'staple-toor-dal', name: 'Tata Sampann Toor Dal', qty: 1, unit: '500g', price: 78 },
-      { id: 'lf-1008', name: 'Country Tomatoes', qty: 1, unit: '500g', price: 15 },
-      { id: 'lf-1029', name: 'Garlic Bulbs (Peeled pods)', qty: 1, unit: '100g', price: 22 }
+      { id: 'rb-tomato', name: 'Country Tomatoes', qty: 1, unit: '500g', price: 15 },
+      { id: 'rb-garlic', name: 'Garlic Bulbs (Peeled pods)', qty: 1, unit: '100g', price: 22 }
     ]
   },
   {
@@ -86,10 +86,10 @@ export const ANDHRA_RECIPE_BASKETS = Object.freeze([
     image: '☕',
     desc: 'Vizag beach-style large bajji chillies stuffed with ajwain and served with hot chai.',
     ingredients: [
-      { id: 'lf-1034', name: 'Large Andhra Bajji Chillies', qty: 1, unit: '250g', price: 20 },
+      { id: 'rb-bajji-chillies', name: 'Large Andhra Bajji Chillies', qty: 1, unit: '250g', price: 20 },
       { id: 'staple-besan', name: 'Fine Besan (Gram Flour)', qty: 1, unit: '500g', price: 48 },
       { id: 'dairy-milk', name: 'Heritage Full Cream Milk', qty: 1, unit: '500ml', price: 32 },
-      { id: 'lf-1018', name: 'Fresh Ginger for Chai', qty: 1, unit: '100g', price: 14 }
+      { id: 'rb-ginger', name: 'Fresh Ginger for Chai', qty: 1, unit: '100g', price: 14 }
     ]
   }
 ]);

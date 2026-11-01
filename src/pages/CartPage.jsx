@@ -368,15 +368,15 @@ export default function CartPage({ userLocation }) {
       {/* ── KiranaPRO Parivaar Pass Card (Phase 17 Prompt 17.2) ── */}
       <div className="kp-parivaar-pass-card">
         <div className="kp-pp-left">
-          <span className="kp-pp-title">👑 KiranaPRO Parivaar Pass · ₹29/Month</span>
-          <span className="kp-pp-sub">Save ₹7 on this order right now + ₹0 Delivery Fee all month (Pay via COD)</span>
+          <span className="kp-pp-title">⭐ KiranaPRO Pass · VIP Member Benefits</span>
+          <span className="kp-pp-sub">Save ₹7 on this order right now + ₹0 Delivery Fee + Earn 5% KiranaCoins (Pay via COD)</span>
         </div>
         <button
           type="button"
           className={`kp-pp-checkbox ${parivaarPassActive ? 'active' : ''}`}
           onClick={() => setParivaarPassActive(p => !p)}
         >
-          {parivaarPassActive ? '✓ Added (₹29)' : '+ Add Pass (₹29)'}
+          {parivaarPassActive ? '✓ KiranaPRO Pass Active (₹29)' : '+ Activate KiranaPRO Pass (₹29)'}
         </button>
       </div>
 
