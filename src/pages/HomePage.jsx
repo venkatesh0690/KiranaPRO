@@ -355,13 +355,6 @@ export default function HomePage({ userLocation, onLocationChange }) {
         </div>
       </header>
 
-      {passActive && (
-        <div className="kp-pass-active-strip">
-          <span>⭐ <strong>KiranaPRO Pass Active:</strong> ₹0 Free Delivery &bull; 5% Coins Cashback unlocked!</span>
-          <button type="button" className="kp-pass-strip-close" onClick={() => setIsPassModalOpen(true)} title="Manage Pass">Manage</button>
-        </div>
-      )}
-
       {/* ── Slidable Hero Banner Carousel with Distinct Styles & Smooth Transitions ── */}
       <section
         className="kp-instacart-hero-section"
@@ -585,10 +578,6 @@ export default function HomePage({ userLocation, onLocationChange }) {
           </div>
         </div>
       </section>
-
-      <div className="kp-concept-footer">
-        <span>KiranaPRO</span>
-      </div>
 
       <CategoriesModal isOpen={categoriesOpen} onClose={() => setCategoriesOpen(false)} onSelectCategory={openCategory} />
       <AuthModal isOpen={Boolean(authMode)} initialMode={authMode || 'login'} onClose={() => setAuthMode(null)} />

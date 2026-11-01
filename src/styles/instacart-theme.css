@@ -929,8 +929,12 @@
 /* ── "WHAT TO COOK TODAY" BANNER (Preserved as requested) ── */
 .kp-recipe-banner-section {
   max-width: 1240px !important;
-  margin: 32px auto 0 !important;
+  margin: 28px auto 16px !important;
   padding: 0 20px !important;
+}
+
+.kp-concept-footer {
+  display: none !important;
 }
 
 .kp-recipe-hero-banner {
@@ -1024,11 +1028,16 @@
   
   /* Mobile Resizing for Stores Section & Cards to perfectly match screen size */
   .home-container.kp-home {
-    padding: 0 0 84px 0 !important;
+    padding: 0 0 10px 0 !important;
     width: 100% !important;
     max-width: 100vw !important;
     overflow-x: hidden !important;
     box-sizing: border-box !important;
+  }
+
+  .kp-recipe-banner-section {
+    padding: 0 16px !important;
+    margin: 20px auto 12px !important;
   }
 
   .kp-concept-stores {
