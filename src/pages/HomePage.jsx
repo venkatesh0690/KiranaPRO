@@ -282,29 +282,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
         </div>
       </section>
 
-      {/* ── 04 / My Monthly Kirana List (Phase 10 Prompt 10.2) ── */}
-      <section className="kp-home-app-showcase" style={{ marginTop: '16px' }} aria-labelledby="kp-monthly-title">
-        <div className="kp-has-heading">
-          <div>
-            <span className="kp-concept-index">04 / MONTHLY RATIONS</span>
-            <h2 id="kp-monthly-title">My Household Kirana List</h2>
-          </div>
-          <span className="kp-has-sub">1-Tap Repeat Order</span>
-        </div>
-        <div style={{ background: '#FFFFFF', border: '1.5px solid #E2E8F0', borderRadius: '14px', padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-          <div>
-            <strong style={{ fontSize: '13.5px', color: '#0F172A', display: 'block' }}>Monthly Staples Pack (Dal, Rice, Oil, Spices)</strong>
-            <span style={{ fontSize: '11.5px', color: '#64748B' }}>Save ₹140 vs Quick-Commerce dark stores · Fulfilled by neighborhood Kiranas</span>
-          </div>
-          <button
-            type="button"
-            style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #7521FF 0%, #DE00B7 100%)', color: '#FFFFFF', border: 'none', borderRadius: '8px', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}
-            onClick={() => navigate('/store/localfresh')}
-          >
-            ⚡ Re-Order Basket (₹640)
-          </button>
-        </div>
-      </section>
+      
 
       <div className="kp-concept-footer">
         <span>KiranaPRO</span>
