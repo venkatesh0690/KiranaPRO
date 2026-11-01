@@ -1,1 +1,1 @@
-feat: add logo to banner 1, govt mandi to banner 2, cookbook and cloud rest to banner 3  
+feat: place KiranaCoins right of search bar and fix user name visibility on profile page  

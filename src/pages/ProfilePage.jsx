@@ -46,9 +46,20 @@ export default function ProfilePage({ userLocation }) {
 
   const [authModalMode, setAuthModalMode] = useState(null);
 
+  // Stored Name Fallback for Guest / Customer Sessions
+  const [savedCustomName, setSavedCustomName] = useState(() => {
+    try {
+      return localStorage.getItem('kp_custom_user_name') || '';
+    } catch {
+      return '';
+    }
+  });
+
+  const effectiveUserName = authSession.userName || savedCustomName || '';
+
   // Edit Name State (Requirement: Add option to modify user name)
   const [isEditNameModalOpen, setIsEditNameModalOpen] = useState(false);
-  const [newNameInput, setNewNameInput] = useState(authSession.userName || '');
+  const [newNameInput, setNewNameInput] = useState(effectiveUserName || '');
   const [nameError, setNameError] = useState('');
   const [nameSuccess, setNameSuccess] = useState('');
 
@@ -81,6 +92,12 @@ export default function ProfilePage({ userLocation }) {
     setNameError('');
     const res = updateUserName(newNameInput);
     if (res.success) {
+      try {
+        localStorage.setItem('kp_custom_user_name', res.name);
+      } catch {
+        /* Ignore storage error */
+      }
+      setSavedCustomName(res.name);
       setNameSuccess('Name updated successfully!');
       setTimeout(() => {
         setNameSuccess('');
@@ -133,15 +150,15 @@ export default function ProfilePage({ userLocation }) {
           <div className="profile-avatar">{authSession.isAuthenticated ? '👨‍💼' : '👤'}</div>
         </div>
         <div className="profile-user-info">
-          {authSession.isAuthenticated && authSession.userName ? (
+          {effectiveUserName ? (
             <>
               <div className="profile-name-edit-row">
-                <h2 className="profile-user-name">{authSession.userName}</h2>
+                <h2 className="profile-user-name">{effectiveUserName}</h2>
                 <button
                   type="button"
                   className="profile-edit-badge-btn"
                   onClick={() => {
-                    setNewNameInput(authSession.userName);
+                    setNewNameInput(effectiveUserName);
                     setIsEditNameModalOpen(true);
                   }}
                   title="Modify User Name"
@@ -175,6 +192,9 @@ export default function ProfilePage({ userLocation }) {
                 </button>
               </div>
               <span className="profile-user-phone">Sign in to track orders & save delivery address</span>
+              <span className="profile-user-location">
+                📍 {userLocation || 'Delivery area not selected'} · Visakhapatnam
+              </span>
               <div className="profile-guest-actions">
                 <button
                   type="button"

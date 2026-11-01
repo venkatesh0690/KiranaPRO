@@ -257,28 +257,8 @@ export default function HomePage({ userLocation, onLocationChange }) {
             </button>
           </div>
 
-          {/* Right Controls: KiranaCoins (clean, pass details hidden until clicked), Location, Profile/Auth, Cart */}
+          {/* Right Controls: Location, Profile/Auth, Cart */}
           <div className="kp-topbar-actions">
-            {/* KiranaCoins Button - Pass active details hidden until clicked */}
-            <button
-              type="button"
-              className="kp-kiranacoins-banner"
-              onClick={() => setIsPassModalOpen(true)}
-              title="KiranaCoins Rewards"
-              aria-label="KiranaCoins: 140 Coins. Worth ₹140"
-            >
-              <div className="kp-kc-coin-wrap">
-                <span className="kp-kc-coin-icon">🪙</span>
-              </div>
-              <div className="kp-kc-info">
-                <div className="kp-kc-top">
-                  <span className="kp-kc-name">KiranaCoins</span>
-                  <span className="kp-kc-badge">140</span>
-                </div>
-                <span className="kp-kc-sub">Worth ₹140</span>
-              </div>
-            </button>
-
             {/* Delivery location */}
             <button type="button" className="kp-concept-location" onClick={() => setIsMapOpen(true)} title="Change delivery neighborhood">
               <span className="kp-concept-pin"><MapPin size={16} strokeWidth={2.2} /></span>
@@ -328,7 +308,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
           </div>
         </div>
 
-        {/* Dedicated Search Bar Line Placed Below Logo - In-Place Search (Doesn't open another page) */}
+        {/* Dedicated Search Bar Line Placed Below Logo with KiranaCoins on the Right */}
         <div className="kp-concept-search-line kp-home-dedicated-search">
           <div className="kp-search-bar-wrap">
             <Search size={16} aria-hidden="true" className="kp-concept-search-icon" />
@@ -363,6 +343,26 @@ export default function HomePage({ userLocation, onLocationChange }) {
               <Camera size={15} strokeWidth={2.2} />
             </button>
           </div>
+
+          {/* KiranaCoins Button Placed on Right Side of the Search Bar */}
+          <button
+            type="button"
+            className="kp-kiranacoins-banner"
+            onClick={() => setIsPassModalOpen(true)}
+            title="KiranaCoins Rewards"
+            aria-label="KiranaCoins: 140 Coins. Worth ₹140"
+          >
+            <div className="kp-kc-coin-wrap">
+              <span className="kp-kc-coin-icon">🪙</span>
+            </div>
+            <div className="kp-kc-info">
+              <div className="kp-kc-top">
+                <span className="kp-kc-name">KiranaCoins</span>
+                <span className="kp-kc-badge">140</span>
+              </div>
+              <span className="kp-kc-sub">Worth ₹140</span>
+            </div>
+          </button>
 
           {/* Instant live search results dropdown on Home without opening another page */}
           {isSearchFocused && searchQuery.trim() && matchingProducts.length > 0 && (

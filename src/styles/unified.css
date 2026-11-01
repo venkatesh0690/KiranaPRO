@@ -346,3 +346,51 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
     transition: none !important;
   }
 }
+
+
+/* ── USER PROFILE HIGH CONTRAST DARK TEXT STYLING ── */
+.profile-user-card {
+  background: #FFFFFF !important;
+  border: 1.5px solid var(--kp-border, #E2E8F0) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+  color: #0F172A !important;
+}
+
+.profile-avatar-wrap {
+  background: #F0FDF4 !important;
+  border: 2px solid #86EFAC !important;
+  color: #166534 !important;
+}
+
+.profile-user-name {
+  color: #0F172A !important;
+  font-size: 1.3rem !important;
+  font-weight: 800 !important;
+  margin: 0 !important;
+  line-height: 1.25 !important;
+}
+
+.profile-user-phone {
+  color: #334155 !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+  display: block !important;
+  margin-top: 4px !important;
+}
+
+.profile-user-location {
+  color: #64748B !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  display: block !important;
+  margin-top: 3px !important;
+}
+
+.profile-edit-badge-btn {
+  background: #F0FDF4 !important;
+  border: 1px solid #86EFAC !important;
+  color: #166534 !important;
+  font-weight: 700 !important;
+}
