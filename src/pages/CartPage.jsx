@@ -494,7 +494,7 @@ export default function CartPage({ userLocation }) {
             <div key={it.id} className="cart-compact-row">
               {/* Small Icon Thumbnail (matching Image 2) */}
               <div className="cc-thumb-wrap">
-                <CatalogProductVisual product={it} />
+                <CatalogProductVisual product={{ ...it, name: cleanItemName(it.name) }} />
               </div>
 
               {/* Item Name & Details */}

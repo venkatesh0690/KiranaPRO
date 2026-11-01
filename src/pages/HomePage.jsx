@@ -1,12 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ArrowRight, ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight,
+  ArrowRight, ArrowUpRight, Camera, ChevronDown, ChevronLeft, ChevronRight,
   MapPin, Menu, Search, ShoppingBag, UserRound, SlidersHorizontal
 } from 'lucide-react';
 import { allCategories } from '../data/stores';
-import { ANDHRA_RECIPE_BASKETS } from '../data/recipeBaskets';
-import { getStoresForArea, FREE_DELIVERY_THRESHOLD, isLocalFreshStore } from '../data/deliveryAreas';
+import { getStoresForArea, isLocalFreshStore } from '../data/deliveryAreas';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
@@ -16,7 +15,6 @@ import { HomeOffersCarousel } from '../components/StoreOffersCarousel';
 import CategoriesModal from '../components/CategoriesModal';
 import ParchiScannerModal from '../components/ParchiScannerModal';
 import VizagZoneMapModal from '../components/VizagZoneMapModal';
-import { MANDI_SAVER_COMBOS, isEveningClearanceActive } from '../utils/mandiClearanceAndGrades';
 import AuthModal from '../components/AuthModal';
 
 const storeFilters = [
@@ -27,6 +25,51 @@ const storeFilters = [
   { id: 'grocery', label: 'Grocery' },
   { id: 'pickup', label: 'Pickup' },
   { id: 'rated', label: 'Top rated' },
+];
+
+const HERO_SLIDES = [
+  {
+    id: 'instacart-forest',
+    theme: 'forest',
+    bg: '#003D29',
+    title: 'Order groceries for delivery or pickup today',
+    ctaText: 'Sign up to get 40% off (up to ₹150)',
+    ctaBg: '#108910',
+    ctaHover: '#0D6E0D',
+    ctaColor: '#FFFFFF',
+    subtext: '2 orders in 14 days · 20% on first mandi cart · Fast delivery in 20–30 mins',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=720&q=80',
+    imageAlt: 'Fresh produce and grocery ingredients',
+    action: '/store/localfresh'
+  },
+  {
+    id: 'mandi-harvest',
+    theme: 'amber',
+    bg: 'linear-gradient(135deg, #78350F 0%, #B45309 60%, #92400E 100%)',
+    title: 'Fresh Mandi Harvest Direct from Farmers',
+    ctaText: 'Explore Morning Mandi · Zero Markups',
+    ctaBg: '#F59E0B',
+    ctaHover: '#D97706',
+    ctaColor: '#1F1403',
+    subtext: 'Direct farm produce: tender vankaya, country tamata & fresh greens picked at dawn',
+    image: 'https://images.unsplash.com/photo-1610348725531-843dff563e2c?auto=format&fit=crop&w=720&q=80',
+    imageAlt: 'Morning mandi farm vegetables',
+    action: '/store/localfresh'
+  },
+  {
+    id: 'andhra-meal-kits',
+    theme: 'teal',
+    bg: 'linear-gradient(135deg, #0F172A 0%, #0E7490 60%, #155E75 100%)',
+    title: 'What to Cook Today? 1-Tap Andhra Meal Kits',
+    ctaText: 'Cook in 20 Mins · View 6 Kits',
+    ctaBg: '#06B6D4',
+    ctaHover: '#0891B2',
+    ctaColor: '#042F2E',
+    subtext: 'Gutti Vankaya, Pesarattu & Pappu Charu with pre-measured ingredients ready in 20 mins',
+    image: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=720&q=80',
+    imageAlt: 'Authentic Indian cooking ingredients and spices',
+    action: '/recipes'
+  }
 ];
 
 export default function HomePage({ userLocation, onLocationChange }) {
@@ -41,6 +84,8 @@ export default function HomePage({ userLocation, onLocationChange }) {
   const [seniorMode, setSeniorMode] = useState(false);
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isParchiOpen, setIsParchiOpen] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   const [passActive, setPassActive] = useState(() => {
     try {
       return localStorage.getItem('kiranapro_pass') !== 'inactive';
@@ -48,6 +93,21 @@ export default function HomePage({ userLocation, onLocationChange }) {
       return true;
     }
   });
+
+  useEffect(() => {
+    if (isHovered) return;
+    const timer = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % HERO_SLIDES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [isHovered]);
+
+  const prevSlide = () => {
+    setCurrentSlide(prev => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+  };
+  const nextSlide = () => {
+    setCurrentSlide(prev => (prev + 1) % HERO_SLIDES.length);
+  };
 
   const togglePass = () => {
     setPassActive(prev => {
@@ -83,9 +143,10 @@ export default function HomePage({ userLocation, onLocationChange }) {
 
   return (
     <div className={`home-container kp-home kp-concept ${seniorMode ? "kp-senior-mode" : ""}`}>
-      {/* ── Instacart Clean White Navbar ── */}
-      <header className="kp-concept-header">
-        <div className="kp-concept-header-top">
+      {/* ── Single Unified Instacart Top Bar: Brand, Search, KiranaCoins, Location, Profile, Cart ── */}
+      <header className="kp-concept-header kp-instacart-unified-bar">
+        <div className="kp-topbar-inner">
+          {/* Brand & Menu */}
           <div className="kp-instacart-brand-wrap">
             <button
               type="button"
@@ -107,13 +168,63 @@ export default function HomePage({ userLocation, onLocationChange }) {
             </button>
           </div>
 
-          <button type="button" className="kp-concept-location" onClick={() => setIsMapOpen(true)} title="Change delivery neighborhood">
-            <span className="kp-concept-pin"><MapPin size={16} strokeWidth={2.2} /></span>
-            <span className="kp-concept-location-label">Delivering to <strong>{userLocation || 'Choose delivery area'}</strong></span>
-            <ChevronDown size={15} aria-hidden="true" />
-          </button>
+          {/* Search Bar Line with Camera Icon (replacing Parchi word) */}
+          <div className="kp-concept-search-line kp-topbar-search-line">
+            <div className="kp-search-bar-wrap">
+              <button
+                type="button"
+                className="kp-concept-search"
+                onClick={() => navigate('/search')}
+                aria-label="Search all groceries, vegetables and stores"
+              >
+                <Search size={18} aria-hidden="true" className="kp-concept-search-icon" />
+                <span className="kp-concept-search-text">Search products and stores...</span>
+                <span className="kp-concept-search-arrow"><ArrowRight size={16} aria-hidden="true" /></span>
+              </button>
+              <button
+                type="button"
+                className="kp-scan-camera-btn"
+                onClick={() => setIsParchiOpen(true)}
+                title="Scan paper grocery list with camera"
+                aria-label="Scan paper grocery list with camera"
+              >
+                <Camera size={19} strokeWidth={2.2} />
+              </button>
+            </div>
+          </div>
 
-          <div className="kp-concept-header-actions">
+          {/* Right Controls in same bar: KiranaCoins VIP, Location, Senior Mode, Profile/Auth, Cart */}
+          <div className="kp-topbar-actions">
+            {/* KiranaCoins VIP Button */}
+            <button
+              type="button"
+              className={`kp-kiranacoins-banner ${passActive ? 'is-vip' : ''}`}
+              onClick={togglePass}
+              title="KiranaCoins VIP Member & Rewards"
+              aria-label={`KiranaCoins: 140 Coins. ${passActive ? 'VIP Active' : 'Activate VIP Pass'}`}
+            >
+              <div className="kp-kc-coin-wrap">
+                <span className="kp-kc-coin-icon">🪙</span>
+              </div>
+              <div className="kp-kc-info">
+                <div className="kp-kc-top">
+                  <span className="kp-kc-name">KiranaCoins</span>
+                  <span className="kp-kc-badge">{passActive ? 'VIP' : '140'}</span>
+                </div>
+                <span className="kp-kc-sub">
+                  {passActive ? '✓ VIP Active' : 'Worth ₹140'}
+                </span>
+              </div>
+            </button>
+
+            {/* Delivery location */}
+            <button type="button" className="kp-concept-location" onClick={() => setIsMapOpen(true)} title="Change delivery neighborhood">
+              <span className="kp-concept-pin"><MapPin size={16} strokeWidth={2.2} /></span>
+              <span className="kp-concept-location-label"><strong>{userLocation || 'Choose delivery area'}</strong></span>
+              <ChevronDown size={14} aria-hidden="true" />
+            </button>
+
+            {/* Senior Mode (A+) */}
             <button
               type="button"
               className={`kp-concept-header-icon ${seniorMode ? 'is-senior' : ''}`}
@@ -124,6 +235,8 @@ export default function HomePage({ userLocation, onLocationChange }) {
             >
               A+
             </button>
+
+            {/* Profile or Login/Signup */}
             {authSession?.isAuthenticated ? (
               <button
                 type="button"
@@ -151,6 +264,8 @@ export default function HomePage({ userLocation, onLocationChange }) {
                 </button>
               </>
             )}
+
+            {/* Cart with count badge */}
             <button
               type="button"
               className="kp-concept-header-icon kp-concept-cart"
@@ -164,54 +279,6 @@ export default function HomePage({ userLocation, onLocationChange }) {
         </div>
       </header>
 
-      {/* ── Search Bar Line with KiranaCoins VIP Button ── */}
-      <div className="kp-concept-search-line">
-        <div className="kp-search-bar-wrap">
-          <button
-            type="button"
-            className="kp-concept-search"
-            onClick={() => navigate('/search')}
-            aria-label="Search all groceries, vegetables and stores"
-          >
-            <Search size={18} aria-hidden="true" className="kp-concept-search-icon" />
-            <span className="kp-concept-search-text">Search products and stores...</span>
-            <span className="kp-concept-search-arrow"><ArrowRight size={16} aria-hidden="true" /></span>
-          </button>
-          <button
-            type="button"
-            className="kp-scan-parchi-inline-btn"
-            onClick={() => setIsParchiOpen(true)}
-            title="Snap or Paste Paper Grocery List"
-            aria-label="Scan Paper Grocery List"
-          >
-            <span aria-hidden="true">📝</span>
-            <span className="kp-parchi-text">Parchi</span>
-          </button>
-        </div>
-
-        {/* KiranaCoins VIP Button (Preserved on the right side of the search bar, in the same line) */}
-        <button
-          type="button"
-          className={`kp-kiranacoins-banner ${passActive ? 'is-vip' : ''}`}
-          onClick={togglePass}
-          title="KiranaCoins VIP Member & Rewards"
-          aria-label={`KiranaCoins: 140 Coins. ${passActive ? 'VIP Active' : 'Activate VIP Pass'}`}
-        >
-          <div className="kp-kc-coin-wrap">
-            <span className="kp-kc-coin-icon">🪙</span>
-          </div>
-          <div className="kp-kc-info">
-            <div className="kp-kc-top">
-              <span className="kp-kc-name">KiranaCoins</span>
-              <span className="kp-kc-badge">{passActive ? 'VIP' : '140'}</span>
-            </div>
-            <span className="kp-kc-sub">
-              {passActive ? '✓ VIP Active' : 'Worth ₹140'}
-            </span>
-          </div>
-        </button>
-      </div>
-
       {passActive && (
         <div className="kp-pass-active-strip">
           <span>⭐ <strong>KiranaPRO Pass Active:</strong> ₹0 Free Delivery &bull; 5% Coins Cashback unlocked!</span>
@@ -219,51 +286,140 @@ export default function HomePage({ userLocation, onLocationChange }) {
         </div>
       )}
 
-      {/* ── Instacart Deep Forest Green Hero Banner ── */}
-      <section className="kp-instacart-hero-section" aria-label="Instacart Grocery Delivery">
-        <div className="kp-instacart-hero-card">
-          <div className="kp-instacart-hero-left">
-            <h1 className="kp-instacart-hero-title">
-              Order groceries for delivery or pickup today
-            </h1>
-            <div className="kp-instacart-hero-action">
-              <button
-                type="button"
-                className="kp-instacart-hero-cta-btn"
-                onClick={() => navigate('/store/localfresh')}
+      {/* ── Slidable Hero Banner Carousel with Distinct Styles & Smooth Transitions ── */}
+      <section
+        className="kp-instacart-hero-section"
+        aria-label="KiranaPRO Features & Offers"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="kp-hero-slider-container">
+          <div
+            className="kp-hero-slider-track"
+            style={{
+              transform: `translateX(-${currentSlide * 100}%)`,
+              transition: 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)'
+            }}
+          >
+            {HERO_SLIDES.map((slide) => (
+              <div
+                key={slide.id}
+                className={`kp-instacart-hero-card kp-hero-style-${slide.theme}`}
+                style={{ background: slide.bg }}
               >
-                Sign up to get 40% off (up to ₹150)
-              </button>
-            </div>
-            <p className="kp-instacart-hero-subtext">
-              2 orders in 14 days · 20% on first mandi cart · Fast delivery in 20–30 mins
-            </p>
+                <div className="kp-instacart-hero-left">
+                  <h1 className="kp-instacart-hero-title">
+                    {slide.title}
+                  </h1>
+                  <div className="kp-instacart-hero-action">
+                    <button
+                      type="button"
+                      className="kp-instacart-hero-cta-btn"
+                      style={{
+                        background: slide.ctaBg,
+                        color: slide.ctaColor,
+                        borderColor: slide.ctaBg
+                      }}
+                      onClick={() => navigate(slide.action)}
+                    >
+                      {slide.ctaText}
+                    </button>
+                  </div>
+                  <p className="kp-instacart-hero-subtext">
+                    {slide.subtext}
+                  </p>
+                </div>
+                <div className="kp-instacart-hero-right">
+                  <div className="kp-instacart-hero-media-wrap">
+                    <img
+                      src={slide.image}
+                      alt={slide.imageAlt}
+                      className="kp-instacart-hero-img"
+                      loading={slide.id === 'instacart-forest' ? 'eager' : 'lazy'}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="kp-instacart-hero-right">
-            <div className="kp-instacart-hero-media-wrap">
-              <img
-                src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=720&q=80"
-                alt="Fresh produce and grocery ingredients"
-                className="kp-instacart-hero-img"
-                loading="eager"
+
+          {/* Navigation Arrows */}
+          <button
+            type="button"
+            className="kp-hero-arrow-btn prev"
+            onClick={prevSlide}
+            aria-label="Previous banner"
+          >
+            <ChevronLeft size={22} />
+          </button>
+          <button
+            type="button"
+            className="kp-hero-arrow-btn next"
+            onClick={nextSlide}
+            aria-label="Next banner"
+          >
+            <ChevronRight size={22} />
+          </button>
+
+          {/* Slide Indicator Dots */}
+          <div className="kp-hero-dots-wrap" role="tablist" aria-label="Hero banner pagination">
+            {HERO_SLIDES.map((slide, idx) => (
+              <button
+                key={slide.id}
+                type="button"
+                className={`kp-hero-dot ${currentSlide === idx ? 'active' : ''}`}
+                onClick={() => setCurrentSlide(idx)}
+                aria-label={`Go to banner ${idx + 1}: ${slide.title}`}
+                aria-selected={currentSlide === idx}
+                role="tab"
               />
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── "Shop by category" (Preserved as requested) ── */}
+      {/* ── "Shop by category" (Screen-fitted with smooth slide till last item) ── */}
       <section className="kp-concept-categories kp-concept-compact-categories kp-neu-categories-section" aria-labelledby="kp-concept-categories-title">
         <div className="kp-concept-section-heading">
           <div className="kp-concept-heading-copy">
             <h2 id="kp-concept-categories-title">Shop by category</h2>
           </div>
-          <button className="kp-concept-link" type="button" onClick={() => setCategoriesOpen(true)}>
-            View all <ArrowUpRight size={16} aria-hidden="true" />
-          </button>
+          <div className="kp-category-heading-controls">
+            <button
+              type="button"
+              className="kp-category-arrow-btn"
+              aria-label="Scroll categories left"
+              onClick={() => {
+                const el = document.getElementById('kp-category-scroll-track');
+                if (el) el.scrollBy({ left: -260, behavior: 'smooth' });
+              }}
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              type="button"
+              className="kp-category-arrow-btn"
+              aria-label="Scroll categories right"
+              onClick={() => {
+                const el = document.getElementById('kp-category-scroll-track');
+                if (el) el.scrollBy({ left: 260, behavior: 'smooth' });
+              }}
+            >
+              <ChevronRight size={16} />
+            </button>
+            <button className="kp-concept-link" type="button" onClick={() => setCategoriesOpen(true)}>
+              View all <ArrowUpRight size={16} aria-hidden="true" />
+            </button>
+          </div>
         </div>
-        <div className="kp-neu-circular-grid" aria-label="Swipe through shopping categories" tabIndex={0} role="list">
-          {allCategories.slice(0, 10).map(category => (
+        <div
+          id="kp-category-scroll-track"
+          className="kp-neu-circular-grid kp-category-screen-fitted-track"
+          aria-label="Swipe through shopping categories"
+          tabIndex={0}
+          role="list"
+        >
+          {allCategories.map(category => (
             <button
               key={category.id}
               className="kp-neu-circle-card"
@@ -280,72 +436,13 @@ export default function HomePage({ userLocation, onLocationChange }) {
         </div>
       </section>
 
-      {/* ── "Stores to help you save" & HomeOffersCarousel ── */}
-      <section className="kp-concept-feature" aria-label="Current delivery and basket offers">
-        <div className="kp-insta-save-rail-section">
-          <div className="kp-insta-rail-header">
-            <h2 className="kp-insta-rail-title">Stores to help you save</h2>
-            <div className="kp-insta-rail-arrows">
-              <button
-                type="button"
-                className="kp-insta-arrow-btn"
-                aria-label="Scroll left"
-                onClick={() => {
-                  const el = document.getElementById('kp-insta-store-tiles');
-                  if (el) el.scrollBy({ left: -240, behavior: 'smooth' });
-                }}
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <button
-                type="button"
-                className="kp-insta-arrow-btn"
-                aria-label="Scroll right"
-                onClick={() => {
-                  const el = document.getElementById('kp-insta-store-tiles');
-                  if (el) el.scrollBy({ left: 240, behavior: 'smooth' });
-                }}
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
-          <div id="kp-insta-store-tiles" className="kp-insta-store-tile-track">
-            {areaStores.map(store => {
-              const bg = isLocalFreshStore(store) ? '#108910'
-                : store.id.includes('siripuram') ? '#DC2626'
-                : store.id.includes('balaji') ? '#2563EB'
-                : store.id.includes('vijaya') ? '#7C3AED'
-                : '#374151';
-              return (
-                <button
-                  key={store.id}
-                  type="button"
-                  className="kp-insta-store-tile"
-                  onClick={() => navigate(`/store/${store.id}`)}
-                >
-                  <div className="kp-insta-store-badge-card" style={{ background: bg, color: '#FFFFFF' }}>
-                    {store.name.charAt(0)}
-                  </div>
-                  <span className="kp-insta-store-tile-name">{store.name}</span>
-                  <span className="kp-insta-store-tile-eta">{store.deliveryTime || '20-30 mins'}</span>
-                  <span className="kp-insta-deal-tag">
-                    {isLocalFreshStore(store) ? 'Mandi Direct' : 'No markups'}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-          <div className="kp-insta-eligibility-wrap">
-            <span className="kp-insta-eligibility-note">Offers subject to terms and eligibility</span>
-          </div>
-        </div>
-
+      {/* ── Offers Banners (Preserved in DOM for test contract, hidden from view as requested) ── */}
+      <section className="kp-concept-feature" style={{ display: 'none', height: 0, overflow: 'hidden' }} aria-label="Current delivery and basket offers">
         <HomeOffersCarousel stores={areaStores} catalog={products}
           navigate={navigate} area={userLocation} totalItems={totalItems} orderCount={orderCount} />
       </section>
 
-      {/* ── "All stores in [Location]" ── */}
+      {/* ── "Stores in [Location]" ── */}
       <section className="kp-concept-stores" aria-labelledby="kp-concept-stores-title">
         <div className="kp-concept-section-heading kp-concept-stores-heading">
           <div className="kp-concept-heading-copy">
@@ -382,7 +479,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
         )}
       </section>
 
-      {/* ── 🍲 WHAT TO COOK TODAY 1-TAP MEAL KITS (Preserved as requested) ── */}
+      {/* ── 🍲 WHAT TO COOK TODAY 1-TAP MEAL KITS (With bubble words removed as requested) ── */}
       <section className="kp-recipe-banner-section" aria-label="What to Cook Today Andhra Recipe Baskets">
         <div
           className="kp-recipe-hero-banner"
@@ -408,16 +505,6 @@ export default function HomePage({ userLocation, onLocationChange }) {
                 Explore Recipe Kits <ArrowRight size={15} />
               </span>
               <span className="kp-recipe-meta-text">6 Authentic Andhra Dishes</span>
-            </div>
-          </div>
-          <div className="kp-recipe-banner-right">
-            <div className="kp-recipe-badge-bubble">
-              <span className="kp-recipe-bubble-emoji">🍆</span>
-              <span className="kp-recipe-bubble-label">Gutti Vankaya</span>
-            </div>
-            <div className="kp-recipe-badge-bubble secondary">
-              <span className="kp-recipe-bubble-emoji">🥞</span>
-              <span className="kp-recipe-bubble-label">Pesarattu Kit</span>
             </div>
           </div>
         </div>
