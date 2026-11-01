@@ -669,3 +669,175 @@
     font-size: 12px;
   }
 }
+
+
+/* ==========================================================================
+   WHAT TO COOK TODAY: TATA NEU PROMOTIONAL REDIRECT BANNER
+   ========================================================================== */
+
+.kp-recipe-banner-section {
+  padding: 16px;
+  background: var(--neu-surface);
+}
+
+.kp-recipe-hero-banner {
+  background: linear-gradient(135deg, #1C0B2B 0%, #2E0B46 45%, #4C126F 85%, #6A1499 100%);
+  border: 1.5px solid rgba(222, 0, 183, 0.35);
+  border-radius: 20px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(42, 8, 69, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.kp-recipe-hero-banner:hover {
+  transform: translateY(-2px);
+  border-color: var(--neu-magenta);
+  box-shadow: 0 12px 30px rgba(182, 0, 223, 0.35);
+}
+
+.kp-recipe-hero-banner::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -30px;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(222, 0, 183, 0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.kp-recipe-banner-left {
+  flex: 1;
+  min-width: 0;
+  z-index: 1;
+}
+
+.kp-recipe-banner-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.kp-recipe-tag-pill {
+  background: linear-gradient(135deg, #DE00B7 0%, #7521FF 100%);
+  color: #FFFFFF;
+  font-size: 10.5px;
+  font-weight: 850;
+  padding: 2px 9px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+
+.kp-recipe-tag-sub {
+  font-size: 10px;
+  font-weight: 750;
+  color: #FFD166;
+  letter-spacing: 0.4px;
+}
+
+.kp-recipe-banner-headline {
+  font-size: 18px;
+  font-weight: 900;
+  color: #FFFFFF;
+  margin: 0 0 6px;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
+}
+
+.kp-recipe-banner-subtext {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 14px;
+  line-height: 1.45;
+  max-width: 480px;
+}
+
+.kp-recipe-cta-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.kp-recipe-cta-button {
+  background: #FFFFFF;
+  color: var(--neu-purple);
+  font-size: 12.5px;
+  font-weight: 850;
+  padding: 8px 16px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.kp-recipe-hero-banner:hover .kp-recipe-cta-button {
+  background: var(--neu-gold-gradient);
+  color: #1A0826;
+  box-shadow: 0 4px 14px rgba(255, 183, 3, 0.4);
+}
+
+.kp-recipe-meta-text {
+  font-size: 11.5px;
+  color: #FFD166;
+  font-weight: 650;
+}
+
+.kp-recipe-banner-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.kp-recipe-badge-bubble {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 750;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.kp-recipe-badge-bubble.secondary {
+  transform: translateX(-10px);
+  background: rgba(222, 0, 183, 0.2);
+  border-color: rgba(222, 0, 183, 0.4);
+}
+
+.kp-recipe-bubble-emoji {
+  font-size: 18px;
+}
+
+@media (max-width: 600px) {
+  .kp-recipe-hero-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+  }
+  
+  .kp-recipe-banner-right {
+    display: none;
+  }
+  
+  .kp-recipe-banner-headline {
+    font-size: 16px;
+  }
+}

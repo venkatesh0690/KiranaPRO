@@ -241,89 +241,44 @@ export default function HomePage({ userLocation, onLocationChange }) {
         )}
       </section>
 
-      {/* ── 03 / App Features & Visual Banner Showcase (User Uploaded Graphics) ── */}
-      <section className="kp-home-app-showcase" aria-labelledby="kp-has-title">
-        <div className="kp-has-heading">
-          <div>
-            <span className="kp-concept-index">03 / WHY KIRANAPRO</span>
-            <h2 id="kp-has-title">Fast. Fresh. Direct from Mandis & Local Kiranas</h2>
-          </div>
-          <span className="kp-has-sub">Visakhapatnam Hyperlocal Network</span>
-        </div>
-        <div className="kp-has-grid">
-          <div className="kp-has-card">
-            <div className="kp-has-img-wrap">
-              <img src="/banners/fast-fresh-delivered.png" alt="Fast Fresh Delivered - KiranaPRO local delivery bag" loading="lazy" />
+      {/* ── What to Cook Today Recipe Baskets Banner (Redirects to /recipes) ── */}
+      <section className="kp-recipe-banner-section" aria-label="What to Cook Today Andhra Recipe Baskets">
+        <div
+          className="kp-recipe-hero-banner"
+          onClick={() => navigate('/recipes')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && navigate('/recipes')}
+          title="Explore What to Cook Today Recipe Baskets"
+        >
+          <div className="kp-recipe-banner-left">
+            <div className="kp-recipe-banner-tags">
+              <span className="kp-recipe-tag-pill">🍲 WHAT TO COOK TODAY</span>
+              <span className="kp-recipe-tag-sub">1-TAP MEAL KITS</span>
             </div>
-            <div className="kp-has-content">
-              <span className="kp-has-tag">⚡ 20–30 MIN DELIVERY</span>
-              <h3 className="kp-has-title">Fast. Fresh. Delivered.</h3>
-              <p className="kp-has-desc">Your daily groceries and vegetables delivered hot and fresh directly to your door, right on time.</p>
-            </div>
-          </div>
-          <div className="kp-has-card">
-            <div className="kp-has-img-wrap">
-              <img src="/banners/fresh-grocery-bag.png" alt="Fresh Mandi Harvest Vegetables in Grocery Bag" loading="lazy" />
-            </div>
-            <div className="kp-has-content">
-              <span className="kp-has-tag">🌾 DIRECT MANDI HARVEST</span>
-              <h3 className="kp-has-title">100% Hand-Inspected Quality</h3>
-              <p className="kp-has-desc">Freshly harvested daily produce sourced directly from farmers and mandis. Zero dark-store surge pricing.</p>
+            <h2 className="kp-recipe-banner-headline">
+              What to Cook Today? Fresh Mandi Recipe Kits
+            </h2>
+            <p className="kp-recipe-banner-subtext">
+              Gutti Vankaya, Pesarattu, Pappu Charu & more. Pre-portioned fresh ingredients delivered in 20–30 mins.
+            </p>
+            <div className="kp-recipe-cta-wrap">
+              <span className="kp-recipe-cta-button">
+                Explore Recipe Kits <ArrowRight size={15} />
+              </span>
+              <span className="kp-recipe-meta-text">6 Authentic Andhra Dishes</span>
             </div>
           </div>
-          <div className="kp-has-card">
-            <div className="kp-has-img-wrap">
-              <img src="/banners/express-delivery-30min.png" alt="30-Minute Grocery Delivery partner emerging from mobile phone" loading="lazy" />
+          <div className="kp-recipe-banner-right">
+            <div className="kp-recipe-badge-bubble">
+              <span className="kp-recipe-bubble-emoji">🍆</span>
+              <span className="kp-recipe-bubble-label">Gutti Vankaya</span>
             </div>
-            <div className="kp-has-content">
-              <span className="kp-has-tag">🛵 IN-HOUSE FLEET</span>
-              <h3 className="kp-has-title">30-Minute Express Delivery</h3>
-              <p className="kp-has-desc">Doorstep Cash on Delivery (COD) with PIN verification and instant item inspection before paying.</p>
+            <div className="kp-recipe-badge-bubble secondary">
+              <span className="kp-recipe-bubble-emoji">🥞</span>
+              <span className="kp-recipe-bubble-label">Pesarattu Kit</span>
             </div>
           </div>
-        </div>
-      </section>
-
-{/* ── 05 / 1-Tap Andhra Recipe Baskets (Phase 18 Prompt 18.1) ── */}
-      <section className="kp-home-app-showcase" style={{ marginTop: '20px' }} aria-labelledby="kp-recipes-title">
-        <div className="kp-has-heading">
-          <div>
-            <span className="kp-concept-index">05 / WHAT TO COOK TODAY</span>
-            <h2 id="kp-recipes-title">1-Tap Andhra Recipe Baskets</h2>
-          </div>
-          <span className="kp-has-sub">Direct Mandi Meal Kits</span>
-        </div>
-        <div className="kp-recipe-grid">
-          {ANDHRA_RECIPE_BASKETS.map(recipe => (
-            <div key={recipe.id} className="kp-recipe-card">
-              <div>
-                <div className="kp-rc-head">
-                  <span className="kp-rc-icon">{recipe.image}</span>
-                  <span className="kp-rc-tag">{recipe.tag}</span>
-                </div>
-                <h3 className="kp-rc-title">{recipe.title}</h3>
-                <div className="kp-rc-meta">⏱️ {recipe.time} · 👥 {recipe.servings}</div>
-                <p style={{ fontSize: '11.5px', color: '#475569', lineHeight: 1.45, margin: '0 0 10px' }}>
-                  {recipe.desc}
-                </p>
-                <div style={{ fontSize: '11px', color: '#64748B', marginBottom: '12px' }}>
-                  Includes: {recipe.ingredients.map(i => i.name.split('(')[0].trim()).join(' · ')}
-                </div>
-              </div>
-              <button
-                type="button"
-                className="kp-rc-btn"
-                onClick={() => {
-                  recipe.ingredients.forEach(it => {
-                    addItem('localfresh', { id: it.id, name: it.name, price: it.price, mrp: it.price + 5, unit: it.unit });
-                  });
-                  navigate('/cart');
-                }}
-              >
-                ⚡ Add Meal Kit to Basket (₹{recipe.ingredients.reduce((s, i) => s + i.price, 0)})
-              </button>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -343,7 +298,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
           </div>
           <button
             type="button"
-            style={{ padding: '8px 16px', background: '#166534', color: '#FFFFFF', border: 'none', borderRadius: '8px', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}
+            style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #7521FF 0%, #DE00B7 100%)', color: '#FFFFFF', border: 'none', borderRadius: '8px', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}
             onClick={() => navigate('/store/localfresh')}
           >
             ⚡ Re-Order Basket (₹640)
