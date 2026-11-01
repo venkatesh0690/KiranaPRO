@@ -27,12 +27,13 @@ export function sanitizeInput(input) {
     .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
     .replace(/javascript:/gi, '')
     .replace(/on\w+\s*=/gi, '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
-    .replace(/\//g, '&#x2F;')
+    .replace(/[<>]/g, '')
+    .replace(/&#x2F;/gi, '/')
+    .replace(/&#47;/g, '/')
+    .replace(/&amp;/gi, '&')
+    .replace(/&#x27;/gi, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/gi, '"')
     .trim();
 }
 

@@ -448,7 +448,108 @@ export const CATALOG_PRODUCT_PICTURES = Object.freeze({
     photo: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=400&q=80",
     name: "Bhimseni Pure Camphor (Karpuram) Jar",
     source: "Unsplash"
-  }
+  },
+  // --- Andhra Recipe Basket & Kitchen Essentials ---
+  "rb-vankaya": {
+    photo: "https://images.unsplash.com/photo-1615484477778-ca3b77940c25?auto=format&fit=crop&w=400&q=80",
+    name: "Brinjal / Vankaya (Small tender)",
+    source: "Unsplash"
+  },
+  "rb-onion": {
+    photo: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=400&q=80",
+    name: "Onions (Medium uniform)",
+    source: "Unsplash"
+  },
+  "rb-coriander": {
+    photo: "https://images.unsplash.com/photo-1592417817098-8f3d6ef23a49?auto=format&fit=crop&w=400&q=80",
+    name: "Fresh Coriander / Dhaniya",
+    source: "Unsplash"
+  },
+  "staple-peanut": {
+    photo: "https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=400&q=80",
+    name: "Roasted Peanuts Pack",
+    source: "Unsplash"
+  },
+  "rb-chillies-cumin": {
+    photo: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80",
+    name: "Green Chillies & Cumin Pack",
+    source: "Unsplash"
+  },
+  "rb-curry-chillies": {
+    photo: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80",
+    name: "Curry Leaves & Green Chillies",
+    source: "Unsplash"
+  },
+  "rb-mint-chillies": {
+    photo: "https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=400&q=80",
+    name: "Fresh Mint & Green Chillies",
+    source: "Unsplash"
+  },
+  "rb-bendakaya": {
+    photo: "https://images.unsplash.com/photo-1425543103986-22abb7d7e8d2?auto=format&fit=crop&w=400&q=80",
+    name: "Lady Finger / Bendakaya (Tender fry cut)",
+    source: "Unsplash"
+  },
+  "rb-tomato": {
+    photo: "https://images.unsplash.com/photo-1546470427-0d4db154ceb7?auto=format&fit=crop&w=400&q=80",
+    name: "Country Tomatoes (Naatu Tamata)",
+    source: "Unsplash"
+  },
+  "rb-carrots-beans": {
+    photo: "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=400&q=80",
+    name: "Carrots & Green Beans Fresh Cut",
+    source: "Unsplash"
+  },
+  "rb-bajji-chillies": {
+    photo: "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=400&q=80",
+    name: "Large Andhra Bajji Chillies",
+    source: "Unsplash"
+  },
+  "staple-besan": {
+    photo: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80",
+    name: "Fine Besan (Gram Flour)",
+    source: "Unsplash"
+  },
+  "dairy-milk": {
+    photo: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80",
+    name: "Heritage Full Cream Milk",
+    source: "Unsplash"
+  },
+  "rb-dosakaya": {
+    photo: "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=400&q=80",
+    name: "Yellow Cucumber (Dosakaya)",
+    source: "Unsplash"
+  },
+  "rb-garlic": {
+    photo: "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=400&q=80",
+    name: "Garlic Bulbs (Peeled pods)",
+    source: "Unsplash"
+  },
+  "staple-rice": {
+    photo: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80",
+    name: "Basmati Rice Aged 1kg",
+    source: "Unsplash"
+  },
+  "staple-moong": {
+    photo: "https://images.unsplash.com/photo-1585994192701-f1a505c817ea?auto=format&fit=crop&w=400&q=80",
+    name: "Whole Green Moong Dal",
+    source: "Unsplash"
+  },
+  "staple-toor-dal": {
+    photo: "https://images.unsplash.com/photo-1585994192701-f1a505c817ea?auto=format&fit=crop&w=400&q=80",
+    name: "Tata Sampann Toor Dal",
+    source: "Unsplash"
+  },
+  "imp-02": {
+    photo: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80",
+    name: "Fresh Green Chillies Pack",
+    source: "Unsplash"
+  },
+  "imp-06": {
+    photo: "https://images.unsplash.com/photo-1592417817098-8f3d6ef23a49?auto=format&fit=crop&w=400&q=80",
+    name: "Coriander / Dhaniya Bunch",
+    source: "Unsplash"
+  },
 });
 
 /**
@@ -462,12 +563,68 @@ export function getCatalogProductPicture(product, failedUrls = []) {
     if (!failedUrls.includes(entry.photo)) return entry;
   }
 
-  // Name-based fallback lookup
-  const cleanName = String(product.name || '').toLowerCase().trim();
+  // Normalize HTML entities and whitespace
+  const cleanName = String(product.name || '')
+    .replace(/&#x2F;/gi, '/')
+    .replace(/&#47;/g, '/')
+    .replace(/&amp;/gi, '&')
+    .replace(/&#x27;/gi, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/gi, '"')
+    .toLowerCase()
+    .trim();
+
+  // Exact name match
   for (const entry of Object.values(CATALOG_PRODUCT_PICTURES)) {
     if (entry.name.toLowerCase() === cleanName && !failedUrls.includes(entry.photo)) {
       return entry;
     }
+  }
+
+  // Keyword / ingredient matches for recipe baskets & impulse shelves
+  if (/vankaya|brinjal|eggplant/i.test(cleanName)) {
+    const e = Object.values(CATALOG_PRODUCT_PICTURES).find(p => /vankaya|brinjal/i.test(p.name));
+    if (e && !failedUrls.includes(e.photo)) return e;
+  }
+  if (/onion/i.test(cleanName)) {
+    const e = Object.values(CATALOG_PRODUCT_PICTURES).find(p => /onion/i.test(p.name));
+    if (e && !failedUrls.includes(e.photo)) return e;
+  }
+  if (/coriander|dhaniya/i.test(cleanName)) {
+    const e = Object.values(CATALOG_PRODUCT_PICTURES).find(p => /coriander|dhaniya/i.test(p.name));
+    if (e && !failedUrls.includes(e.photo)) return e;
+  }
+  if (/moong|green gram/i.test(cleanName)) {
+    const e = Object.values(CATALOG_PRODUCT_PICTURES).find(p => /moong/i.test(p.name));
+    if (e && !failedUrls.includes(e.photo)) return e;
+  }
+  if (/peanut|groundnut/i.test(cleanName)) {
+    const e = Object.values(CATALOG_PRODUCT_PICTURES).find(p => /peanut/i.test(p.name));
+    if (e && !failedUrls.includes(e.photo)) return e;
+  }
+  if (/chilli|chillies/i.test(cleanName)) {
+    const e = Object.values(CATALOG_PRODUCT_PICTURES).find(p => /chilli/i.test(p.name));
+    if (e && !failedUrls.includes(e.photo)) return e;
+  }
+  if (/bendakaya|lady finger|okra/i.test(cleanName)) {
+    const e = Object.values(CATALOG_PRODUCT_PICTURES).find(p => /lady finger|bendakaya/i.test(p.name));
+    if (e && !failedUrls.includes(e.photo)) return e;
+  }
+  if (/tomato/i.test(cleanName)) {
+    const e = Object.values(CATALOG_PRODUCT_PICTURES).find(p => /tomato/i.test(p.name));
+    if (e && !failedUrls.includes(e.photo)) return e;
+  }
+  if (/cucumber|dosakaya/i.test(cleanName)) {
+    const e = Object.values(CATALOG_PRODUCT_PICTURES).find(p => /cucumber/i.test(p.name));
+    if (e && !failedUrls.includes(e.photo)) return e;
+  }
+  if (/ginger|allam/i.test(cleanName)) {
+    const e = Object.values(CATALOG_PRODUCT_PICTURES).find(p => /ginger|allam/i.test(p.name));
+    if (e && !failedUrls.includes(e.photo)) return e;
+  }
+  if (/garlic|vellulli/i.test(cleanName)) {
+    const e = Object.values(CATALOG_PRODUCT_PICTURES).find(p => /garlic/i.test(p.name));
+    if (e && !failedUrls.includes(e.photo)) return e;
   }
 
   return null;

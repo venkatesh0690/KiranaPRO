@@ -32,6 +32,18 @@ import { formatAddressForDisplay } from '../utils/addressAndGate';
 import { getChillarBalance, deductChillarBalance, getCustomerTrustScore, isGoldNeighbor } from '../utils/chillarKhata';
 import { isRainModeActive } from '../utils/rainModeAndFleet';
 
+function cleanItemName(str) {
+  if (!str) return 'Grocery Item';
+  return String(str)
+    .replace(/&#x2F;/gi, '/')
+    .replace(/&#47;/g, '/')
+    .replace(/&amp;/gi, '&')
+    .replace(/&#x27;/gi, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/gi, '"')
+    .trim();
+}
+
 export default function CartPage({ userLocation }) {
   const { cart, addItem, removeItem, switchStoreItems, clearCart, totalItems, totalPrice } = useCart();
   const { stores, products } = useStore();
@@ -487,7 +499,7 @@ export default function CartPage({ userLocation }) {
 
               {/* Item Name & Details */}
               <div className="cc-info">
-                <h3 className="cc-name">{it.name}</h3>
+                <h3 className="cc-name">{cleanItemName(it.name)}</h3>
                 <div className="cc-sub-meta">
                   <span className="cc-unit">{it.unit || 'unit'}</span>
                   <span className="cc-price">₹{it.price}</span>

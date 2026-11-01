@@ -54,7 +54,7 @@ const iconRules = [
   [/tomato/i, ['🍅','#f8e8e4']],
   [/radish|carrot|gaajar/i, ['🥕','#f7e9dc']],
   [/bajji mirchi|chilli|mirapa/i, ['🌶️','#f6e7df']],
-  [/brinjal|eggplant/i, ['🍆','#f1e8f4']],
+  [/brinjal|eggplant|vankaya/i, ['🍆','#f1e8f4']],
   [/bottle gourd|ash gourd|bitter gourd|ivy gourd|beerakaya|snake guard|dosakaya|potols|cucumber|zucchini/i, ['🥒','#eaf2df']],
   [/broad beans|cluster beans|barabati|french beans|pencil beans|soaked beans|drumsticks|green peas|white peas/i, ['🫛','#edf3e4']],
   [/broccoli/i, ['🥦','#e6f0e3']],
@@ -110,7 +110,14 @@ function shortLabel(name) {
   return text.length>40 ? text.slice(0,37).trimEnd()+"…" : text;
 }
 export function getCatalogVisual(product) {
-  const name=String(product?.name||"").trim();
+  const name=String(product?.name||"")
+    .replace(/&#x2F;/gi, '/')
+    .replace(/&#47;/g, '/')
+    .replace(/&amp;/gi, '&')
+    .replace(/&#x27;/gi, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/gi, '"')
+    .trim();
   const category=String(product?.category||"");
   const icon=iconRules.find(([rx])=>rx.test(name.toLowerCase()))
     || (/(flower)/i.test(category)?[null,["💐","#f6e9ed"]]:null)
