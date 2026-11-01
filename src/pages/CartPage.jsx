@@ -49,7 +49,8 @@ export default function CartPage({ userLocation }) {
   const { authSession, logSecurityEvent } = useSecurity();
   const { orderCount, nextOrderNumber, recordOrder } = useCustomerOrders();
   const navigate = useNavigate();
-  const store = stores.find((s) => String(s.id).toLowerCase() === String(cart.storeId).toLowerCase());
+  const store = stores.find((s) => String(s.id).toLowerCase() === String(cart.storeId).toLowerCase()) ||
+    (isLocalFreshStore(cart?.storeId) || cart?.items?.some(i => isLocalFreshStore(i.storeId)) ? stores.find(s => isLocalFreshStore(s)) : null);
   const storeServesArea = store && isStoreAvailableInArea(store,userLocation);
   const areaKiranas = stores.filter(s => isStoreAvailableInArea(s, userLocation) && !isLocalFreshStore(s));
   const currentKiranaStore = stores.find(s => String(s.id).toLowerCase() === String(cart.storeId).toLowerCase() && !isLocalFreshStore(s));
@@ -157,7 +158,9 @@ export default function CartPage({ userLocation }) {
   const tax = currentQuote.tax;
   const passFee = parivaarPassActive ? 99 : 0;
   const grandTotal = Math.max(0, currentQuote.total - parivaarDiscount + passFee);
-  const isLocalFresh = isLocalFreshStore(store);
+  const isLocalFresh = isLocalFreshStore(store) ||
+    isLocalFreshStore(cart?.storeId) ||
+    Boolean(cart?.items?.some(i => isLocalFreshStore(i.storeId) || String(i.id).toLowerCase().startsWith('lf-')));
   const isPickup = fulfilment.mode==='pickup';
   const isFreeDelivery = !isLocalFresh && totalPrice > FREE_DELIVERY_THRESHOLD;
   const fulfilmentValidation = validateFulfilment(fulfilment);
@@ -610,15 +613,15 @@ export default function CartPage({ userLocation }) {
       {/* ── KiranaPRO Pass Card placed just above Bill Details ── */}
       <div className="kp-parivaar-pass-card">
         <div className="kp-pp-left">
-          <span className="kp-pp-title">⭐ KiranaPRO Pass · VIP Member Benefits</span>
-          <span className="kp-pp-sub">Save on delivery &amp; packing + ₹0 Delivery Fee + Earn 5% KiranaCoins (Pay via COD)</span>
+          <span className="kp-pp-title">⭐ KiranaPRO Pass · 20 Days Validity</span>
+          <span className="kp-pp-sub">20 days validity · Save on delivery &amp; packing + ₹0 Delivery Fee + Earn 5% KiranaCoins (Pay via COD)</span>
         </div>
         <button
           type="button"
           className={`kp-pp-checkbox ${parivaarPassActive ? 'active' : ''}`}
           onClick={() => setParivaarPassActive(p => !p)}
         >
-          {parivaarPassActive ? '✓ KiranaPRO Pass Active (₹99)' : '+ Activate KiranaPRO Pass (₹99)'}
+          {parivaarPassActive ? '✓ KiranaPRO Pass Active (₹99 · 20 Days)' : '+ Activate KiranaPRO Pass (₹99 · 20 Days)'}
         </button>
       </div>
 
@@ -682,7 +685,7 @@ export default function CartPage({ userLocation }) {
 
           {parivaarPassActive && (
             <div className="bill-row" style={{ color: '#15803d', fontWeight: '750' }}>
-              <span>⭐ KiranaPRO Pass (VIP Member)</span>
+              <span>⭐ KiranaPRO Pass (20 Days VIP Member)</span>
               <span className="tabular-nums">₹99</span>
             </div>
           )}

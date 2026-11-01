@@ -72,6 +72,9 @@ test('the non-LocalFresh free-delivery rule is not confused with pickup', async 
   assert.equal(qualifiesForFreeDelivery(localFresh,999),false);
   assert.equal(qualifiesForFreeDelivery(otherStore,300),false);
   assert.equal(qualifiesForFreeDelivery(otherStore,301),true);
+  const { readFileSync } = await import('node:fs');
+  const cardCode = readFileSync(new URL('../src/components/StoreCard.jsx', import.meta.url), 'utf8');
+  assert.match(cardCode, /!isLocalFreshStore\(store\)\s*&&\s*\(\s*<span className="kp-insta-sub-tag">Free delivery above ₹\{FREE_DELIVERY_THRESHOLD\}<\/span>\s*\)/);
 });
 
 test('unique neighborhood names across all five areas',()=>{

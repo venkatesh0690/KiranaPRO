@@ -37,13 +37,13 @@ export default function KiranaPassModal({ isOpen, onClose, passActive, onToggleP
             <path d="M11 18l8-14h6l-8 14h-6z" fill="#6366F1" />
           </svg>
           <span className="kpm-brand-name">
-            Kirana<span>Pass</span>
+            KiranaPRO <span>Pass</span>
           </span>
         </div>
 
         {/* Main Headline */}
         <h2 id="kpm-title" className="kpm-headline">
-          Get ₹0 delivery fees and exclusive benefits
+          Get ₹0 delivery fees and exclusive benefits (20 Days Validity)
         </h2>
 
         {/* Benefits List matching DoorDash layout */}
@@ -135,7 +135,7 @@ export default function KiranaPassModal({ isOpen, onClose, passActive, onToggleP
           <a href="#terms" onClick={(e) => e.preventDefault()}>
             Terms and Conditions
           </a>
-          . You also agree to a recurring monthly charge (currently ₹99) until you cancel. Cancel
+          . You also agree to a recurring charge (currently ₹99 per 20 days validity) until you cancel. Cancel
           in app or online prior to renewal date to avoid future charges. See{' '}
           <a href="#cancellation" onClick={(e) => e.preventDefault()}>
             Cancellation Policy
@@ -152,7 +152,7 @@ export default function KiranaPassModal({ isOpen, onClose, passActive, onToggleP
                 className="kpm-cta-btn is-active-badge"
                 onClick={onClose}
               >
-                ✓ KiranaPass Active · VIP Benefits Unlocked
+                ✓ KiranaPRO Pass Active · 20 Days Validity Unlocked
               </button>
               <button
                 type="button"
@@ -168,7 +168,7 @@ export default function KiranaPassModal({ isOpen, onClose, passActive, onToggleP
               className="kpm-cta-btn"
               onClick={handleStartTrial}
             >
-              Start 30-day free trial
+              Start 20-day free trial
             </button>
           )}
 

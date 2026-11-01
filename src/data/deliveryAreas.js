@@ -14,7 +14,11 @@ export const DELIVERY_AREAS = Object.freeze([
 import { calculateLocalFreshDeliveryFee } from '../utils/localfreshDelivery.js';
 export const FREE_DELIVERY_THRESHOLD = 300;
 export function isLocalFreshStore(store) {
-  return String(store?.id ?? '').toLowerCase() === 'localfresh';
+  if (!store) return false;
+  if (typeof store === 'string') return store.toLowerCase() === 'localfresh';
+  const id = String(store.id ?? '').toLowerCase();
+  const name = String(store.name ?? '').toLowerCase();
+  return id === 'localfresh' || name === 'localfresh' || Boolean(store.isAdminManaged);
 }
 export function qualifiesForFreeDelivery(store, itemSubtotal) {
   return !isLocalFreshStore(store) && Number(itemSubtotal) > FREE_DELIVERY_THRESHOLD;

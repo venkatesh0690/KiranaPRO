@@ -29,43 +29,55 @@ const HERO_SLIDES = [
   {
     id: 'instacart-forest',
     theme: 'forest',
-    bg: '#003D29',
+    neonTag: '⚡ 20–30 MIN EXPRESS',
+    neonAccent: '#00E676',
+    badgeIcon: '🛒',
+    badgeText: 'Express Neon',
+    bg: "radial-gradient(circle at 85% 35%, rgba(0, 255, 136, 0.42) 0%, rgba(0, 255, 136, 0.08) 45%, transparent 68%), linear-gradient(135deg, rgba(2, 24, 15, 0.92) 0%, rgba(5, 51, 34, 0.86) 50%, rgba(1, 30, 19, 0.96) 100%), url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat",
     title: 'Order groceries for delivery or pickup today',
     ctaText: 'Sign up to get 40% off (up to ₹150)',
-    ctaBg: '#108910',
-    ctaHover: '#0D6E0D',
-    ctaColor: '#FFFFFF',
+    ctaBg: '#00E676',
+    ctaHover: '#00C853',
+    ctaColor: '#002B18',
     subtext: '2 orders in 14 days · 20% on first mandi cart · Fast delivery in 20–30 mins',
-    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=720&q=80',
-    imageAlt: 'Fresh produce and grocery ingredients',
+    image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80',
+    imageAlt: 'HD emerald neon cyber design for express grocery delivery',
     action: '/store/localfresh'
   },
   {
     id: 'mandi-harvest',
     theme: 'amber',
-    bg: 'linear-gradient(135deg, #78350F 0%, #B45309 60%, #92400E 100%)',
+    neonTag: '🌾 DAWN FARM MANDI',
+    neonAccent: '#FFB703',
+    badgeIcon: '🌾',
+    badgeText: 'Mandi Glow',
+    bg: "radial-gradient(circle at 85% 35%, rgba(255, 183, 3, 0.45) 0%, rgba(255, 107, 0, 0.12) 45%, transparent 68%), linear-gradient(135deg, rgba(28, 10, 0, 0.92) 0%, rgba(61, 23, 3, 0.86) 50%, rgba(36, 12, 1, 0.96) 100%), url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat",
     title: 'Fresh Mandi Harvest Direct from Farmers',
     ctaText: 'Explore Morning Mandi · Zero Markups',
-    ctaBg: '#F59E0B',
-    ctaHover: '#D97706',
-    ctaColor: '#1F1403',
+    ctaBg: '#FFB703',
+    ctaHover: '#FB8500',
+    ctaColor: '#240C00',
     subtext: 'Direct farm produce: tender vankaya, country tamata & fresh greens picked at dawn',
-    image: 'https://images.unsplash.com/photo-1610348725531-843dff563e2c?auto=format&fit=crop&w=720&q=80',
-    imageAlt: 'Morning mandi farm vegetables',
+    image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+    imageAlt: 'HD radiant solar amber neon design for dawn farm mandi harvest',
     action: '/store/localfresh'
   },
   {
     id: 'andhra-meal-kits',
     theme: 'teal',
-    bg: 'linear-gradient(135deg, #0F172A 0%, #0E7490 60%, #155E75 100%)',
+    neonTag: '🍲 1-TAP CHEF RECIPES',
+    neonAccent: '#00F0FF',
+    badgeIcon: '🍲',
+    badgeText: 'Chef Neon',
+    bg: "radial-gradient(circle at 85% 35%, rgba(0, 240, 255, 0.45) 0%, rgba(168, 85, 247, 0.16) 45%, transparent 68%), linear-gradient(135deg, rgba(7, 9, 27, 0.92) 0%, rgba(17, 26, 58, 0.86) 50%, rgba(21, 9, 42, 0.96) 100%), url('https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat",
     title: 'What to Cook Today? 1-Tap Andhra Meal Kits',
     ctaText: 'Cook in 20 Mins · View 6 Kits',
-    ctaBg: '#06B6D4',
-    ctaHover: '#0891B2',
-    ctaColor: '#042F2E',
+    ctaBg: '#00F0FF',
+    ctaHover: '#00D0DF',
+    ctaColor: '#051E28',
     subtext: 'Gutti Vankaya, Pesarattu & Pappu Charu with pre-measured ingredients ready in 20 mins',
-    image: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=720&q=80',
-    imageAlt: 'Authentic Indian cooking ingredients and spices',
+    image: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80',
+    imageAlt: 'HD electric cyan and ultraviolet geometric neon design for Andhra meal kits',
     action: '/recipes'
   }
 ];
@@ -91,7 +103,14 @@ export default function HomePage({ userLocation, onLocationChange }) {
   const [isHovered, setIsHovered] = useState(false);
   const [passActive, setPassActive] = useState(() => {
     try {
-      return localStorage.getItem('kiranapro_pass') !== 'inactive';
+      const stored = localStorage.getItem('kiranapro_pass');
+      if (stored === 'inactive') return false;
+      const passExpires = Number(localStorage.getItem('kiranapro_pass_expires') || 0);
+      if (passExpires && Date.now() > passExpires) {
+        localStorage.setItem('kiranapro_pass', 'inactive');
+        return false;
+      }
+      return true;
     } catch {
       return true;
     }
@@ -115,7 +134,15 @@ export default function HomePage({ userLocation, onLocationChange }) {
   const togglePass = () => {
     setPassActive(prev => {
       const next = !prev;
-      try { localStorage.setItem('kiranapro_pass', next ? 'active' : 'inactive'); } catch {}
+      try {
+        localStorage.setItem('kiranapro_pass', next ? 'active' : 'inactive');
+        if (next) {
+          // 20 days validity
+          localStorage.setItem('kiranapro_pass_expires', String(Date.now() + 20 * 24 * 60 * 60 * 1000));
+        } else {
+          localStorage.removeItem('kiranapro_pass_expires');
+        }
+      } catch {}
       return next;
     });
   };
@@ -376,7 +403,15 @@ export default function HomePage({ userLocation, onLocationChange }) {
                 className={`kp-instacart-hero-card kp-hero-style-${slide.theme}`}
                 style={{ background: slide.bg }}
               >
+                <div className="kp-hero-neon-backdrop" aria-hidden="true" />
                 <div className="kp-instacart-hero-left">
+                  {slide.neonTag && (
+                    <div className="kp-hero-neon-badge-wrap">
+                      <span className="kp-hero-neon-pill-tag">
+                        {slide.neonTag}
+                      </span>
+                    </div>
+                  )}
                   <h1 className="kp-instacart-hero-title">
                     {slide.title}
                   </h1>
@@ -400,12 +435,20 @@ export default function HomePage({ userLocation, onLocationChange }) {
                 </div>
                 <div className="kp-instacart-hero-right">
                   <div className="kp-instacart-hero-media-wrap">
+                    <div className="kp-hero-media-neon-glow" aria-hidden="true" />
                     <img
                       src={slide.image}
                       alt={slide.imageAlt}
                       className="kp-instacart-hero-img"
                       loading={slide.id === 'instacart-forest' ? 'eager' : 'lazy'}
                     />
+                    {slide.badgeText && (
+                      <div className="kp-hero-media-neon-overlay">
+                        <span className="kp-hero-media-neon-chip">
+                          {slide.badgeIcon} {slide.badgeText}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

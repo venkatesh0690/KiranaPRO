@@ -91,7 +91,9 @@ export default function StoreCard({ store }) {
         </div>
         <div className="kp-insta-card-tags">
           <span className="kp-insta-deal-tag">{categoryTag}</span>
-          <span className="kp-insta-sub-tag">Free delivery above ₹{FREE_DELIVERY_THRESHOLD}</span>
+          {!isLocalFreshStore(store) && (
+            <span className="kp-insta-sub-tag">Free delivery above ₹{FREE_DELIVERY_THRESHOLD}</span>
+          )}
         </div>
         {store.isSample ? (
           <div className="kp-gallery-meta">
