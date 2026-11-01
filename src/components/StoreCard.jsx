@@ -68,7 +68,6 @@ export default function StoreCard({ store }) {
           <span className="kp-insta-deal-tag">
             {isLocalFreshStore(store) ? 'Mandi Direct' : 'No markups'}
           </span>
-          <span className="kp-insta-sub-tag">Lots of deals</span>
           <span className="kp-insta-sub-tag">Free above ₹{FREE_DELIVERY_THRESHOLD}</span>
         </div>
         {store.isSample ? (

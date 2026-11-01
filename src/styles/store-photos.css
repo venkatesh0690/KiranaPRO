@@ -12,3 +12,5 @@
 }
 .kp-store-slideshow .kp-store-slide { object-fit:cover; }
 @media(max-width:420px) { .kp-photo-disclosure{font-size:9px;padding:5px 8px;} }
+
+.kp-photo-disclosure { display: none !important; }

@@ -86,6 +86,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isParchiOpen, setIsParchiOpen] = useState(false);
   const [isPassModalOpen, setIsPassModalOpen] = useState(false);
+  const [fulfilmentMode, setFulfilmentMode] = useState('delivery');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [passActive, setPassActive] = useState(() => {
@@ -179,9 +180,9 @@ export default function HomePage({ userLocation, onLocationChange }) {
                 onClick={() => navigate('/search')}
                 aria-label="Search all groceries, vegetables and stores"
               >
-                <Search size={18} aria-hidden="true" className="kp-concept-search-icon" />
+                <Search size={16} aria-hidden="true" className="kp-concept-search-icon" />
                 <span className="kp-concept-search-text">Search products and stores...</span>
-                <span className="kp-concept-search-arrow"><ArrowRight size={16} aria-hidden="true" /></span>
+                <span className="kp-concept-search-arrow"><ArrowRight size={14} aria-hidden="true" /></span>
               </button>
               <button
                 type="button"
@@ -190,7 +191,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
                 title="Scan paper grocery list with camera"
                 aria-label="Scan paper grocery list with camera"
               >
-                <Camera size={19} strokeWidth={2.2} />
+                <Camera size={15} strokeWidth={2.2} />
               </button>
             </div>
           </div>
@@ -225,6 +226,32 @@ export default function HomePage({ userLocation, onLocationChange }) {
               <span className="kp-concept-location-label"><strong>{userLocation || 'Choose delivery area'}</strong></span>
               <ChevronDown size={14} aria-hidden="true" />
             </button>
+
+            {/* Delivery & Pickup Toggle Segment (matching DoorDash top right) */}
+            <div className="kp-fulfilment-toggle" role="group" aria-label="Order mode: Delivery or Pickup">
+              <button
+                type="button"
+                className={`kp-fulfilment-tab ${fulfilmentMode === 'delivery' ? 'is-active' : ''}`}
+                onClick={() => {
+                  setFulfilmentMode('delivery');
+                  setActiveFilter('all');
+                }}
+                aria-pressed={fulfilmentMode === 'delivery'}
+              >
+                Delivery
+              </button>
+              <button
+                type="button"
+                className={`kp-fulfilment-tab ${fulfilmentMode === 'pickup' ? 'is-active' : ''}`}
+                onClick={() => {
+                  setFulfilmentMode('pickup');
+                  setActiveFilter('pickup');
+                }}
+                aria-pressed={fulfilmentMode === 'pickup'}
+              >
+                Pickup
+              </button>
+            </div>
 
             {/* Senior Mode (A+) */}
             <button
@@ -506,7 +533,6 @@ export default function HomePage({ userLocation, onLocationChange }) {
               <span className="kp-recipe-cta-button">
                 Explore Recipe Kits <ArrowRight size={15} />
               </span>
-              <span className="kp-recipe-meta-text">6 Authentic Andhra Dishes</span>
             </div>
           </div>
         </div>

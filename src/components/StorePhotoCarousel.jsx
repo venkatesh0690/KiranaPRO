@@ -108,7 +108,6 @@ export default function StorePhotoCarousel({ store, className = '', onSwipe }) {
           }}
         />
       ))}
-      <span className="kp-photo-disclosure">Representative store photography</span>
       <div className="kp-store-photo-dots" aria-hidden="true">
         {gallery.map((_, index) => (
           <span key={index} className={index === active ? 'is-active' : ''} />
