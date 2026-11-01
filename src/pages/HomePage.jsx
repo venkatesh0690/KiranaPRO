@@ -55,8 +55,9 @@ const HERO_SLIDES = [
     ctaHover: '#FB8500',
     ctaColor: '#240C00',
     subtext: 'Direct farm produce: tender vankaya, country tamata & fresh greens picked at dawn',
-    image: 'https://images.unsplash.com/photo-1573246123716-6b1782bfc499?auto=format&fit=crop&w=800&q=80',
-    imageAlt: 'Government mandi with all vegetable shops and stalls',
+    image: '/banners/rythu-bazar.jpg',
+    fallbackImage: 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Rythu_bazaar.jpg',
+    imageAlt: 'Rythu bazar photo with fresh vegetable stalls and farmers',
     action: '/store/localfresh'
   },
   {
@@ -71,8 +72,9 @@ const HERO_SLIDES = [
     ctaHover: '#00D0DF',
     ctaColor: '#051E28',
     subtext: 'Gutti Vankaya, Pesarattu & Pappu Charu with pre-measured ingredients ready in 20 mins',
-    image: 'https://images.unsplash.com/photo-1556911073-38141963c9e0?auto=format&fit=crop&w=800&q=80',
-    imageAlt: 'Cookbook with fresh vegetable cutting in kitchen',
+    image: '/banners/cookbook-recipes.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?auto=format&fit=crop&w=800&q=80',
+    imageAlt: 'Cookbook with recipes and fresh ingredients',
     action: '/recipes'
   }
 ];
@@ -429,7 +431,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
                   </p>
                 </div>
                 <div className="kp-instacart-hero-right">
-                  <div className="kp-instacart-hero-media-wrap">
+                  <div className={`kp-instacart-hero-media-wrap ${slide.isLogo ? 'kp-hero-media-wrap-white' : ''}`}>
                     <div className="kp-hero-media-neon-glow" aria-hidden="true" />
                     {slide.isLogo ? (
                       <div className="kp-hero-logo-box">
@@ -446,6 +448,11 @@ export default function HomePage({ userLocation, onLocationChange }) {
                         alt={slide.imageAlt}
                         className="kp-instacart-hero-img"
                         loading={slide.id === 'instacart-forest' ? 'eager' : 'lazy'}
+                        onError={(e) => {
+                          if (slide.fallbackImage && e.currentTarget.src !== slide.fallbackImage) {
+                            e.currentTarget.src = slide.fallbackImage;
+                          }
+                        }}
                       />
                     )}
                   </div>
