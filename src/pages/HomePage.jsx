@@ -16,6 +16,7 @@ import CategoriesModal from '../components/CategoriesModal';
 import ParchiScannerModal from '../components/ParchiScannerModal';
 import VizagZoneMapModal from '../components/VizagZoneMapModal';
 import AuthModal from '../components/AuthModal';
+import KiranaPassModal from '../components/KiranaPassModal';
 
 const storeFilters = [
   { id: 'all', label: 'All' },
@@ -84,6 +85,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
   const [seniorMode, setSeniorMode] = useState(false);
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isParchiOpen, setIsParchiOpen] = useState(false);
+  const [isPassModalOpen, setIsPassModalOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [passActive, setPassActive] = useState(() => {
@@ -199,7 +201,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
             <button
               type="button"
               className={`kp-kiranacoins-banner ${passActive ? 'is-vip' : ''}`}
-              onClick={togglePass}
+              onClick={() => setIsPassModalOpen(true)}
               title="KiranaCoins VIP Member & Rewards"
               aria-label={`KiranaCoins: 140 Coins. ${passActive ? 'VIP Active' : 'Activate VIP Pass'}`}
             >
@@ -282,7 +284,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
       {passActive && (
         <div className="kp-pass-active-strip">
           <span>⭐ <strong>KiranaPRO Pass Active:</strong> ₹0 Free Delivery &bull; 5% Coins Cashback unlocked!</span>
-          <button type="button" className="kp-pass-strip-close" onClick={togglePass} title="Manage Pass">Manage</button>
+          <button type="button" className="kp-pass-strip-close" onClick={() => setIsPassModalOpen(true)} title="Manage Pass">Manage</button>
         </div>
       )}
 
@@ -526,6 +528,12 @@ export default function HomePage({ userLocation, onLocationChange }) {
           Array.isArray(list) ? list.filter(item => String(item?.id || '').startsWith('lf-')) : [])}
         onClose={() => setIsParchiOpen(false)}
       />}
+      <KiranaPassModal
+        isOpen={isPassModalOpen}
+        onClose={() => setIsPassModalOpen(false)}
+        passActive={passActive}
+        onTogglePass={togglePass}
+      />
     </div>
   );
 }
