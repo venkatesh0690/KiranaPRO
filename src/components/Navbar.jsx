@@ -12,9 +12,12 @@ export default function Navbar({ location }) {
     <header className="navbar">
       <div className="navbar-inner">
         {/* Brand */}
-        <Link to="/home" className="brand">
-          <div className="brand-mark">⚡</div>
-          <span className="brand-text">Kirana<span>PRO</span></span>
+        <Link to="/home" className="brand" aria-label="KiranaPRO home">
+          <img
+            src="/kiranapro-logo.png"
+            alt="KiranaPRO"
+            style={{ height: '38px', width: 'auto', objectFit: 'contain', display: 'block' }}
+          />
         </Link>
 
         {/* Location */}

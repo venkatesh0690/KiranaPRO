@@ -224,8 +224,11 @@ export default function HomePage({ userLocation, onLocationChange }) {
               aria-label="KiranaPRO home"
               onClick={() => navigate('/home')}
             >
-              <span className="kp-instacart-carrot-icon" aria-hidden="true">🥕</span>
-              <span>kirana<span>pro</span></span>
+              <img
+                src="/kiranapro-logo.png"
+                alt="KiranaPRO"
+                className="kp-brand-logo-img"
+              />
             </button>
           </div>
 
