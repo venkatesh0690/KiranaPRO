@@ -268,75 +268,8 @@ export default function CartPage({ userLocation }) {
         </div>
       )}
 
-      <div className="kp-cart-progress" aria-label="Checkout progress">
-        <span className={checkoutStep==='review'?'current':'done'}>01 / Basket</span>
-        <span className={checkoutStep==='fulfilment'?'current':''}>02 / Delivery or pickup</span>
-      </div>
-
       {checkoutStep==='review' ? (
         <>
-
-      {/* Animated Coupon Unlock Progress Meter */}
-      <div className="kp-coupon-progress-meter">
-        <div className="kcpm-header">
-          <span className="kcpm-label">
-            {totalPrice < 300
-              ? `Add ₹${300 - totalPrice} more to unlock ₹30 OFF with code WELCOME!`
-              : totalPrice < 500
-              ? `🎉 WELCOME ₹30 OFF unlocked! Add ₹${500 - totalPrice} more for Basket Bonus!`
-              : `🔥 Basket Bonus 5% Extra OFF unlocked on your order!`}
-          </span>
-          <span className="kcpm-percent">{Math.min(100, Math.round((totalPrice / 500) * 100))}%</span>
-        </div>
-        <div className="kcpm-bar">
-          <div
-            className="kcpm-fill"
-            style={{ width: `${Math.min(100, Math.round((totalPrice / 500) * 100))}%` }}
-          />
-        </div>
-      </div>
-
-      {/* Other stores offer free delivery above ₹300; LocalFresh has its own delivery fee. */}
-      <div className={`cart-delivery-status-card ${isFreeDelivery ? 'unlocked' : 'locked'}`}>
-        {isLocalFresh ? (
-          <div className="cdsc-inner">
-            <span className="cdsc-emoji">🚚</span>
-            <div className="cdsc-info">
-              <span className="cdsc-title">LocalFresh delivery</span>
-              <span className="cdsc-subtitle">Delivery charge is included in your bill. Pickup has no delivery fee.</span>
-            </div>
-          </div>
-        ) : isFreeDelivery ? (
-          <div className="cdsc-inner">
-            <span className="cdsc-emoji">🎉</span>
-            <div className="cdsc-info">
-              <span className="cdsc-title">FREE Delivery Unlocked!</span>
-              <span className="cdsc-subtitle">
-                {`Cart is above ₹300 (Saved ₹${baseDeliveryFee} delivery fee)`}
-              </span>
-            </div>
-            <span className="cdsc-tag">₹0 FEE</span>
-          </div>
-        ) : (
-          <div className="cdsc-inner">
-            <span className="cdsc-emoji">🚚</span>
-            <div className="cdsc-info">
-              <div className="cdsc-header-row">
-                <span className="cdsc-title">
-                  Add <strong>₹{Math.max(0, FREE_DELIVERY_THRESHOLD + 1 - totalPrice)}</strong> more for <strong>FREE Delivery</strong>!
-                </span>
-                <span className="cdsc-needed">Above ₹300</span>
-              </div>
-              <div className="cdsc-progress-bar">
-                <div
-                  className="cdsc-progress-fill"
-                  style={{ width: `${Math.min(100, Math.round((totalPrice / (FREE_DELIVERY_THRESHOLD + 1)) * 100))}%` }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
 
       {/* Compare Across Local Kiranas Switcher Strip (Phase 8 Prompt 8.2) */}
       {areaKiranas.length > 1 && (
@@ -362,32 +295,6 @@ export default function CartPage({ userLocation }) {
               );
             })}
           </div>
-        </div>
-      )}
-
-      {/* ── KiranaPRO Parivaar Pass Card (Phase 17 Prompt 17.2) ── */}
-      <div className="kp-parivaar-pass-card">
-        <div className="kp-pp-left">
-          <span className="kp-pp-title">⭐ KiranaPRO Pass · VIP Member Benefits</span>
-          <span className="kp-pp-sub">Save ₹7 on this order right now + ₹0 Delivery Fee + Earn 5% KiranaCoins (Pay via COD)</span>
-        </div>
-        <button
-          type="button"
-          className={`kp-pp-checkbox ${parivaarPassActive ? 'active' : ''}`}
-          onClick={() => setParivaarPassActive(p => !p)}
-        >
-          {parivaarPassActive ? '✓ KiranaPRO Pass Active (₹29)' : '+ Activate KiranaPRO Pass (₹29)'}
-        </button>
-      </div>
-
-      {/* ── Traditional Mandi Complimentary Free Dhaniya & Karivepaku Gift (Phase 16 Prompt 16.2) ── */}
-      {totalPrice >= 199 && (
-        <div className="kp-free-dhaniya-gift">
-          <div className="kp-fdg-info">
-            <span>🎁</span>
-            <span>Complimentary Fresh Dhaniya & Karivepaku (Coriander & Curry Leaves)</span>
-          </div>
-          <span className="kp-fdg-tag">₹0 MANDI GIFT</span>
         </div>
       )}
 
@@ -708,6 +615,63 @@ export default function CartPage({ userLocation }) {
           area={userLocation}
         />
       )}
+
+      {/* ── Free Delivery Status Banner placed just above Bill Details ── */}
+      <div className={`cart-delivery-status-card ${isFreeDelivery ? 'unlocked' : 'locked'}`}>
+        {isLocalFresh ? (
+          <div className="cdsc-inner">
+            <span className="cdsc-emoji">🚚</span>
+            <div className="cdsc-info">
+              <span className="cdsc-title">LocalFresh delivery</span>
+              <span className="cdsc-subtitle">Delivery charge is included in your bill. Pickup has no delivery fee.</span>
+            </div>
+          </div>
+        ) : isFreeDelivery ? (
+          <div className="cdsc-inner">
+            <span className="cdsc-emoji">🎉</span>
+            <div className="cdsc-info">
+              <span className="cdsc-title">FREE Delivery Unlocked!</span>
+              <span className="cdsc-subtitle">
+                {`Cart is above ₹300 (Saved ₹${baseDeliveryFee} delivery fee)`}
+              </span>
+            </div>
+            <span className="cdsc-tag">₹0 FEE</span>
+          </div>
+        ) : (
+          <div className="cdsc-inner">
+            <span className="cdsc-emoji">🚚</span>
+            <div className="cdsc-info">
+              <div className="cdsc-header-row">
+                <span className="cdsc-title">
+                  Add <strong>₹{Math.max(0, FREE_DELIVERY_THRESHOLD + 1 - totalPrice)}</strong> more for <strong>FREE Delivery</strong>!
+                </span>
+                <span className="cdsc-needed">Above ₹300</span>
+              </div>
+              <div className="cdsc-progress-bar">
+                <div
+                  className="cdsc-progress-fill"
+                  style={{ width: `${Math.min(100, Math.round((totalPrice / (FREE_DELIVERY_THRESHOLD + 1)) * 100))}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── KiranaPRO Pass Card placed just above Bill Details ── */}
+      <div className="kp-parivaar-pass-card">
+        <div className="kp-pp-left">
+          <span className="kp-pp-title">⭐ KiranaPRO Pass · VIP Member Benefits</span>
+          <span className="kp-pp-sub">Save ₹7 on this order right now + ₹0 Delivery Fee + Earn 5% KiranaCoins (Pay via COD)</span>
+        </div>
+        <button
+          type="button"
+          className={`kp-pp-checkbox ${parivaarPassActive ? 'active' : ''}`}
+          onClick={() => setParivaarPassActive(p => !p)}
+        >
+          {parivaarPassActive ? '✓ KiranaPRO Pass Active (₹29)' : '+ Activate KiranaPRO Pass (₹29)'}
+        </button>
+      </div>
 
       {/* ── Fee-Transparent Honest Bill Summary (Phase 37 Prompt 37.2) ── */}
       <div className="cart-bill-card">
