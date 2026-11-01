@@ -26,7 +26,7 @@ export function buildHomepageBanners(stores, _catalog, area, orderCount=0) {
       ...FEATURED_CHECKOUT_OFFERS[0],kind:'global',
       id:'offer-free-delivery',tag:'FREE DELIVERY · SELECTED STORES',
       title:'Free delivery above ₹300',
-      subtitle:'20-30 min express delivery · Free above ₹300. Championing your neighborhood family kiranas!',
+      subtitle:'20-30 min express delivery · Free delivery above ₹300. Championing your neighborhood family kiranas!',
       store:participatingDeliveryStores[0],
       cta:'Explore eligible stores',minCart:MIN_PROMO_SUBTOTAL
     });

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight, ArrowUpRight, Camera, ChevronDown, ChevronLeft, ChevronRight,
-  MapPin, Menu, Search, ShoppingBag, UserRound, SlidersHorizontal
+  MapPin, Search, ShoppingBag, UserRound, SlidersHorizontal
 } from 'lucide-react';
 import { allCategories } from '../data/stores';
 import { getStoresForArea, isLocalFreshStore } from '../data/deliveryAreas';
@@ -149,17 +149,8 @@ export default function HomePage({ userLocation, onLocationChange }) {
       {/* ── Single Unified Instacart Top Bar: Brand, Search, KiranaCoins, Location, Profile, Cart ── */}
       <header className="kp-concept-header kp-instacart-unified-bar">
         <div className="kp-topbar-inner">
-          {/* Brand & Menu */}
+          {/* Brand */}
           <div className="kp-instacart-brand-wrap">
-            <button
-              type="button"
-              className="kp-instacart-menu-btn"
-              onClick={() => setCategoriesOpen(true)}
-              aria-label="Open categories menu"
-              title="Shop by Category"
-            >
-              <Menu size={22} />
-            </button>
             <button
               type="button"
               className="kp-concept-wordmark"

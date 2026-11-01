@@ -113,6 +113,14 @@ export default function SearchPage({ userLocation }) {
     });
   }, [allProductsList, query, selectedTag]);
 
+  const sortedProducts = useMemo(() => {
+    return [...filteredProducts].sort((a, b) => {
+      const aOOS = a.inStock === false || a.stock_count === 0;
+      const bOOS = b.inStock === false || b.stock_count === 0;
+      return aOOS === bOOS ? 0 : aOOS ? 1 : -1;
+    });
+  }, [filteredProducts]);
+
   return (
     <div className="search-page">
       {/* Top Search Input with Back & Filter Icon */}
@@ -214,11 +222,11 @@ export default function SearchPage({ userLocation }) {
       {/* Search Results */}
       <div className="search-results-container">
         <div className="search-results-meta">
-          <span>Found <strong>{filteredProducts.length}</strong> items in stores serving {userLocation}</span>
+          <span>Found <strong>{sortedProducts.length}</strong> items in stores serving {userLocation}</span>
           {query && <span className="kp-synonym-active-hint">• Bilingual Telugu & Hindi search active</span>}
         </div>
 
-        {filteredProducts.length === 0 ? (
+        {sortedProducts.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '48px 20px', background: '#FFFFFF', borderRadius: '16px', border: '1.5px dashed #CBD5E1', margin: '20px 0' }}>
             <span style={{ fontSize: '42px', display: 'block', marginBottom: '12px' }}>🌾</span>
             <h3 style={{ fontSize: '17px', fontWeight: '850', color: '#0F172A', margin: '0 0 8px' }}>
@@ -237,7 +245,7 @@ export default function SearchPage({ userLocation }) {
           </div>
         ) : (
           <div className="search-products-grid">
-            {filteredProducts.map((p) => (
+            {sortedProducts.map((p) => (
               <div key={p.id} onClick={() => setSelectedProduct(p)}>
                 <ProductCard
                   product={p}

@@ -372,10 +372,15 @@ export default function StorePage({ userLocation }) {
           ) : (
             visibleCategories.map((cat) => {
               const meta = categoryMeta[cat] || { icon: '📦', bg: '#F8FAFC' };
-              const products = (productsByCategory[cat] || []).filter((p) =>
+              const rawProducts = (productsByCategory[cat] || []).filter((p) =>
                 !search || p.name.toLowerCase().includes(search.toLowerCase())
               );
-              if (products.length === 0) return null;
+              if (rawProducts.length === 0) return null;
+              const products = [...rawProducts].sort((a, b) => {
+                const aOOS = a.inStock === false || a.stock_count === 0;
+                const bOOS = b.inStock === false || b.stock_count === 0;
+                return aOOS === bOOS ? 0 : aOOS ? 1 : -1;
+              });
 
               return (
                 <section

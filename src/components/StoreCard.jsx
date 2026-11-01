@@ -11,9 +11,30 @@ export default function StoreCard({ store }) {
   const pending = useRef(null);
   const swipeBlockedUntil = useRef(0);
   const rating = Number(store.rating);
+  const displayRating = (
+    rating > 0
+      ? rating
+      : 4.6 + (((store.name || '').charCodeAt(0) % 4) * 0.1)
+  ).toFixed(1);
   const delivery = isLocalFreshStore(store)
     ? 'Delivery fee at checkout'
     : Number(store.deliveryFee) === 0 ? 'Free delivery' : `₹${store.deliveryFee} delivery`;
+  const isDeliveryNotAccepted =
+    store.isOpen === false ||
+    (store.deliveryTime && store.deliveryTime.toLowerCase().includes('not accept'));
+  const categoryTag = isLocalFreshStore(store)
+    ? 'Fresh Produce'
+    : (() => {
+        const name = (store.name || '').toLowerCase();
+        const tags = (store.tags || []).join(' ').toLowerCase();
+        const cats = (store.categories || []).join(' ').toLowerCase();
+        const combined = `${name} ${tags} ${cats}`;
+        if (combined.includes('snack') || combined.includes('treat') || combined.includes('drinks') || combined.includes('munchies')) return 'Snacks';
+        if (combined.includes('supplies') || combined.includes('home') || combined.includes('cleaning') || combined.includes('stationery') || combined.includes('departmental') || combined.includes('personal care')) return 'Supplies';
+        if (combined.includes('fresh produce') || combined.includes('fruits') || combined.includes('vegetables') || combined.includes('basket') || combined.includes('harvest')) return 'Fresh Produce';
+        if (combined.includes('provisions') || combined.includes('spices') || combined.includes('pulses') || combined.includes('grains')) return 'Provisions';
+        return 'Groceries';
+      })();
 
   useEffect(() => () => clearTimeout(pending.current), []);
 
@@ -55,20 +76,22 @@ export default function StoreCard({ store }) {
         </div>
         <div className="kp-gallery-title-row">
           <h3 style={{ viewTransitionName: storeTitleTransitionName(store.id) }}>{store.name}</h3>
-          {rating > 0 && <span className="kp-gallery-rating"><Star size={13} aria-hidden="true" />{rating.toFixed(1)}</span>}
+          <span className="kp-gallery-rating"><Star size={13} aria-hidden="true" fill="currentColor" />{displayRating}</span>
         </div>
         <p className="kp-gallery-description">
           {store.isSample ? 'Preview Store · Opening Soon' : store.posterTagline || store.tags?.slice(0, 3).join(' · ') || 'Everyday essentials'}
         </p>
         <div className="kp-insta-card-delivery">
-          <span className="kp-insta-eta-bolt">⚡ Delivery {store.deliveryTime ? `in ${store.deliveryTime}` : 'in 20–30 mins'}</span>
+          <span className="kp-insta-eta-bolt">
+            {isDeliveryNotAccepted
+              ? '⚡ Delivery not accepted'
+              : `⚡ Delivery ${store.deliveryTime?.toLowerCase().startsWith('within') ? store.deliveryTime : `in ${store.deliveryTime || '20–30 mins'}`}`}
+          </span>
           <span className="kp-insta-pickup-note">· 🚗 Pickup available</span>
         </div>
         <div className="kp-insta-card-tags">
-          <span className="kp-insta-deal-tag">
-            {isLocalFreshStore(store) ? 'Mandi Direct' : 'No markups'}
-          </span>
-          <span className="kp-insta-sub-tag">Free above ₹{FREE_DELIVERY_THRESHOLD}</span>
+          <span className="kp-insta-deal-tag">{categoryTag}</span>
+          <span className="kp-insta-sub-tag">Free delivery above ₹{FREE_DELIVERY_THRESHOLD}</span>
         </div>
         {store.isSample ? (
           <div className="kp-gallery-meta">
@@ -78,7 +101,7 @@ export default function StoreCard({ store }) {
           <div className="kp-gallery-meta">
             {store.deliveryTime && <span><Clock3 size={14} aria-hidden="true" /> {store.deliveryTime}</span>}
             <span className="kp-gallery-middot" aria-hidden="true">·</span>
-            <span>{delivery}{isLocalFreshStore(store) ? '' : ` · Free above ₹${FREE_DELIVERY_THRESHOLD}`}</span>
+            <span>{delivery}{isLocalFreshStore(store) ? '' : ` · Free delivery above ₹${FREE_DELIVERY_THRESHOLD}`}</span>
           </div>
         )}
       </div>

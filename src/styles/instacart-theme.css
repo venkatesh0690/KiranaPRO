@@ -143,13 +143,17 @@
 
 /* Location Header Pill */
 .kp-concept-location {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
   background: var(--insta-surface-subtle) !important;
   border: 1px solid var(--insta-border) !important;
   border-radius: var(--insta-radius-pill) !important;
-  padding: 6px 14px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  box-sizing: border-box !important;
+  padding: 0 14px !important;
   color: var(--insta-text-primary) !important;
   font-size: 13px !important;
   font-weight: 600 !important;
@@ -177,12 +181,20 @@
   background: transparent;
   border: 1px solid var(--insta-border-strong);
   border-radius: var(--insta-radius-pill);
-  padding: 8px 18px;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  box-sizing: border-box !important;
+  padding: 0 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   font-size: 13.5px;
   font-weight: 700;
   color: var(--insta-text-primary);
   cursor: pointer;
   transition: background 0.15s ease;
+  flex-shrink: 0 !important;
 }
 
 .kp-instacart-login-btn:hover {
@@ -193,12 +205,20 @@
   background: var(--insta-emerald);
   border: 1px solid var(--insta-emerald);
   border-radius: var(--insta-radius-pill);
-  padding: 8px 20px;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  box-sizing: border-box !important;
+  padding: 0 20px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   font-size: 13.5px;
   font-weight: 700;
   color: #FFFFFF;
   cursor: pointer;
   transition: background 0.15s ease, transform 0.1s ease;
+  flex-shrink: 0 !important;
 }
 
 .kp-instacart-signup-btn:hover {
@@ -259,10 +279,11 @@
   background: var(--insta-surface-subtle) !important;
   border: 1.5px solid var(--insta-border) !important;
   border-radius: var(--insta-radius-pill) !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  max-height: 36px !important;
-  padding: 0 4px 0 12px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  box-sizing: border-box !important;
+  padding: 0 4px 0 14px !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
   transition: all 0.2s ease !important;
   box-sizing: border-box !important;
@@ -324,13 +345,17 @@
 /* KiranaCoins VIP Button (Preserved on the right in the same line) */
 .kp-kiranacoins-banner {
   flex-shrink: 0 !important;
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center !important;
-  gap: 10px !important;
+  gap: 8px !important;
   background: #FFFFFF !important;
   border: 1.5px solid var(--insta-deal-yellow-border) !important;
   border-radius: var(--insta-radius-pill) !important;
-  padding: 6px 14px 6px 10px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  box-sizing: border-box !important;
+  padding: 0 12px 0 6px !important;
   cursor: pointer !important;
   box-shadow: 0 2px 8px rgba(253, 224, 71, 0.28) !important;
   transition: all 0.2s ease !important;
@@ -347,15 +372,16 @@
 }
 
 .kp-kc-coin-wrap {
-  width: 32px !important;
-  height: 32px !important;
+  width: 26px !important;
+  height: 26px !important;
   border-radius: 50% !important;
   background: #FEF08A !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 17px !important;
+  font-size: 14px !important;
   border: 1px solid #FDE047 !important;
+  flex-shrink: 0 !important;
 }
 
 .kp-kc-info {
@@ -1397,7 +1423,9 @@
   border: 1px solid var(--insta-border) !important;
   border-radius: var(--insta-radius-pill) !important;
   padding: 2px !important;
-  height: 36px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
 }
@@ -1406,13 +1434,17 @@
   background: transparent !important;
   border: none !important;
   border-radius: var(--insta-radius-pill) !important;
-  padding: 5px 13px !important;
+  padding: 0 12px !important;
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   font-size: 12.5px !important;
   font-weight: 600 !important;
   color: var(--insta-text-muted) !important;
   cursor: pointer !important;
   transition: all 0.15s ease !important;
-  line-height: 1.2 !important;
+  line-height: 1 !important;
   white-space: nowrap !important;
 }
 
