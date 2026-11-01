@@ -27,7 +27,6 @@ import AuthModal from '../components/AuthModal';
 import { quoteFulfilment, validateFulfilment } from '../utils/fulfilment';
 import { UNDER_25_IMPULSE_ITEMS } from '../data/recipeBaskets';
 import StructuredAddressForm from '../components/StructuredAddressForm';
-import ParchiScannerModal from '../components/ParchiScannerModal';
 import { formatAddressForDisplay } from '../utils/addressAndGate';
 import { getChillarBalance, deductChillarBalance, getCustomerTrustScore, isGoldNeighbor } from '../utils/chillarKhata';
 import { isRainModeActive } from '../utils/rainModeAndFleet';
@@ -66,7 +65,6 @@ export default function CartPage({ userLocation }) {
   const [isParentOrder, setIsParentOrder] = useState(false);
 
   // Phases 19, 23, 27, 29 Playbook Upgrades
-  const [isParchiOpen, setIsParchiOpen] = useState(false);
   const [structuredAddr, setStructuredAddr] = useState(null);
   const [useChillar, setUseChillar] = useState(true);
   const chillarBalance = getChillarBalance();
@@ -317,61 +315,8 @@ export default function CartPage({ userLocation }) {
         </div>
       </div>
 
-      {/* ── Prompt 23.3 & Prompt 24.1: WhatsApp List Importer & Community Group Drop Banner ── */}
-      <div style={{ margin: '10px 18px 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <button
-          type="button"
-          onClick={() => setIsParchiOpen(true)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            padding: '10px 14px',
-            background: '#F0FDF4',
-            border: '1.5px dashed #16A34A',
-            borderRadius: '12px',
-            color: '#15803D',
-            fontWeight: '800',
-            fontSize: '13px',
-            cursor: 'pointer'
-          }}
-        >
-          <span>📲</span> Paste List from WhatsApp / Scan Paper Parchi
-        </button>
-
-        <div style={{
-          background: 'var(--bg-subtle, #EEF2EB)',
-          borderRadius: '12px',
-          padding: '10px 14px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          fontSize: '11px',
-          color: 'var(--brand-primary, #1E3A2B)'
-        }}>
-          <div>
-            <strong>👥 {userLocation} Evening Mandi Drop:</strong> 8 of 10 neighbors joined.
-          </div>
-          <button
-            type="button"
-            onClick={() => navigate('/community-drop')}
-            style={{
-              background: 'var(--brand-primary, #1E3A2B)',
-              color: '#FFF',
-              border: 'none',
-              borderRadius: '6px',
-              padding: '4px 8px',
-              fontSize: '10px',
-              fontWeight: '700',
-              cursor: 'pointer'
-            }}
-          >
-            View Drop
-          </button>
-        </div>
-
-        {rainActive && (
+      {rainActive && (
+        <div style={{ margin: '10px 18px 0' }}>
           <div style={{
             background: '#EFF6FF',
             border: '1px solid #BFDBFE',
@@ -388,8 +333,8 @@ export default function CartPage({ userLocation }) {
               <strong>Coastal Rain Mode in {userLocation}:</strong> Crates are waterproof-sealed. Allow 15–20 mins extra for rider safety.
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Cart Items List: Redesigned with small icons and item names (matching Image 2) */}
       <div className="cart-items-wrap">
@@ -898,13 +843,6 @@ export default function CartPage({ userLocation }) {
           <ChevronRight size={18} />
         </button>
       </div>
-
-      {isParchiOpen && (
-        <ParchiScannerModal
-          catalog={Object.values(products || {}).flat()}
-          onClose={() => setIsParchiOpen(false)}
-        />
-      )}
     </div>
   );
 }
