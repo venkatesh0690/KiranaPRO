@@ -3,13 +3,13 @@
 [![Vite](https://img.shields.io/badge/Vite-8.3.5-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-19.3.1-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![Neon](https://img.shields.io/badge/Neon-PostgreSQL-00E599?logo=postgresql&logoColor=white)](https://neon.tech/)
-[![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?logo=vercel&logoColor=white)](https://kiranapro.vercel.app)
-[![Live Demo](https://img.shields.io/badge/Live_URL-kiranapro.vercel.app-00C781?style=flat&logo=vercel&logoColor=white)](https://kiranapro.vercel.app)
+[![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?logo=vercel&logoColor=white)](https://kiranapro-two.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live_URL-kiranapro-two.vercel.app-00C781?style=flat&logo=vercel&logoColor=white)](https://kiranapro-two.vercel.app)
 [![Download Android APK](https://img.shields.io/badge/Download_APK-v1.0.0_Android-3DDC84?style=flat&logo=android&logoColor=white)](https://github.com/venkatesh0690/KiranaPRO/releases/download/v1.0.0-mobile/KiranaPRO-v1.0.0.apk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 > **KiranaPRO** connects local consumers with neighborhood kirana stores and direct-from-mandi farmers.
-> 🌐 **Live Website**: [https://kiranapro.vercel.app](https://kiranapro.vercel.app)
+> 🌐 **Live Website**: [https://kiranapro-two.vercel.app](https://kiranapro-two.vercel.app)
 > 📱 **Android APK**: [Download KiranaPRO-v1.0.0.apk (Official Release)](https://github.com/venkatesh0690/KiranaPRO/releases/download/v1.0.0-mobile/KiranaPRO-v1.0.0.apk)
 
 ---
@@ -48,7 +48,7 @@
 
 ### 6. 📱 Native Mobile App & PWA (Android APK & iOS)
 - **Automated GitHub Actions CI/CD APK Build**: Generates a downloadable `KiranaPRO-v1.0.0.apk` directly from GitHub repository pushes.
-- **Capacitor Mobile Shell**: Native Android container (`com.kiranapro.app`) with live cloud sync to `https://kiranapro.vercel.app` for continuous zero-recompile updates.
+- **Capacitor Mobile Shell**: Native Android container (`com.kiranapro.app`) with live cloud sync to `https://kiranapro-two.vercel.app` for continuous zero-recompile updates.
 - **Progressive Web App (PWA)**: Standalone 1-tap mobile installation prompt on Android and iOS browsers.
 
 ---
@@ -158,7 +158,7 @@ KiranaPRO is pre-configured with `vercel.json` for zero-configuration deployment
 KiranaPRO is fully mobile-enabled through both automated GitHub APK builds and Progressive Web App installation:
 
 ### Method 1: Instant PWA Install on Mobile (Recommended)
-1. Open **[https://kiranapro.vercel.app](https://kiranapro.vercel.app)** on your Android phone (Chrome / Samsung Internet) or iPhone (Safari).
+1. Open **[https://kiranapro-two.vercel.app](https://kiranapro-two.vercel.app)** on your Android phone (Chrome / Samsung Internet) or iPhone (Safari).
 2. Tap the **"Get KiranaPRO Mobile App"** banner at the bottom or browser menu -> **"Install App"** / **"Add to Home Screen"**.
 3. KiranaPRO installs directly to your home screen with full-screen standalone mobile UX, native icons, and push-like speed.
 
