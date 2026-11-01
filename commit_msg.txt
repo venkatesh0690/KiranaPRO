@@ -1,1 +1,1 @@
-feat: place KiranaCoins right of search bar and fix user name visibility on profile page  
+feat: show only logo in banner 1, govt mandi in banner 2, and cookbook cutting in banner 3  

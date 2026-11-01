@@ -31,8 +31,6 @@ const HERO_SLIDES = [
     theme: 'forest',
     neonTag: '⚡ 20–30 MIN EXPRESS',
     neonAccent: '#00E676',
-    badgeIcon: '⚡',
-    badgeText: 'KiranaPRO Official',
     bg: "radial-gradient(circle at 85% 35%, rgba(0, 255, 136, 0.42) 0%, rgba(0, 255, 136, 0.08) 45%, transparent 68%), linear-gradient(135deg, rgba(2, 24, 15, 0.92) 0%, rgba(5, 51, 34, 0.86) 50%, rgba(1, 30, 19, 0.96) 100%), url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat",
     title: 'Order groceries for delivery or pickup today',
     ctaText: 'Sign up to get 40% off (up to ₹150)',
@@ -50,8 +48,6 @@ const HERO_SLIDES = [
     theme: 'amber',
     neonTag: '🌾 DAWN FARM MANDI',
     neonAccent: '#FFB703',
-    badgeIcon: '🌾',
-    badgeText: 'Govt Mandi & Veg Shops',
     bg: "radial-gradient(circle at 85% 35%, rgba(255, 183, 3, 0.45) 0%, rgba(255, 107, 0, 0.12) 45%, transparent 68%), linear-gradient(135deg, rgba(28, 10, 0, 0.92) 0%, rgba(61, 23, 3, 0.86) 50%, rgba(36, 12, 1, 0.96) 100%), url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat",
     title: 'Fresh Mandi Harvest Direct from Farmers',
     ctaText: 'Explore Morning Mandi · Zero Markups',
@@ -60,7 +56,7 @@ const HERO_SLIDES = [
     ctaColor: '#240C00',
     subtext: 'Direct farm produce: tender vankaya, country tamata & fresh greens picked at dawn',
     image: 'https://images.unsplash.com/photo-1573246123716-6b1782bfc499?auto=format&fit=crop&w=800&q=80',
-    imageAlt: 'Local government mandi with all vegetable shops and stalls',
+    imageAlt: 'Government mandi with all vegetable shops and stalls',
     action: '/store/localfresh'
   },
   {
@@ -68,8 +64,6 @@ const HERO_SLIDES = [
     theme: 'teal',
     neonTag: '🍲 1-TAP CHEF RECIPES',
     neonAccent: '#00F0FF',
-    badgeIcon: '🍲',
-    badgeText: 'Cookbook & Cloud Kitchen',
     bg: "radial-gradient(circle at 85% 35%, rgba(0, 240, 255, 0.45) 0%, rgba(168, 85, 247, 0.16) 45%, transparent 68%), linear-gradient(135deg, rgba(7, 9, 27, 0.92) 0%, rgba(17, 26, 58, 0.86) 50%, rgba(21, 9, 42, 0.96) 100%), url('https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat",
     title: 'What to Cook Today? 1-Tap Andhra Meal Kits',
     ctaText: 'Cook in 20 Mins · View 6 Kits',
@@ -77,13 +71,8 @@ const HERO_SLIDES = [
     ctaHover: '#00D0DF',
     ctaColor: '#051E28',
     subtext: 'Gutti Vankaya, Pesarattu & Pappu Charu with pre-measured ingredients ready in 20 mins',
-    dualMedia: true,
-    primaryImage: 'https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?auto=format&fit=crop&w=600&q=80',
-    primaryLabel: '📖 Cookbook',
-    secondaryImage: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80',
-    secondaryLabel: '👨‍🍳 Cloud Restaurant',
-    image: 'https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?auto=format&fit=crop&w=800&q=80',
-    imageAlt: 'Cookbook and cloud restaurant kitchen',
+    image: 'https://images.unsplash.com/photo-1556911073-38141963c9e0?auto=format&fit=crop&w=800&q=80',
+    imageAlt: 'Cookbook with fresh vegetable cutting in kitchen',
     action: '/recipes'
   }
 ];
@@ -444,35 +433,12 @@ export default function HomePage({ userLocation, onLocationChange }) {
                     <div className="kp-hero-media-neon-glow" aria-hidden="true" />
                     {slide.isLogo ? (
                       <div className="kp-hero-logo-box">
-                        <div className="kp-hero-logo-glass-card">
-                          <img
-                            src={slide.logoImage}
-                            alt={slide.imageAlt}
-                            className="kp-hero-brand-logo-img"
-                            loading="eager"
-                          />
-                        </div>
-                      </div>
-                    ) : slide.dualMedia ? (
-                      <div className="kp-hero-dual-media-grid">
-                        <div className="kp-hero-dual-col">
-                          <img
-                            src={slide.primaryImage}
-                            alt={slide.primaryLabel}
-                            className="kp-hero-dual-img"
-                            loading="lazy"
-                          />
-                          <span className="kp-hero-dual-tag">{slide.primaryLabel}</span>
-                        </div>
-                        <div className="kp-hero-dual-col">
-                          <img
-                            src={slide.secondaryImage}
-                            alt={slide.secondaryLabel}
-                            className="kp-hero-dual-img"
-                            loading="lazy"
-                          />
-                          <span className="kp-hero-dual-tag">{slide.secondaryLabel}</span>
-                        </div>
+                        <img
+                          src={slide.logoImage}
+                          alt={slide.imageAlt}
+                          className="kp-hero-brand-logo-img"
+                          loading="eager"
+                        />
                       </div>
                     ) : (
                       <img
@@ -481,13 +447,6 @@ export default function HomePage({ userLocation, onLocationChange }) {
                         className="kp-instacart-hero-img"
                         loading={slide.id === 'instacart-forest' ? 'eager' : 'lazy'}
                       />
-                    )}
-                    {slide.badgeText && (
-                      <div className="kp-hero-media-neon-overlay">
-                        <span className="kp-hero-media-neon-chip">
-                          {slide.badgeIcon} {slide.badgeText}
-                        </span>
-                      </div>
                     )}
                   </div>
                 </div>
