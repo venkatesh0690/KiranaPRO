@@ -176,7 +176,6 @@ export default function HomePage({ userLocation, onLocationChange }) {
       <section className="kp-concept-categories kp-concept-compact-categories kp-neu-categories-section" aria-labelledby="kp-concept-categories-title">
         <div className="kp-concept-section-heading">
           <div className="kp-concept-heading-copy">
-            <span className="kp-concept-index">01 / EXPLORE</span>
             <h2 id="kp-concept-categories-title">Shop by category</h2>
           </div>
           <button className="kp-concept-link" type="button" onClick={() => setCategoriesOpen(true)}>
@@ -209,7 +208,6 @@ export default function HomePage({ userLocation, onLocationChange }) {
       <section className="kp-concept-stores" aria-labelledby="kp-concept-stores-title">
         <div className="kp-concept-section-heading kp-concept-stores-heading">
           <div className="kp-concept-heading-copy">
-            <span className="kp-concept-index">02 / YOUR MARKETPLACE</span>
             <h2 id="kp-concept-stores-title">Stores in {userLocation}</h2>
           </div>
           <span className="kp-concept-count">{filteredStores.length} stores</span>
