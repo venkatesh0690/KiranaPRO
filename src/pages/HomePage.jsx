@@ -21,7 +21,11 @@ import AuthModal from '../components/AuthModal';
 
 const storeFilters = [
   { id: 'all', label: 'All' },
-  { id: 'fast', label: 'Fast delivery' },
+  { id: 'fast', label: 'Fastest' },
+  { id: 'offers', label: 'Offers' },
+  { id: 'mandi', label: 'No markups' },
+  { id: 'grocery', label: 'Grocery' },
+  { id: 'pickup', label: 'Pickup' },
   { id: 'rated', label: 'Top rated' },
 ];
 
@@ -56,6 +60,10 @@ export default function HomePage({ userLocation, onLocationChange }) {
   const areaStores = getStoresForArea(stores, userLocation);
   const filteredStores = areaStores.filter(store => {
     if (activeFilter === 'fast') return /15|20|30/.test(store.deliveryTime || '');
+    if (activeFilter === 'offers') return isLocalFreshStore(store) || store.tags?.some(t => /deal|save|offer|popular/i.test(t));
+    if (activeFilter === 'mandi') return isLocalFreshStore(store) || !store.isSample;
+    if (activeFilter === 'grocery') return isLocalFreshStore(store) || store.categories?.includes('Groceries');
+    if (activeFilter === 'pickup') return true;
     if (activeFilter === 'rated') return Number(store.rating) >= 4.7;
     return true;
   });
@@ -327,6 +335,9 @@ export default function HomePage({ userLocation, onLocationChange }) {
                 </button>
               );
             })}
+          </div>
+          <div className="kp-insta-eligibility-wrap">
+            <span className="kp-insta-eligibility-note">Offers subject to terms and eligibility</span>
           </div>
         </div>
 

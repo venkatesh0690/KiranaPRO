@@ -1,7 +1,7 @@
 /* ==========================================================================
-   KiranaPRO — Instacart Design System Reconstitution
-   Authentic Instacart Look & Feel: Clean White, Deep Forest Green (#003D29),
-   Action Emerald (#108910), Deal Amber (#FEF08A), and High-Density Typography
+   KiranaPRO — Instacart Design System (Authentic Pixel-Perfect Replication)
+   Theme: Clean White, Deep Forest Green (#003D29), Action Emerald (#108910),
+   Deal Amber (#FEF08A), Neutral Pills (#F4F5F7), and High-Density Store Cards
    ========================================================================== */
 
 :root {
@@ -62,7 +62,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 10px;
 }
 
 /* Left Brand & Menu */
@@ -365,7 +364,7 @@
   font-weight: 700 !important;
 }
 
-/* ── DEEP FOREST GREEN HERO BANNER (Instacart Signature) ── */
+/* ── DEEP FOREST GREEN HERO BANNER (Instacart Signature #003D29) ── */
 .kp-instacart-hero-section {
   max-width: 1240px;
   margin: 20px auto 0;
@@ -568,6 +567,17 @@
   line-height: 1.2;
 }
 
+.kp-insta-eligibility-wrap {
+  text-align: right;
+  margin-top: 6px;
+  padding-right: 4px;
+}
+
+.kp-insta-eligibility-note {
+  font-size: 11px;
+  color: var(--insta-text-muted);
+}
+
 /* ── "SHOP BY CATEGORY" SECTION (Preserved as requested) ── */
 .kp-concept-categories {
   max-width: 1240px !important;
@@ -712,11 +722,11 @@
   margin: 4px 0 16px !important;
 }
 
-/* Store Cards Grid */
+/* ── COMPACT INSTACART STORE CARDS (Horizontal Layout matching reference) ── */
 .kp-concept-store-grid {
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
-  gap: 20px !important;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)) !important;
+  gap: 16px !important;
 }
 
 .store-card.kp-gallery-card {
@@ -725,8 +735,10 @@
   border-radius: var(--insta-radius-card) !important;
   padding: 16px !important;
   display: flex !important;
-  flex-direction: column !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 16px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
   text-decoration: none !important;
   transition: all 0.2s ease !important;
 }
@@ -738,20 +750,95 @@
 }
 
 .kp-gallery-media {
-  border-radius: 12px !important;
+  width: 64px !important;
+  height: 64px !important;
+  min-width: 64px !important;
+  aspect-ratio: 1 !important;
+  border-radius: 14px !important;
   overflow: hidden !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  background: var(--insta-surface-subtle) !important;
+  border: 1px solid var(--insta-border) !important;
+}
+
+.kp-gallery-media .kp-gallery-open-icon,
+.kp-gallery-media .kp-gallery-track-counter {
+  display: none !important;
+}
+
+.kp-gallery-copy {
+  flex: 1 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.kp-gallery-kicker {
+  display: none !important;
+}
+
+.kp-gallery-title-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
 }
 
 .kp-gallery-title-row h3 {
-  font-size: 16.5px !important;
+  font-size: 16px !important;
   font-weight: 800 !important;
   color: var(--insta-text-primary) !important;
+  margin: 0 !important;
+  line-height: 1.25 !important;
+}
+
+.kp-gallery-description {
+  display: none !important;
+}
+
+.kp-insta-card-delivery {
+  font-size: 12.5px !important;
+  font-weight: 750 !important;
+  color: #15803D !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-top: 2px !important;
+}
+
+.kp-insta-pickup-note {
+  font-size: 11.5px !important;
+  color: var(--insta-text-muted) !important;
+  font-weight: 500 !important;
+}
+
+.kp-insta-card-tags {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+  margin-top: 4px !important;
+}
+
+.kp-insta-deal-tag {
+  background: var(--insta-deal-yellow) !important;
+  color: var(--insta-deal-text) !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  line-height: 1.2 !important;
+}
+
+.kp-insta-sub-tag {
+  font-size: 11px !important;
+  color: var(--insta-text-muted) !important;
+  font-weight: 550 !important;
 }
 
 .kp-gallery-meta {
-  color: #15803D !important;
-  font-weight: 700 !important;
-  font-size: 13px !important;
+  display: none !important;
 }
 
 /* ── "WHAT TO COOK TODAY" BANNER (Preserved as requested) ── */

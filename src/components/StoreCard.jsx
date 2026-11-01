@@ -92,6 +92,17 @@ export default function StoreCard({ store }) {
         <p className="kp-gallery-description">
           {store.isSample ? 'Demand pending — vote to bring this shop online' : store.posterTagline || store.tags?.slice(0, 3).join(' · ') || 'Everyday essentials'}
         </p>
+        <div className="kp-insta-card-delivery">
+          <span className="kp-insta-eta-bolt">⚡ Delivery {store.deliveryTime ? `in ${store.deliveryTime}` : 'in 20–30 mins'}</span>
+          <span className="kp-insta-pickup-note">· 🚗 Pickup available</span>
+        </div>
+        <div className="kp-insta-card-tags">
+          <span className="kp-insta-deal-tag">
+            {isLocalFreshStore(store) ? 'Mandi Direct' : 'No markups'}
+          </span>
+          <span className="kp-insta-sub-tag">Lots of deals</span>
+          <span className="kp-insta-sub-tag">Free above ₹{FREE_DELIVERY_THRESHOLD}</span>
+        </div>
         {store.isSample ? (
           <div className="kp-fasttrack-row" onClick={e => e.stopPropagation()}>
             <button
