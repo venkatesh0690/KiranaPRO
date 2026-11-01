@@ -106,7 +106,8 @@ export async function discoverProductPhoto(product) {
     try {
       const url=new URL(photo);
       valid=url.protocol==='https:' && (
-        ['upload.wikimedia.org','commons.wikimedia.org'].includes(url.hostname) ||
+        ['upload.wikimedia.org','commons.wikimedia.org','thumb.wikimedia.org'].includes(url.hostname) ||
+        url.hostname.endsWith('.wikimedia.org') ||
         (result.match==='illustrative' &&
           url.hostname.endsWith('.public.blob.vercel-storage.com'))
       );
