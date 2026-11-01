@@ -157,7 +157,7 @@ export default function CartPage({ userLocation }) {
   const deliveryFee = parivaarPassActive ? 0 : currentQuote.deliveryFee;
   const handlingFee = parivaarPassActive ? 0 : currentQuote.handlingFee;
   const tax = currentQuote.tax;
-  const passFee = parivaarPassActive ? 29 : 0;
+  const passFee = parivaarPassActive ? 99 : 0;
   const grandTotal = Math.max(0, currentQuote.total - parivaarDiscount + passFee);
   const isLocalFresh = isLocalFreshStore(store);
   const isPickup = fulfilment.mode==='pickup';
@@ -200,7 +200,11 @@ export default function CartPage({ userLocation }) {
     const finalQuote=quoteFulfilment({
       store,subtotal:totalPrice,discount:effectiveDiscount,mode:requested.mode,items:cart.items
     });
-    const chillarDeducted = (useChillar && chillarBalance > 0) ? Math.min(chillarBalance, finalQuote.total) : 0;
+    const orderDeliveryFee = parivaarPassActive ? 0 : finalQuote.deliveryFee;
+    const orderHandlingFee = parivaarPassActive ? 0 : finalQuote.handlingFee;
+    const orderPassFee = parivaarPassActive ? 99 : 0;
+    const computedTotal = Math.max(0, totalPrice - effectiveDiscount + orderDeliveryFee + (rainActive ? rainTip : 0) + orderHandlingFee + finalQuote.tax + orderPassFee);
+    const chillarDeducted = (useChillar && chillarBalance > 0) ? Math.min(chillarBalance, computedTotal) : 0;
     if (chillarDeducted > 0) {
       deductChillarBalance(chillarDeducted);
     }
@@ -209,9 +213,9 @@ export default function CartPage({ userLocation }) {
       storeId:cart.storeId,storeName:store?.name || 'Local Store',
       storeArea:userLocation,deliveryAddress:isPickup ? (store?.address || 'Store pickup address') : deliveryAddress.trim(),
       items:cart.items.map(i=>({id:i.id,name:i.name,qty:i.quantity,price:i.price,unit:i.unit})),
-      subtotal:totalPrice,deliveryFee:finalQuote.deliveryFee + (rainActive ? rainTip : 0),discount:effectiveDiscount,
-      discountCode:effectiveCode,total:Math.max(0, finalQuote.total + (rainActive ? rainTip : 0) - chillarDeducted),
-      handlingFee:finalQuote.handlingFee,tax:finalQuote.tax,
+      subtotal:totalPrice,deliveryFee:orderDeliveryFee + (rainActive ? rainTip : 0),discount:effectiveDiscount,
+      discountCode:effectiveCode,total:Math.max(0, computedTotal - chillarDeducted),
+      handlingFee:orderHandlingFee,passFee:orderPassFee,tax:finalQuote.tax,
       fulfilment:requested,
       paymentMethod:'Cash on Delivery (Pay at Doorstep)',
       codChangeRequestedFor:codChangeAmount,
@@ -662,14 +666,14 @@ export default function CartPage({ userLocation }) {
       <div className="kp-parivaar-pass-card">
         <div className="kp-pp-left">
           <span className="kp-pp-title">⭐ KiranaPRO Pass · VIP Member Benefits</span>
-          <span className="kp-pp-sub">Save ₹7 on this order right now + ₹0 Delivery Fee + Earn 5% KiranaCoins (Pay via COD)</span>
+          <span className="kp-pp-sub">Save on delivery &amp; packing + ₹0 Delivery Fee + Earn 5% KiranaCoins (Pay via COD)</span>
         </div>
         <button
           type="button"
           className={`kp-pp-checkbox ${parivaarPassActive ? 'active' : ''}`}
           onClick={() => setParivaarPassActive(p => !p)}
         >
-          {parivaarPassActive ? '✓ KiranaPRO Pass Active (₹29)' : '+ Activate KiranaPRO Pass (₹29)'}
+          {parivaarPassActive ? '✓ KiranaPRO Pass Active (₹99)' : '+ Activate KiranaPRO Pass (₹99)'}
         </button>
       </div>
 
@@ -685,11 +689,6 @@ export default function CartPage({ userLocation }) {
           <div className="bill-row">
             <span>Item Total (Mandi & Kirana Direct)</span>
             <span className="tabular-nums">₹{totalPrice}</span>
-          </div>
-
-          <div className="bill-row" style={{ color: '#16A34A', fontWeight: '700' }}>
-            <span>Dark-Store Surge / Peak Fee</span>
-            <span>₹0 (Always Free)</span>
           </div>
 
           <div className="bill-row" style={{ color: '#64748B' }}>
@@ -722,13 +721,26 @@ export default function CartPage({ userLocation }) {
 
           <div className="bill-row">
             <span>Careful Hand-Packing & Grading</span>
-            <span className="tabular-nums">₹{handlingFee}</span>
+            <span className="tabular-nums">
+              {parivaarPassActive ? (
+                <span className="bill-free">FREE</span>
+              ) : (
+                `₹${handlingFee}`
+              )}
+            </span>
           </div>
 
           <div className="bill-row">
             <span>Estimated GST</span>
             <span className="tabular-nums">₹{tax}</span>
           </div>
+
+          {parivaarPassActive && (
+            <div className="bill-row" style={{ color: '#15803d', fontWeight: '750' }}>
+              <span>⭐ KiranaPRO Pass (VIP Member)</span>
+              <span className="tabular-nums">₹99</span>
+            </div>
+          )}
 
           <hr className="bill-dash" />
 
