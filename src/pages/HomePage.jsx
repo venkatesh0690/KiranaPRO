@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ArrowRight, ArrowUpRight, ChevronDown, MapPin, Search, ShoppingBag, UserRound,
-  SlidersHorizontal
+  ArrowRight, ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight,
+  MapPin, Menu, Search, ShoppingBag, UserRound, SlidersHorizontal
 } from 'lucide-react';
 import { allCategories } from '../data/stores';
 import { ANDHRA_RECIPE_BASKETS } from '../data/recipeBaskets';
-import { getStoresForArea, FREE_DELIVERY_THRESHOLD } from '../data/deliveryAreas';
+import { getStoresForArea, FREE_DELIVERY_THRESHOLD, isLocalFreshStore } from '../data/deliveryAreas';
 import { useStore } from '../context/StoreContext';
 import { useCart } from '../context/CartContext';
 import { useSecurity } from '../context/SecurityContext';
@@ -20,7 +20,7 @@ import { MANDI_SAVER_COMBOS, isEveningClearanceActive } from '../utils/mandiClea
 import AuthModal from '../components/AuthModal';
 
 const storeFilters = [
-  { id: 'all', label: 'All stores' },
+  { id: 'all', label: 'All' },
   { id: 'fast', label: 'Fast delivery' },
   { id: 'rated', label: 'Top rated' },
 ];
@@ -36,7 +36,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [seniorMode, setSeniorMode] = useState(false);
   const [isMapOpen, setIsMapOpen] = useState(false);
-    const [isParchiOpen, setIsParchiOpen] = useState(false);
+  const [isParchiOpen, setIsParchiOpen] = useState(false);
   const [passActive, setPassActive] = useState(() => {
     try {
       return localStorage.getItem('kiranapro_pass') !== 'inactive';
@@ -53,7 +53,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
     });
   };
 
-  const areaStores = getStoresForArea(stores,userLocation);
+  const areaStores = getStoresForArea(stores, userLocation);
   const filteredStores = areaStores.filter(store => {
     if (activeFilter === 'fast') return /15|20|30/.test(store.deliveryTime || '');
     if (activeFilter === 'rated') return Number(store.rating) >= 4.7;
@@ -75,50 +75,88 @@ export default function HomePage({ userLocation, onLocationChange }) {
 
   return (
     <div className={`home-container kp-home kp-concept ${seniorMode ? "kp-senior-mode" : ""}`}>
+      {/* ── Instacart Clean White Navbar ── */}
       <header className="kp-concept-header">
         <div className="kp-concept-header-top">
-          <button
-            type="button"
-            className="kp-concept-wordmark"
-            aria-label="KiranaPRO home"
-            onClick={() => navigate('/home')}
-          >
-            <span className="kp-concept-monogram">K.</span>
-            <span>Kirana<span>PRO</span></span>
+          <div className="kp-instacart-brand-wrap">
+            <button
+              type="button"
+              className="kp-instacart-menu-btn"
+              onClick={() => setCategoriesOpen(true)}
+              aria-label="Open categories menu"
+              title="Shop by Category"
+            >
+              <Menu size={22} />
+            </button>
+            <button
+              type="button"
+              className="kp-concept-wordmark"
+              aria-label="KiranaPRO home"
+              onClick={() => navigate('/home')}
+            >
+              <span className="kp-instacart-carrot-icon" aria-hidden="true">🥕</span>
+              <span>kirana<span>pro</span></span>
+            </button>
+          </div>
+
+          <button type="button" className="kp-concept-location" onClick={() => setIsMapOpen(true)} title="Change delivery neighborhood">
+            <span className="kp-concept-pin"><MapPin size={16} strokeWidth={2.2} /></span>
+            <span className="kp-concept-location-label">Delivering to <strong>{userLocation || 'Choose delivery area'}</strong></span>
+            <ChevronDown size={15} aria-hidden="true" />
           </button>
+
           <div className="kp-concept-header-actions">
             <button
               type="button"
               className={`kp-concept-header-icon ${seniorMode ? 'is-senior' : ''}`}
               onClick={() => setSeniorMode(s => !s)}
-              title="Senior Citizen / Amma-Nanna Easy Read Mode (A+)"
+              title="Senior Citizen / Easy Read Mode (A+)"
               aria-label="Toggle Senior Citizen Easy Read Mode"
-              style={{ fontWeight: 850, fontSize: '13px', color: seniorMode ? '#FFD166' : undefined }}
+              style={{ fontWeight: 850, fontSize: '13px' }}
             >
               A+
             </button>
+            {authSession?.isAuthenticated ? (
+              <button
+                type="button"
+                className="kp-concept-header-icon"
+                onClick={() => navigate('/profile')}
+                aria-label="Open account"
+              >
+                <UserRound size={18} strokeWidth={2} />
+              </button>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className="kp-instacart-login-btn"
+                  onClick={() => setAuthMode('login')}
+                >
+                  Log in
+                </button>
+                <button
+                  type="button"
+                  className="kp-instacart-signup-btn"
+                  onClick={() => setAuthMode('signup')}
+                >
+                  Sign up
+                </button>
+              </>
+            )}
             <button
               type="button"
-              className="kp-concept-header-icon"
-              onClick={() => authSession.isAuthenticated ? navigate('/profile') : setAuthMode('login')}
-              aria-label={authSession.isAuthenticated ? 'Open account' : 'Log in'}
+              className="kp-concept-header-icon kp-concept-cart"
+              onClick={() => navigate('/cart')}
+              aria-label={`Cart with ${totalItems} items`}
             >
-              <UserRound size={18} strokeWidth={1.9} />
-            </button>
-            <button type="button" className="kp-concept-header-icon kp-concept-cart" onClick={() => navigate('/cart')} aria-label={`Cart with ${totalItems} items`}>
-              <ShoppingBag size={19} strokeWidth={1.9} />
+              <ShoppingBag size={18} strokeWidth={2} />
               {totalItems > 0 && <span>{totalItems}</span>}
             </button>
           </div>
         </div>
-
-        <button type="button" className="kp-concept-location" onClick={() => setIsMapOpen(true)}>
-          <span className="kp-concept-pin"><MapPin size={17} strokeWidth={2} /></span>
-          <span className="kp-concept-location-label">Delivering to <strong>{userLocation || 'Choose your delivery area'}</strong></span>
-          <ChevronDown size={16} aria-hidden="true" />
-        </button>
       </header>
 
+      {/* ── Search Bar Line with KiranaCoins VIP Button ── */}
       <div className="kp-concept-search-line">
         <div className="kp-search-bar-wrap">
           <button
@@ -128,7 +166,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
             aria-label="Search all groceries, vegetables and stores"
           >
             <Search size={18} aria-hidden="true" className="kp-concept-search-icon" />
-            <span className="kp-concept-search-text">Search 189+ groceries, direct mandi produce & stores...</span>
+            <span className="kp-concept-search-text">Search products and stores...</span>
             <span className="kp-concept-search-arrow"><ArrowRight size={16} aria-hidden="true" /></span>
           </button>
           <button
@@ -143,12 +181,12 @@ export default function HomePage({ userLocation, onLocationChange }) {
           </button>
         </div>
 
-        {/* Resized KiranaCoins Banner on the right side of the search bar, in the same line */}
+        {/* KiranaCoins VIP Button (Preserved on the right side of the search bar, in the same line) */}
         <button
           type="button"
           className={`kp-kiranacoins-banner ${passActive ? 'is-vip' : ''}`}
           onClick={togglePass}
-          title="KiranaPRO Pass VIP Member & KiranaCoins"
+          title="KiranaCoins VIP Member & Rewards"
           aria-label={`KiranaCoins: 140 Coins. ${passActive ? 'VIP Active' : 'Activate VIP Pass'}`}
         >
           <div className="kp-kc-coin-wrap">
@@ -173,6 +211,40 @@ export default function HomePage({ userLocation, onLocationChange }) {
         </div>
       )}
 
+      {/* ── Instacart Deep Forest Green Hero Banner ── */}
+      <section className="kp-instacart-hero-section" aria-label="Instacart Grocery Delivery">
+        <div className="kp-instacart-hero-card">
+          <div className="kp-instacart-hero-left">
+            <h1 className="kp-instacart-hero-title">
+              Order groceries for delivery or pickup today
+            </h1>
+            <div className="kp-instacart-hero-action">
+              <button
+                type="button"
+                className="kp-instacart-hero-cta-btn"
+                onClick={() => navigate('/store/localfresh')}
+              >
+                Sign up to get 40% off (up to ₹150)
+              </button>
+            </div>
+            <p className="kp-instacart-hero-subtext">
+              2 orders in 14 days · 20% on first mandi cart · Fast delivery in 20–30 mins
+            </p>
+          </div>
+          <div className="kp-instacart-hero-right">
+            <div className="kp-instacart-hero-media-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=720&q=80"
+                alt="Fresh produce and grocery ingredients"
+                className="kp-instacart-hero-img"
+                loading="eager"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── "Shop by category" (Preserved as requested) ── */}
       <section className="kp-concept-categories kp-concept-compact-categories kp-neu-categories-section" aria-labelledby="kp-concept-categories-title">
         <div className="kp-concept-section-heading">
           <div className="kp-concept-heading-copy">
@@ -200,15 +272,75 @@ export default function HomePage({ userLocation, onLocationChange }) {
         </div>
       </section>
 
+      {/* ── "Stores to help you save" & HomeOffersCarousel ── */}
       <section className="kp-concept-feature" aria-label="Current delivery and basket offers">
+        <div className="kp-insta-save-rail-section">
+          <div className="kp-insta-rail-header">
+            <h2 className="kp-insta-rail-title">Stores to help you save</h2>
+            <div className="kp-insta-rail-arrows">
+              <button
+                type="button"
+                className="kp-insta-arrow-btn"
+                aria-label="Scroll left"
+                onClick={() => {
+                  const el = document.getElementById('kp-insta-store-tiles');
+                  if (el) el.scrollBy({ left: -240, behavior: 'smooth' });
+                }}
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                type="button"
+                className="kp-insta-arrow-btn"
+                aria-label="Scroll right"
+                onClick={() => {
+                  const el = document.getElementById('kp-insta-store-tiles');
+                  if (el) el.scrollBy({ left: 240, behavior: 'smooth' });
+                }}
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+          <div id="kp-insta-store-tiles" className="kp-insta-store-tile-track">
+            {areaStores.map(store => {
+              const bg = isLocalFreshStore(store) ? '#108910'
+                : store.id.includes('siripuram') ? '#DC2626'
+                : store.id.includes('balaji') ? '#2563EB'
+                : store.id.includes('vijaya') ? '#7C3AED'
+                : '#374151';
+              return (
+                <button
+                  key={store.id}
+                  type="button"
+                  className="kp-insta-store-tile"
+                  onClick={() => navigate(`/store/${store.id}`)}
+                >
+                  <div className="kp-insta-store-badge-card" style={{ background: bg, color: '#FFFFFF' }}>
+                    {store.name.charAt(0)}
+                  </div>
+                  <span className="kp-insta-store-tile-name">{store.name}</span>
+                  <span className="kp-insta-store-tile-eta">{store.deliveryTime || '20-30 mins'}</span>
+                  <span className="kp-insta-deal-tag">
+                    {isLocalFreshStore(store) ? 'Mandi Direct' : 'No markups'}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         <HomeOffersCarousel stores={areaStores} catalog={products}
           navigate={navigate} area={userLocation} totalItems={totalItems} orderCount={orderCount} />
       </section>
 
+      {/* ── "All stores in [Location]" ── */}
       <section className="kp-concept-stores" aria-labelledby="kp-concept-stores-title">
         <div className="kp-concept-section-heading kp-concept-stores-heading">
           <div className="kp-concept-heading-copy">
-            <h2 id="kp-concept-stores-title">Stores in {userLocation}</h2>
+            <h2 id="kp-concept-stores-title">
+              Stores in <span className="kp-instacart-location-name" onClick={() => setIsMapOpen(true)}>{userLocation}</span>
+            </h2>
           </div>
           <span className="kp-concept-count">{filteredStores.length} stores</span>
         </div>
@@ -239,7 +371,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
         )}
       </section>
 
-      {/* ── What to Cook Today Recipe Baskets Banner (Redirects to /recipes) ── */}
+      {/* ── 🍲 WHAT TO COOK TODAY 1-TAP MEAL KITS (Preserved as requested) ── */}
       <section className="kp-recipe-banner-section" aria-label="What to Cook Today Andhra Recipe Baskets">
         <div
           className="kp-recipe-hero-banner"
@@ -279,8 +411,6 @@ export default function HomePage({ userLocation, onLocationChange }) {
           </div>
         </div>
       </section>
-
-      
 
       <div className="kp-concept-footer">
         <span>KiranaPRO</span>

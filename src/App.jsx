@@ -48,7 +48,7 @@ import './styles/order-rewards.css';
 import './styles/fulfilment-checkout.css';
 import './styles/sample-stores-guest.css';
 import './styles/editorial-banners.css';
-import './styles/tataneu-theme.css';
+import './styles/instacart-theme.css';
 
 // Load nonessential screens on demand: initial location selection no longer
 // downloads cart, search, profile, seller and administrator dashboards.
