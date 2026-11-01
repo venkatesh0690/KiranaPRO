@@ -1,34 +1,50 @@
 /* ==========================================================================
-   KiranaPRO — Tata Neu-Inspired Super-App Design System & KiranaPRO Pass
-   Adaptive / Dual Theme: Dark Obsidian Hero & Pass with Crisp Light Storefront
+   KiranaPRO — Tata Neu-Inspired Super-App Design System & KiranaCoins
+   Theme: Authentic Tata Neu (Royal Plum/Violet, Electric Magenta & NeuCoins Gold)
    ========================================================================== */
 
 :root {
-  --neu-dark-bg: #0B0F19;
-  --neu-dark-card: #111827;
-  --neu-dark-border: rgba(255, 255, 255, 0.08);
-  --neu-gold: #F59E0B;
-  --neu-gold-gradient: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%);
-  --neu-emerald: #10B981;
-  --neu-emerald-gradient: linear-gradient(135deg, #10B981 0%, #059669 100%);
-  --neu-pass-bg: linear-gradient(135deg, #0F172A 0%, #1E293B 55%, #0B1120 100%);
-  --neu-pass-border: linear-gradient(135deg, rgba(245, 158, 11, 0.6) 0%, rgba(16, 185, 129, 0.5) 100%);
+  /* Tata Neu Signature Color Spectrum */
+  --neu-dark-bg: #1A0826;
+  --neu-dark-header: linear-gradient(180deg, #1A0826 0%, #2A0845 50%, #1D0630 100%);
+  --neu-purple: #7521FF;
+  --neu-magenta: #DE00B7;
+  --neu-electric-blue: #0096FF;
+  --neu-brand-gradient: linear-gradient(135deg, #7521FF 0%, #B600DF 50%, #DE00B7 100%);
+  --neu-brand-glow: 0 4px 20px rgba(182, 0, 223, 0.4);
+  
+  /* NeuCoins / KiranaCoins Gold Palette */
+  --neu-gold: #FFD166;
+  --neu-gold-gradient: linear-gradient(135deg, #FFD166 0%, #FFB703 50%, #FB8500 100%);
+  --neu-gold-glow: 0 2px 10px rgba(255, 183, 3, 0.45);
+  
+  /* Surface & Typography */
+  --neu-surface: #FAF7FC;
+  --neu-card-bg: #FFFFFF;
+  --neu-card-border: rgba(117, 33, 255, 0.12);
+  --neu-card-shadow: 0 4px 16px rgba(42, 8, 69, 0.06);
+  --neu-text-primary: #1F152E;
+  --neu-text-secondary: #6B5E7D;
   --neu-text-light: #F8FAFC;
-  --neu-text-muted: #94A3B8;
-  --neu-surface: #F8FAFC;
+  
+  /* Badges & Actions */
+  --neu-btn-primary: linear-gradient(135deg, #7521FF 0%, #B600DF 50%, #DE00B7 100%);
+  --neu-btn-hover: linear-gradient(135deg, #6515EB 0%, #A200C7 50%, #C400A1 100%);
+  --neu-badge-bg: #FDF2F8;
+  --neu-badge-text: #BE185D;
 }
 
-/* ── ADAPTIVE DARK HEADER (Tata Neu Style) ── */
+/* ── ADAPTIVE DARK HEADER (Tata Neu Plum & Royal Violet) ── */
 .kp-home.kp-concept {
-  background: #F8FAFC;
+  background: var(--neu-surface);
   min-height: 100vh;
 }
 
 .kp-concept-header {
-  background: var(--neu-dark-bg) !important;
+  background: var(--neu-dark-header) !important;
   color: var(--neu-text-light) !important;
-  padding: 16px 16px 20px !important;
-  border-bottom: 1px solid var(--neu-dark-border);
+  padding: 16px 16px 12px !important;
+  border-bottom: 1px solid rgba(222, 0, 183, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -36,22 +52,22 @@
 .kp-concept-header::before {
   content: '';
   position: absolute;
-  top: -50px;
-  right: -50px;
-  width: 220px;
-  height: 220px;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, transparent 70%);
+  top: -60px;
+  right: -40px;
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(222, 0, 183, 0.28) 0%, transparent 70%);
   pointer-events: none;
 }
 
 .kp-concept-header::after {
   content: '';
   position: absolute;
-  top: -30px;
-  left: -30px;
-  width: 180px;
-  height: 180px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 70%);
+  top: -40px;
+  left: -40px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(117, 33, 255, 0.25) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -59,7 +75,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .kp-concept-wordmark {
@@ -77,26 +93,28 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 10px;
-  background: var(--neu-emerald-gradient);
+  background: var(--neu-brand-gradient);
   color: #FFFFFF;
   font-weight: 900;
-  font-size: 16px;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+  font-size: 17px;
+  box-shadow: var(--neu-brand-glow);
 }
 
 .kp-concept-wordmark span:last-child {
-  font-size: 20px;
-  font-weight: 850;
+  font-size: 21px;
+  font-weight: 900;
   letter-spacing: -0.5px;
   color: #FFFFFF;
 }
 
 .kp-concept-wordmark span:last-child span {
-  color: var(--neu-emerald);
-  margin-left: 1px;
+  background: linear-gradient(135deg, #DE00B7 0%, #FF60A8 50%, #FFD166 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-left: 2px;
 }
 
 .kp-concept-header-actions {
@@ -107,11 +125,11 @@
 
 .kp-concept-header-icon {
   background: rgba(255, 255, 255, 0.08) !important;
-  color: #F8FAFC !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
   backdrop-filter: blur(8px);
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -120,8 +138,15 @@
 }
 
 .kp-concept-header-icon:hover {
-  background: rgba(255, 255, 255, 0.16) !important;
+  background: rgba(222, 0, 183, 0.25) !important;
+  border-color: rgba(222, 0, 183, 0.5) !important;
   transform: translateY(-1px);
+}
+
+.kp-concept-header-icon.is-senior {
+  color: #FFD166 !important;
+  border-color: #FFD166 !important;
+  background: rgba(255, 209, 102, 0.15) !important;
 }
 
 .kp-concept-cart {
@@ -132,50 +157,43 @@
   position: absolute;
   top: -4px;
   right: -4px;
-  background: var(--neu-gold);
-  color: #000000;
-  font-size: 11px;
+  background: var(--neu-magenta);
+  color: #FFFFFF;
+  font-size: 10.5px;
   font-weight: 850;
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  display: grid;
+  place-items: center;
+  border: 2px solid #1A0826;
+  box-shadow: 0 2px 8px rgba(222, 0, 183, 0.5);
 }
 
-/* ── LOCATION SELECTOR PILL ── */
 .kp-concept-location {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 8px 14px;
-  border-radius: 12px;
-  color: #F8FAFC;
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-radius: 12px !important;
+  padding: 8px 12px !important;
   width: 100%;
-  backdrop-filter: blur(8px);
-  transition: background 0.2s ease;
-}
-
-.kp-concept-location:hover {
-  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(6px);
 }
 
 .kp-concept-pin {
-  color: var(--neu-emerald);
+  color: var(--neu-magenta);
   display: flex;
-  align-items: center;
 }
 
 .kp-concept-location-label {
   flex: 1;
   text-align: left;
   font-size: 12.5px;
-  color: #CBD5E1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -186,425 +204,468 @@
   margin-left: 4px;
 }
 
-/* ── SEARCH LINE & PARCHI SCAN BUTTON ── */
+/* ==========================================================================
+   SEARCH LINE: SEARCH BAR & RESIZED INLINE KIRANACOINS BANNER (SAME LINE)
+   ========================================================================== */
+
 .kp-concept-search-line {
   background: var(--neu-dark-bg);
-  padding: 0 16px 16px;
+  padding: 0 16px 14px;
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.kp-search-bar-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(117, 33, 255, 0.18);
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.kp-search-bar-wrap:focus-within {
+  border-color: var(--neu-purple);
+  box-shadow: 0 0 0 3px rgba(117, 33, 255, 0.2), 0 4px 16px rgba(117, 33, 255, 0.2);
 }
 
 .kp-concept-search {
   flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: #1E293B !important;
-  color: #94A3B8 !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 14px !important;
-  padding: 12px 14px !important;
-  font-size: 13.5px !important;
+  gap: 8px;
+  background: transparent !important;
+  color: #6B5E7D !important;
+  border: none !important;
+  padding: 9px 12px !important;
+  font-size: 13px !important;
   cursor: pointer;
-  transition: all 0.2s ease;
+  text-align: left;
 }
 
-.kp-concept-search:hover {
-  border-color: rgba(16, 185, 129, 0.4) !important;
-  color: #F8FAFC !important;
+.kp-concept-search-icon {
+  color: var(--neu-purple);
+  flex-shrink: 0;
+}
+
+.kp-concept-search-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 550;
+  color: #6B5E7D;
 }
 
 .kp-concept-search-arrow {
-  margin-left: auto;
-  color: var(--neu-emerald);
+  color: var(--neu-magenta);
+  flex-shrink: 0;
 }
 
-.kp-scan-parchi-neu-btn {
-  background: linear-gradient(135deg, #10B981 0%, #047857 100%) !important;
-  color: #FFFFFF !important;
+.kp-scan-parchi-inline-btn {
+  background: rgba(117, 33, 255, 0.08) !important;
+  color: var(--neu-purple) !important;
   border: none !important;
-  border-radius: 14px !important;
-  padding: 11px 15px !important;
-  font-size: 12.5px !important;
-  font-weight: 800 !important;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-  transition: transform 0.15s ease;
-}
-
-.kp-scan-parchi-neu-btn:hover {
-  transform: scale(1.02);
-}
-
-/* ── KIRANAPRO PASS HERO CARD (Replacing NeuPass) ── */
-.kp-pass-hero-card {
-  margin: 16px 16px 20px;
-  background: var(--neu-pass-bg);
-  border: 1.5px solid rgba(245, 158, 11, 0.4);
-  border-radius: 20px;
-  padding: 18px 20px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4), 0 0 20px rgba(245, 158, 11, 0.1);
-  color: #FFFFFF;
-}
-
-.kp-pass-hero-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 140px;
-  height: 140px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.kp-pass-badge-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.kp-pass-title-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.05) 100%);
-  border: 1px solid rgba(245, 158, 11, 0.5);
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 11.5px;
-  font-weight: 850;
-  letter-spacing: 0.5px;
-  color: #FBBF24;
-  text-transform: uppercase;
-}
-
-.kp-pass-toggle-pill {
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  color: #34D399;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 800;
+  border-left: 1px solid rgba(117, 33, 255, 0.15) !important;
+  padding: 8px 10px !important;
+  font-size: 13px !important;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 4px;
-}
-
-.kp-pass-toggle-pill.is-active {
-  background: var(--neu-emerald-gradient);
-  color: #FFFFFF;
-  border-color: transparent;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
-}
-
-.kp-pass-hero-body {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.kp-pass-coins-block h3 {
-  font-size: 22px;
-  font-weight: 850;
-  margin: 0 0 2px;
-  letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.kp-pass-coins-block p {
-  margin: 0;
-  font-size: 12px;
-  color: #94A3B8;
-  font-weight: 500;
-}
-
-.kp-pass-value-tag {
-  background: rgba(245, 158, 11, 0.15);
-  color: #FBBF24;
-  padding: 4px 8px;
-  border-radius: 8px;
-  font-size: 11px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
   font-weight: 750;
-  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
-.kp-pass-perks-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 12px;
+.kp-scan-parchi-inline-btn:hover {
+  background: rgba(117, 33, 255, 0.16) !important;
 }
 
-.kp-pass-perk-item {
+.kp-parchi-text {
+  font-size: 11px;
+}
+
+/* ── RESIZED KIRANACOINS BANNER (IN THE SAME LINE ON THE RIGHT) ── */
+.kp-kiranacoins-banner {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  background: linear-gradient(135deg, #2D0C47 0%, #4D1270 50%, #681794 100%) !important;
+  border: 1.5px solid rgba(255, 209, 102, 0.65) !important;
+  border-radius: 14px !important;
+  padding: 6px 12px 6px 9px !important;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(77, 18, 112, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  transition: all 0.2s ease;
+  text-align: left;
+  max-width: 165px;
+}
+
+.kp-kiranacoins-banner:hover {
+  transform: translateY(-1px);
+  border-color: #FFD166 !important;
+  box-shadow: 0 6px 18px rgba(222, 0, 183, 0.5) !important;
+}
+
+.kp-kiranacoins-banner.is-vip {
+  background: linear-gradient(135deg, #3B0E5A 0%, #7521FF 50%, #DE00B7 100%) !important;
+  border-color: #FFD166 !important;
+  box-shadow: 0 4px 16px rgba(222, 0, 183, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+}
+
+.kp-kc-coin-wrap {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD166 0%, #FB8500 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(255, 183, 3, 0.5);
+  animation: kp-coin-shimmer 3s infinite ease-in-out;
+}
+
+@keyframes kp-coin-shimmer {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.08); filter: brightness(1.2); }
+}
+
+.kp-kc-coin-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.kp-kc-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 0;
+}
+
+.kp-kc-top {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kp-kc-name {
+  font-size: 11px;
+  font-weight: 850;
+  color: #FFFFFF;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+}
+
+.kp-kc-badge {
+  font-size: 9.5px;
+  font-weight: 900;
+  color: #1A0826;
+  background: #FFD166;
+  border-radius: 4px;
+  padding: 1px 4px;
+  line-height: 1.1;
+}
+
+.kp-kc-sub {
+  font-size: 10px;
+  font-weight: 700;
+  color: #FFD166;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kp-kiranacoins-banner.is-vip .kp-kc-sub {
+  color: #FFFFFF;
+}
+
+/* ── ACTIVE VIP PASS STRIP ── */
+.kp-pass-active-strip {
+  background: linear-gradient(90deg, #2D0C47 0%, #4D1270 50%, #2D0C47 100%);
+  border-bottom: 1px solid rgba(255, 209, 102, 0.3);
+  color: #F8FAFC;
+  padding: 8px 16px;
   font-size: 11.5px;
-  color: #E2E8F0;
-  font-weight: 600;
-}
-
-.kp-pass-perk-item span:first-child {
-  font-size: 14px;
-}
-
-/* ── TATA NEU-INSPIRED CIRCULAR CATEGORY GRID ── */
-.kp-neu-categories-section {
-  padding: 16px 16px 20px;
-  background: #FFFFFF;
-  border-bottom: 1px solid #E2E8F0;
-}
-
-.kp-neu-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
 }
 
-.kp-neu-title {
-  font-size: 16px;
-  font-weight: 850;
-  color: #0F172A;
-  letter-spacing: -0.3px;
-  margin: 0;
+.kp-pass-active-strip strong {
+  color: #FFD166;
 }
 
-.kp-neu-sub {
-  font-size: 11.5px;
-  color: #64748B;
-  font-weight: 500;
-}
-
-.kp-neu-view-all-btn {
-  background: none;
-  border: none;
-  color: #10B981;
-  font-size: 12.5px;
-  font-weight: 800;
+.kp-pass-strip-close {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 10.5px;
+  font-weight: 750;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 0;
+}
+
+/* ==========================================================================
+   TATA NEU CATEGORIES: CIRCULAR 62PX BUBBLE GRID
+   ========================================================================== */
+
+.kp-neu-categories-section {
+  padding: 18px 16px 12px;
+  background: var(--neu-surface);
+}
+
+.kp-concept-index {
+  color: var(--neu-purple) !important;
+  font-weight: 850 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.8px !important;
+}
+
+.kp-concept-section-heading h2 {
+  color: #1F152E !important;
+  font-weight: 850 !important;
+}
+
+.kp-concept-link {
+  color: var(--neu-purple) !important;
+  font-weight: 750 !important;
 }
 
 .kp-neu-circular-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px 10px;
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 6px 2px 14px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 
-@media (max-width: 480px) {
-  .kp-neu-circular-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px 8px;
-  }
+.kp-neu-circular-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .kp-neu-circle-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: transform 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  flex-shrink: 0;
+  width: 68px;
+  text-align: center;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .kp-neu-circle-card:hover {
   transform: translateY(-3px);
 }
 
-.kp-neu-circle-card:active {
-  transform: scale(0.95);
-}
-
 .kp-neu-circle-bubble {
-  width: 60px;
-  height: 60px;
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #F8FAFC 0%, #EDF2F7 100%);
-  border: 1.5px solid #E2E8F0;
+  background: linear-gradient(145deg, #FFFFFF 0%, #F5EEFD 100%);
+  border: 1.5px solid rgba(117, 33, 255, 0.18);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 26px;
-  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
-  position: relative;
+  box-shadow: 0 4px 14px rgba(117, 33, 255, 0.1);
   transition: all 0.2s ease;
 }
 
 .kp-neu-circle-card:hover .kp-neu-circle-bubble {
-  border-color: #10B981;
-  box-shadow: 0 6px 16px -2px rgba(16, 185, 129, 0.25);
-  background: #FFFFFF;
+  border-color: var(--neu-magenta);
+  box-shadow: 0 6px 18px rgba(222, 0, 183, 0.25);
+  background: linear-gradient(145deg, #FFFFFF 0%, #FDF2F8 100%);
 }
 
 .kp-neu-circle-label {
   font-size: 11px;
-  font-weight: 700;
-  color: #334155;
-  text-align: center;
+  font-weight: 750;
+  color: #2D0C47;
   line-height: 1.25;
-  max-width: 68px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 68px;
 }
 
-/* ── TATA NEU-INSPIRED STORIES & CAROUSEL CARDS ── */
-.kp-neu-offers-wrap {
-  padding: 16px;
+/* ==========================================================================
+   TATA NEU STORE & PRODUCT CARD ENHANCEMENTS
+   ========================================================================== */
+
+.product-card {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(117, 33, 255, 0.1) !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 16px rgba(42, 8, 69, 0.05) !important;
+  transition: all 0.2s ease !important;
 }
 
-/* ── MODERN SUPER-APP BOTTOM NAV (Tata Neu Style) ── */
-.bottom-nav {
-  background: rgba(255, 255, 255, 0.94) !important;
-  backdrop-filter: blur(14px) !important;
-  border-top: 1px solid rgba(226, 232, 240, 0.8) !important;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06) !important;
+.product-card:hover {
+  border-color: rgba(222, 0, 183, 0.3) !important;
+  box-shadow: 0 8px 24px rgba(117, 33, 255, 0.12) !important;
+  transform: translateY(-2px);
 }
 
-.bnav-item.active {
-  color: #10B981 !important;
-}
-
-.bnav-item.active .bnav-label {
-  color: #0F172A !important;
+/* ── ADD BUTTONS (Tata Neu Violet/Magenta Glow) ── */
+.pc-add-btn {
+  background: #FFFFFF !important;
+  color: var(--neu-purple) !important;
+  border: 1.5px solid var(--neu-purple) !important;
+  border-radius: 12px !important;
   font-weight: 850 !important;
+  font-size: 13px !important;
+  padding: 8px 16px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
 }
 
-.bnav-item.active::after {
+.pc-add-btn:hover {
+  background: var(--neu-brand-gradient) !important;
+  color: #FFFFFF !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 14px rgba(117, 33, 255, 0.35) !important;
+}
+
+.pc-qty-btn {
+  background: var(--neu-purple) !important;
+  color: #FFFFFF !important;
+  border-radius: 8px !important;
+}
+
+/* ── MANDI & DISCOUNT TAGS ── */
+.kp-mandi-tag, .pc-badge {
+  background: #FDF2F8 !important;
+  color: #BE185D !important;
+  border: 1px solid #FBCFE8 !important;
+  font-weight: 800 !important;
+}
+
+.product-discount-pill, .pc-discount-badge {
+  background: linear-gradient(135deg, #DE00B7 0%, #7521FF 100%) !important;
+  color: #FFFFFF !important;
+  font-weight: 900 !important;
+}
+
+/* ==========================================================================
+   CART PAGE: TATA NEU ROYAL PURPLE & GOLD VIP PASS CARD
+   ========================================================================== */
+
+.cart-parivaar-card {
+  background: linear-gradient(135deg, #1C0B2B 0%, #3D105A 50%, #5B167D 100%) !important;
+  border: 1.5px solid rgba(255, 209, 102, 0.5) !important;
+  border-radius: 18px !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 20px rgba(61, 16, 90, 0.3) !important;
+}
+
+.kp-pp-btn {
+  background: linear-gradient(135deg, #FFD166 0%, #FB8500 100%) !important;
+  color: #1A0826 !important;
+  font-weight: 900 !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-shadow: 0 3px 10px rgba(255, 183, 3, 0.45) !important;
+}
+
+/* ── CART PROCEED TO PAY / CHECKOUT BUTTON ── */
+.cart-checkout-btn, .cart-main-cta {
+  background: var(--neu-brand-gradient) !important;
+  color: #FFFFFF !important;
+  font-weight: 900 !important;
+  box-shadow: var(--neu-brand-glow) !important;
+  border: none !important;
+  border-radius: 14px !important;
+}
+
+.cart-checkout-btn:hover, .cart-main-cta:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   TATA NEU BOTTOM NAVIGATION DOCK
+   ========================================================================== */
+
+.mobile-bottom-nav, .kp-bottom-nav {
+  background: #FFFFFF !important;
+  border-top: 1px solid rgba(117, 33, 255, 0.12) !important;
+  box-shadow: 0 -4px 20px rgba(42, 8, 69, 0.08) !important;
+}
+
+.mbn-item.active, .kp-nav-item.is-active {
+  color: var(--neu-purple) !important;
+}
+
+.mbn-item.active .mbn-icon-wrap, .kp-nav-item.is-active svg {
+  color: var(--neu-magenta) !important;
+  filter: drop-shadow(0 2px 8px rgba(222, 0, 183, 0.4));
+}
+
+.mbn-item.active::after, .kp-nav-item.is-active::after {
   content: '';
   position: absolute;
   bottom: 4px;
-  width: 14px;
+  width: 18px;
   height: 3px;
   border-radius: 3px;
-  background: var(--neu-emerald-gradient);
+  background: var(--neu-brand-gradient);
 }
 
-/* ── CART PAGE KIRANAPRO PASS VIP CARD (Tata Neu Style) ── */
-.kp-parivaar-pass-card {
-  background: var(--neu-pass-bg) !important;
-  border: 1.5px solid rgba(245, 158, 11, 0.45) !important;
-  border-radius: 16px !important;
-  padding: 14px 18px !important;
+.mbn-badge {
+  background: var(--neu-magenta) !important;
   color: #FFFFFF !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
-}
-
-.kp-pp-title {
-  color: #FBBF24 !important;
   font-weight: 850 !important;
-  font-size: 13.5px !important;
-  letter-spacing: 0.2px !important;
 }
 
-.kp-pp-sub {
-  color: #94A3B8 !important;
-  font-size: 11.5px !important;
-}
+/* ── RESPONSIVE MOBILE ADAPTATIONS ── */
+@media (max-width: 480px) {
+  .kp-concept-search-line {
+    padding: 0 12px 12px;
+    gap: 8px;
+  }
+  
+  .kp-kiranacoins-banner {
+    padding: 5px 8px 5px 6px !important;
+    gap: 6px;
+    max-width: 140px;
+  }
+  
+  .kp-kc-coin-wrap {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .kp-kc-coin-icon {
+    font-size: 13px;
+  }
+  
+  .kp-kc-name {
+    font-size: 10px;
+  }
+  
+  .kp-kc-sub {
+    font-size: 9px;
+  }
 
-.kp-pp-checkbox {
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-  color: #FFFFFF !important;
-  border: none !important;
-  border-radius: 10px !important;
-  font-weight: 800 !important;
-  font-size: 12px !important;
-  padding: 8px 14px !important;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35) !important;
-  cursor: pointer;
-}
-
-.kp-pp-checkbox.active {
-  background: var(--neu-gold-gradient) !important;
-  color: #000000 !important;
-  font-weight: 850 !important;
-  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4) !important;
-}
-
-/* ── TATA NEU-INSPIRED PRODUCT CARD STYLING ── */
-.pc {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
-  border-radius: 18px !important;
-  overflow: hidden !important;
-  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05) !important;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
-}
-
-.pc:hover {
-  transform: translateY(-3px) !important;
-  box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.1) !important;
-  border-color: #CBD5E1 !important;
-}
-
-.pc-img-wrap {
-  border-radius: 16px 16px 8px 8px !important;
-  overflow: hidden !important;
-}
-
-.pc-disc {
-  background: linear-gradient(135deg, #15803D 0%, #166534 100%) !important;
-  color: #FFFFFF !important;
-  font-size: 10px !important;
-  font-weight: 850 !important;
-  letter-spacing: 0.3px !important;
-  border-radius: 0 0 8px 0 !important;
-  padding: 3px 8px !important;
-  box-shadow: 0 2px 6px rgba(22, 101, 52, 0.3) !important;
-}
-
-.pc-btn {
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-  color: #FFFFFF !important;
-  border: none !important;
-  border-radius: 10px !important;
-  font-weight: 850 !important;
-  font-size: 12.5px !important;
-  letter-spacing: 0.3px !important;
-  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3) !important;
-  transition: all 0.15s ease !important;
-}
-
-.pc-btn:hover {
-  transform: scale(1.03) !important;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45) !important;
-}
-
-.pc-stepper {
-  background: #F0FDF4 !important;
-  border: 1.5px solid #10B981 !important;
-  border-radius: 10px !important;
-}
-
-.pc-step-btn {
-  color: #047857 !important;
-}
-
-.pc-step-qty {
-  color: #064E3B !important;
-  font-weight: 850 !important;
+  .kp-concept-search-text {
+    font-size: 12px;
+  }
 }

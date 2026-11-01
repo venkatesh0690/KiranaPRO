@@ -93,7 +93,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
               onClick={() => setSeniorMode(s => !s)}
               title="Senior Citizen / Amma-Nanna Easy Read Mode (A+)"
               aria-label="Toggle Senior Citizen Easy Read Mode"
-              style={{ fontWeight: 850, fontSize: '13px', color: seniorMode ? '#166534' : undefined }}
+              style={{ fontWeight: 850, fontSize: '13px', color: seniorMode ? '#FFD166' : undefined }}
             >
               A+
             </button>
@@ -120,65 +120,58 @@ export default function HomePage({ userLocation, onLocationChange }) {
       </header>
 
       <div className="kp-concept-search-line">
-        <button type="button" className="kp-concept-search" onClick={() => navigate('/search')} aria-label="Search all groceries, vegetables and stores">
-          <Search size={19} aria-hidden="true" />
-          <span>Search 189+ groceries, direct mandi vegetables & stores...</span>
-          <span className="kp-concept-search-arrow"><ArrowRight size={18} aria-hidden="true" /></span>
-        </button>
-        <button
-          type="button"
-          className="kp-scan-parchi-neu-btn"
-          onClick={() => setIsParchiOpen(true)}
-          title="Snap or Paste Paper Grocery List"
-        >
-          <span>📝</span> Scan Parchi
-        </button>
-      </div>
-
-      {/* ── ⭐ KiranaPRO PASS HERO CARD (Tata Neu NeuPass-Inspired) ── */}
-      <section className="kp-pass-hero-card" aria-label="KiranaPRO Pass Loyalty & Member Benefits">
-        <div className="kp-pass-badge-row">
-          <span className="kp-pass-title-badge">
-            <span>⭐</span> KiranaPRO Pass
-          </span>
+        <div className="kp-search-bar-wrap">
           <button
             type="button"
-            className={`kp-pass-toggle-pill ${passActive ? 'is-active' : ''}`}
-            onClick={togglePass}
-            aria-pressed={passActive}
-            title="Toggle KiranaPRO Pass benefits"
+            className="kp-concept-search"
+            onClick={() => navigate('/search')}
+            aria-label="Search all groceries, vegetables and stores"
           >
-            <span>{passActive ? '✓ VIP ACTIVE' : '+ ACTIVATE PASS'}</span>
+            <Search size={18} aria-hidden="true" className="kp-concept-search-icon" />
+            <span className="kp-concept-search-text">Search 189+ groceries, direct mandi produce & stores...</span>
+            <span className="kp-concept-search-arrow"><ArrowRight size={16} aria-hidden="true" /></span>
+          </button>
+          <button
+            type="button"
+            className="kp-scan-parchi-inline-btn"
+            onClick={() => setIsParchiOpen(true)}
+            title="Snap or Paste Paper Grocery List"
+            aria-label="Scan Paper Grocery List"
+          >
+            <span aria-hidden="true">📝</span>
+            <span className="kp-parchi-text">Parchi</span>
           </button>
         </div>
 
-        <div className="kp-pass-hero-body">
-          <div className="kp-pass-coins-block">
-            <h3>140 KiranaCoins</h3>
-            <p>Earn 5% Neu-style Coins on every local mandi & store order</p>
+        {/* Resized KiranaCoins Banner on the right side of the search bar, in the same line */}
+        <button
+          type="button"
+          className={`kp-kiranacoins-banner ${passActive ? 'is-vip' : ''}`}
+          onClick={togglePass}
+          title="KiranaPRO Pass VIP Member & KiranaCoins"
+          aria-label={`KiranaCoins: 140 Coins. ${passActive ? 'VIP Active' : 'Activate VIP Pass'}`}
+        >
+          <div className="kp-kc-coin-wrap">
+            <span className="kp-kc-coin-icon">🪙</span>
           </div>
-          <span className="kp-pass-value-tag">Worth ₹140</span>
-        </div>
+          <div className="kp-kc-info">
+            <div className="kp-kc-top">
+              <span className="kp-kc-name">KiranaCoins</span>
+              <span className="kp-kc-badge">{passActive ? 'VIP' : '140'}</span>
+            </div>
+            <span className="kp-kc-sub">
+              {passActive ? '✓ VIP Active' : 'Worth ₹140'}
+            </span>
+          </div>
+        </button>
+      </div>
 
-        <div className="kp-pass-perks-grid">
-          <div className="kp-pass-perk-item">
-            <span>🛵</span>
-            <span>₹0 Free Delivery (Always)</span>
-          </div>
-          <div className="kp-pass-perk-item">
-            <span>💰</span>
-            <span>5% KiranaCoins Cashback</span>
-          </div>
-          <div className="kp-pass-perk-item">
-            <span>⚡</span>
-            <span>Priority Mandi Harvest</span>
-          </div>
-          <div className="kp-pass-perk-item">
-            <span>🎁</span>
-            <span>Free Dhaniya on ₹199+</span>
-          </div>
+      {passActive && (
+        <div className="kp-pass-active-strip">
+          <span>⭐ <strong>KiranaPRO Pass Active:</strong> ₹0 Free Delivery &bull; 5% Coins Cashback unlocked!</span>
+          <button type="button" className="kp-pass-strip-close" onClick={togglePass} title="Manage Pass">Manage</button>
         </div>
-      </section>
+      )}
 
       <section className="kp-concept-categories kp-concept-compact-categories kp-neu-categories-section" aria-labelledby="kp-concept-categories-title">
         <div className="kp-concept-section-heading">
