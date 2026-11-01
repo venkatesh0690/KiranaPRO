@@ -33,7 +33,7 @@ export const stores = [
     owner: "Lakshmi Devi",
     rating: 4.9,
     reviewCount: 428,
-    deliveryTime: "Within 20 mins",
+    deliveryTime: "Within 30 mins",
     deliveryFee: 20,
     distance: "0.3 km",
     minOrder: 79,

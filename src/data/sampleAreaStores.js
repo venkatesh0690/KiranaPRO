@@ -217,7 +217,7 @@ export const sampleAreaStores=Object.entries(demoGroups).flatMap(([area,group],a
       isSample:true,
       rating:null,
       reviewCount:0,
-      deliveryTime:'Not accepting orders',
+      deliveryTime:(index % 2 === 0) ? 'Within 30 mins' : 'Not accepting orders',
       deliveryFee:20+(index%3)*5,
       distance,
       minOrder:0,

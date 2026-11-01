@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  X,
   ArrowRight, ArrowUpRight, Camera, ChevronDown, ChevronLeft, ChevronRight,
   MapPin, Search, ShoppingBag, UserRound, SlidersHorizontal
 } from 'lucide-react';
@@ -195,7 +196,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
 
   return (
     <div className={`home-container kp-home kp-concept ${seniorMode ? "kp-senior-mode" : ""}`}>
-      {/* ── Single Unified Instacart Top Bar: Brand, Search, KiranaCoins, Location, Profile, Cart ── */}
+      {/* ── Single Unified Instacart Top Bar: Logo on Left, Actions on Right, Search Bar Below Logo ── */}
       <header className="kp-concept-header kp-instacart-unified-bar">
         <div className="kp-topbar-inner">
           {/* Brand */}
@@ -211,40 +212,15 @@ export default function HomePage({ userLocation, onLocationChange }) {
             </button>
           </div>
 
-          {/* Search Bar Line with Camera Icon (replacing Parchi word) */}
-          <div className="kp-concept-search-line kp-topbar-search-line">
-            <div className="kp-search-bar-wrap">
-              <button
-                type="button"
-                className="kp-concept-search"
-                onClick={() => navigate('/search')}
-                aria-label="Search all groceries, vegetables and stores"
-              >
-                <Search size={16} aria-hidden="true" className="kp-concept-search-icon" />
-                <span className="kp-concept-search-text">Search products and stores...</span>
-                <span className="kp-concept-search-arrow"><ArrowRight size={14} aria-hidden="true" /></span>
-              </button>
-              <button
-                type="button"
-                className="kp-scan-camera-btn"
-                onClick={() => setIsParchiOpen(true)}
-                title="Scan paper grocery list with camera"
-                aria-label="Scan paper grocery list with camera"
-              >
-                <Camera size={15} strokeWidth={2.2} />
-              </button>
-            </div>
-          </div>
-
-          {/* Right Controls in same bar: KiranaCoins VIP, Location, Senior Mode, Profile/Auth, Cart */}
+          {/* Right Controls: KiranaCoins (clean, pass details hidden until clicked), Location, Profile/Auth, Cart */}
           <div className="kp-topbar-actions">
-            {/* KiranaCoins VIP Button */}
+            {/* KiranaCoins Button - Pass active details hidden until clicked */}
             <button
               type="button"
-              className={`kp-kiranacoins-banner ${passActive ? 'is-vip' : ''}`}
+              className="kp-kiranacoins-banner"
               onClick={() => setIsPassModalOpen(true)}
-              title="KiranaCoins VIP Member & Rewards"
-              aria-label={`KiranaCoins: 140 Coins. ${passActive ? 'VIP Active' : 'Activate VIP Pass'}`}
+              title="KiranaCoins Rewards"
+              aria-label="KiranaCoins: 140 Coins. Worth ₹140"
             >
               <div className="kp-kc-coin-wrap">
                 <span className="kp-kc-coin-icon">🪙</span>
@@ -252,11 +228,9 @@ export default function HomePage({ userLocation, onLocationChange }) {
               <div className="kp-kc-info">
                 <div className="kp-kc-top">
                   <span className="kp-kc-name">KiranaCoins</span>
-                  <span className="kp-kc-badge">{passActive ? 'VIP' : '140'}</span>
+                  <span className="kp-kc-badge">140</span>
                 </div>
-                <span className="kp-kc-sub">
-                  {passActive ? '✓ VIP Active' : 'Worth ₹140'}
-                </span>
+                <span className="kp-kc-sub">Worth ₹140</span>
               </div>
             </button>
 
@@ -265,18 +239,6 @@ export default function HomePage({ userLocation, onLocationChange }) {
               <span className="kp-concept-pin"><MapPin size={16} strokeWidth={2.2} /></span>
               <span className="kp-concept-location-label"><strong>{userLocation || 'Choose delivery area'}</strong></span>
               <ChevronDown size={14} aria-hidden="true" />
-            </button>
-
-            {/* Senior Mode (A+) */}
-            <button
-              type="button"
-              className={`kp-concept-header-icon ${seniorMode ? 'is-senior' : ''}`}
-              onClick={() => setSeniorMode(s => !s)}
-              title="Senior Citizen / Easy Read Mode (A+)"
-              aria-label="Toggle Senior Citizen Easy Read Mode"
-              style={{ fontWeight: 850, fontSize: '13px' }}
-            >
-              A+
             </button>
 
             {/* Profile or Login/Signup */}
@@ -319,6 +281,65 @@ export default function HomePage({ userLocation, onLocationChange }) {
               {totalItems > 0 && <span>{totalItems}</span>}
             </button>
           </div>
+        </div>
+
+        {/* Dedicated Search Bar Line Placed Below Logo - In-Place Search (Doesn't open another page) */}
+        <div className="kp-concept-search-line kp-home-dedicated-search">
+          <div className="kp-search-bar-wrap">
+            <Search size={16} aria-hidden="true" className="kp-concept-search-icon" />
+            <input
+              type="text"
+              className="kp-home-search-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setIsSearchFocused(false), 250)}
+              placeholder="Search products and stores..."
+              aria-label="Search all groceries, vegetables and stores"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                className="kp-search-clear-btn"
+                onClick={() => setSearchQuery('')}
+                title="Clear search"
+                aria-label="Clear search"
+              >
+                <X size={15} />
+              </button>
+            )}
+            <button
+              type="button"
+              className="kp-scan-camera-btn"
+              onClick={() => setIsParchiOpen(true)}
+              title="Scan paper grocery list with camera"
+              aria-label="Scan paper grocery list with camera"
+            >
+              <Camera size={15} strokeWidth={2.2} />
+            </button>
+          </div>
+
+          {/* Instant live search results dropdown on Home without opening another page */}
+          {isSearchFocused && searchQuery.trim() && matchingProducts.length > 0 && (
+            <div className="kp-home-search-dropdown" role="listbox">
+              <div className="kp-hsd-header">Matching items in {userLocation}</div>
+              {matchingProducts.map((p) => (
+                <div
+                  key={p.id}
+                  className="kp-hsd-item"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    addItem(p.storeId || 'localfresh', p);
+                  }}
+                >
+                  <span className="kp-hsd-name">{p.name}</span>
+                  <span className="kp-hsd-unit">{p.unit || ''}</span>
+                  <span className="kp-hsd-price">₹{p.price}</span>
+                  <button type="button" className="kp-hsd-add-btn">+ Add</button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </header>
 
