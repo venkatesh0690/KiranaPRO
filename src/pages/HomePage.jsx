@@ -21,11 +21,7 @@ import KiranaPassModal from '../components/KiranaPassModal';
 
 const storeFilters = [
   { id: 'all', label: 'All' },
-  { id: 'fast', label: 'Fastest' },
   { id: 'offers', label: 'Offers' },
-  { id: 'mandi', label: 'No markups' },
-  { id: 'grocery', label: 'Grocery' },
-  { id: 'pickup', label: 'Pickup' },
   { id: 'rated', label: 'Top rated' },
 ];
 
@@ -141,11 +137,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
     return all.filter(p => (p.name || '').toLowerCase().includes(q)).slice(0, 8);
   }, [searchQuery, products, areaStores]);
   const filteredStores = areaStores.filter(store => {
-    if (activeFilter === 'fast') return /15|20|30/.test(store.deliveryTime || '');
     if (activeFilter === 'offers') return isLocalFreshStore(store) || store.tags?.some(t => /deal|save|offer|popular/i.test(t));
-    if (activeFilter === 'mandi') return isLocalFreshStore(store) || !store.isSample;
-    if (activeFilter === 'grocery') return isLocalFreshStore(store) || store.categories?.includes('Groceries');
-    if (activeFilter === 'pickup') return true;
     if (activeFilter === 'rated') return Number(store.rating) >= 4.7;
     return true;
   });
