@@ -86,6 +86,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isParchiOpen, setIsParchiOpen] = useState(false);
   const [isPassModalOpen, setIsPassModalOpen] = useState(false);
+  const categoryTrackRef = useRef(null);
   const [fulfilmentMode, setFulfilmentMode] = useState('delivery');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -143,6 +144,54 @@ export default function HomePage({ userLocation, onLocationChange }) {
       navigate('/search');
     }
   };
+
+  
+  // Drag-to-swipe support for Category track on desktop and touch devices
+  useEffect(() => {
+    const track = categoryTrackRef.current;
+    if (!track) return;
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+    let hasMoved = false;
+
+    const onMouseDown = (e) => {
+      isDown = true;
+      hasMoved = false;
+      startX = e.pageX - track.offsetLeft;
+      scrollLeft = track.scrollLeft;
+    };
+    const onMouseLeave = () => { isDown = false; };
+    const onMouseUp = () => { isDown = false; };
+    const onMouseMove = (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - track.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      if (Math.abs(walk) > 4) hasMoved = true;
+      track.scrollLeft = scrollLeft - walk;
+    };
+    const onClickCapture = (e) => {
+      if (hasMoved) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    };
+
+    track.addEventListener('mousedown', onMouseDown);
+    track.addEventListener('mouseleave', onMouseLeave);
+    track.addEventListener('mouseup', onMouseUp);
+    track.addEventListener('mousemove', onMouseMove);
+    track.addEventListener('click', onClickCapture, true);
+
+    return () => {
+      track.removeEventListener('mousedown', onMouseDown);
+      track.removeEventListener('mouseleave', onMouseLeave);
+      track.removeEventListener('mouseup', onMouseUp);
+      track.removeEventListener('mousemove', onMouseMove);
+      track.removeEventListener('click', onClickCapture, true);
+    };
+  }, []);
 
   return (
     <div className={`home-container kp-home kp-concept ${seniorMode ? "kp-senior-mode" : ""}`}>
@@ -217,32 +266,6 @@ export default function HomePage({ userLocation, onLocationChange }) {
               <span className="kp-concept-location-label"><strong>{userLocation || 'Choose delivery area'}</strong></span>
               <ChevronDown size={14} aria-hidden="true" />
             </button>
-
-            {/* Delivery & Pickup Toggle Segment (matching DoorDash top right) */}
-            <div className="kp-fulfilment-toggle" role="group" aria-label="Order mode: Delivery or Pickup">
-              <button
-                type="button"
-                className={`kp-fulfilment-tab ${fulfilmentMode === 'delivery' ? 'is-active' : ''}`}
-                onClick={() => {
-                  setFulfilmentMode('delivery');
-                  setActiveFilter('all');
-                }}
-                aria-pressed={fulfilmentMode === 'delivery'}
-              >
-                Delivery
-              </button>
-              <button
-                type="button"
-                className={`kp-fulfilment-tab ${fulfilmentMode === 'pickup' ? 'is-active' : ''}`}
-                onClick={() => {
-                  setFulfilmentMode('pickup');
-                  setActiveFilter('pickup');
-                }}
-                aria-pressed={fulfilmentMode === 'pickup'}
-              >
-                Pickup
-              </button>
-            </div>
 
             {/* Senior Mode (A+) */}
             <button
@@ -434,6 +457,7 @@ export default function HomePage({ userLocation, onLocationChange }) {
         </div>
         <div
           id="kp-category-scroll-track"
+          ref={categoryTrackRef}
           className="kp-neu-circular-grid kp-category-screen-fitted-track"
           aria-label="Swipe through shopping categories"
           tabIndex={0}
