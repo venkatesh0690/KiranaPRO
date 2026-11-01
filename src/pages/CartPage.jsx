@@ -823,7 +823,7 @@ export default function CartPage({ userLocation }) {
             <label className="kp-cod-change-label">Need Change? Tell your rider:</label>
             <div className="kp-cod-change-pills">
               {['Exact Cash Ready', 100, 200, 500]
-                .filter(opt => opt === 'Exact Cash Ready' || opt > finalQuote.total)
+                .filter(opt => opt === 'Exact Cash Ready' || opt > grandTotal)
                 .map((opt) => (
                   <button
                     key={String(opt)}
@@ -837,7 +837,7 @@ export default function CartPage({ userLocation }) {
             </div>
             {typeof codChangeAmount === 'number' && (
               <span className="kp-cod-change-hint">
-                Rider will bring ₹{codChangeAmount - finalQuote.total} change.
+                Rider will bring ₹{codChangeAmount - grandTotal} change.
               </span>
             )}
           </div>

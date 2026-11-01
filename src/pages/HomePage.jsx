@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   X,
@@ -87,6 +87,8 @@ export default function HomePage({ userLocation, onLocationChange }) {
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isParchiOpen, setIsParchiOpen] = useState(false);
   const [isPassModalOpen, setIsPassModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const categoryTrackRef = useRef(null);
   const [fulfilmentMode, setFulfilmentMode] = useState('delivery');
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -123,6 +125,21 @@ export default function HomePage({ userLocation, onLocationChange }) {
   };
 
   const areaStores = getStoresForArea(stores, userLocation);
+
+  const matchingProducts = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase().trim();
+    const all = Object.entries(products || {}).flatMap(([cat, list]) => {
+      const seller = areaStores.find(s => s.categories?.includes(cat) && !s.isSample)
+        || areaStores.find(s => s.categories?.includes(cat)) || { id: 'localfresh' };
+      return (list || []).map(p => ({
+        ...p,
+        category: cat,
+        storeId: seller.id
+      }));
+    });
+    return all.filter(p => (p.name || '').toLowerCase().includes(q)).slice(0, 8);
+  }, [searchQuery, products, areaStores]);
   const filteredStores = areaStores.filter(store => {
     if (activeFilter === 'fast') return /15|20|30/.test(store.deliveryTime || '');
     if (activeFilter === 'offers') return isLocalFreshStore(store) || store.tags?.some(t => /deal|save|offer|popular/i.test(t));

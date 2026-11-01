@@ -92,7 +92,7 @@ export default function SellerDashboard() {
   };
   const zeroOutStock = (id) => {
     setStockCounts(prev => ({ ...prev, [id]: 0 }));
-    const p = allStoreProducts.find(item => item.id === id);
+    const p = Object.values(products).flat().find(item => item.id === id);
     if (p && p.inStock) toggleStock(id);
   };
 
