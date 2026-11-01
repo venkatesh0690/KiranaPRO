@@ -43,9 +43,10 @@ function CatalogProductVisual({ product, className = '' }) {
 
   const resolvedRemote=remote.key===key ? remote.value : null;
   const selected=selectCatalogPhoto(visual,resolvedRemote,failedUrls);
+  const catalogPic = !selected.photo ? getCatalogProductPicture(product, failedUrls) : null;
+  const currentPhoto = selected.photo || catalogPic?.photo || null;
   const initial=visual.photo;
   const localIllustration=visual.illustrativePhoto;
-  const currentPhoto=selected.photo;
   const needSearch=visible && !currentPhoto && requested!==key;
 
   useEffect(()=>{
