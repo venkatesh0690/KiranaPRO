@@ -39,8 +39,9 @@ const HERO_SLIDES = [
     ctaColor: '#002B18',
     subtext: '2 orders in 14 days · 20% on first mandi cart · Fast delivery in 20–30 mins',
     isLogo: true,
-    logoImage: '/kiranapro-logo.png',
-    imageAlt: 'Kirana PRO official logo',
+    image: '/banners/banner1-logo-full.png',
+    fallbackImage: '/kiranapro-logo.png',
+    imageAlt: 'Kirana PRO official platform logo full photo',
     action: '/store/localfresh'
   },
   {
@@ -55,9 +56,9 @@ const HERO_SLIDES = [
     ctaHover: '#FB8500',
     ctaColor: '#240C00',
     subtext: 'Direct farm produce: tender vankaya, country tamata & fresh greens picked at dawn',
-    image: '/banners/rythu-bazar.jpg',
-    fallbackImage: 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Rythu_bazaar.jpg',
-    imageAlt: 'Rythu bazar photo with fresh vegetable stalls and farmers',
+    image: '/banners/banner2-mandi-full.webp',
+    fallbackImage: '/banners/rythu-bazar.jpg',
+    imageAlt: 'Authentic local mandi full photo with fresh produce stalls and baskets',
     action: '/store/localfresh'
   },
   {
@@ -433,28 +434,17 @@ export default function HomePage({ userLocation, onLocationChange }) {
                 <div className="kp-instacart-hero-right">
                   <div className={`kp-instacart-hero-media-wrap ${slide.isLogo ? 'kp-hero-media-wrap-white' : ''}`}>
                     <div className="kp-hero-media-neon-glow" aria-hidden="true" />
-                    {slide.isLogo ? (
-                      <div className="kp-hero-logo-box">
-                        <img
-                          src={slide.logoImage}
-                          alt={slide.imageAlt}
-                          className="kp-hero-brand-logo-img"
-                          loading="eager"
-                        />
-                      </div>
-                    ) : (
-                      <img
-                        src={slide.image}
-                        alt={slide.imageAlt}
-                        className="kp-instacart-hero-img"
-                        loading={slide.id === 'instacart-forest' ? 'eager' : 'lazy'}
-                        onError={(e) => {
-                          if (slide.fallbackImage && e.currentTarget.src !== slide.fallbackImage) {
-                            e.currentTarget.src = slide.fallbackImage;
-                          }
-                        }}
-                      />
-                    )}
+                    <img
+                      src={slide.image}
+                      alt={slide.imageAlt}
+                      className="kp-instacart-hero-img"
+                      loading={slide.id === 'instacart-forest' ? 'eager' : 'lazy'}
+                      onError={(e) => {
+                        if (slide.fallbackImage && e.currentTarget.src !== slide.fallbackImage) {
+                          e.currentTarget.src = slide.fallbackImage;
+                        }
+                      }}
+                    />
                   </div>
                 </div>
               </div>
