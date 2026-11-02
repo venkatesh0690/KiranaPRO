@@ -1727,3 +1727,36 @@
   background: #DCFCE7 !important;
   border-color: #166534 !important;
 }
+
+/* Store pickup only: KiranaCoins is an indicative benefit, not wallet credit. */
+.kp-pickup-coins-offer {
+  display:inline-flex;
+  width:fit-content;
+  align-items:center;
+  gap:4px;
+  margin-top:2px;
+  padding:3px 7px;
+  border:1px solid #f5deb1;
+  border-radius:7px;
+  color:#87550d;
+  background:#fff7e6;
+  font-size:10px;
+  font-weight:750;
+  line-height:1.45;
+}
+.kp-fulfilment-mode.selected .kp-pickup-coins-offer {border-color:#e3cc91;}
+.kp-fulfilment-pickup-address .kp-pickup-coins-detail {
+  font-size:12px;
+  font-weight:750;
+  color:#7d550a;
+}
+.kp-fulfilment-pickup-address .kp-pickup-coins-disclaimer {
+  font-size:10px;
+  font-weight:450;
+  color:#63716b;
+  line-height:1.5;
+}
+.kp-checkout-mode-summary .kp-checkout-pickup-coins {
+  font-weight:740;
+  color:#855b10;
+}
