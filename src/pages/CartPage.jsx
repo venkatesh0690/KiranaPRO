@@ -25,6 +25,7 @@ import FulfilmentPicker from '../components/FulfilmentPicker';
 import CatalogProductVisual from '../components/CatalogProductVisual';
 import AuthModal from '../components/AuthModal';
 import { quoteFulfilment, validateFulfilment } from '../utils/fulfilment';
+import { applyKiranaPROPass } from '../utils/kiranaproPass';
 import { getStoreUnder100AddOns } from '../utils/cartStoreAddOns';
 import StructuredAddressForm from '../components/StructuredAddressForm';
 import { formatAddressForDisplay } from '../utils/addressAndGate';
@@ -155,12 +156,12 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
   const currentQuote = quoteFulfilment({
     store,subtotal:totalPrice,discount:couponDiscount,mode:fulfilment.mode,items:cart.items
   });
-  const parivaarDiscount = parivaarPassActive ? (currentQuote.deliveryFee + currentQuote.handlingFee) : 0;
-  const deliveryFee = parivaarPassActive ? 0 : currentQuote.deliveryFee;
-  const handlingFee = parivaarPassActive ? 0 : currentQuote.handlingFee;
-  const tax = currentQuote.tax;
-  const passFee = parivaarPassActive ? 99 : 0;
-  const grandTotal = Math.max(0, currentQuote.total - parivaarDiscount + passFee);
+  // KiranaPRO Pass covers delivery only; handling and estimated GST remain payable.
+  const displayedCharges = applyKiranaPROPass(currentQuote,parivaarPassActive);
+  const deliveryFee = displayedCharges.deliveryFee;
+  const handlingFee = displayedCharges.handlingFee;
+  const tax = displayedCharges.tax;
+  const grandTotal = Math.max(0,displayedCharges.total);
   const isLocalFresh = isLocalFreshStore(store) ||
     isLocalFreshStore(cart?.storeId) ||
     Boolean(cart?.items?.some(i => isLocalFreshStore(i.storeId) || String(i.id).toLowerCase().startsWith('lf-')));
@@ -204,10 +205,11 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
     const finalQuote=quoteFulfilment({
       store,subtotal:totalPrice,discount:effectiveDiscount,mode:requested.mode,items:cart.items
     });
-    const orderDeliveryFee = parivaarPassActive ? 0 : finalQuote.deliveryFee;
-    const orderHandlingFee = parivaarPassActive ? 0 : finalQuote.handlingFee;
-    const orderPassFee = parivaarPassActive ? 99 : 0;
-    const computedTotal = Math.max(0, totalPrice - effectiveDiscount + orderDeliveryFee + (rainActive ? rainTip : 0) + orderHandlingFee + finalQuote.tax + orderPassFee);
+    const finalCharges = applyKiranaPROPass(finalQuote,parivaarPassActive);
+    const orderDeliveryFee = finalCharges.deliveryFee;
+    const orderHandlingFee = finalCharges.handlingFee;
+    const orderPassFee = finalCharges.passFee;
+    const computedTotal = Math.max(0,finalCharges.total + (rainActive ? rainTip : 0));
     const chillarDeducted = (useChillar && chillarBalance > 0) ? Math.min(chillarBalance, computedTotal) : 0;
     if (chillarDeducted > 0) {
       deductChillarBalance(chillarDeducted);
@@ -555,7 +557,7 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
       <div className="kp-parivaar-pass-card">
         <div className="kp-pp-left">
           <span className="kp-pp-title">⭐ KiranaPRO Pass · 20 Days Validity</span>
-          <span className="kp-pp-sub">20 days validity · Save on delivery &amp; packing with your Pass. 5% KiranaCoins applies only to Store Pickup orders.</span>
+          <span className="kp-pp-sub">20 days validity · Save on delivery charges only. Handling and estimated GST still apply. 5% KiranaCoins applies only to Store Pickup orders.</span>
         </div>
         <button
           type="button"
@@ -611,11 +613,7 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
           <div className="bill-row">
             <span>Careful Hand-Packing & Grading</span>
             <span className="tabular-nums">
-              {parivaarPassActive ? (
-                <span className="bill-free">FREE</span>
-              ) : (
-                `₹${handlingFee}`
-              )}
+`₹${handlingFee}`
             </span>
           </div>
 
@@ -760,7 +758,7 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
             <span className="ccb-items-badge">{totalItems} {totalItems === 1 ? 'item' : 'items'} in basket</span>
           </div>
           <span className="ccb-savings">
-            {isPickup ? 'Pickup · ₹0 delivery' : isFreeDelivery ? `Saved ₹${baseDeliveryFee} delivery` : 'Direct Mandi & Kirana guarantee'}
+            {isPickup ? 'Pickup · ₹0 delivery' : parivaarPassActive ? 'KiranaPRO Pass · delivery waived; handling applies' : isFreeDelivery ? `Saved ₹${baseDeliveryFee} delivery` : 'Direct Mandi & Kirana guarantee'}
           </span>
         </div>
         <button
