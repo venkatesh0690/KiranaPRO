@@ -49,6 +49,7 @@ import './styles/fulfilment-checkout.css';
 import './styles/sample-stores-guest.css';
 import './styles/editorial-banners.css';
 import './styles/instacart-theme.css';
+import './styles/single-store-cart.css';
 
 // Load nonessential screens on demand: initial location selection no longer
 // downloads cart, search, profile, seller and administrator dashboards.
