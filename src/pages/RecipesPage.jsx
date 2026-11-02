@@ -37,15 +37,14 @@ export default function RecipesPage({ userLocation = 'Siripuram' }) {
     : ANDHRA_RECIPE_BASKETS.filter(r => r.tag === activeFilter);
 
   const handleAddRecipeKit = (recipe) => {
-    recipe.ingredients.forEach(it => {
-      addItem('localfresh', {
-        id: it.id,
-        name: cleanItemName(it.name),
-        price: it.price,
-        mrp: it.price + 5,
-        unit: it.unit
-      });
-    });
+    // Stop immediately on a different-store cart: no partial recipe kit and
+    // no false success state when the shared cart shows its warning popup.
+    for (const it of recipe.ingredients) {
+      if (!addItem('localfresh', {
+        id:it.id,name:cleanItemName(it.name),
+        price:it.price,mrp:it.price+5,unit:it.unit
+      })) return;
+    }
     setAddedRecipeId(recipe.id);
     setTimeout(() => setAddedRecipeId(null), 2500);
   };
