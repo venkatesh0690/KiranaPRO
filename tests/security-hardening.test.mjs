@@ -33,7 +33,8 @@ test('authentication uses server-only sessions and rejects self-assigned admin a
   assert.match(api,/timingSafeEqual/);
   assert.match(api,/SELECT set_config\('app.role'/);
   assert.match(auth,/role==='seller'.*approved/);
-  assert.match(auth,/process\.env\.ADMIN_PASSWORD_HASH/);
+  assert.doesNotMatch(auth,/process\\.env\\.ADMIN_PASSWORD_HASH/);
+  assert.match(auth,/one-time, owner-authorized setup endpoint/);
   assert.match(auth,/pendingApproval:true/);
 });
 test('customer, seller and admin order access is scoped at SQL level',()=>{
