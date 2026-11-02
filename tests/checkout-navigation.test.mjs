@@ -45,3 +45,19 @@ test('checkout CTA remains unobstructed by global cart bar and bottom navigation
   assert.match(app,/const isCheckoutRoute = location\.pathname === '\/checkout'/);
   assert.match(app,/!isCheckoutRoute && <BottomNav \/>/);
 });
+
+test('5% KiranaCoins promotion is explicitly limited to Store Pickup',()=>{
+  const picker=read('src/components/FulfilmentPicker.jsx');
+  const css=read('src/styles/fulfilment-checkout.css');
+  const cartPage=read('src/pages/CartPage.jsx');
+  assert.match(picker,/mode\.id==='pickup' && <span className="kp-pickup-coins-badge">/);
+  assert.match(picker,/5% KiranaCoins · Pickup only/);
+  assert.match(picker,/value\.mode==='pickup' && \([\s\S]*kp-pickup-coins-details/);
+  assert.match(picker,/Earn 5% KiranaCoins — Store Pickup orders only/);
+  assert.match(picker,/Order now and scheduled delivery do not qualify/);
+  assert.match(picker,/This demo checkout does not automatically credit coins/);
+  assert.match(css,/\.kp-pickup-coins-badge/);
+  assert.match(css,/\.kp-pickup-coins-details/);
+  assert.doesNotMatch(cartPage,/Earn 5% KiranaCoins \(Pay via COD\)/);
+  assert.match(cartPage,/5% KiranaCoins applies only to Store Pickup orders/);
+});
