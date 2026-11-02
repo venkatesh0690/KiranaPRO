@@ -15,7 +15,7 @@
     "test:areas": "node --test tests/delivery-areas.test.mjs tests/cart-store-addons.test.mjs",
     "test:highlights": "node --test tests/neighborhood-highlights.test.mjs",
     "test:app": "node --test tests/app-providers.test.mjs",
-    "test:fulfilment": "node --test tests/fulfilment.test.mjs",
+    "test:fulfilment": "node --test tests/fulfilment.test.mjs tests/pass-delivery-only.test.mjs",
     "test:catalog": "node --test tests/catalog-visuals.test.mjs",
     "test:photos": "node --test tests/photo-search.test.mjs",
     "test:sample-stores": "node --test tests/area-samples-guest.test.mjs",
