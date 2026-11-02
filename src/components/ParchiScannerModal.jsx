@@ -53,16 +53,14 @@ export default function ParchiScannerModal({ catalog, onClose }) {
   };
 
   const handleAddAllToCart = () => {
-    let count = 0;
-    matchedItems.forEach((item) => {
-      if (item.selected && item.matchedProduct) {
-        for (let q = 0; q < item.selectedQty; q++) {
-          addItem('localfresh', item.matchedProduct);
-        }
-        count++;
+    for (const item of matchedItems) {
+      if (!item.selected || !item.matchedProduct) continue;
+      for (let q=0;q<item.selectedQty;q++) {
+        // Different-store attempts raise the shared popup and keep this list
+        // open without displaying a misleading success confirmation.
+        if (!addItem('localfresh',item.matchedProduct)) return;
       }
-    });
-
+    }
     onClose();
   };
 
