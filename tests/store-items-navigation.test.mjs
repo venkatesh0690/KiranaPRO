@@ -31,7 +31,7 @@ test('all store-entry points navigate immediately without flushSync transitions'
   navigateWithStoreTransition(path=>{opened=path;},'/store/localfresh');
   assert.equal(opened,'/store/localfresh');
   const util=read('src/utils/storeTransition.js');
-  assert.doesNotMatch(util,/flushSync|startViewTransition\(/);
+  assert.match(util,/export function navigateWithStoreTransition\(navigate, to\) \{\s*navigate\(to\);\s*\}/);
   const app=read('src/App.jsx');
   assert.match(app,/path="\/store\/:id"/);
 });
