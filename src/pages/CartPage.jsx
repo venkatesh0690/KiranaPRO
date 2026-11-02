@@ -612,9 +612,7 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
 
           <div className="bill-row">
             <span>Careful Hand-Packing & Grading</span>
-            <span className="tabular-nums">
-`₹${handlingFee}`
-            </span>
+            <span className="tabular-nums">₹{handlingFee}</span>
           </div>
 
           <div className="bill-row">
