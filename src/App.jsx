@@ -110,6 +110,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
     location.pathname.startsWith('/seller') || location.pathname.startsWith('/admin') || location.pathname.startsWith('/rider');
   const isStoreRoute = location.pathname.startsWith('/store');
   const isLocationRoute = location.pathname === '/location';
+  const isCheckoutRoute = location.pathname === '/checkout';
 
   return (
     <div className="app-root-wrapper full-screen-mode">
@@ -117,7 +118,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
       {/* Dynamic Route Content */}
       <main
         className={`app-content-area ${
-          canShop && !isPortalRoute && !isLocationRoute ? 'with-bottom-nav' : ''
+          canShop && !isPortalRoute && !isLocationRoute && !isCheckoutRoute ? 'with-bottom-nav' : ''
         } ${isStoreRoute ? 'store-view-mode' : ''}`}
       >
         <RouteRecoveryBoundary key={location.pathname}>
@@ -152,7 +153,11 @@ function MainAppShell({ userLocation, setUserLocation }) {
           />
           <Route
             path="/cart"
-            element={canShop ? <CartPage userLocation={userLocation} /> : <Navigate to="/" replace />}
+            element={canShop ? <CartPage userLocation={userLocation} checkoutMode="review" /> : <Navigate to="/" replace />}
+          />
+          <Route
+            path="/checkout"
+            element={canShop ? <CartPage userLocation={userLocation} checkoutMode="fulfilment" /> : <Navigate to="/" replace />}
           />
           <Route
             path="/profile"
@@ -217,7 +222,7 @@ function MainAppShell({ userLocation, setUserLocation }) {
       {!isPortalRoute && !isLocationRoute && <CartBar />}
 
       {/* Bottom Navigation Bar (Customer mode only) */}
-      {canShop && !isPortalRoute && !isLocationRoute && <BottomNav />}
+      {canShop && !isPortalRoute && !isLocationRoute && !isCheckoutRoute && <BottomNav />}
     </div>
   );
 }
