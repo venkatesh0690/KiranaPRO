@@ -1,14 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { ArrowUpRight, Clock3, Star } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import StorePhotoCarousel from './StorePhotoCarousel';
 import { FREE_DELIVERY_THRESHOLD, isLocalFreshStore } from '../data/deliveryAreas';
-import { navigateWithStoreTransition, storeImageTransitionName, storeTitleTransitionName } from '../utils/storeTransition';
+import { storeImageTransitionName, storeTitleTransitionName } from '../utils/storeTransition';
 
 export default function StoreCard({ store }) {
-  const navigate = useNavigate();
-  const [opening, setOpening] = useState(false);
-  const pending = useRef(null);
   const swipeBlockedUntil = useRef(0);
   const rating = Number(store.rating);
   const displayRating = (
@@ -36,28 +33,17 @@ export default function StoreCard({ store }) {
         return 'Groceries';
       })();
 
-  useEffect(() => () => clearTimeout(pending.current), []);
-
+  // React Router's Link handles navigation synchronously. Never postpone a
+  // store tap behind a timer/view transition: Android/PWA route remounts can
+  // cancel the timer and leave the user stuck on the storefront cards.
   const openStore = (event) => {
-    if (Date.now() < swipeBlockedUntil.current) { event.preventDefault(); return; }
-    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || opening) return;
-    event.preventDefault();
-    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) {
-      navigate(`/store/${store.id}`);
-      return;
-    }
-    setOpening(true);
-    // Visible tap feedback before navigation, even in older Android WebViews.
-    pending.current = window.setTimeout(() => {
-      navigateWithStoreTransition(navigate, `/store/${store.id}`);
-    }, 65);
+    if (Date.now() < swipeBlockedUntil.current) event.preventDefault();
   };
 
   return (
     <Link
       to={`/store/${store.id}`}
-      className={`store-card kp-gallery-card kp-motion-store ${opening ? 'kp-is-opening' : ''}`}
+      className="store-card kp-gallery-card kp-motion-store"
       onClick={openStore}
       aria-label={`Open ${store.name}`}
     >
