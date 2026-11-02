@@ -98,7 +98,7 @@ export default function ProductCard({ product, storeId, layout = 'big', category
             <button
               type="button"
               className="pc-add-btn"
-              onClick={handleIncrement}
+              onClick={event => { event.stopPropagation(); handleIncrement(); }}
               style={{ minHeight: '36px', minWidth: '44px' }}
             >
               ADD
@@ -107,7 +107,7 @@ export default function ProductCard({ product, storeId, layout = 'big', category
             <div className="pc-qty" style={{ minHeight: '36px' }}>
               <button
                 type="button"
-                onClick={handleDecrement}
+                onClick={event => { event.stopPropagation(); handleDecrement(); }}
                 aria-label="Decrease quantity"
               >
                 <Minus size={13} strokeWidth={3} />
@@ -115,7 +115,7 @@ export default function ProductCard({ product, storeId, layout = 'big', category
               <span className="tabular-nums" style={{ minWidth: '20px', textAlign: 'center' }}>{qty}</span>
               <button
                 type="button"
-                onClick={handleIncrement}
+                onClick={event => { event.stopPropagation(); handleIncrement(); }}
                 disabled={qty >= stockCount}
                 aria-label="Increase quantity"
                 style={{ opacity: qty >= stockCount ? 0.4 : 1 }}
