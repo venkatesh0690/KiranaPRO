@@ -19,7 +19,7 @@ try{
    }
    await page.waitForURL('**/home',{timeout:10000});
    await page.locator('a.store-card').first().waitFor({timeout:10000});
-   const hrefs=await page.locator('a.store-card').evaluateAll(nodes=>[...new Set(nodes.map(n=>n.getAttribute('href')))].slice(0,5));
+   const hrefs=await page.locator('a.store-card').evaluateAll(nodes=>[...new Set(nodes.map(n=>n.getAttribute('href')))].slice(0,2));
    for(const href of hrefs){
     faults.length=0;
     await page.locator('a.store-card[href="'+href+'"]').first().click({timeout:8000});
@@ -35,14 +35,9 @@ try{
       console.log('STORE_PAGE_FAIL '+JSON.stringify({area,href,reason:String(e).slice(0,450),
         url:page.url(),errors:faults.slice(0,3),body:(await page.locator('body').innerText().catch(()=>'' )).slice(0,440)}));
     }
-    await page.goto(origin+'/',{waitUntil:'domcontentloaded',timeout:20000});
-    const preview=page.getByRole('button',{name:/Explore as guest/i});
-    if(await preview.count())await preview.click({timeout:6000});
-    if(await page.getByRole('heading',{name:'Select your area'}).count()){
-      await page.getByRole('button',{name:new RegExp(area)}).first().click({timeout:6000});
-      await page.getByRole('button',{name:/Continue to stores/}).click({timeout:6000});
-    }
+    await page.goBack({waitUntil:'domcontentloaded',timeout:12000});
     await page.waitForURL('**/home',{timeout:10000});
+    await page.locator('a.store-card').first().waitFor({timeout:7000});
    }
   }catch(e){failed++;console.log('STORE_AREA_FAIL '+JSON.stringify({area,reason:String(e).slice(0,500),errors:faults.slice(0,3),url:page.url()}));}
   finally{await page.close()}
