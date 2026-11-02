@@ -470,29 +470,8 @@ export default function CartPage({ userLocation }) {
         </div>
       </div>
 
-      {/* ── Under-₹25 Kitchen Impulse Shelf (Phase 14 Prompt 14.3) ── */}
-      <div className="kp-impulse-shelf">
-        <div className="kp-impulse-header">
-          <span className="kp-impulse-title">⚡ Under-₹25 Daily Kitchen Add-Ons</span>
-          <span className="kp-impulse-badge">Zero Extra Delivery Fee</span>
-        </div>
-        <div className="kp-impulse-scroll">
-          {UNDER_25_IMPULSE_ITEMS.map(imp => (
-            <div key={imp.id} className="kp-impulse-card">
-              <span className="kp-impulse-icon">{imp.icon}</span>
-              <span className="kp-impulse-name">{imp.name}</span>
-              <span className="kp-impulse-price">₹{imp.price}</span>
-              <button
-                type="button"
-                className="kp-impulse-add-btn"
-                onClick={() => addItem(cart.storeId, { id: imp.id, name: imp.name, price: imp.price, mrp: imp.price + 5, unit: imp.unit })}
-              >
-                + Add
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* No generic impulse shelf: add-ons must be verified products sold
+          by the current shop before they can be offered in its cart. */}
 
       {appliedCoupon && !couponQualified && (
         <p className="kp-coupon-threshold-note" role="status">
