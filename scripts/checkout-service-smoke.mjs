@@ -27,7 +27,23 @@ try {
       await page.getByRole('heading',{name:'Choose order service'}).waitFor({timeout:12000});
       await page.getByRole('heading',{name:'How would you like your groceries?'}).waitFor({timeout:12000});
       await page.getByRole('button',{name:/Order now/i}).waitFor({timeout:10000});
+      const pickupMode=page.locator('.kp-fulfilment-mode').filter({hasText:'Store pickup'});
+      const coinBadge=pickupMode.locator('.kp-pickup-coins-offer');
+      if(await coinBadge.count()!==1 || !(await coinBadge.innerText()).includes('5% KiranaCoins')) {
+        throw Error('5% KiranaCoins message missing from Store pickup option');
+      }
+      if(await page.locator('.kp-checkout-pickup-coins').count()) {
+        throw Error('Pickup coins incentive shown for Order now delivery');
+      }
+      await pickupMode.click();
+      await page.locator('.kp-pickup-coins-detail').waitFor({timeout:5000});
+      if(!(await page.locator('.kp-checkout-pickup-coins').innerText()).includes('Store pickup only')) {
+        throw Error('Pickup-only coins message missing in checkout summary');
+      }
       await page.getByRole('button',{name:/Schedule delivery/i}).click();
+      if(await page.locator('.kp-checkout-pickup-coins').count()) {
+        throw Error('Pickup-only coins message leaked into scheduled delivery');
+      }
       await page.locator('.kp-fulfilment-date').nth(1).click();
       await page.locator('.kp-fulfilment-slot').first().click({timeout:8000});
       const selected=await page.locator('.kp-fulfilment-selection').innerText();
