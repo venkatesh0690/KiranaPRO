@@ -11,7 +11,7 @@ try {
   await page.goto(origin+'/',{waitUntil:'domcontentloaded',timeout:30000});
   await page.getByRole('link',{name:/Open LocalFresh/i}).first().click({timeout:15000});
   await page.locator('.pc-add-btn:not([disabled])').first().click({timeout:15000});
-  await page.locator('.kp-fcb-count').getByText('1 item').waitFor({timeout:12000});
+  await page.locator('.kp-fcb-count').filter({hasText:'1 item'}).first().waitFor({timeout:12000});
   await page.getByRole('button',{name:'Back to home'}).click({timeout:12000});
   await page.getByRole('link',{name:/Open Siripuram Daily Basket/i}).click({timeout:15000});
   await page.locator('.pc-add-btn:not([disabled])').first().click({timeout:15000});
