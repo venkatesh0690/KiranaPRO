@@ -25,7 +25,6 @@ import FulfilmentPicker from '../components/FulfilmentPicker';
 import CatalogProductVisual from '../components/CatalogProductVisual';
 import AuthModal from '../components/AuthModal';
 import { quoteFulfilment, validateFulfilment } from '../utils/fulfilment';
-import { UNDER_25_IMPULSE_ITEMS } from '../data/recipeBaskets';
 import StructuredAddressForm from '../components/StructuredAddressForm';
 import { formatAddressForDisplay } from '../utils/addressAndGate';
 import { getChillarBalance, deductChillarBalance, getCustomerTrustScore, isGoldNeighbor } from '../utils/chillarKhata';
