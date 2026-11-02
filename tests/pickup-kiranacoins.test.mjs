@@ -27,5 +27,5 @@ test('existing schedule and pickup controls remain unchanged',()=>{
   assert.match(picker,/getFulfilmentDates\(now\)/);
   assert.match(picker,/getFulfilmentSlots\(value\.mode,value\.date,now\)/);
   assert.match(picker,/onClick=\{\(\)=>onChange\(\{\.\.\.value,slot:slot\.value\}\)\}/);
-  assert.match(picker,/requested times for a demo order, not confirmed bookings/i);
+  assert.match(picker,/requested<\/strong> times for a demo order, not confirmed bookings/i);
 });
