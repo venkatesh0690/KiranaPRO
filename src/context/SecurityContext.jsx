@@ -36,7 +36,7 @@ export const SecurityProvider = ({ children }) => {
   const [savedAddresses,setSavedAddresses]=useState([]);
   useEffect(()=>{setSavedAddresses([]);},[authSession.userId,authSession.isTemporary]);
 
-  // Security Audit Trail
+  // Browser-only activity stream. Never treat it as a server security audit log.
   const [securityAuditLogs, setSecurityAuditLogs] = useState(() => {
     try {
       const saved = sessionStorage.getItem(AUDIT_STORAGE_KEY);
@@ -44,19 +44,10 @@ export const SecurityProvider = ({ children }) => {
     } catch {
       // Fallback
     }
-    return [
-      {
-        id: 'SEC-INIT-1',
-        timestamp: new Date().toLocaleTimeString(),
-        event: 'SECURITY_SHIELD_INITIALIZED',
-        details: 'KiranaPRO Anti-Tamper, XSS Sanitizer & Free Delivery Rules active.',
-        severity: 'info',
-        ip: '127.0.0.1 (Local Verified)'
-      }
-    ];
+    return [];
   });
 
-  // Save audit logs to sessionStorage
+  // Save browser-only activity to sessionStorage (not authoritative).
   useEffect(() => {
     try {
       sessionStorage.setItem(AUDIT_STORAGE_KEY, JSON.stringify(securityAuditLogs.slice(0, 50)));
@@ -73,7 +64,7 @@ export const SecurityProvider = ({ children }) => {
       event,
       details,
       severity,
-      ip: '127.0.0.1 (Local Verified)'
+      ip: 'Unavailable (browser-local event)'
     };
     setSecurityAuditLogs(prev => [newLog, ...prev.slice(0, 49)]);
   }, []);
