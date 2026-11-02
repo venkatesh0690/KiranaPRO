@@ -3,7 +3,7 @@ import { getDeliveryFee } from '../data/deliveryAreas.js';
  * No store calendar or capacity provider is connected; these are NOT confirmed slots.
  * Every time is in Asia/Kolkata (IST), not the browser's local timezone. */
 export const FULFILMENT_MODES = Object.freeze([
-  {id:'standard',title:'Standard delivery',description:'Normal delivery request; no guaranteed time'},
+  {id:'standard',title:'Order now',description:'Request the earliest delivery; no guaranteed time'},
   {id:'scheduled',title:'Schedule delivery',description:'Request a two-hour delivery window'},
   {id:'pickup',title:'Store pickup',description:'Request a time to collect your packed order'}
 ]);
