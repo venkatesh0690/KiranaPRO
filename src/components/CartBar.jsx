@@ -8,7 +8,7 @@ export default function CartBar({ storeId }) {
   const location = useLocation();
 
   // Hide on cart page, portal routes (admin/seller), or when cart is empty
-  if (totalItems === 0 || location.pathname === '/cart' || location.pathname.startsWith('/admin') || location.pathname.startsWith('/seller')) {
+  if (totalItems === 0 || (location.pathname === '/cart' || location.pathname === '/checkout') || location.pathname.startsWith('/admin') || location.pathname.startsWith('/seller')) {
     return null;
   }
 
