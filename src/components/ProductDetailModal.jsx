@@ -11,7 +11,9 @@ export default function ProductDetailModal({ product, storeId, storeName, onClos
 
   if (!product) return null;
 
-  const cartItem = cart.items.find((i) => i.id === product.id);
+  const cartItem = String(cart.storeId ?? '').toLowerCase() === String(storeId ?? '').toLowerCase()
+    ? cart.items.find(i => String(i.id) === String(product.id))
+    : null;
   const qty = cartItem ? cartItem.quantity : 0;
   const discount = product.mrp > product.price
     ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
