@@ -78,11 +78,11 @@ export default function CommandSpotlight({ catalog = [] }) {
       const selected = filteredItems[selectedIndex];
       if (selected) {
         if (e.shiftKey) {
-          addItem('localfresh', selected);
+          addItem(selected.storeId || 'localfresh', selected);
           setIsOpen(false);
           navigate('/cart');
         } else {
-          addItem('localfresh', selected);
+          addItem(selected.storeId || 'localfresh', selected);
           triggerHaptic(10);
         }
       }
@@ -172,7 +172,7 @@ export default function CommandSpotlight({ catalog = [] }) {
                 }}
                 onMouseEnter={() => setSelectedIndex(idx)}
                 onClick={() => {
-                  addItem('localfresh', item);
+                  addItem(item.storeId || 'localfresh', item);
                   triggerHaptic(10);
                 }}
               >
