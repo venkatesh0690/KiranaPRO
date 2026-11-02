@@ -113,7 +113,8 @@ export async function getSession(req) {
     LIMIT 1
   `]);
   const account = rows[0];
-  if (!account || (account.role==='seller' && !account.approved)) return null;
+  // A disabled/revoked account must lose access regardless of prior role.
+  if (!account || !account.approved) return null;
   return {id:account.id,role:account.role,storeId:account.store_id,account};
 }
 export async function requireUser(req,res,roles) {
