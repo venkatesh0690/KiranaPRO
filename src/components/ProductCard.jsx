@@ -6,7 +6,8 @@ import { triggerHaptic } from '../utils/nativePlatform';
 
 export default function ProductCard({ product, storeId, layout = 'big', categoryBg = '#FFF3E0' }) {
   const { cart, addItem, removeItem } = useCart();
-  const cartItem = cart.items.find((i) => i.id === product.id);
+  const cartItem = cart.items.find(i => String(i.id) === String(product.id) &&
+    String(i.storeId).toLowerCase() === String(storeId).toLowerCase());
   const qty = cartItem ? cartItem.quantity : 0;
   
   // Stock count logic
