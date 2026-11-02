@@ -552,7 +552,7 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
             <span className="cdsc-emoji">🚚</span>
             <div className="cdsc-info">
               <span className="cdsc-title">LocalFresh delivery</span>
-              <span className="cdsc-subtitle">Delivery charge is included in your bill. Pickup has no delivery fee.</span>
+              <span className="cdsc-subtitle">Delivery starts at ₹20; heavier baskets may cost more. Pickup has no delivery fee.</span>
             </div>
           </div>
         ) : isFreeDelivery ? (
@@ -693,7 +693,7 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
       )}
       {checkoutStep==='review' && <div className="kp-coupon-eligibility-note">
         <strong>Order #{nextOrderNumber}</strong> · {isLocalFresh
-          ? 'LocalFresh delivery charge is shown in your bill.'
+          ? 'LocalFresh delivery starts at ₹20, with higher charges for heavier baskets.'
           : 'Free delivery above ₹300.'}
         {totalPrice>500
           ? ' Automatic basket saving up to ₹30 (5%, capped) applies if no eligible coupon is used.'
@@ -710,10 +710,10 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
               ? 'Only handling fee and estimated GST are charged in addition to the grocery total, after any eligible discount.'
               : fulfilment.mode==='scheduled'
                 ? isLocalFresh
-                  ? 'The delivery charge for this store is shown in your bill.'
+                  ? 'LocalFresh delivery starts at ₹20; the exact fee is shown in your bill.'
                   : 'Standard delivery fee applies at ₹300 or below; free above ₹300.'
                 : isLocalFresh
-                  ? 'The delivery charge for this store is shown in your bill.'
+                  ? 'LocalFresh delivery starts at ₹20; the exact fee is shown in your bill.'
                   : 'Normal delivery charges apply at ₹300 or below; free above ₹300.'}
           </span>
           {fulfilmentValidation.valid && fulfilment.mode!=='standard' && (
