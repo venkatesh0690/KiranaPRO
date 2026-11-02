@@ -42,7 +42,7 @@ export default function FulfilmentPicker({value,onChange,store,area}) {
         <div className="kp-fulfilment-callout">
           <Truck size={19} aria-hidden="true"/>
           <span>{isLocalFreshStore(store)
-            ? 'Delivery charge is shown in your bill. Estimated arrival is not guaranteed.'
+            ? 'LocalFresh delivery starts at ₹20; heavier baskets may cost more. Your bill shows the exact fee. Estimated arrival is not guaranteed.'
             : "Delivery is free above ₹300. For smaller baskets, the store's normal delivery fee applies. Estimated arrival is not guaranteed."}</span>
         </div>
       )}
@@ -67,7 +67,7 @@ export default function FulfilmentPicker({value,onChange,store,area}) {
           <Clock3 size={19} aria-hidden="true"/>
           <span>Choose a two-hour delivery window, such as 2:00 PM – 4:00 PM or 3:00 PM – 5:00 PM.
           {isLocalFreshStore(store)
-            ? ' Delivery charges are shown in your bill.'
+            ? ' LocalFresh delivery starts at ₹20 and the exact charge is shown in your bill.'
             : ' Delivery is free above ₹300.'}</span>
         </div>
       )}

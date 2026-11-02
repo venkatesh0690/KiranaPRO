@@ -5,6 +5,7 @@
  * their pack/bunch/piece specifications. These estimates are not scales data.
  */
 export const LOCALFRESH_RATE_PER_KG = 5;
+export const LOCALFRESH_MIN_DELIVERY_FEE = 20;
 
 // Estimated weights, in kg, for SKUs sold as pieces, dozens and loose bundles.
 // Unknown per-piece/bunch items are handled by conservative defaults below.
@@ -73,5 +74,7 @@ export function getCartWeightKg(items=[]) {
 
 export function calculateLocalFreshDeliveryFee(items) {
   const totalWeight=getCartWeightKg(items);
-  return Math.round((totalWeight*LOCALFRESH_RATE_PER_KG+Number.EPSILON)*100)/100;
+  if (totalWeight <= 0) return 0;
+  const weightBasedFee=Math.round((totalWeight*LOCALFRESH_RATE_PER_KG+Number.EPSILON)*100)/100;
+  return Math.max(LOCALFRESH_MIN_DELIVERY_FEE,weightBasedFee);
 }
