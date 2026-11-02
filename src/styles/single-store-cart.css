@@ -1,0 +1,41 @@
+/* Single-store cart notice: compact, accessible and independent of app theme. */
+.kp-store-cart-overlay {
+  position:fixed;
+  inset:0;
+  z-index:20000;
+  background:rgba(15,23,42,.55);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  backdrop-filter:blur(3px);
+}
+.kp-store-cart-dialog {
+  width:min(100%,390px);
+  padding:26px 24px 22px;
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 20px 75px rgba(15,23,42,.22);
+  color:#172132;
+  text-align:center;
+}
+.kp-store-cart-icon {font-size:34px;line-height:1.1;margin-bottom:12px}
+.kp-store-cart-dialog h2 {font-size:20px;font-weight:800;line-height:1.25;margin:0 0 12px;color:#172132}
+.kp-store-cart-dialog p {font-size:14px;line-height:1.55;color:#475569;margin:0 0 12px}
+.kp-store-cart-dialog .kp-store-cart-preserved {font-size:12px;color:#166534;margin-bottom:19px}
+.kp-store-cart-dialog button {
+  width:100%;
+  min-height:45px;
+  border:0;
+  border-radius:11px;
+  padding:12px 16px;
+  background:#193a2b;
+  color:#fff;
+  font-size:14px;
+  font-weight:750;
+  cursor:pointer;
+}
+.kp-store-cart-dialog button:focus-visible{outline:3px solid #3b82f6;outline-offset:3px}
+@media (prefers-reduced-motion: reduce) {
+  .kp-store-cart-overlay{backdrop-filter:none}
+}
