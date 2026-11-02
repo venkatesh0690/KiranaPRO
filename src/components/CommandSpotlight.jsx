@@ -55,7 +55,16 @@ export default function CommandSpotlight({ catalog = [] }) {
   // StoreContext supplies products grouped by category, not a flat array.
   // Normalize before ANY render path (including the closed state), otherwise
   // catalog.slice() crashes the entire app while the search panel is hidden.
-  const catalogItems = useMemo(() => toCatalogSearchItems(catalog), [catalog]);
+  // The global grouped catalog has no seller mapping for generic products.
+  // Only direct-add verified LocalFresh SKUs here; the full search page maps
+  // the remaining products to their actual store before an add is attempted.
+  const catalogItems = useMemo(
+    () => toCatalogSearchItems(catalog).filter(item =>
+      String(item.storeId || '').toLowerCase()==='localfresh' ||
+      String(item.id || '').toLowerCase().startsWith('lf-')
+    ),
+    [catalog]
+  );
 
   const filteredItems = query.trim()
     ? catalogItems
