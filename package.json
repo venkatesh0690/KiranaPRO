@@ -12,7 +12,7 @@
     "db:migrate": "node scripts/neon_migrate_and_seed.js",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test:areas": "node --test tests/delivery-areas.test.mjs",
+    "test:areas": "node --test tests/delivery-areas.test.mjs tests/cart-store-addons.test.mjs",
     "test:highlights": "node --test tests/neighborhood-highlights.test.mjs",
     "test:app": "node --test tests/app-providers.test.mjs",
     "test:fulfilment": "node --test tests/fulfilment.test.mjs",
