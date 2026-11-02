@@ -1727,3 +1727,9 @@
   background: #DCFCE7 !important;
   border-color: #166534 !important;
 }
+
+/* Pickup-only KiranaCoins offer stays inside the existing order-service UI. */
+.kp-pickup-coins-badge{display:inline-flex;align-self:flex-start;align-items:center;gap:3px;margin-top:3px;padding:4px 7px;border-radius:7px;background:#e8f3e6;color:#25643c;font-size:10px;line-height:1.2;font-weight:800;white-space:normal;}
+.kp-pickup-coins-details{display:flex;flex-direction:column;gap:3px;margin-top:7px;padding:10px 11px;border-radius:9px;border:1px solid #d3e6cf;background:#fff;color:#2b6d40;}
+.kp-pickup-coins-details strong{font-size:12px;line-height:1.4;color:#24623a;}
+.kp-pickup-coins-details span{font-size:11px;line-height:1.45;color:#607568;}
