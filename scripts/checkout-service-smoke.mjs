@@ -43,7 +43,7 @@ try {
         await page.getByRole('button',{name:/Order now/i}).click();
         if(!await continueButton.isEnabled())throw Error('Order-now sign-in action unavailable');
         await continueButton.click();
-        await page.getByRole('dialog').first().waitFor({timeout:10000});
+        await page.locator('.auth-modal-card').first().waitFor({timeout:10000});
       } else {
         if(await continueButton.isEnabled())throw Error('Sample store must not accept orders');
         if(!(await continueButton.innerText()).includes('Sample store'))throw Error('Sample store warning missing');
