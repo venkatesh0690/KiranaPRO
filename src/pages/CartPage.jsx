@@ -25,7 +25,7 @@ import FulfilmentPicker from '../components/FulfilmentPicker';
 import CatalogProductVisual from '../components/CatalogProductVisual';
 import AuthModal from '../components/AuthModal';
 import { quoteFulfilment, validateFulfilment } from '../utils/fulfilment';
-import { UNDER_25_IMPULSE_ITEMS } from '../data/recipeBaskets';
+import { getStoreUnder100AddOns } from '../utils/cartStoreAddOns';
 import StructuredAddressForm from '../components/StructuredAddressForm';
 import { formatAddressForDisplay } from '../utils/addressAndGate';
 import { getChillarBalance, deductChillarBalance, getCustomerTrustScore, isGoldNeighbor } from '../utils/chillarKhata';
@@ -57,6 +57,7 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
   const store = stores.find((s) => String(s.id).toLowerCase() === String(cart.storeId).toLowerCase()) ||
     (isLocalFreshStore(cart?.storeId) || cart?.items?.some(i => isLocalFreshStore(i.storeId)) ? stores.find(s => isLocalFreshStore(s)) : null);
   const storeServesArea = store && isStoreAvailableInArea(store,userLocation);
+  const suggestedAddOns = getStoreUnder100AddOns(store,products,cart.items);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [guestAuthOpen,setGuestAuthOpen] = useState(false);
   const placingRef = useRef(false);
@@ -256,6 +257,16 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
           <ArrowLeft size={18} />
         </button>
         <h1 className="cart-title">{checkoutStep==='review'?'Review your basket':'Choose order service'}</h1>
+        <button type="button" className="cart-top-delivery-area"
+          onClick={() => navigate('/location')}
+          aria-label={'Change delivery area. Current area: ' + (userLocation || 'Not selected')}>
+          <span className="cart-top-area-icon" aria-hidden="true">📍</span>
+          <span className="cart-top-area-details">
+            <strong>{userLocation || 'Choose area'}</strong>
+            <small>Change area</small>
+          </span>
+          <ChevronRight size={15} aria-hidden="true"/>
+        </button>
       </div>
 
       {orderPlaced && (
@@ -474,29 +485,36 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
         </div>
       </div>
 
-      {/* ── Under-₹25 Kitchen Impulse Shelf (Phase 14 Prompt 14.3) ── */}
-      <div className="kp-impulse-shelf">
+      {/* Suggestions follow the active cart store; never borrow another seller's items. */}
+      <section className="kp-impulse-shelf" key={String(cart.storeId)} aria-label={'Under ₹100 products from ' + (store?.name || 'this store')}>
         <div className="kp-impulse-header">
-          <span className="kp-impulse-title">⚡ Under-₹25 Daily Kitchen Add-Ons</span>
-          <span className="kp-impulse-badge">Zero Extra Delivery Fee</span>
+          <span className="kp-impulse-title">⚡ Under ₹100 products</span>
+          <span className="kp-impulse-badge">{store?.name || 'Selected store'}</span>
         </div>
-        <div className="kp-impulse-scroll">
-          {UNDER_25_IMPULSE_ITEMS.map(imp => (
-            <div key={imp.id} className="kp-impulse-card">
-              <span className="kp-impulse-icon">{imp.icon}</span>
-              <span className="kp-impulse-name">{imp.name}</span>
-              <span className="kp-impulse-price">₹{imp.price}</span>
-              <button
-                type="button"
-                className="kp-impulse-add-btn"
-                onClick={() => addItem(cart.storeId, { id: imp.id, name: imp.name, price: imp.price, mrp: imp.price + 5, unit: imp.unit })}
-              >
-                + Add
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+        {suggestedAddOns.length ? (
+          <div className="kp-impulse-scroll" aria-label="Add more items from this store">
+            {suggestedAddOns.map(item => (
+              <div key={String(item.id)} className="kp-impulse-card">
+                <div className="kp-impulse-product-image">
+                  <CatalogProductVisual product={item}/>
+                </div>
+                <span className="kp-impulse-name">{cleanItemName(item.name)}</span>
+                <span className="kp-impulse-price">₹{item.price}</span>
+                <button
+                  type="button"
+                  className="kp-impulse-add-btn"
+                  onClick={() => addItem(store.id, item)}
+                  aria-label={'Add ' + cleanItemName(item.name) + ' from ' + store.name + ' for ₹' + item.price}
+                >
+                  + Add
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="kp-impulse-empty">No other in-stock items under ₹100 from this store right now.</p>
+        )}
+      </section>
 
       {appliedCoupon && !couponQualified && (
         <p className="kp-coupon-threshold-note" role="status">
@@ -523,18 +541,6 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
         )}
       </div>
 
-      {/* Delivery area is selected from five fixed Vizag zones. */}
-      <button type="button" className="cart-delivery-address-card" onClick={() => navigate('/')}>
-        <div className="cdac-left">
-          <span className="cdac-icon">📍</span>
-          <div>
-            <span className="cdac-label">Delivery area: {userLocation}</span>
-            <span className="cdac-address">Change delivery area</span>
-          </div>
-        </div>
-        <ChevronRight size={16} color="#94A3B8" />
-      </button>
-
         </>
       ) : (
         <FulfilmentPicker
@@ -544,48 +550,6 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
           area={userLocation}
         />
       )}
-
-      {/* ── Free Delivery Status Banner placed just above Bill Details ── */}
-      <div className={`cart-delivery-status-card ${isFreeDelivery ? 'unlocked' : 'locked'}`}>
-        {isLocalFresh ? (
-          <div className="cdsc-inner">
-            <span className="cdsc-emoji">🚚</span>
-            <div className="cdsc-info">
-              <span className="cdsc-title">LocalFresh delivery</span>
-              <span className="cdsc-subtitle">Delivery starts at ₹20; heavier baskets may cost more. Pickup has no delivery fee.</span>
-            </div>
-          </div>
-        ) : isFreeDelivery ? (
-          <div className="cdsc-inner">
-            <span className="cdsc-emoji">🎉</span>
-            <div className="cdsc-info">
-              <span className="cdsc-title">FREE Delivery Unlocked!</span>
-              <span className="cdsc-subtitle">
-                {`Cart is above ₹300 (Saved ₹${baseDeliveryFee} delivery fee)`}
-              </span>
-            </div>
-            <span className="cdsc-tag">₹0 FEE</span>
-          </div>
-        ) : (
-          <div className="cdsc-inner">
-            <span className="cdsc-emoji">🚚</span>
-            <div className="cdsc-info">
-              <div className="cdsc-header-row">
-                <span className="cdsc-title">
-                  Add <strong>₹{Math.max(0, FREE_DELIVERY_THRESHOLD + 1 - totalPrice)}</strong> more for <strong>FREE Delivery</strong>!
-                </span>
-                <span className="cdsc-needed">Above ₹300</span>
-              </div>
-              <div className="cdsc-progress-bar">
-                <div
-                  className="cdsc-progress-fill"
-                  style={{ width: `${Math.min(100, Math.round((totalPrice / (FREE_DELIVERY_THRESHOLD + 1)) * 100))}%` }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
 
       {/* ── KiranaPRO Pass Card placed just above Bill Details ── */}
       <div className="kp-parivaar-pass-card">
