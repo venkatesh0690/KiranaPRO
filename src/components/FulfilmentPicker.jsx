@@ -30,6 +30,7 @@ export default function FulfilmentPicker({value,onChange,store,area}) {
               <span className="kp-fulfilment-mode-copy">
                 <strong>{mode.title}</strong>
                 <small>{mode.description}</small>
+                {mode.id==='pickup' && <span className="kp-pickup-coins-badge">🪙 5% KiranaCoins · Pickup only</span>}
               </span>
               <span className="kp-fulfilment-mode-check">{selected?<Check size={17}/>:null}</span>
             </button>
@@ -53,6 +54,10 @@ export default function FulfilmentPicker({value,onChange,store,area}) {
             <strong>Pick up at {store?.name||'the selected store'}</strong>
             <span>{store?.address||area} <em>(listed address; verify before travel)</em></span>
             <small>₹0 delivery even below ₹300 · Handling fee and estimated GST only.</small>
+            <div className="kp-pickup-coins-details">
+              <strong>🪙 Earn 5% KiranaCoins — Store Pickup orders only</strong>
+              <span>Order now and scheduled delivery do not qualify. This demo checkout does not automatically credit coins.</span>
+            </div>
           </div>
         </div>
       )}

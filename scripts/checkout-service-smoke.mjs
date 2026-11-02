@@ -27,7 +27,12 @@ try {
       await page.getByRole('heading',{name:'Choose order service'}).waitFor({timeout:12000});
       await page.getByRole('heading',{name:'How would you like your groceries?'}).waitFor({timeout:12000});
       await page.getByRole('button',{name:/Order now/i}).waitFor({timeout:10000});
+      await page.locator('.kp-pickup-coins-badge').getByText(/5% KiranaCoins/).waitFor({timeout:10000});
+      await page.getByRole('button',{name:/Store pickup/i}).click();
+      await page.locator('.kp-pickup-coins-details').getByText(/Earn 5% KiranaCoins/).waitFor({timeout:10000});
+      await page.getByText(/This demo checkout does not automatically credit coins/).waitFor({timeout:10000});
       await page.getByRole('button',{name:/Schedule delivery/i}).click();
+      if(await page.locator('.kp-pickup-coins-details').count())throw Error('Pickup-only reward must not appear on scheduled delivery');
       await page.locator('.kp-fulfilment-date').nth(1).click();
       await page.locator('.kp-fulfilment-slot').first().click({timeout:8000});
       const selected=await page.locator('.kp-fulfilment-selection').innerText();

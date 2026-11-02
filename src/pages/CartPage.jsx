@@ -591,7 +591,7 @@ export default function CartPage({ userLocation, checkoutMode = 'review' }) {
       <div className="kp-parivaar-pass-card">
         <div className="kp-pp-left">
           <span className="kp-pp-title">⭐ KiranaPRO Pass · 20 Days Validity</span>
-          <span className="kp-pp-sub">20 days validity · Save on delivery &amp; packing + ₹0 Delivery Fee + Earn 5% KiranaCoins (Pay via COD)</span>
+          <span className="kp-pp-sub">20 days validity · Save on delivery &amp; packing with your Pass. 5% KiranaCoins applies only to Store Pickup orders.</span>
         </div>
         <button
           type="button"
