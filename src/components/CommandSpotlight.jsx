@@ -78,9 +78,10 @@ export default function CommandSpotlight({ catalog = [] }) {
       const selected = filteredItems[selectedIndex];
       if (selected) {
         if (e.shiftKey) {
-          addItem('localfresh', selected);
-          setIsOpen(false);
-          navigate('/cart');
+          if (addItem('localfresh', selected)) {
+            setIsOpen(false);
+            navigate('/cart');
+          }
         } else {
           addItem('localfresh', selected);
           triggerHaptic(10);
