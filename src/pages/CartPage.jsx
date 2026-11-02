@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   ArrowLeft,
   Minus,
@@ -43,25 +43,29 @@ function cleanItemName(str) {
     .trim();
 }
 
-export default function CartPage({ userLocation }) {
+export default function CartPage({ userLocation, checkoutMode = 'review' }) {
   const { cart, addItem, removeItem, clearCart, totalItems, totalPrice } = useCart();
   const { stores, products } = useStore();
   const { authSession, logSecurityEvent } = useSecurity();
   const { orderCount, nextOrderNumber, recordOrder } = useCustomerOrders();
   const navigate = useNavigate();
+  const location = useLocation();
+  const checkoutStep = checkoutMode === 'fulfilment' ? 'fulfilment' : 'review';
+  // Preserve customer selections when navigating between basket and the
+  // existing, unchanged order-service screen.
+  const checkoutPreferences = location.state?.checkoutPreferences || {};
   const store = stores.find((s) => String(s.id).toLowerCase() === String(cart.storeId).toLowerCase()) ||
     (isLocalFreshStore(cart?.storeId) || cart?.items?.some(i => isLocalFreshStore(i.storeId)) ? stores.find(s => isLocalFreshStore(s)) : null);
   const storeServesArea = store && isStoreAvailableInArea(store,userLocation);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [guestAuthOpen,setGuestAuthOpen] = useState(false);
   const placingRef = useRef(false);
-  const [checkoutStep,setCheckoutStep] = useState('review');
   const [deliveryAddress,setDeliveryAddress]=useState('');
   const [fulfilment,setFulfilment] = useState({mode:'standard',date:'',slot:''});
   const [codChangeAmount, setCodChangeAmount] = useState('Exact Cash Ready');
-  const [parivaarPassActive, setParivaarPassActive] = useState(false);
+  const [parivaarPassActive, setParivaarPassActive] = useState(Boolean(checkoutPreferences.parivaarPassActive));
   const [replacementPolicy, setReplacementPolicy] = useState('Best Match (Capped at Same Price)');
-  const [isParentOrder, setIsParentOrder] = useState(false);
+  const [isParentOrder, setIsParentOrder] = useState(Boolean(checkoutPreferences.isParentOrder));
 
   // Phases 19, 23, 27, 29 Playbook Upgrades
   const [structuredAddr, setStructuredAddr] = useState(null);
@@ -70,11 +74,11 @@ export default function CartPage({ userLocation }) {
   const trustScore = getCustomerTrustScore();
   const isGold = isGoldNeighbor(trustScore);
   const rainActive = isRainModeActive(userLocation);
-  const [rainTip, setRainTip] = useState(rainActive ? 10 : 0);
+  const [rainTip, setRainTip] = useState(checkoutPreferences.rainTip ?? (rainActive ? 10 : 0));
 
   // Coupon selection is tied to the customer's next successfully placed order.
   const [couponCode, setCouponCode] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState(null); // one coupon code
+  const [appliedCoupon, setAppliedCoupon] = useState(checkoutPreferences.appliedCoupon || null); // one coupon code
   const [couponStatus, setCouponStatus] = useState(null);
   const [orderError, setOrderError] = useState(null);
 
@@ -246,7 +250,7 @@ export default function CartPage({ userLocation }) {
         <button
           type="button"
           className="cart-back"
-          onClick={() => checkoutStep==='fulfilment' ? (setCheckoutStep('review'),setOrderError(null)) : navigate(-1)}
+          onClick={() => checkoutStep==='fulfilment' ? navigate('/cart', {state:{checkoutPreferences:{appliedCoupon,parivaarPassActive,isParentOrder,rainTip}}}) : navigate(-1)}
           aria-label={checkoutStep==='fulfilment' ? 'Back to cart review' : 'Back'}
         >
           <ArrowLeft size={18} />
@@ -800,18 +804,17 @@ export default function CartPage({ userLocation }) {
           className="cart-checkout-btn"
           onClick={() => {
             if(checkoutStep==='review') {
-              setCheckoutStep('fulfilment');
-              setOrderError(null);
-              window.scrollTo?.({top:0,behavior:'smooth'});
-              document.querySelector('.app-content-area')?.scrollTo?.({top:0,behavior:'smooth'});
+              navigate('/checkout', {state:{
+                checkoutPreferences:{appliedCoupon,parivaarPassActive,isParentOrder,rainTip}
+              }});
             } else if(authSession.isTemporary) setGuestAuthOpen(true);
             else handlePlaceOrder();
           }}
-          disabled={orderPlaced || !storeServesArea || Boolean(store?.isSample) ||
-            (checkoutStep==='fulfilment' && !fulfilmentValidation.valid)}
+          disabled={orderPlaced || !storeServesArea ||
+            (checkoutStep==='fulfilment' && (Boolean(store?.isSample) || !fulfilmentValidation.valid))}
         >
-          <span>{store?.isSample ? 'Sample store — checkout unavailable' :
-            checkoutStep==='review' ? 'Continue to order service' :
+          <span>{checkoutStep==='review' ? 'Continue to order service' :
+            store?.isSample ? 'Sample store — checkout unavailable' :
             authSession.isTemporary ? 'Sign in to save order' :
             fulfilment.mode==='pickup' ? 'Save pickup request (demo)' :
             fulfilment.mode==='scheduled' ? 'Save delivery request (demo)' :
