@@ -1,4 +1,4 @@
-import { calculateLocalFreshDeliveryFee, getLineWeightKg, getCartWeightKg } from '../src/utils/localfreshDelivery.js';
+import { calculateLocalFreshDeliveryFee, getLineWeightKg, getCartWeightKg, LOCALFRESH_MIN_DELIVERY_FEE } from '../src/utils/localfreshDelivery.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -51,13 +51,13 @@ test('pickup is always ₹0 delivery even with subtotal below ₹300',()=>{
     assert.equal(q.total,subtotal+q.handlingFee+q.tax);
   }
 });
-test('standard and scheduled delivery use calculated LocalFresh fee and preserve other stores',()=>{
+test('standard and scheduled delivery use ₹20 minimum LocalFresh fee and preserve other stores',()=>{
   const items=[{id:'lf-1004',unit:'per kg',quantity:2}];
   for(const mode of ['standard','scheduled']){
-    assert.equal(quoteFulfilment({store,subtotal:100,mode,items}).deliveryFee,10);
-    assert.equal(quoteFulfilment({store,subtotal:300,mode,items}).deliveryFee,10);
-    assert.equal(quoteFulfilment({store,subtotal:301,mode,items}).deliveryFee,10);
-    assert.equal(quoteFulfilment({store,subtotal:900,mode,items}).deliveryFee,10);
+    assert.equal(quoteFulfilment({store,subtotal:100,mode,items}).deliveryFee,20);
+    assert.equal(quoteFulfilment({store,subtotal:300,mode,items}).deliveryFee,20);
+    assert.equal(quoteFulfilment({store,subtotal:301,mode,items}).deliveryFee,20);
+    assert.equal(quoteFulfilment({store,subtotal:900,mode,items}).deliveryFee,20);
     assert.equal(quoteFulfilment({store:otherStore,subtotal:100,mode,items}).deliveryFee,20);
     assert.equal(quoteFulfilment({store:otherStore,subtotal:301,mode,items}).deliveryFee,0);
   }
@@ -77,12 +77,12 @@ test('LocalFresh uses weights and cart quantities, with rupee paise precision',(
   assert.equal(getLineWeightKg(items[1]),0.2);
   assert.equal(getLineWeightKg(items[2]),1.2);
   assert.equal(getCartWeightKg(items),3.6);
-  assert.equal(calculateLocalFreshDeliveryFee(items),18);
-  assert.equal(calculateLocalFreshDeliveryFee([{id:'lf-fl-06',unit:'250 g box',quantity:1}]),1.25);
+  assert.equal(calculateLocalFreshDeliveryFee(items),20);
+  assert.equal(calculateLocalFreshDeliveryFee([{id:'lf-fl-06',unit:'250 g box',quantity:1}]),20);
 });
 test('no negative quantities or invalid cart weights are applied',()=>{
   const items=[{id:'lf-1004',unit:'per kg',quantity:-4},{id:'lf-1004',unit:'per kg',quantity:2}];
-  assert.equal(calculateLocalFreshDeliveryFee(items),10);
+  assert.equal(calculateLocalFreshDeliveryFee(items),20);
   assert.equal(calculateLocalFreshDeliveryFee([]),0);
 });
 
@@ -94,8 +94,22 @@ test('LocalFresh remains chargeable above ₹300 even with coupon discounts; pic
   const standard=quoteFulfilment({store,subtotal:620,discount:30,items,mode:'standard'});
   const scheduled=quoteFulfilment({store,subtotal:620,discount:30,items,mode:'scheduled'});
   const pickup=quoteFulfilment({store,subtotal:620,discount:30,items,mode:'pickup'});
-  assert.equal(standard.deliveryFee,16);
-  assert.equal(scheduled.deliveryFee,16);
+  assert.equal(standard.deliveryFee,20);
+  assert.equal(scheduled.deliveryFee,20);
   assert.equal(pickup.deliveryFee,0);
-  assert.equal(standard.total-pickup.total,16);
+  assert.equal(standard.total-pickup.total,20);
+});
+
+test('LocalFresh applies ₹20 minimum only to delivery, not pickup, and preserves higher weight charges',()=>{
+  assert.equal(LOCALFRESH_MIN_DELIVERY_FEE,20);
+  assert.equal(calculateLocalFreshDeliveryFee([]),0);
+  for(const weight of [0.25,1,2,4]){
+    const items=[{id:'lf-1004',unit:'per kg',quantity:1,weightKg:weight}];
+    assert.equal(calculateLocalFreshDeliveryFee(items),20);
+    assert.equal(quoteFulfilment({store,subtotal:120,items,mode:'standard'}).deliveryFee,20);
+    assert.equal(quoteFulfilment({store,subtotal:120,items,mode:'pickup'}).deliveryFee,0);
+  }
+  const bulky=[{id:'lf-1004',unit:'per kg',quantity:5}];
+  assert.equal(calculateLocalFreshDeliveryFee(bulky),25);
+  assert.equal(quoteFulfilment({store,subtotal:800,items:bulky,mode:'scheduled'}).deliveryFee,25);
 });
