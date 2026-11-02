@@ -53,7 +53,7 @@ export default function AdminDashboard() {
     addProduct,
     setActiveRole
   } = useStore();
-  const { authSession, securityAuditLogs, logSecurityEvent, logout } = useSecurity();
+  const { authSession, securityAuditLogs, logout } = useSecurity();
 
   const [pendingSellers,setPendingSellers]=useState([]);
   const [approvalError,setApprovalError]=useState('');
@@ -146,22 +146,19 @@ export default function AdminDashboard() {
   const [diagRunning, setDiagRunning] = useState(false);
   const [diagResults, setDiagResults] = useState(null);
 
-  const runSystemDiagnostics = () => {
+  const runSystemDiagnostics = async () => {
     setDiagRunning(true);
-    setTimeout(() => {
-      setDiagResults({
-        timestamp: new Date().toLocaleTimeString('en-IN'),
-        checks: [
-          { name: 'Neon Postgres Connection Pool Latency', status: 'PASS', latency: '42 ms', detail: 'Primary pool healthy (5 idle, 2 active connections)' },
-          { name: 'Atomic Stock Deduction Constraint', status: 'PASS', latency: '18 ms', detail: 'CHECK (stock_count >= 0) enforced on all 5 Vizag stores' },
-          { name: 'Unapproved Mandi Reports Queue', status: 'PASS', latency: '12 ms', detail: '3 morning reports approved; retail prices live' },
-          { name: 'Unsettled Rider COD Cash Audit', status: 'PASS', latency: '24 ms', detail: 'All 4 fleet riders below ₹5,000 safety threshold' },
-          { name: 'Broken Image / Missing Price Catalog Audit', status: 'PASS', latency: '35 ms', detail: '100% of SKUs have verified WebP visuals & valid pricing' },
-          { name: 'RBAC Middleware Protection (/admin, /seller)', status: 'PASS', latency: '14 ms', detail: 'Token & role validation active; unauthenticated blocked' }
-        ]
-      });
-      setDiagRunning(false);
-    }, 600);
+    setDiagResults(null);
+    try{
+      const response=await fetch('/api/security-status',{credentials:'same-origin',cache:'no-store'});
+      if(!response.ok)throw new Error('Database security check unavailable');
+      setDiagResults(await response.json());
+    }catch{
+      setDiagResults({checkedAt:new Date().toISOString(),checks:[
+        {name:'Database security check',status:'ERROR',
+         detail:'Unable to verify live configuration. No security conclusions can be drawn.'}
+      ],note:'Review the server logs and database connection before continuing.'});
+    }finally{setDiagRunning(false);}
   };
 
   // Extract all LocalFresh catalog items from StoreContext
@@ -603,7 +600,7 @@ export default function AdminDashboard() {
           }}
         >
           <ShieldAlert size={16} />
-          <span>🔒 Security & Audit Log ({securityAuditLogs.length})</span>
+          <span>🔒 Security Controls & Local Activity ({securityAuditLogs.length})</span>
         </button>
         <button
           type="button"
@@ -1235,13 +1232,13 @@ export default function AdminDashboard() {
                 <div>
                   <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900 }}>Application Security & Privacy Shield</h3>
                   <p style={{ margin: '3px 0 0', fontSize: '0.82rem', color: '#64748B' }}>
-                    Multi-layer defense: CSP headers, Anti-XSS sanitizer, RBAC session tokens, rate-limiting & price anti-tampering.
+                    Security controls require live verification. Browser-only activity logs are not a substitute for a security audit.
                   </p>
                 </div>
               </div>
               <div className="ad-sec-health-pill">
                 <span className="ad-sec-pulse-dot" />
-                <span>100% SECURE & HEALTHY</span>
+                <span>CONFIGURATION STATUS</span>
               </div>
             </div>
 
@@ -1250,43 +1247,43 @@ export default function AdminDashboard() {
               <div className="ad-sec-module-item active">
                 <CheckCircle2 size={18} color="#16A34A" />
                 <div>
-                  <strong>HTTP Security Headers & CSP</strong>
-                  <span>Content-Security-Policy & nosniff active</span>
+                  <strong>HTTP Security Headers</strong>
+                  <span>Frame protection and nosniff configured; CSP requires separate verification</span>
                 </div>
               </div>
               <div className="ad-sec-module-item active">
                 <CheckCircle2 size={18} color="#16A34A" />
                 <div>
-                  <strong>XSS Sanitizer & HTML Escaping</strong>
-                  <span>User inputs cleansed before state update</span>
+                  <strong>Output Encoding</strong>
+                  <span>React escapes rendered text; review each HTML injection sink independently</span>
                 </div>
               </div>
               <div className="ad-sec-module-item active">
                 <CheckCircle2 size={18} color="#16A34A" />
                 <div>
                   <strong>RBAC & Route Protection</strong>
-                  <span>Seller & Admin routes guarded by token auth</span>
+                  <span>Server endpoints enforce roles; client route guards are for navigation only</span>
                 </div>
               </div>
               <div className="ad-sec-module-item active">
                 <CheckCircle2 size={18} color="#16A34A" />
                 <div>
                   <strong>Cart Anti-Tampering Engine</strong>
-                  <span>Strict catalog cross-check on prices & quantities</span>
+                  <span>Server recalculates order prices and validates products from one store</span>
                 </div>
               </div>
               <div className="ad-sec-module-item active">
                 <CheckCircle2 size={18} color="#16A34A" />
                 <div>
-                  <strong>Brute-Force Rate Limiter</strong>
-                  <span>4 failed attempts locks account for 60 seconds</span>
+                  <strong>Login Rate Limiting</strong>
+                  <span>Five failed attempts can lock one credential/IP pair for 15 minutes</span>
                 </div>
               </div>
               <div className="ad-sec-module-item active">
                 <CheckCircle2 size={18} color="#16A34A" />
                 <div>
-                  <strong>DPDP Customer PII Masking</strong>
-                  <span>Customer phones & addresses masked by default</span>
+                  <strong>Customer Data Scope</strong>
+                  <span>Order details are returned only to authorized customers, sellers or admins</span>
                 </div>
               </div>
             </div>
@@ -1294,8 +1291,8 @@ export default function AdminDashboard() {
             {/* Current Session Metadata */}
             <div className="ad-sec-session-info-strip">
               <div className="ad-sec-sess-item">
-                <span className="lbl">Active Token:</span>
-                <code>{authSession?.token || 'KP-SEC-ROOT-ADMIN'}</code>
+                <span className="lbl">Session:</span>
+                <code>HttpOnly cookie (not readable in JavaScript)</code>
               </div>
               <div className="ad-sec-sess-item">
                 <span className="lbl">Role Privilege:</span>
@@ -1303,7 +1300,7 @@ export default function AdminDashboard() {
               </div>
               <div className="ad-sec-sess-item">
                 <span className="lbl">Lockout Status:</span>
-                <span className="val green">ACTIVE (0 IPs BANNED)</span>
+                <span className="val">Not measured in this dashboard</span>
               </div>
             </div>
           </div>
@@ -1312,23 +1309,32 @@ export default function AdminDashboard() {
           <div className="ad-card" style={{ marginTop: 18 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <div>
-                <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800 }}>Live Security Audit Trail & Access Logs</h3>
+                <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800 }}>Browser Session Activity (Not a Server Audit Trail)</h3>
                 <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: '#64748B' }}>
-                  Real-time recording of logins, privilege grants, price updates, stock changes and system checks.
+                  These entries are generated by this browser session and are not verified server logs or IP records.
                 </p>
               </div>
               <button
                 type="button"
                 className="ad-sec-scan-btn"
-                onClick={() => {
-                  logSecurityEvent('SYSTEM_INTEGRITY_CHECK', 'Full checksum verification passed: Catalog 108 products, Cart validator OK, CSP active.', 'info');
-                  alert('Security Diagnostic Scan Complete:\n✓ 0 Vulnerabilities Detected\n✓ Catalog integrity 100% verified\n✓ Rate limit guards operational\n✓ PII masking active');
-                }}
+                onClick={runSystemDiagnostics}
+                disabled={diagRunning}
               >
-                <RefreshCw size={14} /> Run Security Scan
+                <RefreshCw size={14} /> {diagRunning ? 'Checking Database…' : 'Verify Database Controls'}
               </button>
             </div>
 
+            {diagResults && (
+              <div role="status" style={{padding:'12px 14px',marginBottom:14,border:'1px solid #CBD5E1',borderRadius:8}}>
+                <strong>Server-reported database configuration — {new Date(diagResults.checkedAt).toLocaleString()}</strong>
+                {diagResults.checks.map(check=>(
+                  <p key={check.name} style={{margin:'8px 0 0',fontSize:13}}>
+                    <strong>{check.status}: {check.name}</strong> — {check.detail}
+                  </p>
+                ))}
+                <p style={{margin:'8px 0 0',fontSize:12,color:'#64748B'}}>{diagResults.note}</p>
+              </div>
+            )}
             <div className="ad-audit-table-wrap">
               <table className="ad-audit-table">
                 <thead>
