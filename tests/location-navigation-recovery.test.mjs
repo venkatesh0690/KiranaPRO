@@ -28,7 +28,7 @@ test('lazy route errors and long loads have accessible recovery controls',()=>{
 
 test('fresh HTML / SW rotation and actual banner and product photo hosts',()=>{
   const sw=read('public/sw.js');
-  assert.match(sw,/VERSION='kiranapro-fast-v4'/);
+  assert.match(sw,/VERSION='kiranapro-fast-v5'/);
   assert.match(sw,/url\.pathname\.startsWith\('\/api\/'\)\)return/);
   const html=read('index.html');
   assert.match(html,/img-src [^"]*https:\/\/unsplash\.com/);
