@@ -1,0 +1,65 @@
+/* Cart conflict dialog — preserve the original cart and explain store exclusivity. */
+.kp-store-cart-backdrop {
+  position:fixed;
+  inset:0;
+  z-index:20050;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(19,28,24,.58);
+  padding:20px;
+}
+.kp-store-cart-dialog {
+  width:100%;
+  max-width:390px;
+  border-radius:16px;
+  padding:26px 24px 22px;
+  background:#fff;
+  color:#18221c;
+  box-shadow:0 22px 70px rgba(0,0,0,.2);
+  text-align:left;
+}
+.kp-store-cart-symbol {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:46px;
+  height:46px;
+  border-radius:12px;
+  background:#eef3ef;
+  font-size:24px;
+  margin-bottom:16px;
+}
+.kp-store-cart-dialog h2 {
+  margin:0 0 10px;
+  font-size:19px;
+  font-weight:750;
+  letter-spacing:-.025em;
+}
+.kp-store-cart-dialog p {
+  margin:0 0 12px;
+  color:#435048;
+  line-height:1.6;
+  font-size:14px;
+}
+.kp-store-cart-dialog strong { color:#18221c; }
+.kp-store-cart-dialog .kp-store-cart-note {
+  font-size:12px;
+  color:#65716a;
+  margin-bottom:20px;
+}
+.kp-store-cart-dismiss {
+  width:100%;
+  min-height:46px;
+  border:0;
+  border-radius:10px;
+  background:#1e3a2b;
+  color:#fff;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+}
+.kp-store-cart-dismiss:focus-visible {
+  outline:3px solid #7ab68a;
+  outline-offset:3px;
+}
