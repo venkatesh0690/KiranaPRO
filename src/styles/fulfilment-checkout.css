@@ -1588,6 +1588,45 @@
   background: #E2E8F0;
 }
 
+/* Cart layout: compact delivery-area selector belongs in the top-right header. */
+.cart-page .cart-hd{min-width:0;gap:8px;}
+.cart-page .cart-title{min-width:0;flex:1 1 auto;line-height:1.2;}
+.cart-top-delivery-area{
+  margin-left:auto;display:flex;align-items:center;justify-content:flex-end;gap:5px;
+  flex:0 1 auto;min-width:0;max-width:46%;background:#f8fafc;
+  padding:7px 9px;border:1px solid #e2e8f0;border-radius:12px;
+  color:#1e293b;cursor:pointer;text-align:left;
+}
+.cart-top-delivery-area:hover,.cart-top-delivery-area:focus-visible{border-color:#16a34a;}
+.cart-top-area-icon{font-size:16px;flex:none;line-height:1;}
+.cart-top-area-details{display:flex;flex-direction:column;min-width:0;}
+.cart-top-area-details strong{font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cart-top-area-details small{font-size:10px;color:#64748b;font-weight:600;}
+.cart-top-delivery-area>svg{flex:none;color:#64748b;}
+@media(max-width:390px){
+  .cart-top-delivery-area{max-width:43%;padding:6px;gap:3px;}
+  .cart-top-delivery-area>svg{display:none;}
+  .cart-top-area-details strong{font-size:10px;}
+  .cart-page .cart-title{font-size:1rem;}
+}
+
+/* Under ₹100 suggestions show genuine catalog products owned by the cart store. */
+.kp-impulse-product-image{
+  width:100%;height:72px;flex:none;border-radius:8px;overflow:hidden;
+  background:#f8fafc;display:flex;align-items:center;justify-content:center;
+}
+.kp-impulse-product-image .kp-catalog-product-visual{min-height:0;width:100%;height:100%;border-radius:8px;}
+.kp-impulse-product-image .kp-catalog-illustration{padding:3px;gap:0;}
+.kp-impulse-product-image .kp-catalog-emoji{font-size:30px;}
+.kp-impulse-product-image .kp-catalog-visual-caption{display:none;}
+.kp-impulse-product-image .kp-catalog-image-pending{min-height:0;height:100%;}
+.kp-impulse-product-image .kp-product-image-credit{font-size:7px;bottom:2px;right:2px;padding:1px 2px;}
+.kp-impulse-title{min-width:0;}
+.kp-impulse-badge{max-width:42%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.kp-impulse-name{height:34px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.kp-impulse-price{margin-top:auto;}
+.kp-impulse-empty{font-size:12px;color:#64748b;margin:8px 0 0;line-height:1.5;}
+
 /* Instacart Replacement Policy Bar */
 .kp-replacement-policy-bar {
   margin: 14px 0;
