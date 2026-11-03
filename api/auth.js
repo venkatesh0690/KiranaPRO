@@ -89,18 +89,9 @@ export default async function handler(req,res) {
       `]);
       if(found.length && found[0].approved &&
          await checkPassword(password,found[0].password_hash)) account=found[0];
-      // Retain compatibility with older server-side-only provisioning.
-      if(!account && !found.length && process.env.ADMIN_EMAIL &&
-         process.env.ADMIN_PASSWORD_HASH &&
-         identity===String(process.env.ADMIN_EMAIL).toLowerCase() &&
-         await checkPassword(password,process.env.ADMIN_PASSWORD_HASH)) {
-        const created=await serviceQuery(sql=>[sql`
-          INSERT INTO kiranapro.accounts(email,display_name,password_hash,role,approved)
-          VALUES(${identity},'KiranaPRO Administrator',${process.env.ADMIN_PASSWORD_HASH},'admin',true)
-          ON CONFLICT DO NOTHING RETURNING id,role,phone,display_name,store_id,approved
-        `]);
-        account=created[0];
-      }
+      // No server-side fallback credentials and no implicit administrator
+      // provisioning at login. Admin accounts must be created explicitly
+      // through the one-time, owner-authorized setup endpoint.
     }else{
       const found=await serviceQuery(sql=>[sql`
         SELECT id,role,phone,display_name,password_hash,store_id,approved

@@ -16,7 +16,7 @@ export function SellerProtectedRoute({ children }) {
           <h2>Authentication Required</h2>
           <p>
             You are attempting to access the protected <strong>KiranaPRO Seller Dashboard</strong>.
-            Please authenticate using your registered mobile number and 4-digit security PIN.
+            Please authenticate using your registered mobile number and account password.
           </p>
           <div className="security-badge-pill">
             <ShieldAlert size={14} color="#DC2626" />
@@ -42,7 +42,7 @@ export function SellerProtectedRoute({ children }) {
         <div className="sec-bar-left">
           <span className="sec-dot live" />
           <span>🔒 Authenticated Session: <strong>{authSession.userName}</strong></span>
-          <span className="sec-token-badge">{authSession.token?.slice(0, 16)}...</span>
+          <span className="sec-token-badge">HttpOnly session</span>
         </div>
         <div className="sec-bar-right">
           <span className="sec-expiry-hint">Session Active</span>
@@ -96,8 +96,8 @@ export function AdminProtectedRoute({ children }) {
       <div className="sec-session-bar admin">
         <div className="sec-bar-left">
           <span className="sec-dot admin-live" />
-          <span>🛡️ Super Admin Terminal: <strong>admin@kiranapro.com</strong></span>
-          <span className="sec-token-badge admin">TOKEN: {authSession.token?.slice(0, 18)}...</span>
+          <span>🛡️ Administrator Session: <strong>{authSession.userName || 'Administrator'}</strong></span>
+          <span className="sec-token-badge admin">HttpOnly session</span>
         </div>
         <div className="sec-bar-right">
           <span className="sec-mandi-gov">Platform Governance Active</span>

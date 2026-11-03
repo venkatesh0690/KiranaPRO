@@ -22,7 +22,7 @@
     "test:editorial": "node --test tests/editorial-banners.test.mjs",
     "db:secure": "node scripts/apply_security_schema.mjs",
     "security:hash-admin": "node scripts/hash_admin_password.mjs",
-    "test:security": "node --test tests/security-hardening.test.mjs",
+    "test:security": "node --test tests/security-hardening.test.mjs tests/security-diagnostics.test.mjs",
     "test:performance": "node --test tests/performance-fast.test.mjs",
     "test:ai-images": "node --test tests/ai-catalog-images.test.mjs",
     "test:batch-admin": "node --test tests/batch-admin-images.test.mjs",

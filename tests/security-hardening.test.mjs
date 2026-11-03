@@ -31,9 +31,11 @@ test('no client-side administrator passwords or authoritative local sessions',()
 test('authentication uses server-only sessions and rejects self-assigned admin and sellers',()=>{
   assert.match(api,/HttpOnly; SameSite=Strict; Secure/);
   assert.match(api,/timingSafeEqual/);
+  assert.match(api,/!account\.approved/);
   assert.match(api,/SELECT set_config\('app.role'/);
   assert.match(auth,/role==='seller'.*approved/);
-  assert.match(auth,/process\.env\.ADMIN_PASSWORD_HASH/);
+  assert.doesNotMatch(auth,/process\.env\.ADMIN_PASSWORD_HASH/);
+  assert.match(auth,/one-time, owner-authorized setup endpoint/);
   assert.match(auth,/pendingApproval:true/);
 });
 test('customer, seller and admin order access is scoped at SQL level',()=>{
